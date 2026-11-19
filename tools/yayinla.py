@@ -26,7 +26,7 @@ KOK = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KOKLER = ['ATLAS_SABLONLAR', 'KOD_SABLONLAR', 'ORTAK', 'RAFINE_SABLON',
           'HAKEM_HEYETI', 'DENEME', 'scripts', '.opencode']
 DOSYALAR = ['AGENTS.md', 'AI_CALISMA_SISTEMI_v1.md', 'ISARETCILER.md',
-            'opencode.json']
+            'opencode.json', 'SURUM.md']
 TOOLKIT_DOSYALARI = ['KOMUT_TOOLKIT_v4/000_ONCE_BUNU_YAPISTIR.md',
                      'KOMUT_TOOLKIT_v4/001_SORUN_CIKARSA_OKU.md']
 TOOLKIT_KOKLER = ['KOMUT_TOOLKIT_v4/ARACLAR']
@@ -40,6 +40,8 @@ DOCS_DOSYALARI = [
     'DENETIM-2026-08-31-TAM-TARAMA.md',
     'DENETIM_RAPORU_2026-08-30_v3_SIFIR_GOZLE.md',
     'MUTASYON_KOSUM.md', 'CORRIGENDUM-KIMLIK-ENVANTER-2026-09-01.md',
+    # Kapıların pinlediği kanonik OLGU-06 devri — sürüm satırı buna bağlı.
+    'DEVIR-2026-09-03-1945-AUD-06-07.md',
 ]
 
 # --- HARIC -------------------------------------------------------------------
