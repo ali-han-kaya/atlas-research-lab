@@ -15,6 +15,22 @@ Bu klasör laboratuvarın **kendi üzerine** tuttuğu kayıtları taşır: canl�
 | `MUTASYON_KOSUM.md` | Mutasyon koşusu: kural gerçekten yakalıyor mu, yoksa süs mü. |
 | `CORRIGENDUM-*` | Kendi hatasının ilanı ve düzeltmesi. |
 
+## Neden ayrı bir temiz depo
+
+Bu depo, aynı laboratuvarın **özel** çalışma deposunun (`ATLAS_Research_Lab`,
+artık **arşivli / salt okunur**) yayımlanabilir kısmıdır. Sıfırdan yeni bir depo açılmasının üç nedeni var:
+
+1. **Kapsam:** özel depo üretilmiş makaleleri, konu korpuslarını ve oturum
+   devirlerini taşır. Bu depo yalnız **mekanizmayı** taşır.
+2. **Temiz geçmiş:** özel deponun 924 commit'lik tarihçesi yayımlanmaması gereken
+   içerik ve bir kimlik bilgisi kaydı taşıyor. Geçmişi yeniden yazmak yerine temiz
+   bir tarihçe başlatıldı; böylece buradaki her satır **bilinçli bir aktarım**.
+3. **Lisans ve niyet:** özel depo kişisel çalışma sözleşmesine bağlıydı; bu depo
+   MIT lisanslıdır ve başkasının kullanımına açıktır.
+
+Eski depo arşivlendiği için push kabul etmez; tarihçeler **birleştirilmez**.
+Aktarım yolu `tools/yayinla.py` ve kapsam tablosudur (aşağıda).
+
 ## Yayın kapsamı
 
 **Dahil:** hatların mekanizması (ajanlar, komutlar, şablonlar, kapı betikleri),
