@@ -4,12 +4,16 @@ PY ?= python3
 
 yardim:
 	@echo "make dogrula   tek giriş: hijyen + sözdizimi + sır taraması + üç öz-test"
+	@echo "make dogrula-ci  runner kipi: ölçülebilen kalemler hükme girer, öz-testler rapor"
 	@echo "make oztest    yalnız öz-test paketleri"
 	@echo "make yayinla   özel ağaçtan aktarım (ATLAS_LAB=<yol>; kuru koşu)"
 	@echo "make yayinla UYGULA=1  aktarımı yaz"
 
 dogrula:
 	@$(PY) tools/dogrula.py
+
+dogrula-ci:
+	@$(PY) tools/dogrula.py --ci
 
 oztest:
 	@$(PY) ATLAS_SABLONLAR/scripts/atlas_selftest.py --sessiz
