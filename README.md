@@ -17,14 +17,14 @@ unknown label becomes `SCHEMA_INVALID` → P0; KEEP fingerprints so silent delet
 visible; evidence levels (`BIRINCIL`/`DIJITAL`/`BEYAN`/`OLCULMEDI`); fail-closed handling
 (unmeasured is never a pass); and tamper detection (`GATE_TAMPERED` → P0).
 - **How claims are verified.** `make dogrula` (hygiene, syntax, secret scan, secret-gate
-self-test, three self-test suites), `make mutasyon` (sixty-nine gate cases must actually fire:
+self-test, three self-test suites), `make mutasyon` (seventy-one gate cases must actually fire:
 clean baseline + one violation + a red verdict), and `tools/yayinla.py` (publish parity:
 0 new / 0 changed / 0 deleted). The same commands run in CI on GitHub Actions.
 - **Reproduce it.** `./demo` prints the frozen 8-vs-2 failure with a **red verdict and
 exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin
 wrapper and cannot carry 1 vs 2, because GNU make always exits 2 on a failing recipe. `make dogrula` → **7 pass / 0 fail / 1 not run** (T1 is reported as
 `CALISTIRILMADI` and never counted as a pass — see *Accepted debt* below); KOD self-test
-**174/174**; mutation battery **52/52 red + 17/17 expected finding**. Mutation-tested vs untested gate rules are measured
+**174/174**; mutation battery **54/54 red + 17/17 expected finding**. Mutation-tested vs untested gate rules are measured
 in [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md); dependent-package findings in
 [`docs/GUVENLIK.md`](docs/GUVENLIK.md); CI green. Non-Turkish readers:
 [`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md).
@@ -168,7 +168,7 @@ Kırmızı, bozulmuş bir testten değil iddia/kanıt farkından gelir; fikstür
 | Komut | Süre | Ölçüm |
 |---|---|---|
 | `make dogrula` | 52 s | macOS 27.2 · arm64 · Python 3.9.6 · 2026-11-19 |
-| `make mutasyon` | 63 s | aynı makine ve oturum |
+| `make mutasyon` | 65 s | aynı makine ve oturum |
 | `./demo` | < 1 s | aynı makine ve oturum |
 
 CI süreleri runner'a bağlıdır; burada iddia edilmez, iş akışı kaydı esastır.
@@ -287,16 +287,16 @@ bir kanıt seti tanımlandığında eklenebilir; o güne kadar 7/8, 8/8 gibi gö
 
 ## Mutasyon kapsamı
 
-`make mutasyon` altmış dokuz vakanın gerçekten ateşlediğini kanıtlar; **her kuralın** durumu ise
+`make mutasyon` yetmiş bir vakanın gerçekten ateşlediğini kanıtlar; **her kuralın** durumu ise
 [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md) içinde tek tek yazılıdır. Tablo
 `tools/kapsam.py` tarafından üretilir (elle yazılmaz) ve üç durum ayırır:
 
-- **TEST EDİLDİ** — 69 kural (mutasyon vakası adıyla)
+- **TEST EDİLDİ** — 71 kural (mutasyon vakası adıyla)
 - **KAPSAM DIŞI** — 27 kural, her biri ölçülmüş bir gerekçeyle: ağ
   (`verify_doi`), gizli anahtar (`teslim_imza`), tarihçe (`olgu_lint`), koşu durumu
   (`api_surface`, `oztest_attest`), depo durumu (`dep_audit`), ölü kural kimliği
   (`secret_scan` SEC-04 hiçbir kod dalında basılmıyor)
-- **BOŞLUK** — 21 kural: 9'u yalnız öz-testte anılıyor, 12'si hiçbir testte geçmiyor
+- **BOŞLUK** — 19 kural: 7'si yalnız öz-testte anılıyor, 12'si hiçbir testte geçmiyor
 
 Boşluk "kapsam dışı" diye etiketlenmez; gerekçesi yoksa boşluk olarak kalır ve tabloda
 adıyla durur. `make kapsam` tablonun güncelliğini denetler; CI'da bu adım kırılırsa

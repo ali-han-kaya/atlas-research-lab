@@ -112,6 +112,11 @@ SINIF_SRC01_MD = (
     '| SC-001 | Giris | KURAN | 1 | BIRINCIL | kapsandi |\n'
     '| SC-002 | Yontem | MAKALE | 2 | IKINCIL | kapsandi |\n')
 
+JUNIT_TST5 = ('<?xml version="1.0"?><testsuite tests="5" failures="0" errors="0" '
+              'skipped="0"></testsuite>')
+JUNIT_TST2 = ('<?xml version="1.0"?><testsuite tests="2" failures="0" errors="0" '
+              'skipped="0"></testsuite>')
+
 SCOPE_TR = '# SCOPE\n\nTransliterasyon sistemi: DMG (DIN 31635).\n'
 METIN_TR = '# Makale\n\nMetinde sek\u00eene terimi bir kez ge\u00e7er.\n'
 
@@ -157,15 +162,16 @@ def qr_govde(uzun_mu):
             '"%s" %s\n\n## Kaynakca\n\nKaya, A. (2020). Deneme.\n' % (alinti, atif))
 
 
-def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0):
+def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None):
     """(durum, ayrinti) dondurur. taban_rc: temiz kopyada beklenen cikis kodu."""
     betik = kok / kapi
     if not betik.is_file():
         return 'EKSIK', 'kapi betigi yok: %s' % kapi
 
     komut = [sys.executable, betik] + argumanlar(kok)
+    calisma = cwd or kok
 
-    rc0, o0 = kos(komut, cwd=kok)
+    rc0, o0 = kos(komut, cwd=calisma)
     if rc0 != taban_rc:
         return 'TABAN_KIRIK', 'taban rc=%d (beklenen %d) · %s' % (
             rc0, taban_rc, o0.strip().splitlines()[-1] if o0.strip() else '')
@@ -174,7 +180,7 @@ def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0):
     if hata:
         return 'MUTASYON_UYGULANMADI', hata
 
-    rc1, o1 = kos(komut, cwd=kok)
+    rc1, o1 = kos(komut, cwd=calisma)
     if rc1 == 0:
         return 'ATESLEMEDI', 'mutasyon sonrasi rc=0 (kapi kirmiziya donmedi)'
     if iz not in o1:
@@ -210,6 +216,70 @@ def _src01(k):
     return degistir(k, 'sandbox/sinif_src01.md',
                     '| SC-002 | Yontem | MAKALE | 2 | IKINCIL | kapsandi |',
                     '| SC-002 | Yontem | MAKALE | 2 | BIRINCIL | kapsandi |')
+
+
+def _git_kur(d):
+    """Kucuk fikstur deposu: git diff tabanli kapilar icin tek commit."""
+    for komut in (['git', 'init', '-q', '.'], ['git', 'add', '-A'],
+                  ['git', '-c', 'user.email=t@t', '-c', 'user.name=t',
+                   'commit', '-qm', 'taban']):
+        subprocess.run(komut, cwd=str(d), capture_output=True, text=True, timeout=120)
+
+
+def _reck_hazirla(k):
+    """RECK-03: KFAZ0/1 makine bloklari + temiz kucuk git deposu."""
+    kosu = k / 'sandbox_reck' / '_KOSU'
+    yaz(kosu / '00-KFAZ-0-SPEC.md', '# spec\n\n```json\n' + json.dumps({
+        'sema': 'KFAZ0/v1',
+        'req': [{'id': 'REQ-001', 'tur': 'yapisal', 'kabul': 'x'}],
+    }, ensure_ascii=False) + '\n```\n')
+    yaz(kosu / '01-KFAZ-1-PLAN.md', '# plan\n\n```json\n' + json.dumps({
+        'sema': 'KFAZ1/v1',
+        'degisecek': ['src/eski.py'],
+        'dondurulan': [],
+        'req_test': {'REQ-001': []},
+    }, ensure_ascii=False) + '\n```\n')
+    yaz(kosu / 'gate' / 'BASELINE.json',
+        json.dumps({'test_adlari': []}, ensure_ascii=False, indent=2) + '\n')
+    depo = k / 'sandbox_reck' / 'gitdepo'
+    yaz(depo / 'src' / 'eski.py', 'x = 1\n')
+    _git_kur(depo)
+
+
+def _reck03(k):
+    return yaz(k / 'sandbox_reck' / 'gitdepo' / 'src' / 'plansiz.py', 'y = 1\n')
+
+
+def _tst_hazirla(k):
+    """TST-04: ham JUnit + taban; git deposu tazelik taramasini temiz tutar."""
+    tst = k / 'sandbox_tst'
+    depo = tst / 'gitdepo'
+    yaz(depo / 'olcum.py', 'x = 1\n')
+    _git_kur(depo)
+    # Rapor ve kanit COMMIT'TEN SONRA yazilir: TST-10 onlari kaynaktan yeni gorur.
+    yaz(tst / 'gate' / 'junit.xml', JUNIT_TST5)
+    yaz(tst / 'gate' / 'BASELINE.json', json.dumps({
+        'test': {'kosan': 5, 'atlanan': 0},
+        'test_adlari': [],
+    }, ensure_ascii=False, indent=2) + '\n')
+    yaz(tst / '03-KFAZ-3-TEST-EVIDENCE.json', json.dumps({
+        'komut': 'pytest -q',
+        'cikis_kodu': 0,
+        'rapor': str(tst / 'gate' / 'junit.xml'),
+        'rapor_formati': 'junit-xml',
+        'sonuc': {'kosan': 5, 'basarisiz': 0, 'hata': 0, 'atlanan': 0},
+    }, ensure_ascii=False, indent=2) + '\n')
+
+
+def _tst04(k):
+    """Tek ihlal: test sayisi 5 -> 2; kanit da ayni gercegi soyler."""
+    tst = k / 'sandbox_tst'
+    yaz(tst / 'gate' / 'junit.xml', JUNIT_TST2)
+    p = tst / '03-KFAZ-3-TEST-EVIDENCE.json'
+    veri = json.loads(p.read_text(encoding='utf-8'))
+    veri['sonuc']['kosan'] = 2
+    p.write_text(json.dumps(veri, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    return None
 
 
 def _satir_sil(k, rel, anahtar):
@@ -511,6 +581,23 @@ def vakalar():
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          _frz07,
          'FRZ-07'),
+        # --- chg_reconcile: git diff + plan kapsami ----------------------------
+        ('RECK-03', 'KOD', 'plansiz urun dosyasi kapsam ihlali',
+         'KOD_SABLONLAR/scripts/chg_reconcile.py',
+         lambda k: ['--kosu', str(k / 'sandbox_reck' / '_KOSU'),
+                    '--taban', str(k / 'sandbox_reck' / '_KOSU' / 'gate' / 'BASELINE.json'),
+                    '--faz', 'KFAZ1'],
+         _reck03,
+         'RECK-03', {'cwd': 'sandbox_reck/gitdepo', 'kur': _reck_hazirla}),
+        # --- test_attest: ham JUnit taban karsilastirmasi ----------------------
+        ('TST-04', 'KOD', 'test silinerek yesil olmaz',
+         'KOD_SABLONLAR/scripts/test_attest.py',
+         lambda k: ['--kanit', str(k / 'sandbox_tst' / '03-KFAZ-3-TEST-EVIDENCE.json'),
+                    '--taban', str(k / 'sandbox_tst' / 'gate' / 'BASELINE.json'),
+                    '--profil', str(k / 'kod_profil.json'),
+                    '--kosu', str(k / 'sandbox_tst')],
+         _tst04,
+         'TST-04', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_hazirla}),
         # --- uyari/bilgi kurallari: beklenen bulgu (rc=0 olabilir) ------------
         ('PL-12', 'ATLAS', 'belirsizlik cikisi var', 'ATLAS_SABLONLAR/scripts/prompt_lint.py',
          lambda k: ['--dizin', str(k / 'sandbox_pl')],
@@ -614,7 +701,7 @@ def vakalar():
     ]
 
 
-def hazirla(kok):
+def hazirla(kok, opsiyon=None):
     """Temiz kopya + vakalarin temiz taban fiksturleri."""
     yaz(kok / 'sandbox' / 'notlar.md', '# Notlar\n\nBu dosyada sir yok.\n')
     yaz(kok / 'sandbox' / 'MASTER.md', dec_govde(DEC_BASLIKLAR))
@@ -658,6 +745,8 @@ def hazirla(kok):
     yaz(kok / 'sandbox_sec' / 'notlar.md', '# Notlar\n\nBu dosyada sir yok.\n')
     yaz(kok / 'sandbox' / 'cite_yil.md', CITE_MD)
     yaz(kok / 'sandbox' / 'sinif_src01.md', SINIF_SRC01_MD)
+    if opsiyon and callable(opsiyon.get('kur')):
+        opsiyon['kur'](kok)
 
 
 def main():
@@ -671,21 +760,26 @@ def main():
     satirlar = []
     tum = vakalar()
     for vaka in tum:
-        if len(vaka) == 8 and vaka[7] == 'BULGU':
-            kimlik, katman, kural, kapi, argumanlar, mutasyon, iz, _ = vaka
+        opsiyon = {}
+        if len(vaka) >= 8 and vaka[7] == 'BULGU':
+            kimlik, katman, kural, kapi, argumanlar, mutasyon, iz = vaka[:7]
             bulgu_modu = True
         else:
-            kimlik, katman, kural, kapi, argumanlar, mutasyon, iz = vaka
+            kimlik, katman, kural, kapi, argumanlar, mutasyon, iz = vaka[:7]
             bulgu_modu = False
+            if len(vaka) == 8 and isinstance(vaka[7], dict):
+                opsiyon = vaka[7]
         tmp = Path(tempfile.mkdtemp(prefix='atlas_mut_'))
         try:
             hedef = tmp / 'depo'
             shutil.copytree(KOK, hedef, symlinks=True, ignore=ATLA)
-            hazirla(hedef)
+            hazirla(hedef, opsiyon)
+            calisma = hedef / opsiyon['cwd'] if opsiyon.get('cwd') else hedef
             if bulgu_modu:
                 durum, ayrinti = taban_ve_bulgu(hedef, kapi, argumanlar, mutasyon, iz)
             else:
-                durum, ayrinti = taban_ve_mutasyon(hedef, kapi, argumanlar, mutasyon, iz)
+                durum, ayrinti = taban_ve_mutasyon(hedef, kapi, argumanlar, mutasyon, iz,
+                                                   cwd=calisma)
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
 
