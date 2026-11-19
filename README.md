@@ -191,6 +191,12 @@ yaşayan kataloğa değil bu allowlist anlık görüntüsüne bakar, böylece KO
 her klonda ve runner'da aynı çıkar. Canlı katalogla denetim isteğe bağlıdır:
 `ATLAS_MODEL_KATALOG=~/.cache/opencode/models.json make dogrula`.
 
+Sabit allowlist'in models.dev'de hâlâ geçerli olup olmadığını ölçmek için
+`make katalog-kontrol` vardır. Ağ gerektirir ve **CI'da koşmaz**; eksik model
+adıyla `rc=1`, ağ/JSON okunamazsa `rc=2` döner. Kanonik kod ayrımı için
+`python3 tools/katalog_kontrol.py` kullanılır; GNU make, tarif hatasını 2'ye
+çevirir.
+
 ### Bir projede ATLAS hattını kullanmak
 
 ```bash
@@ -243,6 +249,7 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 | Tek giriş doğrulama | `make dogrula` → `tools/dogrula.py` (sekiz kalem, fail-closed) |
 | Kırmızı hüküm demosu | `./demo` → `tools/demo.py` (kanonik; beklenen `rc=1`, fikstür bozuksa `rc=2`, yeşilde `rc=0`) |
 | Mutasyon kapsamı | `make kapsam` → `docs/MUTASYON_KAPSAM.md` güncel mi (üretilmiş tablo) |
+| Katalog tazeliği (isteğe bağlı) | `make katalog-kontrol` → models.dev canlı kataloğu; ağ gerekir, CI'da koşmaz |
 | Bağımlılık denetimi | `make guvenlik` → `pip-audit`; her bulgu `docs/GUVENLIK.md` içinde adıyla |
 | Commit/push koruması | `make kur` → `core.hooksPath=.githooks`; canlı DSN commit edilemez |
 | Runner doğrulaması | `make dogrula-ci` — yalnız o ortamda ölçülebilen kalemler hükme girer, öz-testler rapor |
