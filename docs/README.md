@@ -121,6 +121,58 @@ Neden düzeltilmiyor: testler sağlam; eksik olan veri. Testi "onarmak" kanıtı
 değil kaydı değiştirmek olurdu. Sahte bir commit çıpası yazmak ise kaydı
 yanlışlardı; yapılmadı.
 
+## Ağaç kanıtı — `make kanit`
+
+`make kanit`, bu depodaki **gerçek HEAD commit'ini** ve izlenen dosyaların
+sha256'sını `attestation.json` içine yazar. Özel ağacı okumaz, ağa bağlanmaz;
+`OLG-1`'in canlı kanıt setine bağımlı değildir. Betik yalnız **temiz izlenen
+ağaçta** çalışır: `attestation.json` dışında commit edilmemiş değişiklik varsa
+`KIRLI_AGAC` ile durur.
+
+| Alan | Anlam |
+|---|---|
+| `schema` | `ATLAS-KANIT/v1` |
+| `commit` | Üretim anındaki gerçek HEAD (40 hex) |
+| `tree` | O commit'in Git ağaç nesnesi (40 hex) |
+| `files[]` | İzlenen her dosya: `path`, `mode`, `size`, `sha256` |
+| `tree_sha256` | `files[]` üzerinden deterministik sha256 |
+| `tool_versions` | Üretim ortamının Python/Git/Make/platform sürümleri |
+| `scope` | Kapsam ve `attestation.json` istisnası |
+
+`attestation.json` kendini kapsamaz. `commit` alanı, dosyayı ekleyen commit
+değil, üretimin yapıldığı HEAD'dir; böylece commit hash'i kendi içeriğine bağlı
+değildir ve hash döngüsü oluşmaz. Kapı, bu commit'in gerçekten var olduğunu ve
+HEAD'in atası olduğunu `git` ile doğrular; **sahte commit çıpası yoktur**.
+
+`make kanit-dogrula` fail-closed doğrular:
+
+| Kod | Kural |
+|---|---|
+| `KANIT-00` | Dosya yok/okunamadı — kapı açılmaz |
+| `KANIT-01` | Şema, alan, tip veya hash biçimi geçersiz |
+| `KANIT-02` | Commit yok, HEAD'in atası değil veya tree uyuşmuyor |
+| `KANIT-03` | Kayıtlı dosya hash'leri commit ağacıyla uyuşmuyor |
+| `KANIT-04` | `tree_sha256` yeniden hesapla tutmuyor |
+| `KANIT-05` | Güncel HEAD ağacı kayıtlı ağaçtan farklı (sürüklenme) |
+| `KANIT-06` | İzlenen ağaç kirli (`attestation.json` dışında) |
+
+**Ne kanıtlar:** kayıt gerçek bir commit'ten üretilmiştir; o commit'in ağacındaki
+dosyaların sha256'ları kayıttakiyle aynıdır; kapı çalıştığı anda güncel HEAD
+aynı ağacı taşır (attestation dosyası hariç); araç sürümleri kayıtlıdır.
+
+**Ne kanıtlamaz:** imza, yazar/köken, dış zaman damgası veya değiştirilemezlik
+yoktur; yazma yetkisi olan biri kanıtı yeniden üretebilir. Testlerin geçtiğini,
+içeriğin doğru olduğunu, üretilen makalelerin varlığını veya `.git` dışındaki
+izlenmeyen dosyaları kapsamaz. `tool_versions` üretim ortamını **tanımlar**;
+doğrulayıcının sürümleriyle eşit olması istenmez. `generated_at` bir beyandır;
+dış saatle doğrulanmaz.
+
+**`OLG-1` ile ilişki:** `OLG-1`'in tarihsel canlı ölçümü bu ağaçta yoktur; onu
+sahte bir commit çıpasıyla yeşile çevirmek yapılmadı. Bu yeni kapı `OLG-1`'in
+yerine geçmez; farklı bir iddiayı — bu commit'in ağacının bu baytlar olduğunu —
+ölçer. Böylece bu ağacın kanıtı yalnız özel ağaca bağlı kalmaz; `OLG-1` borcu
+görünür kalır. `make kanit-dogrula` CI'da tam geçmişle (`fetch-depth: 0`) koşar.
+
 ## Sabit model kataloğunu yenileme
 
 `tools/model_katalog.json` canlı kataloğun tam kopyası değildir; **yalnız aktif

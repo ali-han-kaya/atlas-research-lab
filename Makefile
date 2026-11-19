@@ -2,11 +2,13 @@ PY ?= python3
 # pip-audit yalniz gelistirme aracidir; varsa yerel sanal ortam kullanilir.
 PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(PY))
 
-.PHONY: dogrula dogrula-ci mutasyon oztest demo kapsam kapsam-yaz katalog-kontrol iddia iddia-ag iddia-yaz guvenlik kur yayinla yardim
+.PHONY: dogrula dogrula-ci kanit kanit-dogrula mutasyon oztest demo kapsam kapsam-yaz katalog-kontrol iddia iddia-ag iddia-yaz guvenlik kur yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giris: hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
 	@echo "make dogrula-ci  runner kipi: olculebilen kalemler hukme girer, oz-testler rapor"
+	@echo "make kanit     bu agacin commit + sha256 kanitini yaz (attestation.json)"
+	@echo "make kanit-dogrula  attestation.json'i gercek commit/agac ile dogrula"
 	@echo "make mutasyon  kapi kurallari gercekten atesliyor mu (temiz taban + ihlal)"
 	@echo "make demo      ince sarmalayici: ./demo (kod ayrimi icin ./demo; make her hatada 2 doner)"
 	@echo "make kapsam    mutasyon kapsam tablosu guncel mi (docs/MUTASYON_KAPSAM.md)"
@@ -26,6 +28,12 @@ dogrula:
 
 dogrula-ci:
 	@$(PY) tools/dogrula.py --ci
+
+kanit:
+	@$(PY) tools/kanit.py
+
+kanit-dogrula:
+	@$(PY) tools/kanit_dogrula.py
 
 mutasyon:
 	@$(PY) tools/mutasyon_bataryasi.py
