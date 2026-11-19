@@ -39,10 +39,12 @@ kayıt yerinde durur, kanıtı özel ağaçta kalır.
 ## Ortam bağlı tek kalem
 
 `make dogrula` üç öz-test paketini koşar. ATLAS envanterindeki **OLG-1** testi,
-kanonik olgu tablosunun bağlı olduğu commit'i (`OLGU-04`) arar. Bu depo özel ağacın
-tarihçesini taşımadığı için o commit burada yoktur; test bu yüzden **`KOSULLU`**
-raporlanır — `PASS` değil. Koşul serttir: kalan tek test `OLG-1` olmalı **ve**
-gerekçesi `OLGU-04` çıpasını anmalıdır. Başka bir test kalırsa hüküm `FAIL`'dir.
+`SURUM.md` makine bloğunun bağlı olduğu commit'i ve kanıt setini arar
+(`OLGU-03` sürüm, `OLGU-04` commit, `OLGU-05` canlı ölçüm üçlüsü). Bu depo özel
+ağacın tarihçesini taşımadığı için o bağ burada kurulamaz; test bu yüzden
+**`KOSULLU`** raporlanır — `PASS` değil. Koşul serttir: kalan tek test `OLG-1`
+olmalı **ve** gerekçesi `OLGU-04` çıpasını anmalıdır. Başka bir test kalırsa hüküm
+`FAIL`'dir. `KOD` (174) ve `Toolkit` paketleri bu depoda tam koşar.
 
 Neden düzeltilmiyor: testin kendisi sağlam; eksik olan, yayımlanmayan bir commit
 zinciridir. Testi "onarmak" kanıtı değil kaydı değiştirmek olurdu.

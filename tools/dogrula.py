@@ -193,8 +193,9 @@ def main():
         elif ortam_bagli_mi(kid, cikti):
             kalemler.append((kid, ad, None, son,
                              [s for s in satirlar if s.startswith('KALDI')],
-                             'ortam bagli: %s cipasi bu depoda yok'
-                             % ORTAM_BAGLI[1]))
+                             'ortam bagli: SURUM.md makine blogu ozel agacin '
+                             'HEAD ve kanit setine bagli (%s); bu depo o '
+                             'tarihceyi tasimaz' % ORTAM_BAGLI[1]))
         else:
             kalemler.append((kid, ad, False, son, satirlar[-6:], ''))
 
