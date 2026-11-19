@@ -83,6 +83,14 @@ depo hijyeni, Python sözdizimi, kabuk sözdizimi, sır taraması ve üç öz-te
 (ATLAS · KOD · Toolkit). Sayıları README'ye elle yazmayız — betikler kendileri basar.
 Model çağrısı yoktur: yerel batarya **$0**.
 
+Paketleri ayrı ayrı koşmak istersen (yollar depo köküne görelidir):
+
+```bash
+python3 ATLAS_SABLONLAR/scripts/atlas_selftest.py        # OLG-1 ortam bağlı → KOSULLU
+python3 KOD_SABLONLAR/scripts/kod_selftest.py
+(cd KOMUT_TOOLKIT_v4/ARACLAR/betikler && python3 v4_selftest.py)
+```
+
 ### Bir projede ATLAS hattını kullanmak
 
 ```bash
