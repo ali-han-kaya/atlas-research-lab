@@ -29,19 +29,19 @@
   "iddialar": [
     {
       "id": "IDD-01",
-      "iddia": "make dogrula hukmu 7/8 (7 pass, 0 fail, 1 not run)",
+      "iddia": "make dogrula hukmu 8/8 (8 pass, 0 fail, 0 not run)",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "`make dogrula` → **7 pass / 0 fail / 1 not run** (T1 is reported as"
+          "alinti": "`make dogrula` → **8 pass / 0 fail / 0 not run** (T1, `OLG-1`, now"
         },
         {
           "dosya": "docs/README.md",
-          "alinti": "`make dogrula` bu yayımlanan ağaçta 7/8 verir; T1'in `CALISTIRILMADI` borcu"
+          "alinti": "`make dogrula` bu yayımlanan ağaçta 8/8 verir; T1 artık attestation ile koşar."
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "  HUKUM: PASS 7/8 — T1 CALISTIRILMADI, PASS sayilmadi"
+          "alinti": "  HUKUM: PASS — 8/8 kalem gecti"
         }
       ],
       "durum": "OLCULDU",
@@ -49,8 +49,8 @@
         "{py}",
         "tools/dogrula.py"
       ],
-      "ayikla": "HUKUM:\\s*PASS\\s+(\\d+/\\d+)",
-      "beklenen": "7/8"
+      "ayikla": "HUKUM:\\s*PASS\\s*—?\\s*(\\d+/\\d+)",
+      "beklenen": "8/8"
     },
     {
       "id": "IDD-02",
@@ -62,7 +62,7 @@
         },
         {
           "dosya": "docs/README.md",
-          "alinti": "bu ağaçta ATLAS 144/145 (OLG-1), KOD 174/174; `make dogrula` T1'i"
+          "alinti": "bu ağaçta ATLAS 145/145 (OLG-1 dahil), KOD 174/174; `make dogrula`"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
@@ -79,11 +79,11 @@
     },
     {
       "id": "IDD-03",
-      "iddia": "ATLAS oz-testi 144/145 (OLG-1 kosmuyor)",
+      "iddia": "ATLAS oz-testi 145/145",
       "kaynaklar": [
         {
           "dosya": "docs/README.md",
-          "alinti": "bu ağaçta ATLAS 144/145 (OLG-1), KOD 174/174; `make dogrula` T1'i"
+          "alinti": "bu ağaçta ATLAS 145/145 (OLG-1 dahil), KOD 174/174; `make dogrula`"
         }
       ],
       "durum": "OLCULDU",
@@ -93,8 +93,8 @@
         "--sessiz"
       ],
       "ayikla": "OZ-TEST:\\s*(\\d+/\\d+) gecti",
-      "beklenen": "144/145",
-      "rc_beklenen": 1
+      "beklenen": "145/145",
+      "rc_beklenen": 0
     },
     {
       "id": "IDD-04",
@@ -287,11 +287,11 @@
     },
     {
       "id": "IDD-13",
-      "iddia": "dogrula ozeti 7 gecen / 0 kalan / 1 calistirilmadi",
+      "iddia": "dogrula ozeti 8 gecen / 0 kalan / 0 calistirilmadi",
       "kaynaklar": [
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "  kalem=8 · gecen=7 · kalan=0 · calistirilmadi=1"
+          "alinti": "  kalem=8 · gecen=8 · kalan=0 · calistirilmadi=0"
         }
       ],
       "durum": "OLCULDU",
@@ -300,7 +300,7 @@
         "tools/dogrula.py"
       ],
       "ayikla": "kalem=\\d+ · gecen=(\\d+) · kalan=(\\d+) · calistirilmadi=(\\d+)",
-      "beklenen": "7/0/1"
+      "beklenen": "8/0/0"
     },
     {
       "id": "IDD-14",

@@ -33,7 +33,7 @@ CI runs the runner form of the checks, the mutation battery, scope freshness, de
 
 ## Honest limits
 
-- **OLG-1 (`T1`) is `CALISTIRILMADI`.** It depends on the private tree's commit history and evidence set, which this public repository does not carry. It is printed as not run, never as a pass; the accepted debt stays visible in every `make dogrula` run and is not hidden behind a full-pass label.
+- **OLG-1 (`T1`) now runs against this tree's `attestation.json`.** `olgu_lint` verifies the real commit/tree evidence and no longer needs the private tree's commit history; `make dogrula` reports 8/8 and T1 is a pass. If the attestation is missing or corrupt, OLG-1 fails; it is not reported as not run.
 - **The archive is out of scope.** Generated papers, corpora and session handoffs are deliberately not published. This repository is the mechanism; some documents still cite handoff files that live in the private tree.
 - **Tests measure gate behaviour, not content truth.** They show that a gate fires on a known violation. They do not prove that the content is correct, and an empty test can still pass a gate; the layering reduces that risk but does not eliminate it.
 - **`DENEME/` is frozen on purpose.** It is a deliberately defective run kept as a regression fixture. Do not "fix" it: the defect is the lesson.

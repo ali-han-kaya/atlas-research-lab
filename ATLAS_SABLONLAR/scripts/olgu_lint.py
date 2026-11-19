@@ -6,6 +6,11 @@ karsilastirir. OLGU-KANIT/v1 metadatasi HEAD, run_id, zaman damgasi ve timeout
 bagini gorunur kilar; eksik, bayat veya uyusmayan bag WARN'dir ve sayisal
 OLGU-05 sonucunu FAIL'e cevirmez. Metadata imzali koken kaniti degildir.
 
+OLGU-04, `attestation.json` varsa bu agacin gercek commit/agac kanitini
+(`tools/kanit_dogrula.py`) kullanir; tarihsel ozel-agac commit listesini public
+agacta varlik/ata diye aramaz. Dosya yoksa eski tarihsel denetim aynen kalir.
+Kanit yoksa veya bozuksa OLGU-04 FAIL'dir; "kosmadi" degildir.
+
 OLGU-06, son kanonik DEVIR'den sonraki mekanizma commit hash'lerinin bicimsel
 olarak DERSLER satirlarinda bulunup Git commitlerine cozuldugunu denetler.
 Dersin anlamsal dogrulugunu, olcumun gercekten kosuldugunu veya sonucun ilgili
@@ -121,6 +126,39 @@ def git_kos(git_kok, *args, kod="OLGU-04"):
     except (OSError, subprocess.SubprocessError) as exc:
         fail(kod, "COMMIT_DOGRULANAMADI", beklenen="git exit=0", bulunan=type(exc).__name__)
         return None
+
+
+def olgu04_kanit(kok, yol):
+    """OLGU-04: attestation'i bu agacin gercek commit/agac kanitiyla dogrular."""
+    if not yol.is_file():
+        fail("OLGU-04", "KANIT_YOK", beklenen=str(yol), bulunan="YOK")
+        return 1
+    arac = kok / "tools" / "kanit_dogrula.py"
+    if not arac.is_file():
+        fail("OLGU-04", "KANIT_ARACI_YOK", beklenen=str(arac), bulunan="YOK")
+        return 1
+    try:
+        sonuc = subprocess.run(
+            [sys.executable, str(arac), "--kanit", str(yol)],
+            cwd=str(kok), capture_output=True, text=True, timeout=120,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        fail("OLGU-04", "KANIT_DOGRULANAMADI", beklenen="kanit-dogrula",
+             bulunan=type(exc).__name__)
+        return 1
+    cikti = ((sonuc.stdout or "") + (sonuc.stderr or "")).strip()
+    if sonuc.returncode != 0:
+        son = cikti.splitlines()[-1] if cikti else f"rc={sonuc.returncode}"
+        fail("OLGU-04", "KANIT_GECERSIZ", beklenen="kanit-dogrula rc=0",
+             bulunan=son[:200])
+        return 1
+    kanit_satiri = next(
+        (s for s in cikti.splitlines() if s.startswith("PASS KANIT")), ""
+    )
+    ayrinti = (kanit_satiri[len("PASS KANIT "):]
+               if kanit_satiri else "dogrulandi")
+    print(f"PASS OLGU-04 KANIT {ayrinti}")
+    return 0
 
 
 def mekanizma_yolu(yol):
@@ -505,22 +543,35 @@ def main(argv=None):
 
     baseline = veri["baseline_commit"]
     commitler = [baseline, *mekanizmalar]
-    for commit in commitler:
-        if not isinstance(commit, str) or not COMMIT.fullmatch(commit):
-            fail("OLGU-04", "COMMIT_DOGRULANAMADI", beklenen="7-40 kucuk-hex", bulunan=repr(commit))
-            hatalar += 1
-            continue
-        varlik = git_kos(git_kok, "cat-file", "-e", f"{commit}^{{commit}}")
-        if varlik is None or varlik.returncode != 0:
-            bulunan = "git-yok" if varlik is None else (varlik.stderr.strip() or f"exit={varlik.returncode}")
-            fail("OLGU-04", "COMMIT_DOGRULANAMADI", beklenen=f"commit:{commit}", bulunan=bulunan)
-            hatalar += 1
-            continue
-        ata = git_kos(git_kok, "merge-base", "--is-ancestor", commit, "HEAD")
-        if ata is None or ata.returncode != 0:
-            bulunan = "git-yok" if ata is None else (ata.stderr.strip() or f"exit={ata.returncode}")
-            fail("OLGU-04", "COMMIT_ATA_DEGIL", beklenen=f"{commit}<=HEAD", bulunan=bulunan)
-            hatalar += 1
+    kanit_dosyasi = kok / "attestation.json"
+    if kanit_dosyasi.is_file():
+        # Attestation varsa OLGU-04'un kaynagi bu agacin gercek commit/tree
+        # kanitidir. Tarihsel commit listesi silinmez; bicim denetimi kalir,
+        # public agacta varlik/ata aramasi yapilmaz. Kanit bozuksa FAIL'dir.
+        for commit in commitler:
+            if not isinstance(commit, str) or not COMMIT.fullmatch(commit):
+                fail("OLGU-04", "COMMIT_DOGRULANAMADI",
+                     beklenen="7-40 kucuk-hex", bulunan=repr(commit))
+                hatalar += 1
+        hatalar += olgu04_kanit(kok, kanit_dosyasi)
+    else:
+        for commit in commitler:
+            if not isinstance(commit, str) or not COMMIT.fullmatch(commit):
+                fail("OLGU-04", "COMMIT_DOGRULANAMADI",
+                     beklenen="7-40 kucuk-hex", bulunan=repr(commit))
+                hatalar += 1
+                continue
+            varlik = git_kos(git_kok, "cat-file", "-e", f"{commit}^{{commit}}")
+            if varlik is None or varlik.returncode != 0:
+                bulunan = "git-yok" if varlik is None else (varlik.stderr.strip() or f"exit={varlik.returncode}")
+                fail("OLGU-04", "COMMIT_DOGRULANAMADI", beklenen=f"commit:{commit}", bulunan=bulunan)
+                hatalar += 1
+                continue
+            ata = git_kos(git_kok, "merge-base", "--is-ancestor", commit, "HEAD")
+            if ata is None or ata.returncode != 0:
+                bulunan = "git-yok" if ata is None else (ata.stderr.strip() or f"exit={ata.returncode}")
+                fail("OLGU-04", "COMMIT_ATA_DEGIL", beklenen=f"{commit}<=HEAD", bulunan=bulunan)
+                hatalar += 1
 
     hatalar += olgu06_kontrol(kok, git_kok)
     if hatalar:

@@ -77,26 +77,26 @@ geçmez, `MUTASYON_UYGULANMADI` olarak kırmızı sayılır.
 
 ## CALISTIRILMADI kalemler
 
-`make dogrula` üç öz-test paketini koşar. Verisi bu depoda bulunmayan bir kalem
-**`CALISTIRILMADI`** olarak raporlanır — `PASS` değil, `KOSULLU` da değil: o kalem
-koşmadı ve **hükme sayılmaz**. Her `CALISTIRILMADI` satırı nedenini yanında taşır.
+`make dogrula` üç öz-test paketini koşar. Standart koşuda bu depoda
+`CALISTIRILMADI` kalem **yoktur**: `OLG-1` artık aşağıdaki `attestation.json`
+kanıtıyla koşar. `CALISTIRILMADI` yalnız `--hizli` veya model kataloğu yokluğu
+gibi gerçekten ölçülemeyen kalemlerde basılır — `PASS` değil, `KOSULLU` da
+değil: o kalem koşmadı ve **hükme sayılmaz**.
 
-Koşul serttir: kalan **bütün** test kimlikleri aşağıdaki açık listenin içinde
-olmalı ve beklenen kanıt dizgisi çıktıda görünmelidir. Liste dışı tek bir test
-kalırsa hüküm `FAIL`'dir; gerekçe başka bir hatayı örtmez.
+Koşul serttir: kalan **bütün** test kimlikleri açık listenin içinde olmalı ve
+beklenen kanıt dizgisi çıktıda görünmelidir. Liste dışı tek bir test kalırsa
+hüküm `FAIL`'dir; gerekçe başka bir hatayı örtmez.
 
 | Test | Neyi ölçer | Neden koşmuyor | Nerede koşar |
 |---|---|---|---|
-| `OLG-1` (ATLAS) | `SURUM.md` makine bloğunun sürüm/commit/canlı ölçüm bağını (`OLGU-03/04/05`) | Bu depo özel ağacın commit zincirini ve canlı kanıt setini taşımıyor; `OLGU-04` çıpası yok | Özel ağaçta (145/145) |
 | `MOD-1`, `MOD-2` (ATLAS + KOD) | Ajan `model:` satırları katalogda geçerli mi | Katalog makineye bağlı (`~/.cache/opencode/models.json`) | `ATLAS_MODEL_KATALOG=<yol>` verilerek |
 
 **Determinizm.** Bu ağaçta `make dogrula` çıktısı yalnız deponun içeriğine ve git
 geçmişine bağlıdır: aynı commit'in iki temiz klonu aynı satırları basar. Yerel
 makinenin `~/.cache` durumu bu satırları değiştirmez.
 
-Ölçülen: özel ağaçta (tarihçe yerindeyken) ATLAS 145/145, KOD 174/174. Yayımlanan
-bu ağaçta ATLAS 144/145 (OLG-1), KOD 174/174; `make dogrula` T1'i
-**`CALISTIRILMADI`** basar, PASS değil.
+Ölçülen: bu ağaçta ATLAS 145/145 (OLG-1 dahil), KOD 174/174; `make dogrula`
+**8/8** verir ve T1 artık `CALISTIRILMADI` değildir.
 
 **Model kataloğu depoda sabittir:** `tools/model_katalog.json`. MOD-1/MOD-2
 yaşayan kataloğa değil bu **allowlist anlık görüntüsüne** bakar; böylece KOD
@@ -117,9 +117,10 @@ içeriğinden** geliyordu; sabit katalog bu değişkeni kaldırdı.
 CI aynı kuralları kullanır: `make dogrula-ci` için ayrı muafiyet yoktur; iki kipin
 çıktısı başlık dışında birebirdir.
 
-Neden düzeltilmiyor: testler sağlam; eksik olan veri. Testi "onarmak" kanıtı
-değil kaydı değiştirmek olurdu. Sahte bir commit çıpası yazmak ise kaydı
-yanlışlardı; yapılmadı.
+Neden attestation: testler sağlam; eksik olan özel ağacın tarihsel canlı
+kanıtıydı. Bu ağacın kendi `attestation.json`'ı, tarihsel commit zincirinin
+yerine geçen **gerçek** bir ağaç kanıtıdır; sahte commit çıpası yoktur. Ayrıntı
+aşağıdaki bölümdedir.
 
 ## Ağaç kanıtı — `make kanit`
 
@@ -167,11 +168,23 @@ izlenmeyen dosyaları kapsamaz. `tool_versions` üretim ortamını **tanımlar**
 doğrulayıcının sürümleriyle eşit olması istenmez. `generated_at` bir beyandır;
 dış saatle doğrulanmaz.
 
-**`OLG-1` ile ilişki:** `OLG-1`'in tarihsel canlı ölçümü bu ağaçta yoktur; onu
-sahte bir commit çıpasıyla yeşile çevirmek yapılmadı. Bu yeni kapı `OLG-1`'in
-yerine geçmez; farklı bir iddiayı — bu commit'in ağacının bu baytlar olduğunu —
-ölçer. Böylece bu ağacın kanıtı yalnız özel ağaca bağlı kalmaz; `OLG-1` borcu
-görünür kalır. `make kanit-dogrula` CI'da tam geçmişle (`fetch-depth: 0`) koşar.
+**Seçim — yol 1:** `OLG-1` emekliye ayrılmadı. `olgu_lint`, `attestation.json`
+varsa `tools/kanit_dogrula.py` ile onu doğrular ve `OLGU-04`'ün commit zinciri
+çıpası yerine bu ağacın gerçek commit/tree kanıtını kullanır. Böylece özel
+ağacın 36 tarihsel commit'i public ağaçta aranmaz; sahte commit çıpası yazılmaz.
+`docs/OLGULAR.md` içindeki tarihsel `baseline_commit` ve mekanizma listesi
+**silinmedi**; public ağaçta makine kanıtı sayılmaz, tarihsel kayıt olarak durur.
+`OLG-06` atlanmaz: eksik iki DERSLER satırı (`89fb3da`, `df0d083`) gerçek
+commit'lerle eklendi ve `--dersler` PASS verir.
+
+`attestation.json` yoksa `OLG-1` tarihsel commit denetimine döner ve bu public
+ağaçta `OLGU-04` ile **FAIL** olur; dosya bozuksa `KANIT_GECERSIZ` olur. İkisi
+de `CALISTIRILMADI` olarak gizlenmez. Negatif kontrol: kayıtlı commit/tree
+bozulduğunda `olgu_lint` rc=1 ve `atlas_selftest` içinde `KALDI OLG-1` görülür.
+`make dogrula` bu depoda **8/8** verir; T1 PASS'tir. Kod değişince `make kanit`
+yeniden üretilmelidir; `make kanit-dogrula` ve CI bayat kaydı `KANIT-05` ile
+kırmızıya çevirir. `make kanit-dogrula` CI'da tam geçmişle (`fetch-depth: 0`)
+koşar.
 
 ## Sabit model kataloğunu yenileme
 
@@ -319,9 +332,9 @@ make dogrula
 git diff --check
 ```
 
-`make dogrula` bu yayımlanan ağaçta 7/8 verir; T1'in `CALISTIRILMADI` borcu
-katalogla ilgili değildir. MOD-1/MOD-2 katalogdan geçiyorsa ve canlı kontrol
-`rc=0` ise değişiklik commit edilebilir. Katalogla birlikte yalnız gerçekten
+`make dogrula` bu yayımlanan ağaçta 8/8 verir; T1 artık attestation ile koşar.
+MOD-1/MOD-2 katalogdan geçiyorsa ve canlı kontrol `rc=0` ise değişiklik commit
+edilebilir. Katalogla birlikte yalnız gerçekten
 değişen aktif referansları commit edin; tarihsel `OLCUM`/`SURUM` satırlarını
 katalog yenilemesi bahanesiyle yeniden yazmayın.
 
