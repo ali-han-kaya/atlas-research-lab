@@ -74,17 +74,24 @@ kalırsa hüküm `FAIL`'dir; gerekçe başka bir hatayı örtmez.
 
 **Determinizm.** Bu ağaçta `make dogrula` çıktısı yalnız deponun içeriğine ve git
 geçmişine bağlıdır: aynı commit'in iki temiz klonu aynı satırları basar. Yerel
-makinenin `~/.cache` durumu bu satırları değiştirmez — OLG-1 zaten
-`CALISTIRILMADI`'dır, `PASS` sayılmaz.
+makinenin `~/.cache` durumu bu satırları değiştirmez.
 
-Ölçülen: özel ağaçta (tarihçe ve katalog yerindeyken) ATLAS 145/145, KOD 174/174.
-Yayımlanan bu ağaçta ATLAS 144/145 (OLG-1), KOD 174/174; `make dogrula` T1'i
+Ölçülen: özel ağaçta (tarihçe yerindeyken) ATLAS 145/145, KOD 174/174. Yayımlanan
+bu ağaçta ATLAS 144/145 (OLG-1), KOD 174/174; `make dogrula` T1'i
 **`CALISTIRILMADI`** basar, PASS değil.
 
-CI aynı sözlüğü kullanır: `make dogrula-ci` yalnız runner'da ölçülebilen kalemleri
-hükme sokar; ATLAS/KOD paketlerini **`CALISTIRILMADI`** olarak basar (sayıları özet
-satırında görünür, gizlenmez). Bu, "başka makinede yeşil görünmek" için testi
-yumuşatmak değildir: hükme giren kalemler gerçekten koşar.
+**Model kataloğu depoda sabittir:** `tools/model_katalog.json`. MOD-1/MOD-2
+yaşayan kataloğa değil bu **allowlist anlık görüntüsüne** bakar; böylece KOD
+sayısı runner'da da aynı çıkar. Canlı katalogla denetim isteğe bağlıdır:
+`ATLAS_MODEL_KATALOG=~/.cache/opencode/models.json make dogrula`.
+
+Farkın nereden geldiği ölçüldü (19 Kasım 2026): aynı 9 modellik içerik başka bir
+yolda **174/174**, yerel tam katalog (390 model) **174/174**, katalog yok **170/174**
+(`K8-1`, `K8-2`, `O3-09c`, `O3-09d`). Yani fark makineden değil **katalog
+içeriğinden** geliyordu; sabit katalog bu değişkeni kaldırdı.
+
+CI aynı kuralları kullanır: `make dogrula-ci` için ayrı muafiyet yoktur; iki kipin
+çıktısı başlık dışında birebirdir.
 
 Neden düzeltilmiyor: testler sağlam; eksik olan veri. Testi "onarmak" kanıtı
 değil kaydı değiştirmek olurdu. Sahte bir commit çıpası yazmak ise kaydı
