@@ -1,0 +1,253 @@
+{
+  "arac": "ALI_KOMUT_TOOLKIT_v4",
+  "kapi": "KORUMA",
+  "once": "/tmp/prova/once",
+  "sonra": "/tmp/prova/sonra",
+  "tip": "KOD",
+  "verdict": "ENGEL_VAR",
+  "indeterminate": [],
+  "keep": {
+    "toplam": 72,
+    "korundu": 60,
+    "degisti": 1,
+    "kayip": 9,
+    "kapsama": "61/72"
+  },
+  "birimler": {
+    "SECTION": {
+      "once": 72,
+      "sonra": 64
+    },
+    "CITATION": {
+      "once": 865,
+      "sonra": 865
+    },
+    "NUMBER": {
+      "once": 1030,
+      "sonra": 1031
+    },
+    "SYMBOL": {
+      "once": 119,
+      "sonra": 118
+    },
+    "TEST": {
+      "once": 48,
+      "sonra": 47
+    },
+    "CONFIG_KEY": {
+      "once": 12,
+      "sonra": 13
+    }
+  },
+  "bagimlilik": {
+    "once": 16,
+    "sonra": 15
+  },
+  "kayiplar": [
+    {
+      "kind": "SECTION",
+      "key": "README.md::atlas-verify-api > endpoints",
+      "sinif": "BEYANSIZ",
+      "aciklama": "hicbir mesru kayip sinifina girmiyor"
+    },
+    {
+      "kind": "SECTION",
+      "key": "README.md::atlas-verify-api > try it",
+      "sinif": "BEYANSIZ",
+      "aciklama": "hicbir mesru kayip sinifina girmiyor"
+    },
+    {
+      "kind": "SECTION",
+      "key": "README.md::verify a doi",
+      "sinif": "BIRLESTIRILDI",
+      "aciklama": "icerigin %100'i 'Makefile' icinde bulundu"
+    },
+    {
+      "kind": "SECTION",
+      "key": "README.md::check provenance of a generated claim",
+      "sinif": "BEYANSIZ",
+      "aciklama": "hicbir mesru kayip sinifina girmiyor"
+    },
+    {
+      "kind": "SECTION",
+      "key": "README.md::agent: verify a whole document (pdf upload or text)",
+      "sinif": "BEYANSIZ",
+      "aciklama": "hicbir mesru kayip sinifina girmiyor"
+    },
+    {
+      "kind": "SECTION",
+      "key": "README.md::agent: verify a whole document (pdf upload or text) > agent & mcp",
+      "sinif": "BEYANSIZ",
+      "aciklama": "hicbir mesru kayip sinifina girmiyor"
+    },
+    {
+      "kind": "SECTION",
+      "key": "README.md::agent: verify a whole document (pdf upload or text) > configuration",
+      "sinif": "BEYANSIZ",
+      "aciklama": "hicbir mesru kayip sinifina girmiyor"
+    },
+    {
+      "kind": "SECTION",
+      "key": "README.md::agent: verify a whole document (pdf upload or text) > tests",
+      "sinif": "BEYANSIZ",
+      "aciklama": "hicbir mesru kayip sinifina girmiyor"
+    },
+    {
+      "kind": "SECTION",
+      "key": "README.md::agent: verify a whole document (pdf upload or text) > ecosystem",
+      "sinif": "BEYANSIZ",
+      "aciklama": "hicbir mesru kayip sinifina girmiyor"
+    },
+    {
+      "kind": "SECTION",
+      "key": "README.md::agent: verify a whole document (pdf upload or text) > license",
+      "sinif": "SABLON",
+      "aciklama": "otomatik uretilen icerik"
+    },
+    {
+      "kind": "SECTION",
+      "key": "tests/test_budget.py",
+      "sinif": "KUCULDU",
+      "aciklama": "karakter %95, cumle %96"
+    },
+    {
+      "kind": "SYMBOL",
+      "key": "test_explicit_tokens_win/1",
+      "sinif": "BEYANSIZ",
+      "aciklama": "hicbir mesru kayip sinifina girmiyor"
+    },
+    {
+      "kind": "TEST",
+      "key": "test_explicit_tokens_win",
+      "sinif": "BEYANSIZ",
+      "aciklama": "hicbir mesru kayip sinifina girmiyor"
+    }
+  ],
+  "counts": {
+    "P0": 14,
+    "P1": 1,
+    "P2": 0
+  },
+  "findings": [
+    {
+      "id": "KOR-001",
+      "code": "DATA_LOSS",
+      "severity": "P0",
+      "location": "README.md::atlas-verify-api > endpoints",
+      "evidence": "bolum ciktida yok (567 karakter, 10 cumle); sinif=BEYANSIZ: hicbir mesru kayip sinifina girmiyor",
+      "fix": "bolumu geri getir veya SILME_NIYETI kaydina gerekce+onay ekle"
+    },
+    {
+      "id": "KOR-002",
+      "code": "DATA_LOSS",
+      "severity": "P0",
+      "location": "README.md::atlas-verify-api > try it",
+      "evidence": "bolum ciktida yok (7 karakter, 1 cumle); sinif=BEYANSIZ: hicbir mesru kayip sinifina girmiyor",
+      "fix": "bolumu geri getir veya SILME_NIYETI kaydina gerekce+onay ekle"
+    },
+    {
+      "id": "KOR-003",
+      "code": "DATA_LOSS",
+      "severity": "P0",
+      "location": "README.md::check provenance of a generated claim",
+      "evidence": "bolum ciktida yok (199 karakter, 4 cumle); sinif=BEYANSIZ: hicbir mesru kayip sinifina girmiyor",
+      "fix": "bolumu geri getir veya SILME_NIYETI kaydina gerekce+onay ekle"
+    },
+    {
+      "id": "KOR-004",
+      "code": "DATA_LOSS",
+      "severity": "P0",
+      "location": "README.md::agent: verify a whole document (pdf upload or text)",
+      "evidence": "bolum ciktida yok (314 karakter, 9 cumle); sinif=BEYANSIZ: hicbir mesru kayip sinifina girmiyor",
+      "fix": "bolumu geri getir veya SILME_NIYETI kaydina gerekce+onay ekle"
+    },
+    {
+      "id": "KOR-005",
+      "code": "DATA_LOSS",
+      "severity": "P0",
+      "location": "README.md::agent: verify a whole document (pdf upload or text) > agent & mcp",
+      "evidence": "bolum ciktida yok (540 karakter, 16 cumle); sinif=BEYANSIZ: hicbir mesru kayip sinifina girmiyor",
+      "fix": "bolumu geri getir veya SILME_NIYETI kaydina gerekce+onay ekle"
+    },
+    {
+      "id": "KOR-006",
+      "code": "DATA_LOSS",
+      "severity": "P0",
+      "location": "README.md::agent: verify a whole document (pdf upload or text) > configuration",
+      "evidence": "bolum ciktida yok (376 karakter, 15 cumle); sinif=BEYANSIZ: hicbir mesru kayip sinifina girmiyor",
+      "fix": "bolumu geri getir veya SILME_NIYETI kaydina gerekce+onay ekle"
+    },
+    {
+      "id": "KOR-007",
+      "code": "DATA_LOSS",
+      "severity": "P0",
+      "location": "README.md::agent: verify a whole document (pdf upload or text) > tests",
+      "evidence": "bolum ciktida yok (215 karakter, 6 cumle); sinif=BEYANSIZ: hicbir mesru kayip sinifina girmiyor",
+      "fix": "bolumu geri getir veya SILME_NIYETI kaydina gerekce+onay ekle"
+    },
+    {
+      "id": "KOR-008",
+      "code": "DATA_LOSS",
+      "severity": "P0",
+      "location": "README.md::agent: verify a whole document (pdf upload or text) > ecosystem",
+      "evidence": "bolum ciktida yok (215 karakter, 8 cumle); sinif=BEYANSIZ: hicbir mesru kayip sinifina girmiyor",
+      "fix": "bolumu geri getir veya SILME_NIYETI kaydina gerekce+onay ekle"
+    },
+    {
+      "id": "KOR-009",
+      "code": "FACTUAL_ERROR",
+      "severity": "P0",
+      "location": "pyproject.toml::<giris>",
+      "evidence": "sessiz deger degisimi: 0.11, 4 bu bolumde artik yok (bolum yerinde duruyor, deger degismis)",
+      "fix": "degeri geri getir veya IMZALI niyet kaydiyla beyan et (imzasiz beyan gecerli degildir)"
+    },
+    {
+      "id": "KOR-010",
+      "code": "STYLE_FAILURE",
+      "severity": "P1",
+      "location": "pyproject.toml::<giris>",
+      "evidence": "icerik degisti ama hacim korundu (karakter %96, cumle %97, icerik kelimesi %96)",
+      "fix": "degisikligin bir bulguya bagli oldugunu FIX kaydiyla goster"
+    },
+    {
+      "id": "KOR-011",
+      "code": "FACTUAL_ERROR",
+      "severity": "P0",
+      "location": "tests/test_budget.py",
+      "evidence": "sessiz deger degisimi: 100 bu bolumde artik yok (bolum yerinde duruyor, deger degismis)",
+      "fix": "degeri geri getir veya IMZALI niyet kaydiyla beyan et (imzasiz beyan gecerli degildir)"
+    },
+    {
+      "id": "KOR-012",
+      "code": "DATA_LOSS",
+      "severity": "P0",
+      "location": "tests/test_budget.py",
+      "evidence": "bolum kuculdu: karakter %95 (esik %95), cumle %96 (esik %95)",
+      "fix": "silinen kismi geri getir veya gerekce+onay ile beyan et"
+    },
+    {
+      "id": "KOR-013",
+      "code": "DATA_LOSS",
+      "severity": "P0",
+      "location": "SYMBOL:tests/test_budget.py",
+      "evidence": "'test_explicit_tokens_win/1' girdide vardi, ciktida yok; sinif=BEYANSIZ: hicbir mesru kayip sinifina girmiyor",
+      "fix": "SYMBOL birimini geri getir veya gerekce+onay ile beyan et"
+    },
+    {
+      "id": "KOR-014",
+      "code": "DATA_LOSS",
+      "severity": "P0",
+      "location": "TEST:tests/test_budget.py",
+      "evidence": "'test_explicit_tokens_win' girdide vardi, ciktida yok; sinif=BEYANSIZ: hicbir mesru kayip sinifina girmiyor",
+      "fix": "TEST birimini geri getir veya gerekce+onay ile beyan et"
+    },
+    {
+      "id": "KOR-015",
+      "code": "DATA_LOSS",
+      "severity": "P0",
+      "location": "DEPENDENCY:fastapi",
+      "evidence": "bagimlilik 'fastapi' (>=0.110,<1) kaldirilmis",
+      "fix": "bagimliligi geri getir veya kaldirma gerekcesini yaz"
+    }
+  ]
+}

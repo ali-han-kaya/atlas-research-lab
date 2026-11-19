@@ -1,0 +1,120 @@
+{
+  "surum": "v1 · 24 Agustos 2026",
+  "aciklama": "KOD/URUN hatti rol -> model eslemesi. Fiyatlar ~/.cache/opencode/models.json'dan DOGRULANMISTIR (24.08.2026). Uygulamak icin: python3 scripts/apply_routing.py <profil>",
+  "yetkili_saglayicilar": [
+    "openrouter",
+    "opencode-go",
+    "meta"
+  ],
+  "notlar": [
+    "VARSAYILAN PROFIL: denge (kullanici karari, 24.08.2026).",
+    "Kapi bagimsizligi PAZARLIK KONUSU DEGILDIR: 2A=deepseek, 2B=z-ai, 2C=anthropic — uc ayri aile.",
+    "kod-implementer ve kod-tester ayni aileden olabilir cunku KARARI MODEL VERMEZ, test_attest.py verir.",
+    "opencode-go SAYACLIDIR, abonelik degil. Ayni model OpenRouter'da ucuz: kimi-k2.7-code 0.67/3.4 (OR) vs 0.95/4 (Go).",
+    "Opus 5 hicbir profile GOMULU DEGILDIR (kullanici karari): yalniz derin revizyon / son teslim adiminda elle secilir.",
+    "kod-gate KARAR VERMEZ, kod_gate_merge.py ciktisini sunar — bu yuzden en ucuz modeldedir."
+  ],
+  "faz_maliyet": {
+    "kod-scoper": [
+      "KFAZ0 kapsam & kabul",
+      200000,
+      8000
+    ],
+    "kod-architect": [
+      "KFAZ1 tasarim & dondur",
+      250000,
+      10000
+    ],
+    "kod-implementer": [
+      "KFAZ2 uygulama",
+      600000,
+      40000
+    ],
+    "kod-tester": [
+      "KFAZ3 kanit",
+      200000,
+      6000
+    ],
+    "kod-gate-2a": [
+      "KFAZ4 kor denetim",
+      180000,
+      6000
+    ],
+    "kod-gate-2b": [
+      "KFAZ4 manifest",
+      180000,
+      6000
+    ],
+    "kod-gate-2c-security": [
+      "KFAZ4 guvenlik (kosullu)",
+      150000,
+      5000
+    ],
+    "kod-gate": [
+      "KFAZ4 sunum",
+      80000,
+      3000
+    ],
+    "kod-orchestrator": [
+      "KFAZ5 teslim",
+      250000,
+      8000
+    ]
+  },
+  "profiller": {
+    "denge": {
+      "aciklama": "VARSAYILAN. Uretimde kimi-k2.7-code, muhakemede deepseek-v4-pro, teslimde Sonnet 5.",
+      "kod-orchestrator": "openrouter/anthropic/claude-sonnet-5",
+      "kod-scoper": "openrouter/deepseek/deepseek-v4-pro",
+      "kod-architect": "openrouter/deepseek/deepseek-v4-pro",
+      "kod-implementer": "openrouter/moonshotai/kimi-k2.7-code",
+      "kod-implementer-heavy": "openrouter/moonshotai/kimi-k3",
+      "kod-tester": "openrouter/moonshotai/kimi-k2.7-code",
+      "kod-gate-2a": "openrouter/deepseek/deepseek-v4-pro",
+      "kod-gate-2b": "openrouter/z-ai/glm-5.2",
+      "kod-gate-2c-security": "openrouter/anthropic/claude-sonnet-5",
+      "kod-gate": "openrouter/deepseek/deepseek-v4-flash"
+    },
+    "kalite": {
+      "aciklama": "Agir refactor / genis yuzey. Uretim kimi-k3 (1M ctx), mimari Sonnet 5. Opus yine GOMULU DEGIL.",
+      "kod-orchestrator": "openrouter/anthropic/claude-sonnet-5",
+      "kod-scoper": "openrouter/anthropic/claude-sonnet-5",
+      "kod-architect": "openrouter/anthropic/claude-sonnet-5",
+      "kod-implementer": "openrouter/moonshotai/kimi-k3",
+      "kod-implementer-heavy": "openrouter/moonshotai/kimi-k3",
+      "kod-tester": "openrouter/moonshotai/kimi-k2.7-code",
+      "kod-gate-2a": "openrouter/deepseek/deepseek-v4-pro",
+      "kod-gate-2b": "openrouter/z-ai/glm-5.2",
+      "kod-gate-2c-security": "openrouter/anthropic/claude-sonnet-5",
+      "kod-gate": "openrouter/deepseek/deepseek-v4-flash"
+    },
+    "ekonomi": {
+      "aciklama": "Deneme/prova kosulari. Anthropic yok — 2C guvenlik oyu bu profilde deepseek'e duser, bagimsizlik 2 aileye iner.",
+      "kod-orchestrator": "openrouter/deepseek/deepseek-v4-pro",
+      "kod-scoper": "openrouter/deepseek/deepseek-v4-flash",
+      "kod-architect": "openrouter/deepseek/deepseek-v4-pro",
+      "kod-implementer": "openrouter/moonshotai/kimi-k2.7-code",
+      "kod-implementer-heavy": "openrouter/moonshotai/kimi-k2.7-code",
+      "kod-tester": "openrouter/deepseek/deepseek-v4-flash",
+      "kod-gate-2a": "openrouter/deepseek/deepseek-v4-pro",
+      "kod-gate-2b": "openrouter/z-ai/glm-5.2",
+      "kod-gate-2c-security": "openrouter/deepseek/deepseek-v4-pro",
+      "kod-gate": "openrouter/deepseek/deepseek-v4-flash"
+    },
+    "bedava": {
+      "aciklama": "SIFIR MALIYET. On ajanin hepsi ucretsiz nemotron. UYARI: kapi bagimsizligi 1 AILEYE iner (2A=2B=2C=nvidia) — KFAZ4 sonuclari bagimsizlik acisindan KARAR DEGERI TASIMAZ. Duman/dogrulama kosulari icindir; uretim kosusu icin denge/ekonomi kullanin. OLCUM-03 O3-09: bu profil YOKTU ve $0 kosu icin 10 ajanin `model:` satirini elle sed'lemek gerekiyordu.",
+      "bagimsizlik_feragati": true,
+      "feragat_gerekcesi": "Sifir maliyet hedefi: tek ucretsiz model mevcut. KFAZ4 sonuclari bagimsizlik acisindan KARAR DEGERI TASIMAZ.",
+      "kod-orchestrator": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "kod-scoper": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "kod-architect": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "kod-implementer": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "kod-implementer-heavy": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "kod-tester": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "kod-gate-2a": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "kod-gate-2b": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "kod-gate-2c-security": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "kod-gate": "openrouter/nvidia/nemotron-3-super-120b-a12b:free"
+    }
+  }
+}

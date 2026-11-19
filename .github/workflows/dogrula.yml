@@ -1,0 +1,31 @@
+name: dogrula
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Haftalık: bağımlılıksız araçlar sessizce çürümesin.
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dogrula:
+    name: tek giris dogrulama
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Surumler
+        run: python3 --version && bash --version | head -1
+
+      - name: make dogrula
+        run: make dogrula

@@ -1,0 +1,35 @@
+{
+  "atlas_version": "v5.5",
+  "build": "v5.5.2",
+  "gate": "2A",
+  "agent": "atlas-gate-2a",
+  "verdict": "PASS",
+  "metadata": {
+    "p0_count": 0,
+    "p1_count": 0,
+    "gate_date": "2026-08-23T14:34:17.609721+00:00"
+  },
+  "checks": [
+    {
+      "id": "CHK-01",
+      "status": "GECTI",
+      "evidence": "22 zorunlu SCOPE-ID başlık olarak var."
+    },
+    {
+      "id": "CHK-02",
+      "status": "GECTI",
+      "evidence": "PROVENANCE tablosu tam (22/22 'kapsıyor')."
+    },
+    {
+      "id": "CHK-03",
+      "status": "GECTI",
+      "evidence": "MASTER'da DOĞRULANMADI etiketi yok."
+    },
+    {
+      "id": "CHK-04",
+      "status": "GECTI",
+      "evidence": "FAZ1↔FAZ2 eşleşmesi tam: 8 bulgu ↔ 8 FIX (P0:3, P1:5)."
+    }
+  ],
+  "findings": []
+}

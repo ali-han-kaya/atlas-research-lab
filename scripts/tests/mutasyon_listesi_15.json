@@ -1,0 +1,9 @@
+[
+ {
+  "kapi": "C17",
+  "ad": "fixture (iii) sha vakasi etkisizlesti — sha256 katmani sinanmiyor",
+  "dosya": "scripts/skill_lint.py",
+  "eski": "            _fx_yaz('a.md', b'aab')",
+  "yeni": "            _fx_yaz('a.md', b'aaa')"
+ }
+]

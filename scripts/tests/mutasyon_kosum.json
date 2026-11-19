@@ -1,0 +1,1481 @@
+[
+ {
+  "tarih": "2026-11-14 15:11",
+  "taban_rc": 0,
+  "taban_sure": 36.3,
+  "sure": 255.2,
+  "kanit": 5,
+  "sonuclar": [
+   {
+    "kapi": "C11a",
+    "ad": "§8.1 manifestinde SORU_BUTCESI (4 alan)",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "5 capa",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C11a` | §8.1 manifestinde SORU_BUTCESI (4 alan) | 0 | **1** | PASS 5 capa |"
+   },
+   {
+    "kapi": "C11b",
+    "ad": "§7.4 geri donus P1 -> K2",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "eksik: ['p1 → k2']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C11b` | §7.4 geri donus P1 -> K2 | 0 | **1** | FAIL eksik: ['p1 → k2'] |"
+   },
+   {
+    "kapi": "C11d",
+    "ad": "§10 I6 kimligi (kaynagi AGENTS.md, I1-I9)",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "eksik: ['i1-i9']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C11d` | §10 I6 kimligi (kaynagi AGENTS.md, I1-I9) | 0 | **1** | FAIL eksik: ['i1-i9'] |"
+   },
+   {
+    "kapi": "C11e",
+    "ad": "§7.1 BLOK_GECERSIZ <-> ACIK_SORU ayrimi",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "eksik: ['iki durum karismaz']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C11e` | §7.1 BLOK_GECERSIZ <-> ACIK_SORU ayrimi | 0 | **1** | FAIL eksik: ['iki durum karismaz'] |"
+   },
+   {
+    "kapi": "C14e",
+    "ad": "[sir] isaretleyen insan + veri verilmisse dur (D14)",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['Isaretleyen **insandir**: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14e` | [sir] isaretleyen insan + veri verilmisse dur (D14) | 0 | **1** | FAIL sapan: ['Isaretleyen **insandir**: 0/1'] |"
+   },
+   {
+    "kapi": "C18",
+    "ad": "kapi parametreleri gomulu yazilmaz (D10 5. tekrar)",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['H:tek kaynak `C14t-a` cikt: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C18` | kapi parametreleri gomulu yazilmaz (D10 5. tekrar) | 0 | **1** | FAIL sapan: ['H:tek kaynak `C14t-a` cikt: 0/1'] |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-14 15:45",
+  "taban_rc": 0,
+  "taban_sure": 36.4,
+  "sure": 477.0,
+  "kanit": 2,
+  "sonuclar": [
+   {
+    "kapi": "C13k",
+    "ad": "capa bozuldu: gecersiz dis blok kaydi",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "2 capa",
+    "yan_etki": [
+     "C13c",
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13k` | capa bozuldu: gecersiz dis blok kaydi | 0 | **1** | rc=1 · PASS 2 capa |"
+   },
+   {
+    "kapi": "C13l",
+    "ad": "capa bozuldu: okuma yok + yazma yok: sonuc sohbette",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "1 capa",
+    "yan_etki": [
+     "C13g",
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13l` | capa bozuldu: okuma yok + yazma yok: sonuc sohbette | 0 | **1** | rc=1 · PASS 1 capa |"
+   },
+   {
+    "kapi": "C13m",
+    "ad": "capa bozuldu: esik sekle degil riske baglidir",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "1 capa",
+    "yan_etki": [
+     "C13h",
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13m` | capa bozuldu: esik sekle degil riske baglidir | 0 | **1** | rc=1 · PASS 1 capa |"
+   },
+   {
+    "kapi": "C13n",
+    "ad": "capa bozuldu: ust hemze u+0654",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "2 capa",
+    "yan_etki": [
+     "C13j",
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13n` | capa bozuldu: ust hemze u+0654 | 0 | **1** | rc=1 · PASS 2 capa |"
+   },
+   {
+    "kapi": "C13s",
+    "ad": "capa bozuldu: sayfa/olcu hedefi tutuyor · iskelet/malzeme",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "5 capa",
+    "yan_etki": [
+     "C13n",
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13s` | capa bozuldu: sayfa/olcu hedefi tutuyor · iskelet/malzeme | 0 | **1** | rc=1 · PASS 5 capa |"
+   },
+   {
+    "kapi": "C13u",
+    "ad": "capa bozuldu: gocte veri degistirilmez",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['Gocte **veri degistirilmez: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13u` | capa bozuldu: gocte veri degistirilmez | 0 | **1** | rc=1 · FAIL sapan: ['Gocte **veri degistirilmez: 0/1'] |"
+   },
+   {
+    "kapi": "C14o",
+    "ad": "capa bozuldu: skill_denetim",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "sema=18 gercek=18 eksik=- fazla=-",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14o` | capa bozuldu: skill_denetim | 0 | **1** | rc=1 · PASS sema=18 gercek=18 eksik=- fazla=- |"
+   },
+   {
+    "kapi": "C14l",
+    "ad": "capa bozuldu: si tutan snapshot",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "SONUC: ESIT — alinti #0 (blok #3 ile) [SIKI]",
+    "yan_etki": [
+     "C14s",
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14l` | capa bozuldu: si tutan snapshot | 0 | **1** | rc=1 · PASS SONUC: ESIT — alinti #0 (blok #3 ile) [SIKI] |"
+   },
+   {
+    "kapi": "C14k",
+    "ad": "capa bozuldu: injection_sayac.py",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "uyum rc=0 \"UYUM    : evet\" · uyumsuz rc=1 \"UYUM    : HAYIR (manifest=2, durum=1)\"",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14k` | capa bozuldu: injection_sayac.py | 0 | **1** | rc=1 · PASS uyum rc=0 \"UYUM : evet\" · uyumsuz rc=1 \"UYUM : HAYIR  |"
+   },
+   {
+    "kapi": "C14t",
+    "ad": "capa bozuldu: 0 eslesme",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "0 eslesme · alinti: 0",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14t` | capa bozuldu: 0 eslesme | 0 | **1** | rc=1 · PASS 0 eslesme · alinti: 0 |"
+   },
+   {
+    "kapi": "C15a",
+    "ad": "capa bozuldu: maddeler",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "kayit=7 madde · itirazsiz+degmedi=7 · P1 sorulan=9 · tekrar=0",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C15a` | capa bozuldu: maddeler | 0 | **1** | rc=1 · PASS kayit=7 madde · itirazsiz+degmedi=7 · P1 sorulan=9 ·  |"
+   },
+   {
+    "kapi": "C15d",
+    "ad": "capa bozuldu: sessizlik riza degildir",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "madde=7 · cevapsiz>0 olan=7 · hepsi ITIRAZ_YOK=True · cevapsiz_as_consent=False · HATA: SKILL.md §7.5 \"Sessizlik riza degildir\" cumlesini tasimiyor",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C15d` | capa bozuldu: sessizlik riza degildir | 0 | **1** | rc=1 · FAIL madde=7 · cevapsiz>0 olan=7 · hepsi ITIRAZ_YOK=True · |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-14 15:51",
+  "taban_rc": 0,
+  "taban_sure": 36.4,
+  "sure": 219.4,
+  "kanit": 1,
+  "sonuclar": [
+   {
+    "kapi": "C13n",
+    "ad": "capa bozuldu: her sentez satiri kaynakli · iskelet/malzeme",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['her sentez satiri kaynakli: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13n` | capa bozuldu: her sentez satiri kaynakli · iskelet/malzeme | 0 | **1** | rc=1 · FAIL sapan: ['her sentez satiri kaynakli: 0/1'] |"
+   },
+   {
+    "kapi": "C14o",
+    "ad": "capa bozuldu: --dogrula",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "sema=18 gercek=18 eksik=- fazla=-",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14o` | capa bozuldu: --dogrula | 0 | **1** | rc=1 · PASS sema=18 gercek=18 eksik=- fazla=- |"
+   },
+   {
+    "kapi": "C14l",
+    "ad": "capa bozuldu: si tutan snapshot",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "SONUC: ESIT — alinti #0 (blok #3 ile) [SIKI]",
+    "yan_etki": [
+     "C14s",
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14l` | capa bozuldu: si tutan snapshot | 0 | **1** | rc=1 · PASS SONUC: ESIT — alinti #0 (blok #3 ile) [SIKI] |"
+   },
+   {
+    "kapi": "C14k",
+    "ad": "capa bozuldu: durum_goc.py",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "uyum rc=0 \"UYUM    : evet\" · uyumsuz rc=1 \"UYUM    : HAYIR (manifest=2, durum=1)\"",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14k` | capa bozuldu: durum_goc.py | 0 | **1** | rc=1 · PASS uyum rc=0 \"UYUM : evet\" · uyumsuz rc=1 \"UYUM : HAYIR  |"
+   },
+   {
+    "kapi": "C14t",
+    "ad": "capa bozuldu: 0 eslesme",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "0 eslesme · alinti: 0",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14t` | capa bozuldu: 0 eslesme | 0 | **1** | rc=1 · PASS 0 eslesme · alinti: 0 |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-14 16:06",
+  "taban_rc": 0,
+  "taban_sure": 36.7,
+  "sure": 184.2,
+  "kanit": 4,
+  "sonuclar": [
+   {
+    "kapi": "C14o",
+    "ad": "durum.json anahtari semadan kaydi (kalem 3)",
+    "dosya": "docs/skill_denetim/durum.json",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sema=18 gercek=18 eksik=['asama'] fazla=['asama_x']",
+    "yan_etki": [],
+    "sha_ayni": true,
+    "satir": "| `C14o` | durum.json anahtari semadan kaydi (kalem 3) | 0 | **1** | rc=1 · FAIL sema=18 gercek=18 eksik=['asama'] fazla=['asama_x'] |"
+   },
+   {
+    "kapi": "C14k",
+    "ad": "injection_sayac uyum sarti TERS cevrildi",
+    "dosya": "scripts/injection_sayac.py",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "uyum rc=1 \"DURUM   : injection=1 kayit\" · uyumsuz rc=0 \"<bos>\"",
+    "yan_etki": [],
+    "sha_ayni": true,
+    "satir": "| `C14k` | injection_sayac uyum sarti TERS cevrildi | 0 | **1** | rc=1 · FAIL uyum rc=1 \"DURUM : injection=1 kayit\" · uyumsuz rc=0  |"
+   },
+   {
+    "kapi": "C14l",
+    "ad": "karsilastirici ESIT demiyor (birebir aynilik olcumu)",
+    "dosya": "scripts/sunnah_karsilastir.py",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "SONUC: ES1T — alinti #0 (blok #3 ile) [SIKI]",
+    "yan_etki": [],
+    "sha_ayni": true,
+    "satir": "| `C14l` | karsilastirici ESIT demiyor (birebir aynilik olcumu) | 0 | **1** | rc=1 · FAIL SONUC: ES1T — alinti #0 (blok #3 ile) [SIKI] |"
+   },
+   {
+    "kapi": "C14t",
+    "ad": "SKILL.md'ye gomulu sayac sokuldu (D10b)",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "bulunan: ['sayaç: 7'] · alinti: 0",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14t` | SKILL.md'ye gomulu sayac sokuldu (D10b) | 0 | **1** | rc=1 · FAIL bulunan: ['sayaç: 7'] · alinti: 0 |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-14 16:27",
+  "taban_rc": 0,
+  "taban_sure": 37.8,
+  "sure": 587.3,
+  "kanit": 12,
+  "sonuclar": [
+   {
+    "kapi": "C11a",
+    "ad": "capa bozuldu: kullanilan=",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "eksik: ['kullanilan=']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C11a` | capa bozuldu: kullanilan= | 0 | **1** | rc=1 · FAIL eksik: ['kullanilan='] |"
+   },
+   {
+    "kapi": "C13a",
+    "ad": "capa bozuldu: 2026-11-07 yeniden olcum",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['2026-11-07 yeniden olcum: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13a` | capa bozuldu: 2026-11-07 yeniden olcum | 0 | **1** | rc=1 · FAIL sapan: ['2026-11-07 yeniden olcum: 0/1'] |"
+   },
+   {
+    "kapi": "C13b",
+    "ad": "capa bozuldu: govde indirilmedi",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['govde indirilmedi: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13b` | capa bozuldu: govde indirilmedi | 0 | **1** | rc=1 · FAIL sapan: ['govde indirilmedi: 0/1'] |"
+   },
+   {
+    "kapi": "C13c",
+    "ad": "capa bozuldu: gecersiz dis blok kaydi",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['gecersiz dis blok kaydi: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13c` | capa bozuldu: gecersiz dis blok kaydi | 0 | **1** | rc=1 · FAIL sapan: ['gecersiz dis blok kaydi: 0/1'] |"
+   },
+   {
+    "kapi": "C13d",
+    "ad": "capa bozuldu: butce_disi",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['butce_disi: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13d` | capa bozuldu: butce_disi | 0 | **1** | rc=1 · FAIL sapan: ['butce_disi: 0/1'] |"
+   },
+   {
+    "kapi": "C13f",
+    "ad": "capa bozuldu: 8.2/6 bunu zorunlu kilar",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['8.2/6 bunu zorunlu kilar: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13f` | capa bozuldu: 8.2/6 bunu zorunlu kilar | 0 | **1** | rc=1 · FAIL sapan: ['8.2/6 bunu zorunlu kilar: 0/1'] |"
+   },
+   {
+    "kapi": "C13g",
+    "ad": "capa bozuldu: okuma yok + yazma yok: sonuc sohbette",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['okuma yok + yazma yok: son: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13g` | capa bozuldu: okuma yok + yazma yok: sonuc sohbette | 0 | **1** | rc=1 · FAIL sapan: ['okuma yok + yazma yok: son: 0/1'] |"
+   },
+   {
+    "kapi": "C13h",
+    "ad": "capa bozuldu: esik sekle degil riske baglidir",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['esik sekle degil riske bag: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13h` | capa bozuldu: esik sekle degil riske baglidir | 0 | **1** | rc=1 · FAIL sapan: ['esik sekle degil riske bag: 0/1'] |"
+   },
+   {
+    "kapi": "C13j",
+    "ad": "capa bozuldu: ust hemze u+0654",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['ust hemze U+0654: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13j` | capa bozuldu: ust hemze u+0654 | 0 | **1** | rc=1 · FAIL sapan: ['ust hemze U+0654: 0/1'] |"
+   },
+   {
+    "kapi": "C13p",
+    "ad": "capa bozuldu: kez bilgi sorusu sorar",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['kez bilgi sorusu sorar: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13p` | capa bozuldu: kez bilgi sorusu sorar | 0 | **1** | rc=1 · FAIL sapan: ['kez bilgi sorusu sorar: 0/1'] |"
+   },
+   {
+    "kapi": "C13q",
+    "ad": "capa bozuldu: veya §8.2/6 zorunlu taramasi yapilmadi",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['veya §8.2/6 zorunlu tarama: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13q` | capa bozuldu: veya §8.2/6 zorunlu taramasi yapilmadi | 0 | **1** | rc=1 · FAIL sapan: ['veya §8.2/6 zorunlu tarama: 0/1'] |"
+   },
+   {
+    "kapi": "C14i",
+    "ad": "capa bozuldu: durum_goc.py",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "VERI_DEGISMEDI: evet",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14i` | capa bozuldu: durum_goc.py | 0 | **1** | rc=1 · PASS VERI_DEGISMEDI: evet |"
+   },
+   {
+    "kapi": "C14j",
+    "ad": "capa bozuldu: hadis_olcum.py",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "HATA: tip hatasi (liste bekleniyordu): sir",
+    "yan_etki": [
+     "C13z",
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14j` | capa bozuldu: hadis_olcum.py | 0 | **1** | rc=1 · PASS HATA: tip hatasi (liste bekleniyordu): sir |"
+   },
+   {
+    "kapi": "C14v",
+    "ad": "capa bozuldu: compatibility:",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "gecerli=0 · oz=1 · bozuk-sha=1",
+    "yan_etki": [
+     "C14w",
+     "C14y",
+     "C1c"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14v` | capa bozuldu: compatibility: | 0 | **1** | rc=1 · PASS gecerli=0 · oz=1 · bozuk-sha=1 |"
+   },
+   {
+    "kapi": "C12a",
+    "ad": "capa: §99 diye bir bolum yok (capraz atif cozulmez)",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "cozulmeyen: ['99']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C12a` | capa: §99 diye bir bolum yok (capraz atif cozulmez) | 0 | **1** | rc=1 · FAIL cozulmeyen: ['99'] |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-14 16:41",
+  "taban_rc": 0,
+  "taban_sure": 39.9,
+  "sure": 226.5,
+  "kanit": 1,
+  "sonuclar": [
+   {
+    "kapi": "C14t-a",
+    "ad": "capa bozuldu: kapi_farki.py",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "regresyon=58/58 kacan=- · uzay=2368/2400 (98.7%) · yanlis-pozitif=0/40 · bilinen-kacak=5 ['IIII kontrol', 'IC kapi', 'VV kontrol'] · gizleme-kacan=0",
+    "yan_etki": [
+     "C14d",
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14t-a` | capa bozuldu: kapi_farki.py | 0 | **1** | rc=1 · PASS regresyon=58/58 kacan=- · uzay=2368/2400 (98.7%) · ya |"
+   },
+   {
+    "kapi": "C14za",
+    "ad": "capa bozuldu: itirazsiz",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "tiktoken YOK -> OLCULMEDI+rc2 · dogru davrandi",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14za` | capa bozuldu: itirazsiz | 0 | **1** | rc=1 · PASS tiktoken YOK -> OLCULMEDI+rc2 · dogru davrandi |"
+   },
+   {
+    "kapi": "C15c",
+    "ad": "capa bozuldu: maddeler",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "paket=26 · ayni=21 · farkli=0 · gomdesiz=3 · kunyesiz=2 · gomdesiz: ['DIS_DENETIM_TUR4_P2.md', 'DIS_DENETIM_TUR4_P2_2026-11-09.md', 'DIS_DENETIM_TUR4_P2_2026-11-11.md'] · kunyesiz: ['DIS_DENETIM_TUR3_SONUC_2026-11-08.md', 'k1_dis_denetim_paketi_v1448.md']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C15c` | capa bozuldu: maddeler | 0 | **1** | rc=1 · PASS paket=26 · ayni=21 · farkli=0 · gomdesiz=3 · kunyesiz |"
+   },
+   {
+    "kapi": "C15l",
+    "ad": "capa bozuldu: meal_farki.py",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "n=14 · tmp-sizinti=0 · kucuk=0.30-0.60 · n>=10=0.30-0.50 · sonuc_degisen=0 · zayif=var · secili=0.50·icinde=evet · n_max_veri=16·monoton=evet · sure=1.7s·esik=27.9s·marj=16.4x",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C15l` | capa bozuldu: meal_farki.py | 0 | **1** | rc=1 · PASS n=14 · tmp-sizinti=0 · kucuk=0.30-0.60 · n>=10=0.30-0 |"
+   },
+   {
+    "kapi": "C12b",
+    "ad": "capa: §3.3/99 maddesi yok (madde numarasi uydurma)",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "yok: ['3.3/99']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C12b` | capa: §3.3/99 maddesi yok (madde numarasi uydurma) | 0 | **1** | rc=1 · FAIL yok: ['3.3/99'] |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-14 16:56",
+  "taban_rc": 0,
+  "taban_sure": 37.6,
+  "sure": 150.7,
+  "kanit": 3,
+  "sonuclar": [
+   {
+    "kapi": "C13e",
+    "ad": "token bozuldu: karsiligi el ile yapilir\" hukmu uyarinca",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['karsiligi el ile yapilir\" : 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13e` | token bozuldu: karsiligi el ile yapilir\" hukmu uyarinca | 0 | **1** | rc=1 · FAIL sapan: ['karsiligi el ile yapilir\" : 0/1'] |"
+   },
+   {
+    "kapi": "C13r",
+    "ad": "token bozuldu: Âl-i İmrân 3:159",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['H:Âl-i İmrân 3:159: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13r` | token bozuldu: Âl-i İmrân 3:159 | 0 | **1** | rc=1 · FAIL sapan: ['H:Âl-i İmrân 3:159: 0/1'] |"
+   },
+   {
+    "kapi": "C13s",
+    "ad": "token bozuldu: إن الصدق يهدي إلى البر وإن البر يهدي إلى الج",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['H:إن الصدق يهدي إلى البر و: 0/1']",
+    "yan_etki": [
+     "C14l",
+     "C14n",
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13s` | token bozuldu: إن الصدق يهدي إلى البر وإن البر يهدي إلى الج | 0 | **1** | rc=1 · FAIL sapan: ['H:إن الصدق يهدي إلى البر و: 0/1'] |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-14 17:02",
+  "taban_rc": 0,
+  "taban_sure": 37.0,
+  "sure": 184.7,
+  "kanit": 4,
+  "sonuclar": [
+   {
+    "kapi": "C13k",
+    "ad": "token bozuldu: eklenen olarak kaydedilir",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['eklenen olarak kaydedilir: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13k` | token bozuldu: eklenen olarak kaydedilir | 0 | **1** | rc=1 · FAIL sapan: ['eklenen olarak kaydedilir: 0/1'] |"
+   },
+   {
+    "kapi": "C13l",
+    "ad": "token bozuldu: her p0 ve p1 iddia",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['her p0 ve p1 iddia: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13l` | token bozuldu: her p0 ve p1 iddia | 0 | **1** | rc=1 · FAIL sapan: ['her p0 ve p1 iddia: 0/1'] |"
+   },
+   {
+    "kapi": "C13m",
+    "ad": "token bozuldu: aracla_bulunmadi = arama araci yoktu",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['aracla_bulunmadi = arama a: 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13m` | token bozuldu: aracla_bulunmadi = arama araci yoktu | 0 | **1** | rc=1 · FAIL sapan: ['aracla_bulunmadi = arama a: 0/1'] |"
+   },
+   {
+    "kapi": "C13o",
+    "ad": "token bozuldu: \"mod\":\"<a|b|c>\"",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['\"mod\":\"<a|b|c>\": 0/1']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13o` | token bozuldu: \"mod\":\"<a/b/c>\" | 0 | **1** | rc=1 · FAIL sapan: ['\"mod\":\"<a/b/c>\": 0/1'] |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-14 17:06",
+  "taban_rc": 0,
+  "taban_sure": 37.0,
+  "sure": 146.7,
+  "kanit": 2,
+  "sonuclar": [
+   {
+    "kapi": "C14s",
+    "ad": "SKILL.md'de literal yildiz (vurgu butunlugu bozuldu)",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "literal *: 1 — Ag* yoksa kaynak",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14s` | SKILL.md'de literal yildiz (vurgu butunlugu bozuldu) | 0 | **1** | rc=1 · FAIL literal *: 1 — Ag* yoksa kaynak |"
+   },
+   {
+    "kapi": "C15b",
+    "ad": "tur haritasi sayisi diskle celisiyor (bos iskelet)",
+    "dosya": "docs/TUR_HARITASI.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "paket=19 · harita=6/2 yer · cevapsiz=6 (cevap blogu 0) · anilan=39 · cevap_blogu=8/14 dosyada >0 · kalin_tolerans=ACIK · HATA: haritada 2 yerde \"bos iskelet\" sayisi var, diskte 6; uymayanlar: satir 394",
+    "yan_etki": [],
+    "sha_ayni": true,
+    "satir": "| `C15b` | tur haritasi sayisi diskle celisiyor (bos iskelet) | 0 | **1** | rc=1 · FAIL paket=19 · harita=6/2 yer · cevapsiz=6 (cevap blogu 0 |"
+   },
+   {
+    "kapi": "C15c",
+    "ad": "paket kunye sha != gomulu eser sha",
+    "dosya": "docs/k1_denetim_paket_v141.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 0,
+    "kapi_once": "PASS",
+    "kapi_sonra": "PASS",
+    "ayrinti_sonra": "paket=26 · ayni=21 · farkli=0 · gomdesiz=3 · kunyesiz=2 · gomdesiz: ['DIS_DENETIM_TUR4_P2.md', 'DIS_DENETIM_TUR4_P2_2026-11-09.md', 'DIS_DENETIM_TUR4_P2_2026-11-11.md'] · kunyesiz: ['DIS_DENETIM_TUR3_SONUC_2026-11-08.md', 'k1_dis_denetim_paketi_v1448.md']",
+    "yan_etki": [],
+    "sha_ayni": true,
+    "satir": "| `C15c` | paket kunye sha != gomulu eser sha | 0 | **0** | rc=0 · PASS paket=26 · ayni=21 · farkli=0 · gomdesiz=3 · kunyesiz |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-14 19:13",
+  "taban_rc": 0,
+  "taban_sure": 36.9,
+  "sure": 111.1,
+  "kanit": 2,
+  "sonuclar": [
+   {
+    "kapi": "C11c",
+    "ad": "token bozuldu: §3.3/3",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "eksik: ['§3.3/3']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C11c` | token bozuldu: §3.3/3 | 0 | **1** | rc=1 · FAIL eksik: ['§3.3/3'] |"
+   },
+   {
+    "kapi": "C13i",
+    "ad": "token bozuldu: kucuk is (§0.6)",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "sapan: ['kucuk is (§0.6): 2/3']",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C13i` | token bozuldu: kucuk is (§0.6) | 0 | **1** | rc=1 · FAIL sapan: ['kucuk is (§0.6): 2/3'] |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-14 19:29",
+  "taban_rc": 0,
+  "taban_sure": 36.9,
+  "sure": 297.2,
+  "kanit": 7,
+  "sonuclar": [
+   {
+    "kapi": "C14i",
+    "ad": "goc veriyi degistiriyor (VERI_DEGISMEDI: HAYIR)",
+    "dosya": "scripts/durum_goc.py",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "VERI_DEGISMEDI: HAYIR — GERI AL",
+    "yan_etki": [],
+    "sha_ayni": true,
+    "satir": "| `C14i` | goc veriyi degistiriyor (VERI_DEGISMEDI: HAYIR) | 0 | **1** | rc=1 · FAIL VERI_DEGISMEDI: HAYIR — GERI AL |"
+   },
+   {
+    "kapi": "C14j",
+    "ad": "tip hatasi kontrolu ters cevrildi (fail-closed yok)",
+    "dosya": "scripts/durum_goc.py",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "<bos>",
+    "yan_etki": [
+     "C14i"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14j` | tip hatasi kontrolu ters cevrildi (fail-closed yok) | 0 | **1** | rc=1 · FAIL <bos> |"
+   },
+   {
+    "kapi": "C14za",
+    "ad": "tiktoken yokken rc=0 (OLCULMEDI sozu tutulmuyor)",
+    "dosya": "scripts/token_olcum.py",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "tiktoken YOK -> OLCULMEDI+rc2 · HATA: tiktoken yokken rc=0 (2 beklenir)",
+    "yan_etki": [],
+    "sha_ayni": true,
+    "satir": "| `C14za` | tiktoken yokken rc=0 (OLCULMEDI sozu tutulmuyor) | 0 | **1** | rc=1 · FAIL tiktoken YOK -> OLCULMEDI+rc2 · HATA: tiktoken yokken |"
+   },
+   {
+    "kapi": "C14w",
+    "ad": "compatibility betik kumesini ilan etmiyor (scripts/ yok)",
+    "dosya": "SKILL.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "betik=12 · eksik=- · compatibility=YOK",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14w` | compatibility betik kumesini ilan etmiyor (scripts/ yok) | 0 | **1** | rc=1 · FAIL betik=12 · eksik=- · compatibility=YOK |"
+   },
+   {
+    "kapi": "C15a",
+    "ad": "kapanmis madde P1'de yeniden soruluyor (D22 -> D13)",
+    "dosya": "docs/MADDE_KAPANIS.json",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "kayit=7 madde · itirazsiz+degmedi=7 · P1 sorulan=9 · tekrar=1 · HATA: ITIRAZSIZ kapanmis ama YENIDEN sorulan: ['D13']",
+    "yan_etki": [],
+    "sha_ayni": true,
+    "satir": "| `C15a` | kapanmis madde P1'de yeniden soruluyor (D22 -> D13) | 0 | **1** | rc=1 · FAIL kayit=7 madde · itirazsiz+degmedi=7 · P1 sorulan=9 ·  |"
+   },
+   {
+    "kapi": "C14z",
+    "ad": "surum() SURUM.md ile ayni degil — kendi testi kirilir",
+    "dosya": "scripts/tur4_paket_uret.py",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "rc=1 · Ran 10 tests in 0.073s | FAILED (failures=1)",
+    "yan_etki": [
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14z` | surum() SURUM.md ile ayni degil — kendi testi kirilir | 0 | **1** | rc=1 · FAIL rc=1 · Ran 10 tests in 0.073s / FAILED (failures=1) |"
+   },
+   {
+    "kapi": "C14v",
+    "ad": "oz-beyan artik bagimsiz sayiliyor (OZ_ADLAR'dan 'oz' cikti)",
+    "dosya": "scripts/bagimsizlik_dogrula.py",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "gecerli=0 · oz=0 · bozuk-sha=1",
+    "yan_etki": [],
+    "sha_ayni": true,
+    "satir": "| `C14v` | oz-beyan artik bagimsiz sayiliyor (OZ_ADLAR'dan 'oz' cikti) | 0 | **1** | rc=1 · FAIL gecerli=0 · oz=0 · bozuk-sha=1 |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-14 19:41",
+  "taban_rc": 0,
+  "taban_sure": 36.7,
+  "sure": 110.6,
+  "kanit": 2,
+  "sonuclar": [
+   {
+    "kapi": "C15c",
+    "ad": "gomulu eser govdesi bozuldu (kunye sha tutmuyor)",
+    "dosya": "docs/k1_denetim_paket_v1444.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "paket=26 · ayni=20 · farkli=1 · gomdesiz=3 · kunyesiz=2 · gomdesiz: ['DIS_DENETIM_TUR4_P2.md', 'DIS_DENETIM_TUR4_P2_2026-11-09.md', 'DIS_DENETIM_TUR4_P2_2026-11-11.md'] · kunyesiz: ['DIS_DENETIM_TUR3_SONUC_2026-11-08.md', 'k1_dis_denetim_paketi_v1448.md'] · HATA: KUNYE ile GOMULU GOVDE uyusmuyor: ['k1_denetim_paket_v1444.md (kunye 4412d7a0c63c, hicbir blok tutmadi; 9 blok)']",
+    "yan_etki": [],
+    "sha_ayni": true,
+    "satir": "| `C15c` | gomulu eser govdesi bozuldu (kunye sha tutmuyor) | 0 | **1** | rc=1 · FAIL paket=26 · ayni=20 · farkli=1 · gomdesiz=3 · kunyesiz |"
+   },
+   {
+    "kapi": "C17",
+    "ad": "TUR_HARITASI §3 dosya sayisi manifestle celisiyor (16 -> 17)",
+    "dosya": "docs/TUR_HARITASI.md",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "§3=17 dosya·1865272 B·119 MODEL: · §7=esleme=3/16 · Paket:bas=1/16 · paket:her=2/16 · manifest=16 dosya·1865272 B·119 MODEL: · arsiv=VAR·16 dosya dogrulandi · HATA: §3 dosya: beyan=17 · manifest=16",
+    "yan_etki": [],
+    "sha_ayni": true,
+    "satir": "| `C17` | TUR_HARITASI §3 dosya sayisi manifestle celisiyor (16 -> 17) | 0 | **1** | rc=1 · FAIL §3=17 dosya·1865272 B·119 MODEL: · §7=esleme=3/16 · P |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-14 19:52",
+  "taban_rc": 0,
+  "taban_sure": 36.8,
+  "sure": 108.9,
+  "kanit": 2,
+  "sonuclar": [
+   {
+    "kapi": "C14t-a",
+    "ad": "sayac kuralindan 'kalem' anahtari cikti — bilinen yazim kacar",
+    "dosya": "scripts/skill_lint.py",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "regresyon=55/58 kacan=['9 kalem', 'on iki kalem', 'toplam 9 kalem'] · uzay=2272/2400 (94.7%) · yanlis-pozitif=0/40 · bilinen-kacak=5 ['IIII kontrol', 'IC kapi', 'VV kontrol'] · gizleme-kacan=2",
+    "yan_etki": [
+     "C14u",
+     "C14y"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14t-a` | sayac kuralindan 'kalem' anahtari cikti — bilinen yazim kacar | 0 | **1** | rc=1 · FAIL regresyon=55/58 kacan=['9 kalem', 'on iki kalem', 'to |"
+   },
+   {
+    "kapi": "C15l",
+    "ad": "plato taramasi 3'ten baslamiyor (alt=99) — n<3",
+    "dosya": "scripts/ayet_ozet_kontrol.py",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "n=0 · tmp-sizinti=0 · - · HATA: rc=2 | TARAMA satiri yok | taranan n=0 (<3)",
+    "yan_etki": [],
+    "sha_ayni": true,
+    "satir": "| `C15l` | plato taramasi 3'ten baslamiyor (alt=99) — n<3 | 0 | **1** | rc=1 · FAIL n=0 · tmp-sizinti=0 · - · HATA: rc=2 / TARAMA satiri  |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-14 20:07",
+  "taban_rc": 0,
+  "taban_sure": 36.6,
+  "sure": 72.9,
+  "kanit": 1,
+  "sonuclar": [
+   {
+    "kapi": "C14x",
+    "ad": "manifest disi yetim dosya olusturuldu (KANITSIZ)",
+    "dosya": "scripts/tests/snapshot/Q_yetim.txt",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "manifest=150 · ikiz=6 · ham-iz=2 · KANITSIZ=Q_yetim.txt",
+    "yan_etki": [],
+    "sha_ayni": true,
+    "satir": "| `C14x` | manifest disi yetim dosya olusturuldu (KANITSIZ) | 0 | **1** | rc=1 · FAIL manifest=150 · ikiz=6 · ham-iz=2 · KANITSIZ=Q_yetim.t |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-14 20:30",
+  "taban_rc": 0,
+  "taban_sure": 36.7,
+  "sure": 73.4,
+  "kanit": 1,
+  "sonuclar": [
+   {
+    "kapi": "C17",
+    "ad": "fixture (iii) sha vakasi etkisizlesti — sha256 katmani sinanmiyor",
+    "dosya": "scripts/skill_lint.py",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "§3=16 dosya·1865272 B·119 MODEL: · §7=esleme=3/16 · Paket:bas=1/16 · paket:her=2/16 · manifest=16 dosya·1865272 B·119 MODEL: · arsiv=VAR·16 dosya dogrulandi · fixture=4/5 · HATA: FIXTURE 4/5: (iii) sha uyusmazligi yakalanmadi",
+    "yan_etki": [
+     "C14y",
+     "C1e"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C17` | fixture (iii) sha vakasi etkisizlesti — sha256 katmani sinanmiyor | 0 | **1** | rc=1 · FAIL §3=16 dosya·1865272 B·119 MODEL: · §7=esleme=3/16 · P |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-15 07:48",
+  "taban_rc": 0,
+  "taban_sure": 37.5,
+  "sure": 75.1,
+  "kanit": 1,
+  "sonuclar": [
+   {
+    "kapi": "C14y",
+    "ad": "kaynak tarihi yerine duvar saati (date.today) — gece devri yanlis-kirmizisi geri geldi",
+    "dosya": "scripts/tur4_paket_uret.py",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "EK=3 · eser=v1.4.81 · lint=2.65 · tam=350766 B · P1=78891 B · P2=273161 B · HATA: DIS_DENETIM_TUR4_P1.md BAYAT (disk=78891 B, canli=78891 B; yeniden uret) | DIS_DENETIM_TUR4_P2.md BAYAT (disk=273161 B, canli=273161 B; yeniden uret)",
+    "yan_etki": [
+     "C14z"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C14y` | kaynak tarihi yerine duvar saati (date.today) — gece devri yanlis-kirm | 0 | **1** | rc=1 · FAIL EK=3 · eser=v1.4.81 · lint=2.65 · tam=350766 B · P1=7 |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-15 08:17",
+  "taban_rc": 0,
+  "taban_sure": 37.1,
+  "sure": 74.3,
+  "kanit": 1,
+  "sonuclar": [
+   {
+    "kapi": "C17",
+    "ad": "dogrulanan dosya sayisi bozuk dosyayi DUSMEZ (beyan/olcum celiskisi geri geldi)",
+    "dosya": "scripts/skill_lint.py",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "§3=16 dosya·1865272 B·119 MODEL: · §7=esleme=3/16 · Paket:bas=1/16 · paket:her=2/16 · manifest=16 dosya·1865272 B·119 MODEL: · arsiv=VAR·16/16 dosya dogrulandi · fixture=3/5 · HATA: FIXTURE 3/5: (ii) bayt bozukligu yakalanmadi ya da n=2 (beklenen 1) | (iii) sha uyusmazligi yakalanmadi ya da n=2 (beklenen 1)",
+    "yan_etki": [
+     "C14y",
+     "C1e"
+    ],
+    "sha_ayni": true,
+    "satir": "| `C17` | dogrulanan dosya sayisi bozuk dosyayi DUSMEZ (beyan/olcum celiskisi ge | 0 | **1** | rc=1 · FAIL §3=16 dosya·1865272 B·119 MODEL: · §7=esleme=3/16 · P |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-15 08:44",
+  "taban_rc": 0,
+  "taban_sure": 39.7,
+  "sure": 117.2,
+  "kanit": 2,
+  "sonuclar": [
+   {
+    "kapi": "C15i",
+    "ad": "siniflandirma durum_belirle() uzerinden GECMIYOR (rc deseni geri geldi)",
+    "dosya": "scripts/lab_full.py",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "projeler_tara=var · gorunurluk=var · zorunlu=var · json=var · HATA: projeler_tara durum_belirle() cagirmiyor — siniflandirma baypas edilebilir",
+    "yan_etki": [],
+    "sha_ayni": true,
+    "satir": "| `C15i` | siniflandirma durum_belirle() uzerinden GECMIYOR (rc deseni geri geldi | 0 | **1** | rc=1 · FAIL projeler_tara=var · gorunurluk=var · zorunlu=var · js |"
+   },
+   {
+    "kapi": "C15i",
+    "ad": "bekleyen hukum oneki (PASS-PENDING) dustu — PASS-PENDING-ETHICS yine YESIL",
+    "dosya": "scripts/lab_full.py",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "projeler_tara=var · gorunurluk=var · zorunlu=var · json=var · HATA: durum_belirle: bekleyen hukum oneki yok (PASS-PENDING) — sahte yesil geri gelir",
+    "yan_etki": [],
+    "sha_ayni": true,
+    "satir": "| `C15i` | bekleyen hukum oneki (PASS-PENDING) dustu — PASS-PENDING-ETHICS yine Y | 0 | **1** | rc=1 · FAIL projeler_tara=var · gorunurluk=var · zorunlu=var · js |"
+   }
+  ]
+ },
+ {
+  "tarih": "2026-11-15 08:46",
+  "taban_rc": 0,
+  "taban_sure": 38.7,
+  "sure": 117.4,
+  "kanit": 2,
+  "sonuclar": [
+   {
+    "kapi": "C15i",
+    "ad": "siniflandirma durum_belirle() uzerinden GECMIYOR (rc deseni geri geldi)",
+    "dosya": "scripts/lab_full.py",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "projeler_tara=var · gorunurluk=var · zorunlu=var · json=var · HATA: projeler_tara durum_belirle() cagirmiyor — siniflandirma baypas edilebilir",
+    "yan_etki": [],
+    "sha_ayni": true,
+    "satir": "| `C15i` | siniflandirma durum_belirle() uzerinden GECMIYOR (rc deseni geri geldi | 0 | **1** | rc=1 · FAIL projeler_tara=var · gorunurluk=var · zorunlu=var · js |"
+   },
+   {
+    "kapi": "C15i",
+    "ad": "bekleyen hukum oneki (PASS-PENDING) dustu — PASS-PENDING-ETHICS yine YESIL",
+    "dosya": "scripts/lab_full.py",
+    "durum": "OK",
+    "zaman_asimi": false,
+    "lint_rc_once": 0,
+    "lint_rc_sonra": 1,
+    "kapi_once": "PASS",
+    "kapi_sonra": "FAIL",
+    "ayrinti_sonra": "projeler_tara=var · gorunurluk=var · zorunlu=var · json=var · HATA: durum_belirle: bekleyen hukum oneki yok (PASS-PENDING) — sahte yesil geri gelir",
+    "yan_etki": [],
+    "sha_ayni": true,
+    "satir": "| `C15i` | bekleyen hukum oneki (PASS-PENDING) dustu — PASS-PENDING-ETHICS yine Y | 0 | **1** | rc=1 · FAIL projeler_tara=var · gorunurluk=var · zorunlu=var · js |"
+   }
+  ]
+ }
+]

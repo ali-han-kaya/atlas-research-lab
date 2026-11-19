@@ -1,0 +1,26 @@
+{
+  "_aciklama": "Taban cizgisi. MEVCUT_KOD modunda test sayilari GERCEK OLCUMLE dolar; YESIL_SAHA modunda sifirlarla dolar ama alanlar YINE YAZILIR. Eksik alan CALISTIRILMADI'dir, sifir degil.",
+  "mod": "MEVCUT_KOD",
+  "olculdu": "2026-08-24T00:00:00Z",
+  "temiz_agac": true,
+  "temiz_agac_imzasi": null,
+  "test": {
+    "kosan": 0,
+    "basarisiz": 0,
+    "hata": 0,
+    "atlanan": 0,
+    "kapsam_yuzde": null
+  },
+  "test_adlari": [],
+  "test_komutu_cikis_kodu": null,
+  "kod_profil_yolu": "kod_profil.json",
+  "kod_profil_sha256": "",
+  "scripts_sha256": {},
+  "dondurulan": {},
+  "dis_imza": [],
+  "olculmeyen": [
+    "<ne olculmedi> · <hangi karari etkiler> · <eksik kanit> · <siddet>"
+  ],
+  "_hash_uyarisi": "`kod_profil_sha256`, `scripts_sha256` ve `dondurulan` HER IKI MODDA da GERCEK deger ister — bunlar teste degil DOSYAYA bakar ve YESIL_SAHA'da da hesaplanabilir. Bos birakilirsa freeze_check FRZ-01/FRZ-06 P0 verir ve hat durur: dondurma savunmasi calismiyorsa 'temiz' denemez (OLCUM-02 K11). Doldurmak icin: shasum -a 256 kod_profil.json scripts/*.py",
+  "_temiz_agac_notu": "`temiz_agac` tabanin TEMIZ agacta olculdugunu beyan eder (O3-04). kos_faz.sh kod-faz0'i kirli agacta baslatmaz; `false` yazan taban freeze_check FRZ-07 POISONED_BASELINE P0 alir. Alan yoksa eski taban sayilir ve BILGI loglanir. C4 imzali taban icin `temiz_agac_imzasi` HMAC-SHA256 ile doldurulur (`python3 scripts/imzala.py`); FRZ-08 varsa dogrular (gecerli=BILGI yuksek guven, gecersiz=P0 TAMPERED), yoksa DUSUK_GUVEN P1 (kademeli)."
+}

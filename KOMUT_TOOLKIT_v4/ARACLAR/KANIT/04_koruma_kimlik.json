@@ -1,0 +1,53 @@
+{
+  "arac": "ALI_KOMUT_TOOLKIT_v4",
+  "kapi": "KORUMA",
+  "once": "/tmp/prova/once",
+  "sonra": "/tmp/prova/once",
+  "tip": "KOD",
+  "verdict": "ENGEL_YOK",
+  "indeterminate": [],
+  "keep": {
+    "toplam": 72,
+    "korundu": 72,
+    "degisti": 0,
+    "kayip": 0,
+    "kapsama": "72/72"
+  },
+  "birimler": {
+    "SECTION": {
+      "once": 72,
+      "sonra": 72
+    },
+    "CITATION": {
+      "once": 865,
+      "sonra": 865
+    },
+    "NUMBER": {
+      "once": 1030,
+      "sonra": 1031
+    },
+    "SYMBOL": {
+      "once": 119,
+      "sonra": 119
+    },
+    "TEST": {
+      "once": 48,
+      "sonra": 48
+    },
+    "CONFIG_KEY": {
+      "once": 12,
+      "sonra": 12
+    }
+  },
+  "bagimlilik": {
+    "once": 16,
+    "sonra": 16
+  },
+  "kayiplar": [],
+  "counts": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0
+  },
+  "findings": []
+}

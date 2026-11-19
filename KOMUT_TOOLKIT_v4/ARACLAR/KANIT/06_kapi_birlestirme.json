@@ -1,0 +1,40 @@
+{
+  "arac": "ALI_KOMUT_TOOLKIT_v4",
+  "kapi": "BIRLESTIRICI",
+  "verdict": "ENGEL_VAR",
+  "kapi_sayisi": 2,
+  "kapilar": [
+    {
+      "label": "A",
+      "verdict": "ENGEL_VAR",
+      "declared_verdict": null,
+      "P0": 1,
+      "P1": 1,
+      "P2": 0,
+      "kanitli_kontrol": 1,
+      "kontrol_toplam": 2,
+      "dogrulanamayan_kanit": 0
+    },
+    {
+      "label": "B",
+      "verdict": "ENGEL_VAR",
+      "declared_verdict": null,
+      "P0": 1,
+      "P1": 0,
+      "P2": 0,
+      "kanitli_kontrol": 1,
+      "kontrol_toplam": 1,
+      "dogrulanamayan_kanit": 0
+    }
+  ],
+  "kanit_dogrulamasi": "NOT_EXECUTED (--hedef verilmedi)",
+  "counts": {
+    "P0": 2,
+    "P1": 1,
+    "P2": 0
+  },
+  "notlar": [
+    "A: CHK-TEST calistirilmadi -> OLCULMEYEN"
+  ],
+  "findings": []
+}

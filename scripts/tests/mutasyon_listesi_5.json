@@ -1,0 +1,121 @@
+[
+ {
+  "kapi": "C11a",
+  "ad": "capa bozuldu: kullanilan=",
+  "dosya": "SKILL.md",
+  "eski": "kullanilan=",
+  "yeni": "kullaQnilan=",
+  "capa": "kullanilan="
+ },
+ {
+  "kapi": "C13a",
+  "ad": "capa bozuldu: 2026-11-07 yeniden olcum",
+  "dosya": "SKILL.md",
+  "eski": "2026-11-07 yeniden olcum",
+  "yeni": "2026-11-07 yQeniden olcum",
+  "capa": "2026-11-07 yeniden olcum"
+ },
+ {
+  "kapi": "C13b",
+  "ad": "capa bozuldu: govde indirilmedi",
+  "dosya": "SKILL.md",
+  "eski": "govde indirilmedi",
+  "yeni": "govde inQdirilmedi",
+  "capa": "govde indirilmedi"
+ },
+ {
+  "kapi": "C13c",
+  "ad": "capa bozuldu: gecersiz dis blok kaydi",
+  "dosya": "SKILL.md",
+  "eski": "gecersiz dis blok kaydi",
+  "yeni": "gecersiz diQs blok kaydi",
+  "capa": "gecersiz dis blok kaydi"
+ },
+ {
+  "kapi": "C13d",
+  "ad": "capa bozuldu: butce_disi",
+  "dosya": "SKILL.md",
+  "eski": "butce_disi",
+  "yeni": "butceQ_disi",
+  "capa": "butce_disi"
+ },
+ {
+  "kapi": "C13f",
+  "ad": "capa bozuldu: 8.2/6 bunu zorunlu kilar",
+  "dosya": "SKILL.md",
+  "eski": "8.2/6 bunu **zorunlu kilar",
+  "yeni": "8.2/6 bunu **Qzorunlu kilar",
+  "capa": "8.2/6 bunu zorunlu kilar"
+ },
+ {
+  "kapi": "C13g",
+  "ad": "capa bozuldu: okuma yok + yazma yok: sonuc sohbette",
+  "dosya": "SKILL.md",
+  "eski": "okuma yok + yazma yok: sonuc sohbette",
+  "yeni": "okuma yok + yazma Qyok: sonuc sohbette",
+  "capa": "okuma yok + yazma yok: sonuc sohbette"
+ },
+ {
+  "kapi": "C13h",
+  "ad": "capa bozuldu: esik sekle degil riske baglidir",
+  "dosya": "SKILL.md",
+  "eski": "esik sekle degil riske baglidir",
+  "yeni": "esik sekle degiQl riske baglidir",
+  "capa": "esik sekle degil riske baglidir"
+ },
+ {
+  "kapi": "C13j",
+  "ad": "capa bozuldu: ust hemze u+0654",
+  "dosya": "SKILL.md",
+  "eski": "ust hemze U+0654",
+  "yeni": "ust hemzQe U+0654",
+  "capa": "ust hemze u+0654"
+ },
+ {
+  "kapi": "C13p",
+  "ad": "capa bozuldu: kez bilgi sorusu sorar",
+  "dosya": "SKILL.md",
+  "eski": "kez bilgi sorusu sorar",
+  "yeni": "kez bilgi sQorusu sorar",
+  "capa": "kez bilgi sorusu sorar"
+ },
+ {
+  "kapi": "C13q",
+  "ad": "capa bozuldu: veya §8.2/6 zorunlu taramasi yapilmadi",
+  "dosya": "SKILL.md",
+  "eski": "veya §8.2/6 zorunlu taramasi yapilmadi",
+  "yeni": "veya §8.2/6 zorunluQ taramasi yapilmadi",
+  "capa": "veya §8.2/6 zorunlu taramasi yapilmadi"
+ },
+ {
+  "kapi": "C14i",
+  "ad": "capa bozuldu: durum_goc.py",
+  "dosya": "SKILL.md",
+  "eski": "durum_goc.py",
+  "yeni": "durum_Qgoc.py",
+  "capa": "durum_goc.py"
+ },
+ {
+  "kapi": "C14j",
+  "ad": "capa bozuldu: hadis_olcum.py",
+  "dosya": "SKILL.md",
+  "eski": "hadis_olcum.py",
+  "yeni": "hadis_oQlcum.py",
+  "capa": "hadis_olcum.py"
+ },
+ {
+  "kapi": "C14v",
+  "ad": "capa bozuldu: compatibility:",
+  "dosya": "SKILL.md",
+  "eski": "compatibility:",
+  "yeni": "compatiQbility:",
+  "capa": "compatibility:"
+ },
+ {
+  "kapi": "C12a",
+  "ad": "capa: §99 diye bir bolum yok (capraz atif cozulmez)",
+  "dosya": "SKILL.md",
+  "eski": "*Yasayan belge. Her",
+  "yeni": "*Yasayan belge. §99 Her"
+ }
+]

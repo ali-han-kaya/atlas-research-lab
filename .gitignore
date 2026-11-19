@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.ruff_cache/
+.coverage
+.venv/
+.venv-token/
+
+# Node (opencode araç bağımlılıkları kurulursa)
+node_modules/
+
+# Geçici
+*.tmp
+*.bak
+*.orig
+
+# Sırlar — asla commitlenmez
+.env
+.env.*
+*.key
+.lab_imza.key

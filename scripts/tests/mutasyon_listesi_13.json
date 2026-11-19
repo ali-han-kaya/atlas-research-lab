@@ -1,0 +1,16 @@
+[
+ {
+  "kapi": "C14t-a",
+  "ad": "sayac kuralindan 'kalem' anahtari cikti — bilinen yazim kacar",
+  "dosya": "scripts/skill_lint.py",
+  "eski": "_KW = r'(?:kontroller|kontrol|gate|checks|check|test|capa|kalem)'",
+  "yeni": "_KW = r'(?:kontroller|kontrol|gate|checks|check|test|capa)'"
+ },
+ {
+  "kapi": "C15l",
+  "ad": "plato taramasi 3'ten baslamiyor (alt=99) — n<3",
+  "dosya": "scripts/ayet_ozet_kontrol.py",
+  "eski": "def plato_tarama(yol, alt=3, n_max=None):",
+  "yeni": "def plato_tarama(yol, alt=99, n_max=None):"
+ }
+]

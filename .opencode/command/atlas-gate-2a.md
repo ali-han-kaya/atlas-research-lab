@@ -1,0 +1,1 @@
+../../ATLAS_SABLONLAR/.opencode/command/atlas-gate-2a.md

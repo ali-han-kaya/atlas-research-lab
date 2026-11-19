@@ -1,0 +1,23 @@
+[
+ {
+  "kapi": "C14s",
+  "ad": "SKILL.md'de literal yildiz (vurgu butunlugu bozuldu)",
+  "dosya": "SKILL.md",
+  "eski": "- Ag yoksa kaynak",
+  "yeni": "- Ag* yoksa kaynak"
+ },
+ {
+  "kapi": "C15b",
+  "ad": "tur haritasi sayisi diskle celisiyor (bos iskelet)",
+  "dosya": "docs/TUR_HARITASI.md",
+  "eski": "6 cevap dosyası boş iskelet",
+  "yeni": "7 cevap dosyası boş iskelet"
+ },
+ {
+  "kapi": "C15c",
+  "ad": "paket kunye sha != gomulu eser sha",
+  "dosya": "docs/k1_denetim_paket_v141.md",
+  "eski": "Bu paket TEK dosyadır.",
+  "yeni": "Bu paket TEK dosyadir."
+ }
+]

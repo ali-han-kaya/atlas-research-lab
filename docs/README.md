@@ -1,0 +1,49 @@
+# docs/ — yayımlanan ölçüm ve öğrenim kayıtları
+
+Bu klasör laboratuvarın **kendi üzerine** tuttuğu kayıtları taşır: canlı koşu
+ölçümleri, denetim raporları, ders defteri ve kanonik olgu tablosu. Amaç, deponun
+"biz iyiyiz" demesi değil, **hangi sayının hangi komuttan geldiğini** göstermesi.
+
+## Nedir, ne değildir
+
+| Dosya | Ne taşır |
+|---|---|
+| `OLGULAR.md` | Kanonik sayısal olgu tablosu. Çelişkide bu tablo kazanır; her satır birincil kayda bağlıdır. `atlas_selftest` bu dosyayı okur. |
+| `DERSLER_v1_2026-08-30.md` | Öğrenim defteri: kabul **ve** reddedilen düzeltmeler, Δ_içeride / Δ_dışarıda ile. Reddedilen düzeltme yeniden açılmaz. |
+| `OLCUM-01…07` | Canlı koşu ölçümleri: izin globlarının gerçek davranışı, tam koşu, düzeltme sonrası ölçüm, taze kurulum taraması, maliyet tahmini ↔ gerçekleşen. |
+| `DENETIM-*` | Laboratuvarın kendisine yapılmış tam tarama ve sıfır gözle denetim raporları. |
+| `MUTASYON_KOSUM.md` | Mutasyon koşusu: kural gerçekten yakalıyor mu, yoksa süs mü. |
+| `CORRIGENDUM-*` | Kendi hatasının ilanı ve düzeltmesi. |
+
+## Yayın kapsamı
+
+**Dahil:** hatların mekanizması (ajanlar, komutlar, şablonlar, kapı betikleri,
+ölçüm bataryası), üç öz-test paketi, Toolkit v4 çekirdeği, kusurlu örnek koşu
+(`DENEME/`), yukarıdaki ölçüm ve ders kayıtları.
+
+**Hariç — ve neden:**
+
+| Ne | Neden |
+|---|---|
+| Laboratuvarın ürettiği makaleler, kitapçıklar, PDF'ler | Bu depo **üretim mekanizmasıdır**, ürün arşivi değil. |
+| Konu korpusları (`KOMUT_TOOLKIT_v4/yahudikaynaklar/`, `moschiach/`, `sebatay-sevi-kaynaklari/`) | Araştırma malzemesi; mekanizmanın parçası değil. |
+| `projeler/` | Devam eden/yayımlanmamış çalışmalar. |
+| `docs/DEVIR-*` (oturum devirleri) | Kişisel çalışma bağlamı taşır; ayrıca en az biri **kimlik bilgisi** (veritabanı bağlantı dizesi) içerir. Böyle bir dosya hiçbir koşulda yayımlanmaz. |
+| `SURUM.md` (574 KB bakım günlüğü) | Proje-özel iş kaydı; mekanizmanın kendisi değil. |
+| `gate/FINAL-GATE-*.json` | Bir **projenin** kapı hükmü; mekanizmanın değil. |
+
+Bu sınır yüzünden `DERSLER` ve ölçüm dosyalarındaki bazı atıflar özel ağaçtaki
+devir dosyalarını gösterir. Bu bir kırık bağ değil, **bilinçli yayın sınırıdır**:
+kayıt yerinde durur, kanıtı özel ağaçta kalır.
+
+## Ağacı yenileme
+
+```bash
+python3 tools/yayinla.py --lab ~/Desktop/MTRX/AI_ARASTIRMA_LABI            # kuru koşu
+python3 tools/yayinla.py --lab ~/Desktop/MTRX/AI_ARASTIRMA_LABI --uygula
+make dogrula
+```
+
+Aktarım yalnız `tools/yayinla.py` içindeki **açık listede** yazan yolları taşır.
+Listeye yeni bir yol eklemek bilinçli bir karardır: eklenen dosya bir daha
+sır taramasından geçer ve bulgu varsa hiçbir şey yazılmaz.
