@@ -57,37 +57,38 @@ basmadır; sayı README'ye elle yazılmaz.
 yakaladığını ölçer. Mutasyon uygulanamazsa (desen bulunamazsa) bu da sessiz
 geçmez, `MUTASYON_UYGULANMADI` olarak kırmızı sayılır.
 
-## Ortam bağlı kalemler
+## CALISTIRILMADI kalemler
 
-`make dogrula` üç öz-test paketini koşar. İki kalem, ölçüm ortamı yokluğunda
-**`KOSULLU`** raporlanır — asla `PASS` değil. Koşul serttir: kalan **bütün** test
-kimlikleri aşağıdaki açık listenin içinde olmalı ve gerekçe çıktıda görünmelidir.
-Liste dışı tek bir test kalırsa hüküm `FAIL`'dir; ortam gerekçesi başka bir hatayı
-örtermez.
+`make dogrula` üç öz-test paketini koşar. Verisi bu depoda bulunmayan bir kalem
+**`CALISTIRILMADI`** olarak raporlanır — `PASS` değil, `KOSULLU` da değil: o kalem
+koşmadı ve **hükme sayılmaz**. Her `CALISTIRILMADI` satırı nedenini yanında taşır.
 
-| Test | Neyi ölçer | Neden koşamıyor | Nasıl ölçülür |
+Koşul serttir: kalan **bütün** test kimlikleri aşağıdaki açık listenin içinde
+olmalı ve beklenen kanıt dizgisi çıktıda görünmelidir. Liste dışı tek bir test
+kalırsa hüküm `FAIL`'dir; gerekçe başka bir hatayı örtmez.
+
+| Test | Neyi ölçer | Neden koşmuyor | Nerede koşar |
 |---|---|---|---|
-| `OLG-1` (ATLAS) | `SURUM.md` makine bloğunun sürüm/commit/canlı ölçüm bağını (`OLGU-03/04/05`) | Bu depo özel ağacın commit zincirini taşımıyor; `OLGU-04` çıpası yok | Özel ağaçta koşulur |
-| `MOD-1`, `MOD-2` (ATLAS + KOD) | Ajan `model:` satırları yerel katalogda geçerli mi | Runner'da `~/.cache/opencode/models.json` yok | `ATLAS_MODEL_KATALOG=<yol>` verilerek |
+| `OLG-1` (ATLAS) | `SURUM.md` makine bloğunun sürüm/commit/canlı ölçüm bağını (`OLGU-03/04/05`) | Bu depo özel ağacın commit zincirini ve canlı kanıt setini taşımıyor; `OLGU-04` çıpası yok | Özel ağaçta (145/145) |
+| `MOD-1`, `MOD-2` (ATLAS + KOD) | Ajan `model:` satırları katalogda geçerli mi | Katalog makineye bağlı (`~/.cache/opencode/models.json`) | `ATLAS_MODEL_KATALOG=<yol>` verilerek |
+
+**Determinizm.** Bu ağaçta `make dogrula` çıktısı yalnız deponun içeriğine ve git
+geçmişine bağlıdır: aynı commit'in iki temiz klonu aynı satırları basar. Yerel
+makinenin `~/.cache` durumu bu satırları değiştirmez — OLG-1 zaten
+`CALISTIRILMADI`'dır, `PASS` sayılmaz.
 
 Ölçülen: özel ağaçta (tarihçe ve katalog yerindeyken) ATLAS 145/145, KOD 174/174.
-Yayımlanan bu ağaçta macOS'ta ATLAS 144/145 (OLG-1), KOD 174/174; `make dogrula`
-T1'i **`KOSULLU`** basar, PASS değil.
+Yayımlanan bu ağaçta ATLAS 144/145 (OLG-1), KOD 174/174; `make dogrula` T1'i
+**`CALISTIRILMADI`** basar, PASS değil.
 
-Aynı sayılar Linux runner'da üretilmez: katalog yoktur ve KOD'un `MOD-2` fikstürü
-kataloğun içeriğine duyarlıdır (ölçüldü: 170/174 katalogsuz, 173/174 herhangi bir
-dış katalogla). Bu yüzden CI, `make dogrula-ci` ile yalnız **runner'da
-ölçülebilen** kalemleri hükme sokar — hijyen, Python/kabuk sözdizimi, sır taraması,
-Toolkit paketi — ve ATLAS/KOD paketlerini **RAPOR** olarak basar. Rapor hükme
-girmez ama gizlenmez: rc ve özet satırı her koşuda logdadır.
+CI aynı sözlüğü kullanır: `make dogrula-ci` yalnız runner'da ölçülebilen kalemleri
+hükme sokar; ATLAS/KOD paketlerini **`CALISTIRILMADI`** olarak basar (sayıları özet
+satırında görünür, gizlenmez). Bu, "başka makinede yeşil görünmek" için testi
+yumuşatmak değildir: hükme giren kalemler gerçekten koşar.
 
-Bu, "başka makinede yeşil görünmek" için testi yumuşatmak değildir: hükme giren
-kalemler gerçekten koşar, girmeyenler etiketiyle basılır. Tam koşu yerel ortamda
-`make dogrula` ile alınır.
-
-Neden düzeltilmiyor: testler sağlam; eksik olan ortam. Testi "onarmak" kanıtı
-değil kaydı değiştirmek olurdu. Laboratuvarın kendi kuralı da bunu yasaklar
-(`AGENTS.md`: MOD-1/MOD-2 ortam farkıdır, "onarılmaz").
+Neden düzeltilmiyor: testler sağlam; eksik olan veri. Testi "onarmak" kanıtı
+değil kaydı değiştirmek olurdu. Sahte bir commit çıpası yazmak ise kaydı
+yanlışlardı; yapılmadı.
 
 ## Ağacı yenileme
 

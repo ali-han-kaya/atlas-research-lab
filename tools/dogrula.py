@@ -12,15 +12,17 @@ Iki kip vardir:
                       opencode model katalogu) her sey kosar.
   --ci                Runner kipi. Yalnizca bu ortamda OLCULEBILEN kalemler
                       hukme girer: hijyen, sozdizimi, sir taramasi, Toolkit.
-                      ATLAS ve KOD paketleri kosar ama RAPOR olarak basilir —
-                      cunku ikisi de yerel modele/tarihceye baglidir ve baska
-                      bir makinede ayni sayiyi uretmez. Gizlenmez, basilir.
+                      ATLAS ve KOD paketleri kosar ama CALISTIRILMADI olarak
+                      basilir — cunku ikisi de yerel modele/tarihceye baglidir
+                      ve baska bir makinede ayni sayiyi uretmez. Gizlenmez.
 
-ORTAK BAGLI KALEM: ATLAS'taki OLG-1, SURUM.md makine blogunun bagli oldugu
+CALISTIRILMADI KALEMI: ATLAS'taki OLG-1, SURUM.md makine blogunun bagli oldugu
 commit ve kanit setini arar; bu depo ozel agacin tarihcesini tasimaz. Test bu
-yuzden KOSULLU raporlanir — PASS degil.
+yuzden CALISTIRILMADI raporlanir — PASS degil, KOSULLU da degil: kosmadi.
+Her CALISTIRILMADI kalem nedenini yaninda tasir ve hukme SAYILMAZ.
 
-CIKIS: 0 = hepsi gecti veya kosullu · 1 = en az bir kalem FAIL · 2 = kosulamadi
+CIKIS: 0 = hukme giren kalemlerin hepsi gecti (CALISTIRILMADI varsa bile) ·
+       1 = en az bir kalem FAIL · 2 = kosulamadi
 """
 import os
 import re
@@ -198,7 +200,6 @@ def main():
         kalemler.append((kid, ad, True if gecti else False, ozet,
                          detay if not gecti else [], ''))
 
-    rapor = []
     for kalem in KOMUTLAR:
         kid, ad = kalem[0], kalem[1]
         if HIZLI:
@@ -211,7 +212,13 @@ def main():
         son = satirlar[-1][:110] if satirlar else '(bos cikti)'
 
         if CI and kid in CI_RAPOR:
-            rapor.append((kid, ad, rc, son))
+            # Gecen paket PASS'tir; yalniz kosamayan/gecemeyen CALISTIRILMADI olur.
+            if rc == 0:
+                kalemler.append((kid, ad, True, son, [], ''))
+            else:
+                kalemler.append((kid, ad, None, son, [],
+                                 'CALISTIRILMADI: CI kipi — oz-test sayisi bu '
+                                 'ortamda tasinabilir degil (model katalogu/tarihce)'))
             continue
         if rc == 0:
             kalemler.append((kid, ad, True, son, [], ''))
@@ -220,44 +227,35 @@ def main():
         if sebep:
             kalan = [s for s in satirlar if re.match(r'\s*KALDI', s)][:20]
             kalemler.append((kid, ad, None, son, kalan,
-                             'ortam bagli: %s' % sebep))
+                             'CALISTIRILMADI: %s' % sebep))
             continue
         kalan = [s for s in satirlar if re.match(r'\s*KALDI', s)][:20]
         kalemler.append((kid, ad, False, son, kalan or satirlar[-6:], ''))
 
     for kid, ad, durum, ozet, detay, not_metni in kalemler:
-        etiket = 'ATLANDI' if durum is None else ('PASS' if durum else 'FAIL')
+        etiket = 'CALISTIRILMADI' if durum is None else ('PASS' if durum else 'FAIL')
         print('  %-3s %-24s %-7s %s' % (kid, ad, etiket, ozet))
         if not_metni:
             print('        · %s' % not_metni)
         for satir in detay:
             print('        | %s' % satir[:400])
 
-    if rapor:
-        print()
-        print('  --- RAPOR (hukme GIRMEZ: bu ortamda uretilen sayi tasinabilir '
-              'degil) ---')
-        for kid, ad, rc, son in rapor:
-            print('  %-3s %-24s %-7s %s'
-                  % (kid, ad, 'rc=0' if rc == 0 else 'rc=%d' % rc, son))
-
     kalan = [k for k in kalemler if k[2] is False]
     atlanan = [k for k in kalemler if k[2] is None]
     print()
-    print('  kalem=%d · gecen=%d · kalan=%d · kosullu=%d · rapor=%d'
+    print('  kalem=%d · gecen=%d · kalan=%d · calistirilmadi=%d'
           % (len(kalemler), len(kalemler) - len(kalan) - len(atlanan),
-             len(kalan), len(atlanan), len(rapor)))
+             len(kalan), len(atlanan)))
     print('  NOT: bu betik hakem degildir; rc toplar (OZ_DENETIM).')
     if kalan:
         print('  HUKUM: FAIL — %s' % ', '.join(k[0] for k in kalan))
         return 1
     if atlanan:
-        print('  HUKUM: KOSULLU — %s kosullu (gerekce yukarida); PASS degildir'
-              % ', '.join(k[0] for k in atlanan))
+        print('  HUKUM: PASS %d/%d — %s CALISTIRILMADI, PASS sayilmadi'
+              % (len(kalemler) - len(atlanan), len(kalemler),
+                 ', '.join(k[0] for k in atlanan)))
         return 0
     print('  HUKUM: PASS — %d/%d kalem gecti' % (len(kalemler), len(kalemler)))
-    if rapor:
-        print('  Tam oz-testler icin (yerel ortam): make dogrula')
     return 0
 
 

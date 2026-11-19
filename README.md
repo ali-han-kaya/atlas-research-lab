@@ -87,7 +87,7 @@ Model çağrısı yoktur: yerel batarya **$0**.
 Paketleri ayrı ayrı koşmak istersen (yollar depo köküne görelidir):
 
 ```bash
-python3 ATLAS_SABLONLAR/scripts/atlas_selftest.py        # OLG-1 ortam bağlı → KOSULLU
+python3 ATLAS_SABLONLAR/scripts/atlas_selftest.py        # OLG-1 → CALISTIRILMADI
 python3 KOD_SABLONLAR/scripts/kod_selftest.py
 (cd KOMUT_TOOLKIT_v4/ARACLAR/betikler && python3 v4_selftest.py)
 ```
@@ -169,10 +169,11 @@ bulgu varsa hiçbir şey yazmaz.
 - Makale içerikleri, kaynak korpusları ve oturum devir kayıtları bu depoda yoktur.
   Bu yüzden `DERSLER` ve ölçüm dosyalarındaki bazı atıflar özel ağaçtaki devir
   dosyalarına işaret eder; kapsam notu: [docs/README.md](docs/README.md).
-- İki kalem ölçüm ortamına bağlıdır: ATLAS'ta **OLG-1** (özel ağacın commit
-  zinciri), KOD'da **MOD-1/MOD-2** (yerel opencode model kataloğu). `make dogrula`
-  bunları **`KOSULLU`** olarak basar, `PASS` olarak değil; kimlikler açık listededir
-  ve gerekçe çıktıda yazılıdır. Ayrıntı: [docs/README.md](docs/README.md).
+-   Verisi bu depoda olmayan kalemler açıkça **`CALISTIRILMADI`** basılır ve hükme
+  sayılmaz: ATLAS'ta **OLG-1** (özel ağacın commit zinciri ve canlı kanıt seti),
+  KOD'da **MOD-1/MOD-2** (makinedeki model kataloğu). `PASS` da `KOSULLU` da
+  yazılmaz; kimlikler açık listededir ve gerekçe her satırda yazılıdır.
+  Ayrıntı: [docs/README.md](docs/README.md).
 
 ---
 
