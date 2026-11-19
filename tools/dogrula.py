@@ -46,8 +46,16 @@ FIKSTUR = ('AKIAXXX', 'AKIA1234567890')
 # saymak yerine gercek bicimi ariyoruz.
 ANAHTAR = re.compile(r'-----BEGIN [A-Z ]*PRIVATE KEY-----\r?\n[A-Za-z0-9+/=]{64,}')
 
-# Ortam bagli tek test: kimligi ACIK, desenle degil.
-ORTAM_BAGLI = ('OLG-1', 'OLGU-04')
+# Ortam bagli kalemler: kimlikler ACIK listede, desenle degil.
+# kid -> (izinli kimlikler, ciktida aranan ek kanit, gerekce)
+ORTAM_BAGLI = {
+    'T1': ({'OLG-1'}, 'OLGU-04',
+           'SURUM.md makine blogu ozel agacin HEAD ve kanit setine bagli '
+           '(OLGU-04); bu depo o tarihceyi tasimaz'),
+    'T2': ({'MOD-1', 'MOD-2'}, 'check_models',
+           'yerel opencode model katalogu yok '
+           '(~/.cache/opencode/models.json); ATLAS_MODEL_KATALOG ile verilebilir'),
+}
 
 
 def gez():
@@ -148,20 +156,27 @@ def kos(komut, cwd=None):
 
 
 def ortam_bagli_mi(kid, cikti):
-    """Yalnizca ACIK kimlikli ortam bagli test icin True doner.
+    """Ortam bagliysa gerekce metnini, degilse None doner.
 
-    Kosul sert: kalan tek satir OLG-1 olmali VE gerekcesi OLGU-04 cipasini
-    anmalidir. Baska bir test kalirsa bu dal kapali kalir.
+    Kosul sert: kalan BUTUN kimlikler izinli kumenin icinde olmali ve beklenen
+    kanit dizgisi ciktida gecmeli. Liste disi tek bir test kalirsa bu dal kapali
+    kalir — ortam gerekcesi baska bir hatayi ortemez.
     """
-    if kid != 'T1':
-        return False
+    kural = ORTAM_BAGLI.get(kid)
+    if not kural:
+        return None
+    izinli, ek_kanit, gerekce = kural
     # Ayni satir stdout ve stderr'de tekrarlanabilir; kimlik kumesine bakilir.
     kimlikler = set()
     for satir in cikti.splitlines():
         m = re.match(r'\s*KALDI\s+([A-Za-z0-9_.-]+):', satir)
         if m:
             kimlikler.add(m.group(1))
-    return kimlikler == {ORTAM_BAGLI[0]} and ORTAM_BAGLI[1] in cikti
+    if not kimlikler or not kimlikler <= izinli:
+        return None
+    if ek_kanit not in cikti:
+        return None
+    return gerekce
 
 
 def main():
@@ -193,9 +208,7 @@ def main():
         elif ortam_bagli_mi(kid, cikti):
             kalemler.append((kid, ad, None, son,
                              [s for s in satirlar if s.startswith('KALDI')],
-                             'ortam bagli: SURUM.md makine blogu ozel agacin '
-                             'HEAD ve kanit setine bagli (%s); bu depo o '
-                             'tarihceyi tasimaz' % ORTAM_BAGLI[1]))
+                             'ortam bagli: %s' % ortam_bagli_mi(kid, cikti))
         else:
             # Butun KALDI satirlari tasinir: kirpilan kuyruk test kimligini gizler.
             detay = [s for s in satirlar if re.match(r'\s*KALDI', s)][:20]

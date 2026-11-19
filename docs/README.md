@@ -36,18 +36,27 @@ Bu sınır yüzünden `DERSLER` ve ölçüm dosyalarındaki bazı atıflar özel
 devir dosyalarını gösterir. Bu bir kırık bağ değil, **bilinçli yayın sınırıdır**:
 kayıt yerinde durur, kanıtı özel ağaçta kalır.
 
-## Ortam bağlı tek kalem
+## Ortam bağlı kalemler
 
-`make dogrula` üç öz-test paketini koşar. ATLAS envanterindeki **OLG-1** testi,
-`SURUM.md` makine bloğunun bağlı olduğu commit'i ve kanıt setini arar
-(`OLGU-03` sürüm, `OLGU-04` commit, `OLGU-05` canlı ölçüm üçlüsü). Bu depo özel
-ağacın tarihçesini taşımadığı için o bağ burada kurulamaz; test bu yüzden
-**`KOSULLU`** raporlanır — `PASS` değil. Koşul serttir: kalan tek test `OLG-1`
-olmalı **ve** gerekçesi `OLGU-04` çıpasını anmalıdır. Başka bir test kalırsa hüküm
-`FAIL`'dir. `KOD` (174) ve `Toolkit` paketleri bu depoda tam koşar.
+`make dogrula` üç öz-test paketini koşar. İki kalem, ölçüm ortamı yokluğunda
+**`KOSULLU`** raporlanır — asla `PASS` değil. Koşul serttir: kalan **bütün** test
+kimlikleri aşağıdaki açık listenin içinde olmalı ve gerekçe çıktıda görünmelidir.
+Liste dışı tek bir test kalırsa hüküm `FAIL`'dir; ortam gerekçesi başka bir hatayı
+örtermez.
 
-Neden düzeltilmiyor: testin kendisi sağlam; eksik olan, yayımlanmayan bir commit
-zinciridir. Testi "onarmak" kanıtı değil kaydı değiştirmek olurdu.
+| Test | Neyi ölçer | Neden koşamıyor | Nasıl ölçülür |
+|---|---|---|---|
+| `OLG-1` (ATLAS) | `SURUM.md` makine bloğunun sürüm/commit/canlı ölçüm bağını (`OLGU-03/04/05`) | Bu depo özel ağacın commit zincirini taşımıyor; `OLGU-04` çıpası yok | Özel ağaçta koşulur |
+| `MOD-1`, `MOD-2` (KOD) | Ajan `model:` satırları yerel katalogda geçerli mi | Runner'da `~/.cache/opencode/models.json` yok | `ATLAS_MODEL_KATALOG=<yol>` verilerek |
+
+Ölçülen: özel ağaçta (tarihçe ve katalog yerindeyken) ATLAS 145/145, KOD 174/174.
+Yayımlanan bu ağaçta macOS'ta ATLAS 144/145 (OLG-1 ortam bağlı), KOD 174/174;
+Linux CI'da KOD 172/174 (MOD-1/MOD-2 ortam bağlı). Ortam bağlı kalemler
+**`KOSULLU`** etiketiyle basılır, PASS sayılmaz.
+
+Neden düzeltilmiyor: testler sağlam; eksik olan ortam. Testi "onarmak" kanıtı
+değil kaydı değiştirmek olurdu. Laboratuvarın kendi kuralı da bunu yasaklar
+(`AGENTS.md`: MOD-1/MOD-2 ortam farkıdır, "onarılmaz").
 
 ## Ağacı yenileme
 

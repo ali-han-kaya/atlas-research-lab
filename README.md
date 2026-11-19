@@ -156,10 +156,10 @@ bulgu varsa hiçbir şey yazmaz.
 - Makale içerikleri, kaynak korpusları ve oturum devir kayıtları bu depoda yoktur.
   Bu yüzden `DERSLER` ve ölçüm dosyalarındaki bazı atıflar özel ağaçtaki devir
   dosyalarına işaret eder; kapsam notu: [docs/README.md](docs/README.md).
-- ATLAS envanterindeki **OLG-1** testi, `SURUM.md` makine bloğunun bağlı olduğu
-  commit ve kanıt setine bağlıdır; bu depo o tarihçeyi taşımaz. `make dogrula` bu
-  kalemi **`KOSULLU`** olarak basar, `PASS` olarak değil; gerekçesi çıktıda
-  yazılıdır. Ayrıntı: [docs/README.md](docs/README.md).
+- İki kalem ölçüm ortamına bağlıdır: ATLAS'ta **OLG-1** (özel ağacın commit
+  zinciri), KOD'da **MOD-1/MOD-2** (yerel opencode model kataloğu). `make dogrula`
+  bunları **`KOSULLU`** olarak basar, `PASS` olarak değil; kimlikler açık listededir
+  ve gerekçe çıktıda yazılıdır. Ayrıntı: [docs/README.md](docs/README.md).
 
 ---
 
