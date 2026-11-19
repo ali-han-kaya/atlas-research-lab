@@ -14,11 +14,11 @@ bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus
 |---|---|
 | Kapi betigi | 20 |
 | Bildirilen kural | 117 |
-| Mutasyon vakasi olan (TEST EDILDI) | 43 |
+| Mutasyon vakasi olan (TEST EDILDI) | 50 |
 | Gerekceli kapsam disi | 26 |
-| Bosluk (gerekce yok) | 48 |
-| — bunlardan yalniz oz-testte anilan | 17 |
-| — hicbir testte gecmeyen | 31 |
+| Bosluk (gerekce yok) | 41 |
+| — bunlardan yalniz oz-testte anilan | 13 |
+| — hicbir testte gecmeyen | 28 |
 
 ## Kapsam disi siniflari
 
@@ -122,13 +122,13 @@ Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir
 | `dep_audit.py` | DEP-04 | — | KAPSAM DISI | depo-durumu: `git diff --name-only HEAD` ile degisen dosyalari okur |
 | `dep_audit.py` | DEP-05 | — | KAPSAM DISI | depo-durumu: `git diff --name-only HEAD` ile degisen dosyalari okur |
 | `dep_audit.py` | DEP-06 | — | KAPSAM DISI | depo-durumu: `git diff --name-only HEAD` ile degisen dosyalari okur |
-| `freeze_check.py` | FRZ-01 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `freeze_check.py` | FRZ-02 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
-| `freeze_check.py` | FRZ-03 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
-| `freeze_check.py` | FRZ-04 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `freeze_check.py` | FRZ-05 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `freeze_check.py` | FRZ-06 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
-| `freeze_check.py` | FRZ-07 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
+| `freeze_check.py` | FRZ-01 | FRZ-01 | TEST EDILDI | mutasyon vakasi: FRZ-01 |
+| `freeze_check.py` | FRZ-02 | FRZ-02 | TEST EDILDI | mutasyon vakasi: FRZ-02 |
+| `freeze_check.py` | FRZ-03 | FRZ-03 | TEST EDILDI | mutasyon vakasi: FRZ-03 |
+| `freeze_check.py` | FRZ-04 | FRZ-04 | TEST EDILDI | mutasyon vakasi: FRZ-04 |
+| `freeze_check.py` | FRZ-05 | FRZ-05 | TEST EDILDI | mutasyon vakasi: FRZ-05 |
+| `freeze_check.py` | FRZ-06 | FRZ-06 | TEST EDILDI | mutasyon vakasi: FRZ-06 |
+| `freeze_check.py` | FRZ-07 | FRZ-07 | TEST EDILDI | mutasyon vakasi: FRZ-07 |
 | `perm_lint.py` | PERM-01 | KOD-PERM-01 | TEST EDILDI | mutasyon vakasi: KOD-PERM-01 |
 | `perm_lint.py` | PERM-02 | PERM-02 | TEST EDILDI | mutasyon vakasi: PERM-02 |
 | `perm_lint.py` | PERM-03 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |

@@ -19,6 +19,8 @@ CIKIS
   0  : butun vakalar atesledi (taban temiz + mutasyon kirmizi)
   1  : en az bir vaka ateslemedi / taban kirlendi / mutasyon uygulanamadi
 """
+import hashlib
+import json
 import os
 import shutil
 import subprocess
@@ -157,6 +159,30 @@ def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0):
     if iz not in o1:
         return 'ATESLEMEDI', 'rc=%d ama beklenen iz (%s) ciktida yok' % (rc1, iz)
     return 'GECTI', 'taban rc=0 · mutasyon rc=%d · iz=%s' % (rc1, iz)
+
+
+def _sha(p):
+    h = hashlib.sha256()
+    h.update(Path(p).read_bytes())
+    return h.hexdigest()
+
+
+def _json_duzenle(k, rel, fn):
+    p = k / rel
+    veri = json.loads(p.read_text(encoding='utf-8'))
+    fn(veri)
+    p.write_text(json.dumps(veri, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    return None
+
+
+def _frz06(k):
+    return _json_duzenle(k, '_KOSU/gate/BASELINE.json',
+                         lambda v: v.pop('scripts_sha256', None))
+
+
+def _frz07(k):
+    return _json_duzenle(k, '_KOSU/gate/BASELINE.json',
+                         lambda v: v.__setitem__('temiz_agac', False))
 
 
 def _satir_sil(k, rel, anahtar):
@@ -408,6 +434,35 @@ def vakalar():
          lambda k: degistir(k, 'sandbox_mod/.opencode/agent/ajan.md',
                             'openrouter/anthropic/claude-opus-5', '~/anthropic/claude-opus-5'),
          'MOD-06'),
+        # --- freeze_check: SHA256 taban karsilastirmasi ----------------------
+        ('FRZ-01', 'KOD', 'kod profili dondurulmus', 'KOD_SABLONLAR/scripts/freeze_check.py',
+         lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
+         lambda k: yaz(k / 'kod_profil.json', '{"profil": "degisti"}\n'),
+         'FRZ-01'),
+        ('FRZ-02', 'KOD', 'kapi betigi dondurulmus', 'KOD_SABLONLAR/scripts/freeze_check.py',
+         lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
+         lambda k: yaz(k / 'scripts' / 'kapi.py', '# degistirilmis kapi\n'),
+         'FRZ-02'),
+        ('FRZ-03', 'KOD', 'dondurulan bolge degismez', 'KOD_SABLONLAR/scripts/freeze_check.py',
+         lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
+         lambda k: yaz(k / 'dondurulan.md', '# bozulmus bolge\n'),
+         'FRZ-03'),
+        ('FRZ-04', 'KOD', 'dondurulan dosya kaybolmaz', 'KOD_SABLONLAR/scripts/freeze_check.py',
+         lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
+         lambda k: (k / 'dondurulan.md').unlink(),
+         'FRZ-04'),
+        ('FRZ-05', 'KOD', 'taban yoksa temiz denmez', 'KOD_SABLONLAR/scripts/freeze_check.py',
+         lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
+         lambda k: (k / '_KOSU' / 'gate' / 'BASELINE.json').unlink(),
+         'FRZ-05'),
+        ('FRZ-06', 'KOD', 'taban semasi eksik olamaz', 'KOD_SABLONLAR/scripts/freeze_check.py',
+         lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
+         _frz06,
+         'FRZ-06'),
+        ('FRZ-07', 'KOD', 'taban kirli agacta olculmez', 'KOD_SABLONLAR/scripts/freeze_check.py',
+         lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
+         _frz07,
+         'FRZ-07'),
     ]
 
 
@@ -429,6 +484,16 @@ def hazirla(kok):
     yaz(kok / 'sandbox_mod' / '.opencode' / 'agent' / 'ajan.md',
         '---\ndescription: test ajani\nmode: subagent\n'
         'model: openrouter/anthropic/claude-opus-5\n---\n\nCALISTIRILMADI\n')
+    # freeze_check: sabit SHA256 tabanli, saf dosya fiksturu.
+    yaz(kok / 'kod_profil.json', '{"profil": "test"}\n')
+    yaz(kok / 'scripts' / 'kapi.py', '# test kapi betigi\n')
+    yaz(kok / 'dondurulan.md', '# dondurulmus bolge\n')
+    yaz(kok / '_KOSU' / 'gate' / 'BASELINE.json', json.dumps({
+        'kod_profil_sha256': _sha(kok / 'kod_profil.json'),
+        'scripts_sha256': {'scripts/kapi.py': _sha(kok / 'scripts' / 'kapi.py')},
+        'dondurulan': {'dondurulan.md': _sha(kok / 'dondurulan.md')},
+        'temiz_agac': True,
+    }, ensure_ascii=False, indent=2) + '\n')
     # scope_profile_check: depodaki gercek sozlesme + profil beyani.
     sozlesme = (KOK / 'DENEME' / '00-FAZ-0-SCOPE-CONTRACT-ve-REGISTER.md').read_text(
         encoding='utf-8').replace(
