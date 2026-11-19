@@ -98,12 +98,14 @@ claim/evidence gap, not from a broken test.
 | `make dogrula-ci` | runner mode used by GitHub Actions (same rules, no CI-only exemption) |
 | `make katalog-kontrol` | optional network check: fixed allowlist IDs still exist at models.dev; not run in CI |
 | `make oztest` | the three self-test suites alone |
-| `make iddia` | numeric claims in README/docs, re-measured and named by `IDD-*` on mismatch |
+| `make iddia` | numeric claims in README/docs, re-measured with their stored raw evidence line; named by `IDD-*` on mismatch |
+| `make iddia-yaz` | regenerate the raw evidence snapshot after an intentional change |
 
 `make iddia` is separate from `make dogrula`: it does not change the 7/8 verdict.
 Claims that cannot be re-run are not forced green — `AG_GEREKLI` (network; skipped
 unless `make iddia-ag`), `BEYAN` (dated/machine-bound) and `OLCULMEDI` (not
-reproducible here) are counted separately with their reason.
+reproducible here) are counted separately with their reason and marked
+`ham kanit yok` (no local raw evidence).
 
 CI runs `make dogrula-ci`, `make mutasyon`, `make kapsam`, `make guvenlik`, and
 asserts `./demo` exits **1** while `make demo` exits **2** (the wrapper cannot

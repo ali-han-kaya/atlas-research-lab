@@ -297,8 +297,11 @@ Aktarımın iki mekanik kuralı vardır ve ikisi de ölçülebilir:
 ## İddia defteri ve kapsam sınırı
 
 `make iddia`, bu depodaki public sayısal iddiaları `tools/iddia_defteri.json`
-üzerinden yeniden ölçer. Defter üç dokümanı tarar: kök `README.md`, bu dosya ve
-`docs/EN/QUICKSTART.md`. Tarihli kayıtlar (`OLCUM-*`, `SURUM.md`) ve üretilmiş
+üzerinden yeniden ölçer; her `OLCULDU` satırının son ölçülen ham çıktı satırı
+`tools/iddia_olcum.json` içinde aynı `IDD-*` anahtarıyla saklanır. Ham kanıt güncel
+çıktıyla birebir aynı değilse veya beyanla çelişirse satır kırmızı olur; anlık
+görüntü yalnızca `make iddia-yaz` ile yenilenir. Defter üç dokümanı tarar: kök
+`README.md`, bu dosya ve `docs/EN/QUICKSTART.md`. Tarihli kayıtlar (`OLCUM-*`, `SURUM.md`) ve üretilmiş
 tablolar (`MUTASYON_KAPSAM.md`, `GUVENLIK.md`) kapsam dışıdır: bunlar yeniden
 koşulacak iddia değil, ölçümün o günkü kaydıdır. Kapsam dışı dosyalar yeşil
 sayılmaz; defterin `kapsam.haric` bloğunda gerekçeleriyle listelenir.
