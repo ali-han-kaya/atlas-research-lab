@@ -27,5 +27,8 @@ jobs:
       - name: Surumler
         run: python3 --version && bash --version | head -1
 
+      - name: Bagimliliklar
+        run: python3 -m pip install --quiet -r requirements-dev.txt
+
       - name: make dogrula
         run: make dogrula

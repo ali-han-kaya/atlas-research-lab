@@ -75,6 +75,7 @@ nüsha yoktur.
 ```bash
 git clone https://github.com/ali-han-kaya/atlas-research-lab.git
 cd atlas-research-lab
+python3 -m pip install -r requirements-dev.txt   # DOI doğrulaması için requests
 make dogrula
 ```
 
