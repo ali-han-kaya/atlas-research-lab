@@ -23,9 +23,9 @@ import sys
 KOK = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # --- DAHIL LISTESI (tek kaynak; yeni yol buraya yazilmadan yayimlanmaz) ------
-# NOT: `scripts/` BILEREK yok. Oradaki batarya kisisel exocortex skill'ine
-# (SKILL.md) baglidir; SKILL.md yayimlanmiyor ve betikler sahibin mutlak yolunu
-# tasiyordu. Laboratuvarin kendi mekanizmasi ATLAS + KOD + Toolkit icinde.
+# NOT: `scripts/` BILEREK yok. Oradaki batarya kisisel calisma sozlesmesine
+# baglidir; o dosya yayimlanmiyor ve betikler sahibin mutlak yolunu tasiyordu.
+# Laboratuvarin kendi mekanizmasi ATLAS + KOD + Toolkit icinde.
 KOKLER = ['ATLAS_SABLONLAR', 'KOD_SABLONLAR', 'ORTAK', 'RAFINE_SABLON',
           'HAKEM_HEYETI', 'DENEME', '.opencode']
 # Hedef depoda kalmasi yasak klu kokler (eski surumlerden kalirsa silinir).
