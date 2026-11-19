@@ -1,0 +1,20 @@
+{
+  "_aciklama": "Mutasyon bataryasi icin sabit katalog fiksturu; ag/canli models.dev gerekmez.",
+  "openrouter": {
+    "models": {
+      "anthropic/claude-opus-5": {
+        "reasoning": true,
+        "tool_call": true
+      },
+      "deprecated/old-model": {
+        "reasoning": true,
+        "tool_call": true,
+        "status": "deprecated"
+      },
+      "weak/model": {
+        "reasoning": false,
+        "tool_call": true
+      }
+    }
+  }
+}

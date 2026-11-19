@@ -14,11 +14,11 @@ bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus
 |---|---|
 | Kapi betigi | 20 |
 | Bildirilen kural | 117 |
-| Mutasyon vakasi olan (TEST EDILDI) | 50 |
-| Gerekceli kapsam disi | 26 |
-| Bosluk (gerekce yok) | 41 |
-| — bunlardan yalniz oz-testte anilan | 13 |
-| — hicbir testte gecmeyen | 28 |
+| Mutasyon vakasi olan (TEST EDILDI) | 69 |
+| Gerekceli kapsam disi | 27 |
+| Bosluk (gerekce yok) | 21 |
+| — bunlardan yalniz oz-testte anilan | 9 |
+| — hicbir testte gecmeyen | 12 |
 
 ## Kapsam disi siniflari
 
@@ -31,23 +31,24 @@ Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir
 | depo-durumu | `git diff --name-only HEAD` ile degisen dosyalari okur | dep_audit.py | 6 |
 | gizli-anahtar | HMAC anahtari ister (LAB_IMZA_ANAHTARI / ~/.config/lab_imza.key); anahtar depoya konmaz | teslim_imza.py | 6 |
 | kosu-durumu | butun agacin selftest hash tabanini ve ham kosu ciktisini ister | api_surface.py, oztest_attest.py | 11 |
+| olu-kimlik | SEC-04 yalniz baslikta bildirilir; hicbir kod dali bu kimligi basmiyor (atlanan dosyalar yalniz sayilir) | secret_scan.py | 1 |
 | tarihce | SURUM.md makine blogunu HEAD/commit hashleriyle karsilastirir | olgu_lint.py | 2 |
 
 ## Tam envanter
 
 | Betik | Kural | Mutasyon vakasi | Durum | Gerekce |
 |---|---|---|---|---|
-| `check_models.py` | MOD-01 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
+| `check_models.py` | MOD-01 | MOD-01 | TEST EDILDI | mutasyon vakasi: MOD-01 |
 | `check_models.py` | MOD-02 | MOD-02 | TEST EDILDI | mutasyon vakasi: MOD-02 |
 | `check_models.py` | MOD-03 | MOD-03 | TEST EDILDI | mutasyon vakasi: MOD-03 |
-| `check_models.py` | MOD-04 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `check_models.py` | MOD-05 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
+| `check_models.py` | MOD-04 | MOD-04 | TEST EDILDI | mutasyon vakasi: MOD-04 |
+| `check_models.py` | MOD-05 | MOD-05 | TEST EDILDI | mutasyon vakasi: MOD-05 |
 | `check_models.py` | MOD-06 | MOD-06 | TEST EDILDI | mutasyon vakasi: MOD-06 |
-| `check_models.py` | MOD-07 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `check_models.py` | MOD-08 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
+| `check_models.py` | MOD-07 | MOD-07 | TEST EDILDI | mutasyon vakasi: MOD-07 |
+| `check_models.py` | MOD-08 | MOD-08 | TEST EDILDI | mutasyon vakasi: MOD-08 |
 | `cite_match.py` | CITE-01 | CITE-01 | TEST EDILDI | mutasyon vakasi: CITE-01 |
 | `cite_match.py` | CITE-02 | CITE-02 | TEST EDILDI | mutasyon vakasi: CITE-02 |
-| `cite_match.py` | CITE-03 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
+| `cite_match.py` | CITE-03 | CITE-03 | TEST EDILDI | mutasyon vakasi: CITE-03 |
 | `declaration_check.py` | DEC-01 | DEC-01 | TEST EDILDI | mutasyon vakasi: DEC-01 |
 | `declaration_check.py` | DEC-02 | DEC-02 | TEST EDILDI | mutasyon vakasi: DEC-02 |
 | `declaration_check.py` | DEC-03 | ATLAS-DEC-03 | TEST EDILDI | mutasyon vakasi: ATLAS-DEC-03 |
@@ -75,22 +76,22 @@ Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir
 | `prompt_lint.py` | PL-09 | PL-09 | TEST EDILDI | mutasyon vakasi: PL-09 |
 | `prompt_lint.py` | PL-10 | ATLAS-PL-10 | TEST EDILDI | mutasyon vakasi: ATLAS-PL-10 |
 | `prompt_lint.py` | PL-11 | PL-11 | TEST EDILDI | mutasyon vakasi: PL-11 |
-| `prompt_lint.py` | PL-12 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
+| `prompt_lint.py` | PL-12 | PL-12 | TEST EDILDI | mutasyon vakasi: PL-12 |
 | `prompt_lint.py` | PL-13 | PL-13 | TEST EDILDI | mutasyon vakasi: PL-13 |
-| `prompt_lint.py` | PL-14 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
+| `prompt_lint.py` | PL-14 | PL-14 | TEST EDILDI | mutasyon vakasi: PL-14 |
 | `prompt_lint.py` | PL-16 | PL-16 | TEST EDILDI | mutasyon vakasi: PL-16 |
 | `prompt_lint.py` | PL-18 | PL-18 | TEST EDILDI | mutasyon vakasi: PL-18 |
-| `prompt_lint.py` | PL-19 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `quote_ratio.py` | QR-01 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
+| `prompt_lint.py` | PL-19 | PL-19 | TEST EDILDI | mutasyon vakasi: PL-19 |
+| `quote_ratio.py` | QR-01 | QR-01 | TEST EDILDI | mutasyon vakasi: QR-01 |
 | `quote_ratio.py` | QR-02 | ATLAS-QR-02 | TEST EDILDI | mutasyon vakasi: ATLAS-QR-02 |
 | `scope_profile_check.py` | SP-01 | SP-01 | TEST EDILDI | mutasyon vakasi: SP-01 |
 | `scope_profile_check.py` | SP-02 | SP-02 | TEST EDILDI | mutasyon vakasi: SP-02 |
 | `scope_profile_check.py` | SP-03 | SP-03 | TEST EDILDI | mutasyon vakasi: SP-03 |
 | `scope_profile_check.py` | SP-04 | SP-04 | TEST EDILDI | mutasyon vakasi: SP-04 |
-| `scope_profile_check.py` | SP-05 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
+| `scope_profile_check.py` | SP-05 | SP-05 | TEST EDILDI | mutasyon vakasi: SP-05 |
 | `scope_profile_check.py` | SP-06 | SP-06 | TEST EDILDI | mutasyon vakasi: SP-06 |
 | `scope_profile_check.py` | SP-07 | SP-07 | TEST EDILDI | mutasyon vakasi: SP-07 |
-| `source_class_check.py` | SRC-01 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
+| `source_class_check.py` | SRC-01 | SRC-01 | TEST EDILDI | mutasyon vakasi: SRC-01 |
 | `source_class_check.py` | SRC-02 | SRC-02 | TEST EDILDI | mutasyon vakasi: SRC-02 |
 | `source_class_check.py` | SRC-03 | SRC-03 | TEST EDILDI | mutasyon vakasi: SRC-03 |
 | `teslim_imza.py` | TSL-01 | — | KAPSAM DISI | gizli-anahtar: HMAC anahtari ister (LAB_IMZA_ANAHTARI / ~/.config/lab_imza.key); anahtar depoya konmaz |
@@ -131,17 +132,17 @@ Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir
 | `freeze_check.py` | FRZ-07 | FRZ-07 | TEST EDILDI | mutasyon vakasi: FRZ-07 |
 | `perm_lint.py` | PERM-01 | KOD-PERM-01 | TEST EDILDI | mutasyon vakasi: KOD-PERM-01 |
 | `perm_lint.py` | PERM-02 | PERM-02 | TEST EDILDI | mutasyon vakasi: PERM-02 |
-| `perm_lint.py` | PERM-03 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
+| `perm_lint.py` | PERM-03 | PERM-03 | TEST EDILDI | mutasyon vakasi: PERM-03 |
 | `perm_lint.py` | PERM-04 | PERM-04 | TEST EDILDI | mutasyon vakasi: PERM-04 |
-| `perm_lint.py` | PERM-05 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `perm_lint.py` | PERM-06 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `perm_lint.py` | PERM-07 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `perm_lint.py` | PERM-08 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
+| `perm_lint.py` | PERM-05 | PERM-05 | TEST EDILDI | mutasyon vakasi: PERM-05 |
+| `perm_lint.py` | PERM-06 | PERM-06 | TEST EDILDI | mutasyon vakasi: PERM-06 |
+| `perm_lint.py` | PERM-07 | PERM-07 | TEST EDILDI | mutasyon vakasi: PERM-07 |
+| `perm_lint.py` | PERM-08 | PERM-08 | TEST EDILDI | mutasyon vakasi: PERM-08 |
 | `secret_scan.py` | SEC-01 | SEC-01 | TEST EDILDI | mutasyon vakasi: SEC-01 |
 | `secret_scan.py` | SEC-02 | KOD-SEC-02 | TEST EDILDI | mutasyon vakasi: KOD-SEC-02 |
-| `secret_scan.py` | SEC-03 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `secret_scan.py` | SEC-04 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `secret_scan.py` | SEC-05 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
+| `secret_scan.py` | SEC-03 | SEC-03 | TEST EDILDI | mutasyon vakasi: SEC-03 |
+| `secret_scan.py` | SEC-04 | — | KAPSAM DISI | olu-kimlik: SEC-04 yalniz baslikta bildirilir; hicbir kod dali bu kimligi basmiyor (atlanan dosyalar yalniz sayilir) |
+| `secret_scan.py` | SEC-05 | SEC-05 | TEST EDILDI | mutasyon vakasi: SEC-05 |
 | `test_attest.py` | TST-01 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
 | `test_attest.py` | TST-02 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
 | `test_attest.py` | TST-03 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
