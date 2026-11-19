@@ -1,0 +1,49 @@
+{
+  "arac": "ALI_KOMUT_TOOLKIT_v4",
+  "kapi": "ARSIV",
+  "hedef": "/root/work/build/ALI_KOMUT_TOOLKIT_v4",
+  "verdict": "ENGEL_YOK",
+  "dosya_sayisi": 29,
+  "toplam_bayt": 229834,
+  "hijyen_ihlali": 0,
+  "sir_bulgusu": 0,
+  "sir_notu": [
+    {
+      "konum": "ARACLAR/betikler/v4_selftest.py:442",
+      "tur": "OpenAI/Anthropic bicimli anahtar",
+      "not": "imzali muafiyet"
+    },
+    {
+      "konum": "ARACLAR/betikler/v4_selftest.py:443",
+      "tur": "AWS erisim anahtari",
+      "not": "imzali muafiyet"
+    },
+    {
+      "konum": "ARACLAR/betikler/v4_selftest.py:454",
+      "tur": "AWS erisim anahtari",
+      "not": "imzali muafiyet"
+    },
+    {
+      "konum": "ARACLAR/betikler/v4_selftest.py:457",
+      "tur": "AWS erisim anahtari",
+      "not": "imzali muafiyet"
+    },
+    {
+      "konum": "ARACLAR/betikler/v4_selftest.py:444",
+      "tur": "anahtar/parola atamasi",
+      "not": "imzali muafiyet"
+    },
+    {
+      "konum": "ARACLAR/betikler/v4_selftest.py:453",
+      "tur": "anahtar/parola atamasi",
+      "not": "imzali muafiyet"
+    }
+  ],
+  "manifest": null,
+  "counts": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0
+  },
+  "findings": []
+}

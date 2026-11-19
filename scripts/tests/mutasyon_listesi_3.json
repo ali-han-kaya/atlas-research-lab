@@ -1,0 +1,42 @@
+[
+ {
+  "kapi": "C13n",
+  "ad": "capa bozuldu: her sentez satiri kaynakli · iskelet/malzeme",
+  "dosya": "SKILL.md",
+  "eski": "her sentez satiri kaynakli · iskelet/malzeme",
+  "yeni": "her sentez satiri kaynQakli · iskelet/malzeme",
+  "capa": "her sentez satiri kaynakli · iskelet/malzeme"
+ },
+ {
+  "kapi": "C14o",
+  "ad": "capa bozuldu: --dogrula",
+  "dosya": "SKILL.md",
+  "eski": "--dogrula",
+  "yeni": "--doQgrula",
+  "capa": "--dogrula"
+ },
+ {
+  "kapi": "C14l",
+  "ad": "capa bozuldu: si tutan snapshot",
+  "dosya": "SKILL.md",
+  "eski": "si tutan** snapshot",
+  "yeni": "si tutan*Q* snapshot",
+  "capa": "si tutan snapshot"
+ },
+ {
+  "kapi": "C14k",
+  "ad": "capa bozuldu: durum_goc.py",
+  "dosya": "SKILL.md",
+  "eski": "durum_goc.py",
+  "yeni": "durum_Qgoc.py",
+  "capa": "durum_goc.py"
+ },
+ {
+  "kapi": "C14t",
+  "ad": "capa bozuldu: 0 eslesme",
+  "dosya": "SKILL.md",
+  "eski": "0 eslesme",
+  "yeni": "0 esQlesme",
+  "capa": "0 eslesme"
+ }
+]

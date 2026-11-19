@@ -1,0 +1,1 @@
+../../ATLAS_SABLONLAR/.opencode/agent/atlas-gate-2a.md

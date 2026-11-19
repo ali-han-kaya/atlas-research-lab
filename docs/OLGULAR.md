@@ -1,0 +1,81 @@
+# OLGULAR — TEK KAYNAK SAYISAL TABLO (tohum v1)
+
+**Amaç:** Makale ve SURUM’daki sayısal olgular düzyazıda değil burada yaşar. Çelişki çıkarsa bu tablo kazanır. Her satır birincil kayda bağlıdır.
+
+| # | Olgu | Değer | Birincil kayıt | Son teyit | Durum |
+|---|---|---|---|---|---|
+| 1 | Fatḥ al-Bārī Salafiyya XI noyau | 349-355 (noyau 351-352) | Shamela kütüphanesi + islamweb (باب التواضع) | 28.08.2026 | DOĞRULANDI (dijital) |
+| 2 | Fatḥ al-Bārī Dār al-Maʿrife XI | 341-344 | Dār al-Maʿrife baskısı | 28.08 | NOT: Salafiyya ile karıştırılmamalı |
+| 3 | Fatḥ al-Bārī metin aralığı (FATH-PAGE revizyonu) | 340-347 (metin 340-341, çekirdek 344-345) | VERIFIED_ISSUES v1.7.64 (Shamela 6712 ص340, 6713 ص341, 6716 ص344) | 29.08 | ÖNERİ — basılı foto bekleniyor |
+| 4 | Toplam hakem model sayısı (TUR2) | 14 model | `docs/DEVIR-2026-08-26-2230.md` — OpenRouter 14/14 rapor, $2.119 | 26.08 | DOĞRULANDI |
+| 5 | Şablon minimum eşiği | 2 model yeter | `HAKEM_BRUTAL:170` | — | ŞABLON KURALI |
+| 6 | Makale kelime sayısı (ANONYME) | 6254 kel (190 satır) | `docs/VERIFIED_ISSUES` kanon hash 25764929… | 29.08 | DOĞRULANDI |
+| 7 | Teslim bütünlüğü | SHA 21/21 OK | `14_LIVRAISON/SHA256SUMS.txt` + `shasum -c` | 30.08 | DOĞRULANDI |
+| 8 | Atlas öz-test | 68/68 PASS | `atlas_selftest.py` 30.08 | 30.08 | DOĞRULANDI |
+| 9 | Toolkit öz-test | 37/39 ENGEL_VAR | `v4_selftest.py` 30.08 (SP-7, TUT-1) | 30.08 | AÇIK |
+| 10 | Maliyet denge profili (tahmin) | ~$2.3 | `routing.profiles.json` denge | 23.08 | TAHMİN — canlı ATLAS ölçümü yok |
+| 11 | Maliyet TUR2 gerçek | $2.119 (14 model) | `DEVIR-2026-08-26-2230` | 26.08 | DOĞRULANDI |
+| 12 | Maliyet OLCUM-07 | tahmin $0.82 → gerçek $1.15 | `OLCUM-07:124` | 26.08 | %40 sapma, DOĞRULANDI |
+
+**Kural:** Bu tablo dışındaki sayısal beyanlar bu tabloya referans vermeli. Yeni sayısal olgu eklenirse bu tabloya satır eklenir.
+
+**Sonraki eklenecekler (tohum):** Lumbard/Anjum DOI’leri, Ibn Manẓūr/Mufradāt sayfaları, Qušayrī/Iḥyāʾ locator’ları, Rāzī 2:165/5:54 doğrulaması.
+
+## MAKİNE-OKUNUR KAYIT
+
+Bu tek ve katı JSON bloğu `olgu_lint.py` tarafından okunur. Tarihsel tablo lint girdisi değildir.
+
+<!-- OLGULAR_JSON_BASLA -->
+```json
+{
+  "schema": "OLGULAR/v1",
+  "lab_surum": "v1.7.405",
+  "baseline_commit": "4b2ae32",
+  "atlas_envanter_sayisi": 145,
+  "atlas_son_gecen": 145,
+  "kod_son_gecen": 174,
+  "attest_canli": 134,
+  "attest_taban": 134,
+  "attest_p0": 0,
+  "attest_p1": 0,
+  "mekanizma_sayisi": 35,
+  "mekanizma_kayitlari": [
+    "b11ed8f",
+    "019b7c3",
+    "ee6c660",
+    "067af4e",
+    "5dbe9bf",
+    "119dea5",
+    "0d8327c",
+    "768f099",
+    "b6d097b",
+    "67202b7",
+    "c777160",
+    "35eafea",
+    "da0cbd5",
+    "9363a36",
+    "a3bbd63",
+    "04e228f",
+    "10c567b",
+    "477dc87",
+    "b80c5a6",
+    "9e25c27",
+    "f2ac6de",
+    "b7ef4a3",
+    "15243d3",
+    "d9ed7ac",
+    "4b7b23e",
+    "c352335",
+    "b66b4f2",
+    "3a8b34a",
+    "3854859",
+    "ac9abe6",
+    "8cc18f1",
+    "a4ae1df",
+    "1fb55c0",
+    "b525aa7",
+    "8da53a9"
+  ]
+}
+```
+<!-- OLGULAR_JSON_BITIR -->

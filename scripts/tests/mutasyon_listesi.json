@@ -1,0 +1,44 @@
+[
+ {
+  "kapi": "C11a",
+  "ad": "§8.1 manifestinde SORU_BUTCESI (4 alan)",
+  "dosya": "SKILL.md",
+  "eski": "`durum.json` `soru_butcesi` alanindan",
+  "yeni": "`durum.json` `sorubutcesi` alanindan"
+ },
+ {
+  "kapi": "C11b",
+  "ad": "§7.4 geri donus P1 -> K2",
+  "dosya": "SKILL.md",
+  "eski": "`P1 → K2`",
+  "yeni": "`P1 → K3`"
+ },
+ {
+  "kapi": "C11d",
+  "ad": "§10 I6 kimligi (kaynagi AGENTS.md, I1-I9)",
+  "dosya": "SKILL.md",
+  "eski": "`I1`-`I9`",
+  "yeni": "`I1`-`I8`"
+ },
+ {
+  "kapi": "C11e",
+  "ad": "§7.1 BLOK_GECERSIZ <-> ACIK_SORU ayrimi",
+  "dosya": "SKILL.md",
+  "eski": "**Iki durum karismaz",
+  "yeni": "**Iki durum karisir"
+ },
+ {
+  "kapi": "C14e",
+  "ad": "[sir] isaretleyen insan + veri verilmisse dur (D14)",
+  "dosya": "SKILL.md",
+  "eski": "Isaretleyen **insandir**",
+  "yeni": "Isaretleyen **ajan**"
+ },
+ {
+  "kapi": "C18",
+  "ad": "kapi parametreleri gomulu yazilmaz (D10 5. tekrar)",
+  "dosya": "SKILL.md",
+  "eski": "tek kaynak `C14t-a` ciktisi",
+  "yeni": "tek kaynak `C14t-b` ciktisi"
+ }
+]

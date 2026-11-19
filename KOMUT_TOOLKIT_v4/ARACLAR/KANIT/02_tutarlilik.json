@@ -1,0 +1,13 @@
+{
+  "arac": "ALI_KOMUT_TOOLKIT_v4",
+  "kapi": "TUTARLILIK",
+  "kok": "/root/work/build/ALI_KOMUT_TOOLKIT_v4",
+  "verdict": "ENGEL_YOK",
+  "incelenen_dosya": 22,
+  "counts": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0
+  },
+  "findings": []
+}

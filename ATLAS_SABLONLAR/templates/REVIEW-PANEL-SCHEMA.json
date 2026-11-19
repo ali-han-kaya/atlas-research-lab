@@ -1,0 +1,287 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ATLAS-REVIEW-PANEL-SCHEMA/v1",
+  "title": "ATLAS P1-7 Three-Role Review Panel Artifact",
+  "description": "Closed schema for one MAIN, REVIEWER, or CRITIC artifact. Role separation is not an independence claim.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/main"
+    },
+    {
+      "$ref": "#/$defs/reviewer"
+    },
+    {
+      "$ref": "#/$defs/critic"
+    }
+  ],
+  "$defs": {
+    "schemaVersion": {
+      "const": "ATLAS-REVIEW-PANEL/v1"
+    },
+    "runId": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9._:-]+$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "sessionRef": {
+      "type": "string",
+      "pattern": "^session:\\S+$"
+    },
+    "severity": {
+      "enum": [
+        "P0",
+        "P1",
+        "P2"
+      ]
+    },
+    "axis": {
+      "enum": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E5",
+        "E6",
+        "E7"
+      ]
+    },
+    "verdict": {
+      "enum": [
+        "AGREE",
+        "DISAGREE_EVIDENCE",
+        "DISAGREE_CONCERN"
+      ]
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finding_id",
+        "severity",
+        "axis",
+        "location",
+        "quote",
+        "claim",
+        "recommendation",
+        "evidence_ref"
+      ],
+      "properties": {
+        "finding_id": {
+          "type": "string",
+          "pattern": "^HJ-(?:[0-9]{3}|R[0-9]{3}|C[0-9]{3})$"
+        },
+        "severity": {
+          "$ref": "#/$defs/severity"
+        },
+        "axis": {
+          "$ref": "#/$defs/axis"
+        },
+        "location": {
+          "type": "string",
+          "minLength": 1
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recommendation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_ref": {
+          "type": "string",
+          "pattern": "^(?:artifact|source):\\S+$"
+        }
+      }
+    },
+    "judgment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finding_id",
+        "verdict",
+        "severity",
+        "location",
+        "rationale",
+        "evidence_ref"
+      ],
+      "properties": {
+        "finding_id": {
+          "type": "string",
+          "pattern": "^HJ-(?:[0-9]{3}|R[0-9]{3})$"
+        },
+        "verdict": {
+          "$ref": "#/$defs/verdict"
+        },
+        "severity": {
+          "$ref": "#/$defs/severity"
+        },
+        "location": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_ref": {
+          "type": "string",
+          "pattern": "^(?:artifact|source):\\S+$"
+        }
+      }
+    },
+    "commonProperties": {
+      "schema": {
+        "$ref": "#/$defs/schemaVersion"
+      },
+      "run_id": {
+        "$ref": "#/$defs/runId"
+      },
+      "provider": {
+        "type": "string",
+        "minLength": 1
+      },
+      "model": {
+        "type": "string",
+        "minLength": 1
+      },
+      "model_family": {
+        "type": "string",
+        "minLength": 1
+      },
+      "session_ref": {
+        "$ref": "#/$defs/sessionRef"
+      },
+      "input_sha256": {
+        "$ref": "#/$defs/sha256"
+      },
+      "attempt": {
+        "const": 1
+      },
+      "cost_usd": {
+        "type": "number",
+        "minimum": 0
+      }
+    },
+    "main": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "run_id",
+        "role",
+        "provider",
+        "model",
+        "model_family",
+        "session_ref",
+        "input_sha256",
+        "attempt",
+        "cost_usd",
+        "findings"
+      ],
+      "properties": {
+        "schema": { "$ref": "#/$defs/schemaVersion" },
+        "run_id": { "$ref": "#/$defs/runId" },
+        "role": { "const": "MAIN" },
+        "provider": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 },
+        "model_family": { "type": "string", "minLength": 1 },
+        "session_ref": { "$ref": "#/$defs/sessionRef" },
+        "input_sha256": { "$ref": "#/$defs/sha256" },
+        "attempt": { "const": 1 },
+        "cost_usd": { "type": "number", "minimum": 0 },
+        "findings": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/finding" }
+        }
+      }
+    },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "run_id",
+        "role",
+        "provider",
+        "model",
+        "model_family",
+        "session_ref",
+        "input_sha256",
+        "attempt",
+        "cost_usd",
+        "judgments",
+        "new_findings"
+      ],
+      "properties": {
+        "schema": { "$ref": "#/$defs/schemaVersion" },
+        "run_id": { "$ref": "#/$defs/runId" },
+        "role": { "const": "REVIEWER" },
+        "provider": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 },
+        "model_family": { "type": "string", "minLength": 1 },
+        "session_ref": { "$ref": "#/$defs/sessionRef" },
+        "input_sha256": { "$ref": "#/$defs/sha256" },
+        "attempt": { "const": 1 },
+        "cost_usd": { "type": "number", "minimum": 0 },
+        "judgments": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/judgment" }
+        },
+        "new_findings": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/finding" }
+        }
+      }
+    },
+    "critic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "run_id",
+        "role",
+        "provider",
+        "model",
+        "model_family",
+        "session_ref",
+        "input_sha256",
+        "attempt",
+        "cost_usd",
+        "judgments",
+        "new_findings"
+      ],
+      "properties": {
+        "schema": { "$ref": "#/$defs/schemaVersion" },
+        "run_id": { "$ref": "#/$defs/runId" },
+        "role": { "const": "CRITIC" },
+        "provider": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 },
+        "model_family": { "type": "string", "minLength": 1 },
+        "session_ref": { "$ref": "#/$defs/sessionRef" },
+        "input_sha256": { "$ref": "#/$defs/sha256" },
+        "attempt": { "const": 1 },
+        "cost_usd": { "type": "number", "minimum": 0 },
+        "judgments": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/judgment" }
+        },
+        "new_findings": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/finding" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+[
+ {
+  "kapi": "C14t-a",
+  "ad": "capa bozuldu: kapi_farki.py",
+  "dosya": "SKILL.md",
+  "eski": "kapi_farki.py",
+  "yeni": "kapi_fQarki.py",
+  "capa": "kapi_farki.py"
+ },
+ {
+  "kapi": "C14za",
+  "ad": "capa bozuldu: itirazsiz",
+  "dosya": "SKILL.md",
+  "eski": "Itirazsiz",
+  "yeni": "ItirQazsiz",
+  "capa": "itirazsiz"
+ },
+ {
+  "kapi": "C15c",
+  "ad": "capa bozuldu: maddeler",
+  "dosya": "SKILL.md",
+  "eski": "maddeler",
+  "yeni": "maddQeler",
+  "capa": "maddeler"
+ },
+ {
+  "kapi": "C15l",
+  "ad": "capa bozuldu: meal_farki.py",
+  "dosya": "SKILL.md",
+  "eski": "meal_farki.py",
+  "yeni": "meal_fQarki.py",
+  "capa": "meal_farki.py"
+ },
+ {
+  "kapi": "C12b",
+  "ad": "capa: §3.3/99 maddesi yok (madde numarasi uydurma)",
+  "dosya": "SKILL.md",
+  "eski": "*Yasayan belge. Her",
+  "yeni": "*Yasayan belge. §3.3/99 Her"
+ }
+]

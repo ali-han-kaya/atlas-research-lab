@@ -1,0 +1,16 @@
+[
+ {
+  "kapi": "C15i",
+  "ad": "siniflandirma durum_belirle() uzerinden GECMIYOR (rc deseni geri geldi)",
+  "dosya": "scripts/lab_full.py",
+  "eski": "        _durum = durum_belirle(rc, _hukum)",
+  "yeni": "        _durum = 'YESIL' if rc == 0 else 'KIRMIZI'"
+ },
+ {
+  "kapi": "C15i",
+  "ad": "bekleyen hukum oneki (PASS-PENDING) dustu — PASS-PENDING-ETHICS yine YESIL",
+  "dosya": "scripts/lab_full.py",
+  "eski": "    for on_ek in ('PASS-PENDING', 'BLOCKED', 'HUMAN_REVIEW'):",
+  "yeni": "    for on_ek in ('BLOCKED', 'HUMAN_REVIEW'):"
+ }
+]

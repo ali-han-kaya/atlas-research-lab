@@ -1,0 +1,39 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "_model_notu": "OLCUM-02 K7: bu anahtar YOKTU. `--command` ile surulen her fazda iki model kosar: alt ajan (frontmatter'dan) ve onu SUREN birincil ajan. Anahtar yokken birincil ajan kullanicinin GLOBAL varsayilanina duser; olculen kosuda bu opencode-go/kimi-k2.7-code idi ve alt ajanlar ucretsiz modele sabitlenmis olmasina ragmen $0.42 harcandi. v1.7.9 sonrasi (24.08.2026, OLCUM-05 hazirlik, kullanici onayi): surucu modeli deepseek-v4-flash'a bilincli gecildi — ucretsiz nemotron'un gunluk kotasu dolu (sondaj: 'Rate limit exceeded: free-models-per-day-high-balance'), Go kotalari dolu; OpenRouter bakiyesinden calisir. Kapi ajanlarinin modeleri routing.profiles.json'dan gelir (denge profili).",
+  "model": "openrouter/deepseek/deepseek-v4-flash",
+  "instructions": [
+    "AI_CALISMA_SISTEMI_v1.md",
+    "00_KOD_OKU_BENI.md"
+  ],
+  "permission": {
+    "read": {
+      "yahuditurk/**": "deny",
+      "**/yahuditurk/**": "deny",
+      "isimlendir/portfolyo/**": "deny",
+      "**/isimlendir/portfolyo/**": "deny",
+      "TRUTH_MAKALE*.md": "deny",
+      "**/TRUTH_MAKALE*.md": "deny"
+    },
+    "edit": {
+      "*": "deny",
+      "yahuditurk/**": "deny",
+      "**/yahuditurk/**": "deny",
+      "isimlendir/portfolyo/**": "deny",
+      "**/isimlendir/portfolyo/**": "deny",
+      "TRUTH_MAKALE*.md": "deny",
+      "**/TRUTH_MAKALE*.md": "deny",
+      "ATLAS/**": "deny",
+      "**/ATLAS/**": "deny",
+      "toolkit/**": "deny",
+      "**/toolkit/**": "deny",
+      "DENEME/**": "deny",
+      "**/DENEME/**": "deny"
+    },
+    "bash": {
+      "*": "deny"
+    }
+  },
+  "_edit_yildiz_notu": "OLCUM-03 O3-01: `--command kod-fazN` IKI oturum acar — `agent=build` bir ebeveyn ve faz alt ajani. Alt ajanin izin blogu uygulanir; ebeveynin izinleri YALNIZ bu dosyadan gelir. Burada `edit` altinda `\"*\"` YOKTU, bu yuzden `build` depoda her seyi yazabiliyordu ve canli kosuda KFAZ0 sirasinda kaynak kodu (`birim/olcek.py`) ve testi yazdi; opencode.db yazma atfi kanittir. `\"*\": \"deny\"` ILK sirada durur (IK-2); kendi bloklarinda `\"*\"` tasiyan ajanlar (implementer'lar `allow`, digerleri `deny` + dar izin) findLast geregi bunu EZER, yani faz ajanlari etkilenmez. Etkilenen tek ajan izin blogu OLMAYAN surucudur — amac budur.",
+  "_bash_yildiz_notu": "OLCUM-06 B1 (26.08.2026): `edit` altinda `\"*\": \"deny\"` vardi ama `bash` blogu YOKTU. `build` ebeveyni `write` reddedilince `mv scripts/*.py .` ile 12 kapi betigini koke tasidi (canli kosu §4-B1). `bash` varsayilan ALLOW oldugu icin edit yasagi tek basina dondurulan bolgeyi korumuyor. Cozum: `bash` altinda `\"*\": \"deny\"` — ebeveyn hicbir shell komutu kosamaz; faz alt ajanlari kendi `bash` bloklarina gore kosar (findLast). Izinli liste YOK — dar liste gerekirse eklenir, su an fail-closed." 
+}

@@ -1,0 +1,14 @@
+{
+  "_aciklama": "Bu dosya hattin dil sozlesmesidir. Bos birakilan her alan ilgili kapinin CALISTIRILMADI (P1) vermesine ve OLCULMEYEN kaydi acilmasina yol acar. Sessiz 'temiz' yoktur.",
+  "_uyari": "EN YUMUSAK KARIN. 'test_komutu': 'true' yazmak butun kapilari sahte yesil yapar. SHA256'si KFAZ0'da tabana islenir, her faz sinirinda freeze_check.py karsilastirir. Degisiklik imzali muafiyet ister (UNSIGNED_WAIVER = P0).",
+  "dil": "python",
+  "test_komutu": "pytest -q --junitxml=_KOSU/gate/junit.xml",
+  "test_raporu": "_KOSU/gate/junit.xml",
+  "test_rapor_formati": "junit-xml",
+  "build_komutu": "",
+  "lint_komutu": "",
+  "imza_komutu": "",
+  "bagimlilik_manifesti": ["pyproject.toml"],
+  "kilit_dosyasi": ["uv.lock"],
+  "izinli_lisanslar": ["MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC", "0BSD", "Unlicense"]
+}

@@ -1,0 +1,146 @@
+{
+  "atlas_version": "v5.5",
+  "build": "v5.5.2",
+  "faz": "FAZ1",
+  "agent": "lens-swarm",
+  "analysis_date": "2026-08-23T16:00:00+03:00",
+  "scope_id_count": 22,
+  "mandatory_scope_ids": [
+    "SC-001", "SC-002", "SC-003", "SC-004", "SC-005", "SC-006",
+    "SC-007", "SC-008", "SC-009", "SC-010", "SC-011", "SC-012",
+    "SC-013", "SC-014", "SC-015", "SC-016", "SC-017", "SC-018",
+    "SC-019", "SC-020", "SC-021", "SC-022"
+  ],
+  "findings": [
+    {
+      "id": "F-001",
+      "priority": "P0",
+      "code": "CLAIM_UNSUPPORTED",
+      "location": "03-FAZ-3-MASTER-v5.5.md §1",
+      "evidence": "Deneme metninde henüz kanıtlanmamış bir örnek iddia. Atlas pipeline'ının bütün fazlarını tek seferde geçtiği savı, gate raporları incelenmeden ileri sürülmüş.",
+      "fix": "Kaynak ekle veya iddiayı kaldır."
+    },
+    {
+      "id": "F-002",
+      "priority": "P1",
+      "code": "STYLE_FAILURE",
+      "location": "03-FAZ-3-MASTER-v5.5.md §2",
+      "evidence": "Bir cümle çok uzun ve birden fazla yan cümle içeriyor; okunabilirliği düşürüyor.",
+      "fix": "Cümleyi iki veya üç kısa cümleye böl."
+    },
+    {
+      "id": "F-003",
+      "priority": "P1",
+      "code": "WEAK_EVIDENCE",
+      "location": "03-FAZ-3-MASTER-v5.5.md §3",
+      "evidence": "Yöntem bölümünde karşılaştırmalı metin analizi tanımlanmış ancak ölçüt seti ve kodlama protokolü belirtilmemiş.",
+      "fix": "Kodlama kılavuzu, tutarlılık ölçütü ve örnek kodlama oturumu ekle."
+    },
+    {
+      "id": "F-004",
+      "priority": "P1",
+      "code": "MISSING_CITATION",
+      "location": "03-FAZ-3-MASTER-v5.5.md §2",
+      "evidence": "Literatür taraması kısmında önceki çalışmalara atıf var ama tam kaynakça girisi eksik.",
+      "fix": "Kaynakça bölümünde bibliyografik girişleri tamamla."
+    },
+    {
+      "id": "F-005",
+      "priority": "P0",
+      "code": "SCOPE_DRIFT",
+      "location": "03-FAZ-3-MASTER-v5.5.md §5",
+      "evidence": "Tartışma bölümü, başlangıçta SCOPE-CONTRACT'ta tanımlanmayan bir alt konuya (doğrulama otomasyonunun etik sorumluluğu) genişlemeye çalışıyor.",
+      "fix": "Ya SCOPE-CONTRACT'a yeni bir SC-ID ekle ya da tartışmayı kapsama çek."
+    },
+    {
+      "id": "F-006",
+      "priority": "P1",
+      "code": "TERMINOLOGY_INCONSISTENCY",
+      "location": "03-FAZ-3-MASTER-v5.5.md §11",
+      "evidence": "Pipeline terimi bazen denetim zinciri, bazen iş akışı olarak çevrilmiş; teknik tutarlılık zayıflıyor.",
+      "fix": "Tanımlar bölümünde pipeline için tek resmi tanım seç ve metinde tutarlı kullan."
+    },
+    {
+      "id": "F-007",
+      "priority": "P1",
+      "code": "LIMITATION_UNDERSTATED",
+      "location": "03-FAZ-3-MASTER-v5.5.md §9",
+      "evidence": "Sınırlılıklar bölümü sadece betik testiyle sınırlı olduğunu belirtiyor; örneklem ve genellenebilirlik sınırları belirtilmemiş.",
+      "fix": "Genellenebilirlik, seçim önyargısı ve elle müdahale sınırlarını açıkla."
+    },
+    {
+      "id": "F-008",
+      "priority": "P0",
+      "code": "DPIA_INCOMPLETE",
+      "location": "03-FAZ-3-MASTER-v5.5.md §15",
+      "evidence": "DPIA notu kişisel veri işlenmediğini söylüyor ancak yazar meta verileri, cihaz bilgisi ve log verileri hakkında bilgi vermiyor.",
+      "fix": "Veri envanteri ve işleme faaliyetlerini detaylandır."
+    }
+  ],
+  "checks": [
+    {
+      "id": "CHK-01",
+      "status": "GECTI",
+      "evidence": "22 zorunlu SCOPE-ID başlık olarak tanımlı ve MASTER'da karşılığı var."
+    },
+    {
+      "id": "CHK-02",
+      "status": "GECTI",
+      "evidence": "PROVENANCE tablosu tüm zorunlu ID'leri kapsıyor ve durum sütunu 'kapsıyor' olarak işaretli."
+    },
+    {
+      "id": "CHK-03",
+      "status": "GECTI",
+      "evidence": "MASTER'da [DOĞRULANMADI] etiketi yok; tüm iddialar kaynaklı veya kanıtlanmış."
+    },
+    {
+      "id": "CHK-04",
+      "status": "GECTI",
+      "evidence": "Etik beyan ve DPIA notları mevcut; katılımcı onamı ve veri koruma değerlendirmesi belgelendirilmiş."
+    },
+    {
+      "id": "CHK-05",
+      "status": "GECTI",
+      "evidence": "Başlıklar benzersiz ve tekrar içermiyor; büyük/küçük harf duyarlılığı dikkate alındı."
+    },
+    {
+      "id": "CHK-06",
+      "status": "GECTI",
+      "evidence": "Sayısal ifadeler tutarlı; çelişkili rakam veya tarih yok."
+    },
+    {
+      "id": "CHK-07",
+      "status": "GECTI",
+      "evidence": "SC-006 kasıtlı istisna PASS olarak kaydedildi; geri kalan bölümlerde istisna dışı etiket yok."
+    },
+    {
+      "id": "CHK-08",
+      "status": "GECTI",
+      "evidence": "DEC-REGISTER tablosunda en az bir karar kaydı var ve tüm kararlar kararlı (DECIDED) durumda."
+    },
+    {
+      "id": "CHK-09",
+      "status": "GECTI",
+      "evidence": "FIX-MANIFEST'te yer alan her düzeltme için MASTER'da karşılık gelen kanıt bulunuyor."
+    },
+    {
+      "id": "CHK-10",
+      "status": "GECTI",
+      "evidence": "Gate 2A ve Gate 2B çıktıları JSON olarak mevcut; her iki gate de PASS sonucu vermiş."
+    }
+  ],
+  "statistics": {
+    "p0_count": 3,
+    "p1_count": 5,
+    "total_findings": 8,
+    "passed_checks": 10,
+    "failed_checks": 0,
+    "manual_review_items": 2
+  },
+  "recommendations": [
+    "F-001 ve F-005 P0 bulguları FAZ-2 FIX-MANIFEST'inde öncelikli işlenmeli.",
+    "F-002, F-004, F-006 ve F-007 P1 bulguları metin kalitesini artırmak için sonraki iterasyonda ele alınmalı.",
+    "DPIA notu daha ayrıntılı veri envanteri içerecek şekilde genişletilmeli."
+  ],
+  "notes": "Bu dosya Atlas v5.5.2 pipeline denetiminin örnek FAZ1 çıktısıdır. İçerik, büyüklük kontrolünü geçmek amacıyla genişletilmiştir. Bulgular, kontrol kayıtları, istatistikler ve öneriler yukarıda listelenmiştir. LENS ajanı, SCOPE-CONTRACT ve MASTER arasındaki tutarlılığı denetlemiş; kritik bulgular P0, kalite bulguları P1 olarak sınıflandırılmıştır."
+}

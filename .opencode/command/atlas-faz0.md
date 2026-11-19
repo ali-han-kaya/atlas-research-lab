@@ -1,0 +1,1 @@
+../../ATLAS_SABLONLAR/.opencode/command/atlas-faz0.md

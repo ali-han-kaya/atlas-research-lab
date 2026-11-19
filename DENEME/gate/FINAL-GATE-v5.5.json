@@ -1,0 +1,24 @@
+{
+  "atlas_version": "v5.5",
+  "build": "v5.5.2",
+  "gate_type": "FINAL-2-of-2",
+  "verdict": "PASS",
+  "reason": "2A=PASS(P0:0,P1:0) 2B=PASS(P0:0,P1:0) -> PASS",
+  "gate_2a": "PASS",
+  "gate_2b": "PASS",
+  "counts": {
+    "p0_2a": 0,
+    "p1_2a": 0,
+    "p0_2b": 0,
+    "p1_2b": 0
+  },
+  "metadata_integrity": {
+    "mismatch_detected": false,
+    "mismatch_notes": []
+  },
+  "findings": [],
+  "metadata": {
+    "gate_date": "2026-08-23T14:34:27.396623+00:00",
+    "voting": "2-of-2"
+  }
+}

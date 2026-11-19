@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:atlas:run-manifest:v1",
+  "title": "ATLAS RUN manifest",
+  "description": "Makalenin butun gelistirme gecmisindeki kanitli fiili AI kullanimlari. Statik routing kaydi kanit sayilmaz.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "scope",
+    "entries"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ATLAS-RUN-MANIFEST/v1"
+    },
+    "scope": {
+      "const": "ARTICLE_DEVELOPMENT_HISTORY"
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role",
+          "provider",
+          "model",
+          "model_version",
+          "date",
+          "usage",
+          "primary_source_verified",
+          "evidence_ref"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "minLength": 1
+          },
+          "provider": {
+            "type": "string",
+            "minLength": 1
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "model_version": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Surum bilinmiyorsa OLCULMEYEN yazilir."
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "usage": {
+            "type": "string",
+            "enum": [
+              "writing",
+              "language_editing",
+              "source_verification",
+              "data_collection",
+              "analysis",
+              "figure_generation"
+            ]
+          },
+          "primary_source_verified": {
+            "type": "string",
+            "enum": [
+              "EVET",
+              "HAYIR",
+              "UYGULANMAZ"
+            ]
+          },
+          "evidence_ref": {
+            "type": "string",
+            "pattern": "^(session|artifact):[^\\s]+$",
+            "description": "Fiili kullanimi gosteren oturum kimligi veya artefakt referansi."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,244 @@
+{
+  "arac": "ALI_KOMUT_TOOLKIT_v4",
+  "kapi": "OZ-TEST",
+  "toplam": 39,
+  "gecti": 39,
+  "kaldi": 0,
+  "verdict": "ENGEL_YOK",
+  "testler": [
+    {
+      "id": "SP-1",
+      "aciklama": "bos kapi ciktisi olumlu karar uretemez",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1 verdict=ENGEL_VAR"
+    },
+    {
+      "id": "SP-2",
+      "aciklama": "kapali liste disi siddet etiketi P0 sayilir",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1 P0=9"
+    },
+    {
+      "id": "SP-3",
+      "aciklama": "ayni icerikli iki kapi bagimsiz sayilmaz",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1 ident=True"
+    },
+    {
+      "id": "SP-5",
+      "aciklama": "beyan-gercek celiskisi tek basina engel nedenidir",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1 mismatch=True"
+    },
+    {
+      "id": "GT-1",
+      "aciklama": "kanitsiz GECTI kaydi olumlu karar uretemez",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1"
+    },
+    {
+      "id": "GT-2",
+      "aciklama": "bozuk JSON bicimli fail-closed rapor uretir",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1 stderr_bos=True"
+    },
+    {
+      "id": "GT-3",
+      "aciklama": "sayiya cevrilemeyen sayac alani cokme uretmez",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1"
+    },
+    {
+      "id": "GT-4",
+      "aciklama": "gercekten temiz durum olumlu karar alir",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=0 verdict=ENGEL_YOK"
+    },
+    {
+      "id": "GT-5",
+      "aciklama": "kaniti hedefte bulunmayan denetci BUTUNLUK_ASKISI uretir",
+      "sonuc": "GECTI",
+      "ayrinti": "verdict=BUTUNLUK_ASKISI"
+    },
+    {
+      "id": "KM-1",
+      "aciklama": "kimlik testi: ayni icerik sifir bulgu uretir",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=0 counts={'P0': 0, 'P1': 0, 'P2': 0}"
+    },
+    {
+      "id": "VK-4",
+      "aciklama": "normalizasyon farki yanlis pozitif uretmez",
+      "sonuc": "GECTI",
+      "ayrinti": "P0=0 kayip=[]"
+    },
+    {
+      "id": "VK-1",
+      "aciklama": "on ek korunup govde silinmesi P0 uretir",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1 P0=10"
+    },
+    {
+      "id": "MUT-1",
+      "aciklama": "silinen atif tespit edilir",
+      "sonuc": "GECTI",
+      "ayrinti": "sessiz deger degisimi: 10.1 bu bolumde artik yok (bolum yerinde duruyor, deger degismis) bolum kuculdu: karakter %79 (esik %95), cumle %71 (esik %95) sessiz deg"
+    },
+    {
+      "id": "MUT-2",
+      "aciklama": "silinen disa acik fonksiyon tespit edilir",
+      "sonuc": "GECTI",
+      "ayrinti": "sessiz deger degisimi: 10.1 bu bolumde artik yok (bolum yerinde duruyor, deger degismis) bolum kuculdu: karakter %79 (esik %95), cumle %71 (esik %95) sessiz deg"
+    },
+    {
+      "id": "MUT-3",
+      "aciklama": "mutasyon testi engel uretir",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1 P0=9"
+    },
+    {
+      "id": "VK-2",
+      "aciklama": "zorunlu birim turu bos cikarsa sonuc INDETERMINATE = engel",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1 indeterminate=['CITATION', 'NUMBER']"
+    },
+    {
+      "id": "KM-2",
+      "aciklama": "beyansiz bolum silme P0 uretir",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1 P0=2"
+    },
+    {
+      "id": "MUT-4",
+      "aciklama": "sessiz deger degisimi (silme degil, degistirme) P0 uretir",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1 mut=True"
+    },
+    {
+      "id": "KT-A",
+      "aciklama": "hacim korunup anlam silinmesi (dolgu) P0 uretir",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1 pad=True"
+    },
+    {
+      "id": "KT-B",
+      "aciklama": "imzasiz niyet kaydi silmeyi mesrulastiramaz",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1 unsigned=True"
+    },
+    {
+      "id": "KT-C",
+      "aciklama": "imzali niyet kaydi mesru kayip sayilir (yanlis pozitif yok)",
+      "sonuc": "GECTI",
+      "ayrinti": "kayiplar=['BEYAN_EDILDI', 'BEYAN_EDILDI_KORUMALI']"
+    },
+    {
+      "id": "MUT-5",
+      "aciklama": "imzali beyanla deger degisimi P1'e iner ama rapordan silinmez",
+      "sonuc": "GECTI",
+      "ayrinti": "P1=True gorunur=True"
+    },
+    {
+      "id": "KM-3",
+      "aciklama": "girdide olmayan yeni atif kaynaksiz ekleme olarak isaretlenir",
+      "sonuc": "GECTI",
+      "ayrinti": "added=True"
+    },
+    {
+      "id": "KM-4",
+      "aciklama": "olmayan yol bicimli fail-closed rapor uretir",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1"
+    },
+    {
+      "id": "SP-4",
+      "aciklama": "bos hedef olumlu karar uretemez (EMPTY_TARGET)",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1 P0=1"
+    },
+    {
+      "id": "SP-6",
+      "aciklama": "yer tutucu ipucu gercek anahtari otomatik indirgemez",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1 P0=3 sir=3"
+    },
+    {
+      "id": "SR-1",
+      "aciklama": "dosyanin ilerisindeki gercek anahtar de goruluyor",
+      "sonuc": "GECTI",
+      "ayrinti": "bulgular=['app.py:402', 'app.py:1']"
+    },
+    {
+      "id": "GZ-1",
+      "aciklama": "imzasiz muafiyet kaydi P0 uretir",
+      "sonuc": "GECTI",
+      "ayrinti": "unsigned=True"
+    },
+    {
+      "id": "GZ-2",
+      "aciklama": "imzali muafiyet yalniz kendi konumunu susturur",
+      "sonuc": "GECTI",
+      "ayrinti": "imzasiz P0=4 imzali P0=2"
+    },
+    {
+      "id": "KT-11a",
+      "aciklama": "arsivde yol gecisi engellenir",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1"
+    },
+    {
+      "id": "KT-11b",
+      "aciklama": "asiri sikistirma orani engellenir",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1"
+    },
+    {
+      "id": "PI-2",
+      "aciklama": "dosya adindaki sinirlayici taklidi bulgu olarak kaydedilir",
+      "sonuc": "GECTI",
+      "ayrinti": "inj=True"
+    },
+    {
+      "id": "HJ-1",
+      "aciklama": "__MACOSX / ._* artiklari hijyen ihlali olarak gorulur",
+      "sonuc": "GECTI",
+      "ayrinti": "hijyen=1"
+    },
+    {
+      "id": "KT-12",
+      "aciklama": "kanit dizini hijyenden muaftir",
+      "sonuc": "GECTI",
+      "ayrinti": "hijyen=0"
+    },
+    {
+      "id": "AR-1",
+      "aciklama": "temiz klasor olumlu karar alir",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=0 counts={'P0': 0, 'P1': 0, 'P2': 0}"
+    },
+    {
+      "id": "SP-7",
+      "aciklama": "arac kendi arsiv/sir kapisindan geciyor",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=0 bulgular=[]"
+    },
+    {
+      "id": "TUT-1",
+      "aciklama": "paket ici tutarlilik kapisindan geciyor",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=0 bulgular=[]"
+    },
+    {
+      "id": "TUT-2",
+      "aciklama": "normatif kaynaktan silinen kapali liste degeri yakalanir",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1 yakaladi=True"
+    },
+    {
+      "id": "TUT-3",
+      "aciklama": "ornek rapor ilk-ekran butcesini asarsa kapi engel verir",
+      "sonuc": "GECTI",
+      "ayrinti": "rc=1"
+    }
+  ]
+}
