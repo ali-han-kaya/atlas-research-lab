@@ -75,7 +75,10 @@ ANAHTAR = re.compile(r'-----BEGIN [A-Z ]*PRIVATE KEY-----\r?\n[A-Za-z0-9+/=]{64,
 YASAK_UZANTI = {'.pdf', '.docx', '.doc', '.tex', '.aux', '.bcf', '.zip',
                 '.bundle', '.epub'}
 
-EV_ONEK = '/Users/alikaya'
+# Aktarimi kosan kullanicinin ev yolu (sert referans degil, kural parametresi).
+# Boylece depoda sahibinin mutlak yolu diye bir sey kalmaz: kural calisirken
+# ortaya cikar, dosyaya yazilmaz.
+EV_ONEK = os.path.expanduser('~')
 
 
 def atilabilir(ad):
@@ -85,7 +88,7 @@ def atilabilir(ad):
 def icerik(tam):
     """Yayimlanacak BAYTLAR. Tek donusum: sahibin ev yolu -> `~`.
 
-    Neden: klonlayan icin `/Users/alikaya` sert referanstir; olcum kaydinda
+    Neden: klonlayan icin sahibin ev yolu sert referanstir; olcum kaydinda
     gecen yol ise bilgi tasir. `~/` ikisini de korur, kaydin anlamini degistirmez.
     """
     with open(tam, 'rb') as f:
