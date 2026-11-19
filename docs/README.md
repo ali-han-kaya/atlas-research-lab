@@ -18,8 +18,8 @@ Bu klasör laboratuvarın **kendi üzerine** tuttuğu kayıtları taşır: canl�
 ## Yayın kapsamı
 
 **Dahil:** hatların mekanizması (ajanlar, komutlar, şablonlar, kapı betikleri),
-üç öz-test paketi, Toolkit v4 çekirdeği, kusurlu örnek koşu (`DENEME/`),
-yukarıdaki ölçüm ve ders kayıtları.
+üç öz-test paketi, mutasyon bataryası (`tools/mutasyon_bataryasi.py`), Toolkit v4
+çekirdeği, kusurlu örnek koşu (`DENEME/`), yukarıdaki ölçüm ve ders kayıtları.
 
 **Hariç — ve neden:**
 
@@ -38,6 +38,24 @@ yukarıdaki ölçüm ve ders kayıtları.
 Bu sınır yüzünden `DERSLER` ve ölçüm dosyalarındaki bazı atıflar özel ağaçtaki
 devir dosyalarını gösterir. Bu bir kırık bağ değil, **bilinçli yayın sınırıdır**:
 kayıt yerinde durur, kanıtı özel ağaçta kalır.
+
+## Mutasyon bataryası
+
+Öz-test "kapı kodu doğru mu" sorusunu sorar; mutasyon bataryası başka bir soruyu
+sorar: **kapı gerçekten kırmızıya dönüyor mu.** Her vaka kendi geçici kopyasında
+çalışır ve üç adımı birlikte ister:
+
+1. **Temiz taban** — ihlalsiz kopyada kapı `rc=0` vermeli.
+2. **Tek ihlal** — aynı kopyada yalnız o kuralı kıran değişiklik yapılır.
+3. **Kırmızı hüküm** — kapı `rc!=0` vermeli ve beklenen kural kimliğini basmalı.
+
+Üçünden biri eksikse vaka `ATESLEMEDI` / `TABAN_KIRIK` olarak raporlanır ve betik
+`rc=1` ile çıkar. Ölçülen kurallar ve hangi katmana ait oldukları çıktıda ada
+basmadır; sayı README'ye elle yazılmaz.
+
+**Neyi ölçmez:** kuralın *doğru tasarlandığını* ölçmez — yalnız kodun o ihlali
+yakaladığını ölçer. Mutasyon uygulanamazsa (desen bulunamazsa) bu da sessiz
+geçmez, `MUTASYON_UYGULANMADI` olarak kırmızı sayılır.
 
 ## Ortam bağlı kalemler
 

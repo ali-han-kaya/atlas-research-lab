@@ -44,6 +44,7 @@ olarak saklandı.
 | **Hakem** | `HAKEM_HEYETI/` | Çok modelli hakem paneli sözleşmesi (F0–F6) ve iki turlu acımasız denetim komutu. |
 | **Ortak** | `ORTAK/` | İki hattın paylaştığı kapı (`ortak_gate.py`), yönlendirme ve bütçe koruması. |
 | **Kayıt** | `docs/` | Ölçüm koşuları, denetim raporları, ders defteri, kanonik olgu tablosu. |
+| **Mutasyon** | `tools/mutasyon_bataryasi.py` | Kapı kuralları gerçekten ateşliyor mu: temiz taban + tek ihlal + kırmızı hüküm. Tek dosya, kişisel yol yok, `SKILL.md` bağımlılığı yok. |
 
 Ajan tanımları `.opencode/agent/` ve `.opencode/command/` altındadır; her girdi
 `ATLAS_SABLONLAR/.opencode/` içindeki tek kaynağa **göreli symlink**'tir — ikinci
@@ -90,6 +91,11 @@ python3 ATLAS_SABLONLAR/scripts/atlas_selftest.py        # OLG-1 ortam bağlı �
 python3 KOD_SABLONLAR/scripts/kod_selftest.py
 (cd KOMUT_TOOLKIT_v4/ARACLAR/betikler && python3 v4_selftest.py)
 ```
+
+`make mutasyon` ayrı bir kanıttır: her kural için önce **temiz taban** (`rc=0`)
+alır, aynı kopyada tek bir ihlal üretir ve kapının **kırmızıya döndüğünü** ölçer.
+İkisi birlikte olmadan vaka geçmez — yani yeşil, kapının değil girdinin özelliği
+olamaz. Model, ağ ve yerel katalog gerekmez.
 
 ### Bir projede ATLAS hattını kullanmak
 
