@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-19T16:30:59Z",
+  "zaman": "2026-11-19T17:47:57Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -162,8 +162,8 @@
         "tools/dogrula.py"
       ],
       "rc": 0,
-      "ham": "  H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 6/6 gecti",
-      "deger": "6/6"
+      "ham": "  H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 8/8 gecti",
+      "deger": "8/8"
     },
     "IDD-19": {
       "komut": [
