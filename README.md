@@ -1,3 +1,29 @@
+## ATLAS Research Lab — in brief
+
+**A verification-first, multi-agent research lab.** ATLAS treats verification as the
+product: a delivery is judged by gates that run over its own bytes, never by a model's
+claim that the work was done.
+
+- **What it does.** Academic audit and hardening (scope → three parallel review lenses →
+targeted fixes → master revision → 2-of-2 acceptance) and a code pipeline (KFAZ0–5 with a
+mandatory baseline and 2A/2B/2C gates). Generated papers, corpora and session handoffs
+are deliberately excluded — this repository is the mechanism, not the archive.
+- **Which gates exist.** An eight-predicate revision gate (count drift, claim IDs,
+body/title consistency, class scan, residue bucket, measurement freshness, version
+marker, source level — all eight must be zero); a closed severity list P0/P1/P2 where any
+unknown label becomes `SCHEMA_INVALID` → P0; KEEP fingerprints so silent deletion becomes
+visible; evidence levels (`BIRINCIL`/`DIJITAL`/`BEYAN`/`OLCULMEDI`); fail-closed handling
+(unmeasured is never a pass); and tamper detection (`GATE_TAMPERED` → P0).
+- **How claims are verified.** `make dogrula` (hygiene, syntax, secret scan, three
+self-test suites), `make mutasyon` (five gate rules must actually fire: clean baseline +
+one violation + a red verdict), and `tools/yayinla.py` (publish parity: 0 new / 0 changed
+/ 0 deleted). The same commands run in CI on GitHub Actions.
+- **Measured state.** `make dogrula` → **6 pass / 0 fail / 1 not run** (T1 is reported as
+`CALISTIRILMADI` and never counted as a pass); KOD self-test **174/174**; mutation battery
+**5/5**; CI green.
+
+---
+
 # ATLAS Research Lab
 
 **Kanıt disiplinli, çok ajanlı üretim laboratuvarı.** Akademik metin ve yazılım
