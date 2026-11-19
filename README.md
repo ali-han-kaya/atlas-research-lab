@@ -17,14 +17,15 @@ unknown label becomes `SCHEMA_INVALID` → P0; KEEP fingerprints so silent delet
 visible; evidence levels (`BIRINCIL`/`DIJITAL`/`BEYAN`/`OLCULMEDI`); fail-closed handling
 (unmeasured is never a pass); and tamper detection (`GATE_TAMPERED` → P0).
 - **How claims are verified.** `make dogrula` (hygiene, syntax, secret scan, secret-gate
-self-test, three self-test suites), `make mutasyon` (seventy-one gate cases must actually fire:
-clean baseline + one violation + a red verdict), and `tools/yayinla.py` (publish parity:
-0 new / 0 changed / 0 deleted). The same commands run in CI on GitHub Actions.
+self-test, three self-test suites), `make mutasyon` (seventy-one gate rules, exercised by
+54 battery cases: clean baseline + one violation + a red verdict), and `tools/yayinla.py`
+(publish parity: 0 new / 0 changed / 0 deleted). The same commands run in CI on GitHub Actions.
+`make iddia` closes the remaining gap: it re-measures the numbers printed in this README.
 - **Reproduce it.** `./demo` prints the frozen 8-vs-2 failure with a **red verdict and
 exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin
 wrapper and cannot carry 1 vs 2, because GNU make always exits 2 on a failing recipe. `make dogrula` → **7 pass / 0 fail / 1 not run** (T1 is reported as
 `CALISTIRILMADI` and never counted as a pass — see *Accepted debt* below); KOD self-test
-**174/174**; mutation battery **54/54 red + 17/17 expected finding**. Mutation-tested vs untested gate rules are measured
+**174/174**; mutation battery **54/54 cases red + 17/17 expected findings** over 71 rules. Mutation-tested vs untested gate rules are measured
 in [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md); dependent-package findings in
 [`docs/GUVENLIK.md`](docs/GUVENLIK.md); CI green. Non-Turkish readers:
 [`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md).
@@ -250,6 +251,7 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 | Kırmızı hüküm demosu | `./demo` → `tools/demo.py` (kanonik; beklenen `rc=1`, fikstür bozuksa `rc=2`, yeşilde `rc=0`) |
 | Mutasyon kapsamı | `make kapsam` → `docs/MUTASYON_KAPSAM.md` güncel mi (üretilmiş tablo) |
 | Katalog tazeliği (isteğe bağlı) | `make katalog-kontrol` → models.dev canlı kataloğu; ağ gerekir, CI'da koşmaz |
+| İddia defteri | `make iddia` → README/docs sayısal iddialarını üreten komutla yeniden ölçer; tutmayan satır `IDD-*` ile kırmızı |
 | Bağımlılık denetimi | `make guvenlik` → `pip-audit`; her bulgu `docs/GUVENLIK.md` içinde adıyla |
 | Commit/push koruması | `make kur` → `core.hooksPath=.githooks`; canlı DSN commit edilemez |
 | Runner doğrulaması | `make dogrula-ci` — yalnız o ortamda ölçülebilen kalemler hükme girer, öz-testler rapor |
@@ -259,6 +261,26 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 `tools/yayinla.py` yalnız **açık listedeki** mekanizma yollarını taşır; liste dışına
 çıkmaz, hedefte liste dışı dosya bırakmaz ve yazmadan önce sır taraması yapar —
 bulgu varsa hiçbir şey yazmaz.
+
+## İddia defteri
+
+Bu README'deki sayısal ölçümler `tools/iddia_defteri.json` içinde tek tek satırdır:
+iddia metni, geçtiği dosya ve **birebir cümle**, onu üreten komut ve son ölçülen
+değer. `make iddia` her satırı yeniden koşar; beyan ile ölçüm tutmazsa satırı
+kimliğiyle (`IDD-07`) kırmızı basar ve `rc=1` döner. Alıntısı dosyasında birebir
+bulunmayan bir satır defteri bozuk sayar (`rc=2`): iddia metni uydurulamaz.
+
+Üç durum yeşile zorlanmaz, ayrı sayılır: `AG_GEREKLI` (ağ ister; varsayılan koşuda
+atlanır), `BEYAN` (tarihli/makineye bağlı kayıt) ve `OLCULMEDI` (bu ağaçta yeniden
+üretilemez; gerekçesi satırda yazılı). Defter `make dogrula` hükmüne girmez; 7/8
+borcu olduğu gibi kalır.
+
+Defterin kapsamı üç public dokümandır: `README.md`, `docs/README.md`,
+`docs/EN/QUICKSTART.md`. Tarihli `docs/OLCUM-*`, `SURUM.md` ve üretilmiş
+`MUTASYON_KAPSAM.md` / `GUVENLIK.md` kapsam dışıdır; gerekçeleri defterin
+`kapsam` bloğundadır. Allowlist'in canlı katalogda 9/9 geçerli olup olmadığı
+`make iddia-ag` ile ölçülür; ağsız koşuda bu satır `AG_GEREKLI` sayılır ve kapıyı
+kırmaz.
 
 ---
 

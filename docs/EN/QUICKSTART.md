@@ -19,7 +19,7 @@ make kur                                         # enable commit/push guards in 
 
 ```text
   H1  depo hijyeni             PASS    0 bulgu
-  H2  python sozdizimi         PASS    56 dosya
+  H2  python sozdizimi         PASS    57 dosya
   H3  kabuk sozdizimi          PASS    7 dosya
   H4  sir taramasi             PASS    0 bulgu
   H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 6/6 gecti
@@ -98,6 +98,12 @@ claim/evidence gap, not from a broken test.
 | `make dogrula-ci` | runner mode used by GitHub Actions (same rules, no CI-only exemption) |
 | `make katalog-kontrol` | optional network check: fixed allowlist IDs still exist at models.dev; not run in CI |
 | `make oztest` | the three self-test suites alone |
+| `make iddia` | numeric claims in README/docs, re-measured and named by `IDD-*` on mismatch |
+
+`make iddia` is separate from `make dogrula`: it does not change the 7/8 verdict.
+Claims that cannot be re-run are not forced green — `AG_GEREKLI` (network; skipped
+unless `make iddia-ag`), `BEYAN` (dated/machine-bound) and `OLCULMEDI` (not
+reproducible here) are counted separately with their reason.
 
 CI runs `make dogrula-ci`, `make mutasyon`, `make kapsam`, `make guvenlik`, and
 asserts `./demo` exits **1** while `make demo` exits **2** (the wrapper cannot
