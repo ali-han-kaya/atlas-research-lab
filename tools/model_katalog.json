@@ -1,0 +1,17 @@
+{
+ "_aciklama": "Sabit model katalogu (allowlist anlik goruntusu). MOD-1/MOD-2 kapilari ajanlarin BU listedeki modelleri kullandigini denetler; boylece sayi her klonda ayni cikar. Canli katalogla denetim icin ATLAS_MODEL_KATALOG=<yol> verin.",
+ "_kaynak": "models.dev semasi; yalniz depoda gecen model kimlikleri, 2026-11-19",
+ "openrouter": {
+  "models": {
+   "anthropic/claude-opus-5": {"reasoning": true, "tool_call": true},
+   "anthropic/claude-sonnet-5": {"reasoning": true, "tool_call": true},
+   "deepseek/deepseek-v4-flash": {"reasoning": true, "tool_call": true},
+   "deepseek/deepseek-v4-pro": {"reasoning": true, "tool_call": true},
+   "moonshotai/kimi-k2.7-code": {"reasoning": true, "tool_call": true},
+   "moonshotai/kimi-k3": {"reasoning": true, "tool_call": true},
+   "nvidia/nemotron-3-super-120b-a12b:free": {"reasoning": true, "tool_call": true},
+   "z-ai/glm-5.2": {"reasoning": true, "tool_call": true},
+   "z-ai/glm-5.3": {"reasoning": true, "tool_call": true}
+  }
+ }
+}

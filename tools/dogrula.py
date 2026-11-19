@@ -10,16 +10,21 @@ Iki kip vardir:
 
   (varsayilan)        Tam kapi. Laboratuvarin kendi ortaminda (macOS + yerel
                       opencode model katalogu) her sey kosar.
-  --ci                Runner kipi. Yalnizca bu ortamda OLCULEBILEN kalemler
-                      hukme girer: hijyen, sozdizimi, sir taramasi, Toolkit.
-                      ATLAS ve KOD paketleri kosar ama CALISTIRILMADI olarak
-                      basilir — cunku ikisi de yerel modele/tarihceye baglidir
-                      ve baska bir makinede ayni sayiyi uretmez. Gizlenmez.
+  --ci                Runner kipi. Hukum AYNI kurallarla verilir: ayri bir
+                      muafiyet yoktur. Kalan fark yalnizca basliktadir; sabit
+                      katalog sayesinde sayilar runner'da da ayni cikar.
 
 CALISTIRILMADI KALEMI: ATLAS'taki OLG-1, SURUM.md makine blogunun bagli oldugu
 commit ve kanit setini arar; bu depo ozel agacin tarihcesini tasimaz. Test bu
 yuzden CALISTIRILMADI raporlanir — PASS degil, KOSULLU da degil: kosmadi.
 Her CALISTIRILMADI kalem nedenini yaninda tasir ve hukme SAYILMAZ.
+
+MODEL KATALOGU: varsayilan kosu DEPODAKI sabit katalogu kullanir
+(`tools/model_katalog.json`) ve makinedeki `~/.cache/opencode/models.json`
+dosyasini OKUMAZ. Boylece ayni commit her klonda ayni sayiyi verir. Sabit
+katalog bir ALLOWLIST anlik goruntusudur: kapi, ajanlarin bu listedeki modelleri
+kullandigini denetler. Canli katalogla denetim icin `ATLAS_MODEL_KATALOG=<yol>`
+verin; fark yalnizca katalog ICERIGINDEN gelir, makineden degil.
 
 CIKIS: 0 = hukme giren kalemlerin hepsi gecti (CALISTIRILMADI varsa bile) ·
        1 = en az bir kalem FAIL · 2 = kosulamadi
@@ -57,9 +62,17 @@ ANAHTAR = re.compile(r'-----BEGIN [A-Z ]*PRIVATE KEY-----\r?\n[A-Za-z0-9+/=]{64,
 ORTAM_BAGLI = {
     'T1': ({'OLG-1', 'MOD-1', 'MOD-2'}, 'OLGU-04',
            'SURUM.md makine blogu ozel agacin HEAD/kanit setine bagli (OLGU-04)'),
-    'T2': ({'MOD-1', 'MOD-2'}, 'check_models',
-           'yerel opencode model katalogu yok'),
+    # KOD'un katalog yoklugunda kosamayan dort testi AYRI AYRI adlandirilir;
+    # kanit dizgisi olmadan bu kimlikler CALISTIRILMADI sayilmaz.
+    'T2': ({'MOD-1', 'MOD-2', 'K8-1', 'K8-2', 'O3-09c', 'O3-09d'},
+           'model katalogu yok',
+           'model katalogu verilmedi (ATLAS_MODEL_KATALOG)'),
 }
+
+# Depoda tasinan sabit katalog (allowlist anlik goruntusu).
+KATALOG_SABIT = os.path.join(KOK, 'tools', 'model_katalog.json')
+# Sabit katalog yoksa: makinedeki onbellegi okumayan yokluk isareti.
+KATALOG_YOK = os.path.join(KOK, '.model-katalog-verilmedi.json')
 
 # Bu ortamda olculemeyen, yalnizca raporlanan paketler (yalniz --ci'da).
 CI_RAPOR = {'T1', 'T2'}
@@ -151,9 +164,14 @@ KOMUTLAR = [
 
 
 def kos(komut, cwd=None):
+    env = dict(os.environ)
+    if not env.get('ATLAS_MODEL_KATALOG'):
+        env['ATLAS_MODEL_KATALOG'] = (KATALOG_SABIT
+                                      if os.path.isfile(KATALOG_SABIT)
+                                      else KATALOG_YOK)
     try:
         r = subprocess.run(komut, cwd=cwd or KOK, capture_output=True,
-                           text=True, timeout=900)
+                           text=True, env=env, timeout=900)
         return r.returncode, ((r.stdout or '') + (r.stderr or '')).strip()
     except subprocess.TimeoutExpired:
         return 124, 'ZAMAN ASIMI (900 s)'
@@ -161,10 +179,15 @@ def kos(komut, cwd=None):
         return 125, 'KOSULAMADI: %s' % e
 
 
-def kimlikler(cikti):
+def kimlikler(cikti, fail_de=False):
+    """Kalan test kimlikleri. `fail_de` yalniz KOD paketi icin acilir: o paket
+    `KALDI` degil `FAIL <kimlik>` basar. ATLAS'ta FAIL satirlari ayrinti metnidir,
+    kimlik sayilirsa gercek kalem yanlis etiketlenir."""
+    desen = (r'\s*(?:KALDI|FAIL)\s+([A-Za-z0-9_.-]+)' if fail_de
+             else r'\s*KALDI\s+([A-Za-z0-9_.-]+):')
     kimlik = set()
     for satir in cikti.splitlines():
-        m = re.match(r'\s*KALDI\s+([A-Za-z0-9_.-]+):', satir)
+        m = re.match(desen, satir)
         if m:
             kimlik.add(m.group(1))
     return kimlik
@@ -177,7 +200,7 @@ def ortam_bagli_mi(kid, cikti):
     if not kural:
         return None
     izinli, ek_kanit, gerekce = kural
-    kalan = kimlikler(cikti)
+    kalan = kimlikler(cikti, fail_de=(kid == 'T2'))
     if not kalan or not kalan <= izinli:
         return None
     if ek_kanit not in cikti:
@@ -189,6 +212,12 @@ def main():
     kip = 'CI' if CI else ('HIZLI' if HIZLI else 'TAM')
     print('ATLAS — tek giris dogrulama · %s' % kip)
     print('kok: %s' % KOK)
+    if os.environ.get('ATLAS_MODEL_KATALOG'):
+        print('model katalogu: %s' % os.environ['ATLAS_MODEL_KATALOG'])
+    elif os.path.isfile(KATALOG_SABIT):
+        print('model katalogu: depo sabiti (tools/model_katalog.json)')
+    else:
+        print('model katalogu: YOK — model kalemleri CALISTIRILMADI olur')
     print()
 
     kalemler = []
@@ -212,13 +241,18 @@ def main():
         son = satirlar[-1][:110] if satirlar else '(bos cikti)'
 
         if CI and kid in CI_RAPOR:
-            # Gecen paket PASS'tir; yalniz kosamayan/gecemeyen CALISTIRILMADI olur.
+            # Kural tabanli siniflandirma: gecen PASS, ortam gerekceli kalan
+            # CALISTIRILMADI, digerleri FAIL. CI'ya ozel muafiyet YOK.
             if rc == 0:
                 kalemler.append((kid, ad, True, son, [], ''))
+                continue
+            sebep = ortam_bagli_mi(kid, cikti)
+            kalan = [s for s in satirlar if re.match(r'\s*KALDI', s)][:20]
+            if sebep:
+                kalemler.append((kid, ad, None, son, kalan,
+                                 'CALISTIRILMADI: %s' % sebep))
             else:
-                kalemler.append((kid, ad, None, son, [],
-                                 'CALISTIRILMADI: CI kipi — oz-test sayisi bu '
-                                 'ortamda tasinabilir degil (model katalogu/tarihce)'))
+                kalemler.append((kid, ad, False, son, kalan or satirlar[-6:], ''))
             continue
         if rc == 0:
             kalemler.append((kid, ad, True, son, [], ''))

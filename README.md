@@ -97,6 +97,11 @@ alır, aynı kopyada tek bir ihlal üretir ve kapının **kırmızıya döndüğ
 İkisi birlikte olmadan vaka geçmez — yani yeşil, kapının değil girdinin özelliği
 olamaz. Model, ağ ve yerel katalog gerekmez.
 
+Model kataloğu depoda **sabittir** (`tools/model_katalog.json`): MOD-1/MOD-2
+yaşayan kataloğa değil bu allowlist anlık görüntüsüne bakar, böylece KOD sayısı
+her klonda ve runner'da aynı çıkar. Canlı katalogla denetim isteğe bağlıdır:
+`ATLAS_MODEL_KATALOG=~/.cache/opencode/models.json make dogrula`.
+
 ### Bir projede ATLAS hattını kullanmak
 
 ```bash
@@ -169,11 +174,11 @@ bulgu varsa hiçbir şey yazmaz.
 - Makale içerikleri, kaynak korpusları ve oturum devir kayıtları bu depoda yoktur.
   Bu yüzden `DERSLER` ve ölçüm dosyalarındaki bazı atıflar özel ağaçtaki devir
   dosyalarına işaret eder; kapsam notu: [docs/README.md](docs/README.md).
--   Verisi bu depoda olmayan kalemler açıkça **`CALISTIRILMADI`** basılır ve hükme
-  sayılmaz: ATLAS'ta **OLG-1** (özel ağacın commit zinciri ve canlı kanıt seti),
-  KOD'da **MOD-1/MOD-2** (makinedeki model kataloğu). `PASS` da `KOSULLU` da
-  yazılmaz; kimlikler açık listededir ve gerekçe her satırda yazılıdır.
-  Ayrıntı: [docs/README.md](docs/README.md).
+- Verisi bu depoda olmayan kalemler açıkça **`CALISTIRILMADI`** basılır ve hükme
+  sayılmaz: bugün yalnız **OLG-1** (özel ağacın commit zinciri ve canlı kanıt
+  seti). `PASS` da `KOSULLU` da yazılmaz; kimlik açık listededir ve gerekçe her
+  satırda yazılıdır. Model kalemleri sabit katalogla koşar; katalog yoksa onlar da
+  `CALISTIRILMADI` olur. Ayrıntı: [docs/README.md](docs/README.md).
 
 ---
 
