@@ -30,9 +30,10 @@ jobs:
       - name: Bagimliliklar
         run: python3 -m pip install --quiet -r requirements-dev.txt
 
-      # Runner kipi: hijyen, sözdizimi, sır taraması ve Toolkit hükme girer.
-      # ATLAS/KOD paketleri koşar ama RAPOR olarak basılır — ikisi de yerel
-      # modele/tarihçeye bağlıdır ve başka makinede aynı sayıyı üretmez.
+      # Runner kipi: hijyen, sözdizimi, sır taraması, sır kapısı öz-testi ve
+      # Toolkit hükme girer. ATLAS/KOD paketleri koşar ama RAPOR olarak basılır —
+      # ikisi de yerel modele/tarihçeye bağlıdır. Kabul edilen borç (T1) iş
+      # özetine yazılır; 7/8 ile yeşil CI arasındaki fark gizlenmez.
       - name: make dogrula-ci
         run: make dogrula-ci
 
@@ -40,3 +41,32 @@ jobs:
       # Model, ağ ve yerel katalog gerektirmez; bu yüzden runner'da hükme girer.
       - name: make mutasyon
         run: make mutasyon
+
+      # Tablo elle yazilmaz; kapi envanteri degisip tablo bayatlarsa kirmizi.
+      - name: Mutasyon kapsami guncel mi
+        run: make kapsam
+
+      # Bulgular gizlenmez: her biri docs/GUVENLIK.md icinde adiyla listelenir;
+      # listede olmayan yeni bulgu cikarsa adim kirmizi doner.
+      - name: Bagimlilik denetimi (pip-audit)
+        run: make guvenlik
+
+      # Demo bilerek rc=1 doner; bu adim "kirmizi gercekten geldi mi" sorusunu
+      # sorar. rc=0 (kirmizi yanmadi) veya rc=2 (fikstur bozuk) basarisizdir.
+      - name: Demo beklenen kirmiziyi veriyor
+        run: |
+          set +e
+          out=$(make demo 2>&1)
+          rc=$?
+          set -e
+          echo "$out"
+          echo "demo rc=$rc"
+          test "$rc" -ne 0
+          echo "$out" | grep -q "BEKLENEN KIRMIZI"
+          ! echo "$out" | grep -q "FIKSTUR DEGISTI"
+          # Betik dogrudan kosturulunca beklenen kirmizi tam olarak 1'dir.
+          set +e
+          python3 tools/demo.py >/dev/null 2>&1
+          rc2=$?
+          set -e
+          test "$rc2" -eq 1

@@ -28,6 +28,10 @@ verin; fark yalnizca katalog ICERIGINDEN gelir, makineden degil.
 
 CIKIS: 0 = hukme giren kalemlerin hepsi gecti (CALISTIRILMADI varsa bile) ·
        1 = en az bir kalem FAIL · 2 = kosulamadi
+
+KABUL EDILEN BORC: kosmayan her kalem ozet satirinda ve HUKUM'de adiyla
+anilir; README'de nedeni yazilidir. Borcu PASS'a cevirmek icin sahte canak
+(commit, tarihce) uretilmez.
 """
 import os
 import re
@@ -153,6 +157,15 @@ def sir_tarama():
     return not kotu, '%d bulgu' % len(kotu), kotu
 
 
+def kapi_oztesti():
+    """sir_kapisi oz-testi: canli desen kirmizi, yer tutucu sessiz (H5)."""
+    rc, cikti = kos([sys.executable,
+                     os.path.join(KOK, 'tools', 'sir_kapisi_selftest.py')])
+    satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
+    son = satirlar[-1][:110] if satirlar else '(bos cikti)'
+    return rc == 0, son, ([] if rc == 0 else satirlar[-6:])
+
+
 KOMUTLAR = [
     ('T1', 'ATLAS oz-testi',
      [sys.executable, 'ATLAS_SABLONLAR/scripts/atlas_selftest.py', '--sessiz']),
@@ -208,6 +221,28 @@ def ortam_bagli_mi(kid, cikti):
     return gerekce
 
 
+def _github_ozeti(kalemler, kalan, atlanan):
+    """Actions is ozeti: 6/7 ile yesil CI arasindaki farki gorunur kilar."""
+    yol = os.environ.get('GITHUB_STEP_SUMMARY')
+    if not yol:
+        return
+    satirlar = ['## dogrula', '', '| Kalem | Hukum |', '|---|---|']
+    for kid, ad, durum, _ozet, _detay, _not in kalemler:
+        etiket = 'CALISTIRILMADI' if durum is None else ('PASS' if durum else 'FAIL')
+        satirlar.append('| %s %s | %s |' % (kid, ad, etiket))
+    satirlar.append('')
+    if atlanan:
+        satirlar.append('**Kabul edilen borc:** %s kosmuyor (%d kalem).'
+                        % (', '.join(k[0] for k in atlanan), len(atlanan)))
+    if kalan:
+        satirlar.append('**FAIL:** %s' % ', '.join(k[0] for k in kalan))
+    try:
+        with open(yol, 'a', encoding='utf-8') as f:
+            f.write('\n'.join(satirlar) + '\n')
+    except OSError:
+        pass
+
+
 def main():
     kip = 'CI' if CI else ('HIZLI' if HIZLI else 'TAM')
     print('ATLAS — tek giris dogrulama · %s' % kip)
@@ -224,7 +259,8 @@ def main():
     for kid, ad, fn in (('H1', 'depo hijyeni', hijyen),
                         ('H2', 'python sozdizimi', py_sozdizimi),
                         ('H3', 'kabuk sozdizimi', sh_sozdizimi),
-                        ('H4', 'sir taramasi', sir_tarama)):
+                        ('H4', 'sir taramasi', sir_tarama),
+                        ('H5', 'sir kapisi oz-testi', kapi_oztesti)):
         gecti, ozet, detay = fn()
         kalemler.append((kid, ad, True if gecti else False, ozet,
                          detay if not gecti else [], ''))
@@ -281,6 +317,12 @@ def main():
           % (len(kalemler), len(kalemler) - len(kalan) - len(atlanan),
              len(kalan), len(atlanan)))
     print('  NOT: bu betik hakem degildir; rc toplar (OZ_DENETIM).')
+    for k in atlanan:
+        if HIZLI:
+            break
+        sebep = (k[5] or '').replace('CALISTIRILMADI: ', '')
+        print('  KABUL EDILEN BORC: %s kosmuyor — %s' % (k[0], sebep))
+    _github_ozeti(kalemler, kalan, atlanan)
     if kalan:
         print('  HUKUM: FAIL — %s' % ', '.join(k[0] for k in kalan))
         return 1
