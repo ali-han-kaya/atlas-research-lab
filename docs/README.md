@@ -103,6 +103,12 @@ yaşayan kataloğa değil bu **allowlist anlık görüntüsüne** bakar; böylec
 sayısı runner'da da aynı çıkar. Canlı katalogla denetim isteğe bağlıdır:
 `ATLAS_MODEL_KATALOG=~/.cache/opencode/models.json make dogrula`.
 
+Sabit allowlist'in models.dev'de hâlâ geçerli olup olmadığını ölçen ayrı bir
+isteğe bağlı kontrol vardır: `make katalog-kontrol`. **Ağ gerektirir ve CI'da
+koşmaz**; eksik model adıyla `rc=1`, ölçülemeyen ağ/JSON için `rc=2` döner.
+Kanonik kod ayrımı `python3 tools/katalog_kontrol.py` ile alınır (GNU make
+tarif hatasını 2'ye çevirir).
+
 Farkın nereden geldiği ölçüldü (19 Kasım 2026): aynı 9 modellik içerik başka bir
 yolda **174/174**, yerel tam katalog (390 model) **174/174**, katalog yok **170/174**
 (`K8-1`, `K8-2`, `O3-09c`, `O3-09d`). Yani fark makineden değil **katalog

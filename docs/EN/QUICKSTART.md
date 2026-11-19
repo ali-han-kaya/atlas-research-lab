@@ -19,7 +19,7 @@ make kur                                         # enable commit/push guards in 
 
 ```text
   H1  depo hijyeni             PASS    0 bulgu
-  H2  python sozdizimi         PASS    54 dosya
+  H2  python sozdizimi         PASS    56 dosya
   H3  kabuk sozdizimi          PASS    7 dosya
   H4  sir taramasi             PASS    0 bulgu
   H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 6/6 gecti
@@ -96,8 +96,14 @@ claim/evidence gap, not from a broken test.
 | `make kapsam` | `docs/MUTASYON_KAPSAM.md` matches the current gate inventory |
 | `make guvenlik` | `pip-audit` findings, each named in `docs/GUVENLIK.md`; unlisted finding → red |
 | `make dogrula-ci` | runner mode used by GitHub Actions (same rules, no CI-only exemption) |
+| `make katalog-kontrol` | optional network check: fixed allowlist IDs still exist at models.dev; not run in CI |
 | `make oztest` | the three self-test suites alone |
 
 CI runs `make dogrula-ci`, `make mutasyon`, `make kapsam`, `make guvenlik`, and
 asserts `./demo` exits **1** while `make demo` exits **2** (the wrapper cannot
 carry 1). Workflow: `.github/workflows/dogrula.yml`.
+
+`make katalog-kontrol` is deliberately **not** in CI: it requires network. It
+exits 1 and names stale/missing IDs, or 2 when the live catalog cannot be read.
+For the code distinction, run `python3 tools/katalog_kontrol.py` directly; GNU
+make turns a failing recipe into exit 2.
