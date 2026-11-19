@@ -14,9 +14,9 @@ bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus
 | Olcum | Deger |
 |---|---|
 | Kapi betigi | 21 |
-| Bildirilen kural | 121 |
+| Bildirilen kural | 122 |
 | Mutasyon vakasi olan (TEST EDILDI) | 71 |
-| Gerekceli kapsam disi | 27 |
+| Gerekceli kapsam disi | 28 |
 | Bosluk (gerekce yok) | 23 |
 | — bunlardan yalniz oz-testte anilan | 11 |
 | — hicbir testte gecmeyen | 12 |
@@ -33,7 +33,7 @@ Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir
 | gizli-anahtar | HMAC anahtari ister (LAB_IMZA_ANAHTARI / ~/.config/lab_imza.key); anahtar depoya konmaz | teslim_imza.py | 6 |
 | kosu-durumu | butun agacin selftest hash tabanini ve ham kosu ciktisini ister | api_surface.py, oztest_attest.py | 11 |
 | olu-kimlik | SEC-04 yalniz baslikta bildirilir; hicbir kod dali bu kimligi basmiyor (atlanan dosyalar yalniz sayilir) | secret_scan.py | 1 |
-| tarihce | SURUM.md makine blogunu HEAD/commit hashleriyle karsilastirir | olgu_lint.py | 2 |
+| tarihce | SURUM.md makine blogunu HEAD/commit hashleriyle karsilastirir | olgu_lint.py | 3 |
 
 ## Tarama kaniti
 
@@ -53,7 +53,7 @@ envanterin konusu degildir.
 | `cite_match.py` | 3 | 3 | 0 | 3 |
 | `declaration_check.py` | 7 | 0 | 0 | 7 |
 | `fix_reconcile.py` | 6 | 6 | 0 | 6 |
-| `olgu_lint.py` | 2 | 0 | 0 | 2 |
+| `olgu_lint.py` | 3 | 0 | 0 | 3 |
 | `oztest_attest.py` | 6 | 0 | 0 | 6 |
 | `prompt_lint.py` | 12 | 0 | 0 | 12 |
 | `provenance_check.py` | 0 | 3 | 3 | 3 |
@@ -71,7 +71,7 @@ envanterin konusu degildir.
 | `secret_scan.py` | 5 | 0 | 0 | 5 |
 | `test_attest.py` | 12 | 1 | 0 | 12 |
 
-Toplam: 21 betik · 121 tekil kural; her satirda Envanter = Baslikta ∪ Bolum basligi.
+Toplam: 21 betik · 122 tekil kural; her satirda Envanter = Baslikta ∪ Bolum basligi.
 
 ## Tam envanter
 
@@ -101,6 +101,7 @@ Toplam: 21 betik · 121 tekil kural; her satirda Envanter = Baslikta ∪ Bolum b
 | `fix_reconcile.py` | REC-04 | REC-04 | TEST EDILDI | mutasyon vakasi: REC-04 |
 | `fix_reconcile.py` | REC-05 | REC-05 | TEST EDILDI | mutasyon vakasi: REC-05 |
 | `fix_reconcile.py` | REC-06 | REC-06 | TEST EDILDI | mutasyon vakasi: REC-06 |
+| `olgu_lint.py` | OLGU-04 | — | KAPSAM DISI | tarihce: SURUM.md makine blogunu HEAD/commit hashleriyle karsilastirir |
 | `olgu_lint.py` | OLGU-05 | — | KAPSAM DISI | tarihce: SURUM.md makine blogunu HEAD/commit hashleriyle karsilastirir |
 | `olgu_lint.py` | OLGU-06 | — | KAPSAM DISI | tarihce: SURUM.md makine blogunu HEAD/commit hashleriyle karsilastirir |
 | `oztest_attest.py` | OZT-01 | — | KAPSAM DISI | kosu-durumu: butun agacin selftest hash tabanini ve ham kosu ciktisini ister |

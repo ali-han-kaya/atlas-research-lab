@@ -174,6 +174,7 @@ varsa `tools/kanit_dogrula.py` ile onu doğrular ve `OLGU-04`'ün commit zinciri
 ağacın 36 tarihsel commit'i public ağaçta aranmaz; sahte commit çıpası yazılmaz.
 `docs/OLGULAR.md` içindeki tarihsel `baseline_commit` ve mekanizma listesi
 **silinmedi**; public ağaçta makine kanıtı sayılmaz, tarihsel kayıt olarak durur.
+Özel ağaçta (145/145) kaydı da tarihseldir; public ağaçta yeniden üretilmez.
 `OLG-06` atlanmaz: eksik iki DERSLER satırı (`89fb3da`, `df0d083`) gerçek
 commit'lerle eklendi ve `--dersler` PASS verir.
 

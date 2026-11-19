@@ -329,7 +329,7 @@ Attestation yoksa/bozuksa OLG-1 FAIL olur. Ayrıntı ve negatif kontrol:
 `tools/kapsam.py` tarafından üretilir (elle yazılmaz) ve üç durum ayırır:
 
 - **TEST EDİLDİ** — 71 kural (mutasyon vakası adıyla)
-- **KAPSAM DIŞI** — 27 kural, her biri ölçülmüş bir gerekçeyle: ağ
+- **KAPSAM DIŞI** — 28 kural, her biri ölçülmüş bir gerekçeyle: ağ
   (`verify_doi`), gizli anahtar (`teslim_imza`), tarihçe (`olgu_lint`), koşu durumu
   (`api_surface`, `oztest_attest`), depo durumu (`dep_audit`), ölü kural kimliği
   (`secret_scan` SEC-04 hiçbir kod dalında basılmıyor)
