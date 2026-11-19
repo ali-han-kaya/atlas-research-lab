@@ -1,0 +1,1475 @@
+{
+  "commit": "16b008d1313d9905e55eff6694c8d3cdbf05a5e1",
+  "file_count": 242,
+  "files": [
+    {
+      "mode": "100755",
+      "path": ".githooks/pre-commit",
+      "sha256": "8b6c826fea146c825fceceb8157b5e85bac7edb651f9e2808c3180cf6fae4d56",
+      "size": 127
+    },
+    {
+      "mode": "100755",
+      "path": ".githooks/pre-push",
+      "sha256": "8bdcdd22d4d5597397e03d373119805d1c585dabaf4b4aa9db2c2e3412f04949",
+      "size": 443
+    },
+    {
+      "mode": "100644",
+      "path": ".github/workflows/dogrula.yml",
+      "sha256": "d76e4f19ef0e1573a907929fe4abbdc54719e09c698fec4b5c0c8c91a7b5d62a",
+      "size": 3084
+    },
+    {
+      "mode": "100644",
+      "path": ".gitignore",
+      "sha256": "b35469ff7058f7e7971be2cfb95ac4974894a57b7d54c6dc8561753b7c75306c",
+      "size": 275
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/agent/atlas-gate-2a.md",
+      "sha256": "0b3180306f6f2a82e6967f65024bceb8893df38437bf701e41fb7cadab7e97be",
+      "size": 54
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/agent/atlas-gate-2b.md",
+      "sha256": "23b66167fba8dff36857c4bf8e6862c4818b9d39179c5d7b47320cba9121e9ae",
+      "size": 54
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/agent/atlas-gate-manifest.md",
+      "sha256": "2880609a10b789be41e4a23da2bb6990867b25f8fc00e6d4a177c13aab141a49",
+      "size": 60
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/agent/atlas-gate-strong.md",
+      "sha256": "0531464508f9432dadd2f63d831dcf3bac82fbc615e184ce2c50a9bfcf1cf2e6",
+      "size": 58
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/agent/atlas-gate.md",
+      "sha256": "5d5974282f17be874f2143866b19358f19a6c381492f1fdac01fd2e0de73ec45",
+      "size": 51
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/agent/atlas-gate_2.md",
+      "sha256": "87ce8f8b7360c42610cd1347eb452080bcb3ec298da14f0d21c6919bae7e4b64",
+      "size": 53
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/agent/atlas-lens-consistency.md",
+      "sha256": "52b4d32fc496ad4bb3569c757aaf108badb65ea89dd133961660969232302b3d",
+      "size": 63
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/agent/atlas-lens-editor.md",
+      "sha256": "8bea35c3a7fb0cbed676064bcf67b7373c078e5af56e1ed3aaef68c0b295658c",
+      "size": 58
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/agent/atlas-lens-structure.md",
+      "sha256": "7f98380d639364b5cc641c778cee7dec7a8de62d0d79de156b986ad04163f3f8",
+      "size": 61
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/agent/atlas-orchestrator.md",
+      "sha256": "b109ffd18303e3467e4406cee19f81b8722a1280afb0c41953cdea636a6977cb",
+      "size": 59
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/agent/atlas-review-critic.md",
+      "sha256": "461fca90aefa15f63712165adf162939cb246b217c25437a00a2b24d16a3a5e2",
+      "size": 60
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/agent/atlas-review-main.md",
+      "sha256": "49c2baf0e9d9edc06cfad92abe9ed65ba3352da68b40bdd1b6cde5f2613c2444",
+      "size": 58
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/agent/atlas-review-reviewer.md",
+      "sha256": "81b9aa04fac2113a411812adb0bfa29f341a047b8a43fe0b5822e8345fcd70ac",
+      "size": 62
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/agent/atlas-scoper.md",
+      "sha256": "eb8e680c5172c5be51a05383f069bd34f3d9fa443d1cd9e48dc993a674f2bcd3",
+      "size": 53
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/agent/atlas-writer-master.md",
+      "sha256": "7f3daea4d794f7d7433d05371343e762579f84b542e808b88ea8a609900ca73a",
+      "size": 60
+    },
+    {
+      "mode": "100644",
+      "path": ".opencode/agent/lab-orchestrator.md",
+      "sha256": "349085d563e869512652f85e8bf887d416dc6ca9d2b4bab5ff59e520521e6138",
+      "size": 5827
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/command/atlas-faz0.md",
+      "sha256": "3a9e1a43e47b5160afa7f8e51c00605ae3594019a1f42797eda8f6addceb4ff0",
+      "size": 53
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/command/atlas-faz1.md",
+      "sha256": "c10315e10465ee3f096d15c6e4cc0ac110319de066e5e46706a87c77735ec73c",
+      "size": 53
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/command/atlas-faz2.md",
+      "sha256": "3622f089b4dc6b5c0ae4c5aa03eaacc727d8c95fd8cf82a48b1c328086df722e",
+      "size": 53
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/command/atlas-faz3.md",
+      "sha256": "19d4d0aa5b0e75b23d5cb633a164d0ca4b89477bf290aa89e7f45c68a700de71",
+      "size": 53
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/command/atlas-faz5-hakem.md",
+      "sha256": "65aa9896c3191bfeebadd2ae964ed09012b48ec40d0d632cd9c627b9505a724d",
+      "size": 59
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/command/atlas-gate-2a.md",
+      "sha256": "4fa31f6cdca5f9761b436bb5f893864a0173cb1d83a552b7459d2e6038ab0220",
+      "size": 56
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/command/atlas-gate-2b.md",
+      "sha256": "88c958af6c776b1cbeec94cf3dcba06ac0a25f93140674e0c89f355f2efe3454",
+      "size": 56
+    },
+    {
+      "mode": "120000",
+      "path": ".opencode/command/atlas-verify.md",
+      "sha256": "b9fad9ad95a5c59012b7aa9dd32aba80c57b078d741073fccfca39203ffce5ae",
+      "size": 55
+    },
+    {
+      "mode": "100644",
+      "path": "AGENTS.md",
+      "sha256": "655a08addcf7761076ec18f79920cd43b46409dab3dbd16e04847432338f7cd8",
+      "size": 11091
+    },
+    {
+      "mode": "100644",
+      "path": "AI_CALISMA_SISTEMI_v1.md",
+      "sha256": "0aab31ebebc7082344c98cccf9e2d9ba1fa1e06219ac4bed067e3ecafe1cfb6b",
+      "size": 5596
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/agent/atlas-gate-2a.md",
+      "sha256": "d163ce5f6314dd723ab2d0cd76b3c8fb7defd867676d6260ce361d6640a34743",
+      "size": 3579
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/agent/atlas-gate-2b.md",
+      "sha256": "1d14f3de35243d3e783206b4bfd624b88b7cf34827cfa65c2e79fe8d4b93fad0",
+      "size": 3240
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/agent/atlas-gate-manifest.md",
+      "sha256": "bbeafcb55802c905c050d42cfcc42e5d519b1c817716f522a26ac94a8c412c3e",
+      "size": 368
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/agent/atlas-gate-strong.md",
+      "sha256": "cd0c6f197bbde3586c60e9fb31ee474a17c62cfebed9ad327d39e5cefdb274da",
+      "size": 397
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/agent/atlas-gate.md",
+      "sha256": "873823ec42c63962982dfa0d02ce02f3987df2647cd89ea1038c66cdaa9701a1",
+      "size": 1324
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/agent/atlas-gate_2.md",
+      "sha256": "bc6b1cb2ad7d050f776fc2ed26ec0cfbfd3596202963930b34163ece49919212",
+      "size": 393
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/.opencode/agent/atlas-lens-comparative-ethics.md",
+      "sha256": "2a1b50c44dc70bfc4281df821b366d6f3a3416c21f879c9b1f356e27bf5b9d52",
+      "size": 4047
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/agent/atlas-lens-consistency.md",
+      "sha256": "8cee77a741bdf640de485330de3f7d248eb90e6521e417144505ac3e9ff3e968",
+      "size": 5147
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/agent/atlas-lens-editor.md",
+      "sha256": "8ce0189b1882ee10ab01ab62f03e705b6397c1b8b774a9ae4b19fce56f4d352b",
+      "size": 5037
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/.opencode/agent/atlas-lens-philology.md",
+      "sha256": "e5893d7a019999ffe9853e1813b24a484b6359594b88543f469dd3ade12f9cad",
+      "size": 3951
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/agent/atlas-lens-structure.md",
+      "sha256": "62fc4191ce4af991dfcb48db7e384fd8df1e845c8208c5d8765a31a39c7db05a",
+      "size": 5290
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/agent/atlas-orchestrator.md",
+      "sha256": "59602a5b098bd64d0db5fd8ac170b11614663f4556dc3e40df30fbbf4f9cb784",
+      "size": 8618
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/.opencode/agent/atlas-review-critic.md",
+      "sha256": "516421de38d9021ef7987a6b5a57d766688c5a054c5fafeea39cb4b7d1ea1acb",
+      "size": 1812
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/.opencode/agent/atlas-review-main.md",
+      "sha256": "0e700dfc39a40326b2c8ce6fd0ae6e328799579e10643742fc08f47116d9ef3f",
+      "size": 2504
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/.opencode/agent/atlas-review-reviewer.md",
+      "sha256": "46a437abd0c5d9b6327978bd57c54a47c7d692c1cff015b8eafb242eb271f644",
+      "size": 1683
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/agent/atlas-scoper.md",
+      "sha256": "028c18df62b2aa783108e58b83911cef9970966c251b04b5276d054a411532a7",
+      "size": 5077
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/agent/atlas-writer-master.md",
+      "sha256": "ba8a702a44a039e633d20d35a01f783bcc3807c3afec95034eb83b321f6b2b76",
+      "size": 5857
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/command/atlas-faz0.md",
+      "sha256": "09ad17abb6fb9fa872f2f344a908beb3f1587693d1178c3f935d0f3005e8291c",
+      "size": 1077
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/command/atlas-faz1.md",
+      "sha256": "60fb56982c197578768b3dcbc6342a25ca3e295454c1424ebb7f35288e3de968",
+      "size": 1267
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/command/atlas-faz2.md",
+      "sha256": "2626c6aa75b15b689f8a5f1601aa0806e07f307ce1a382e7796516cd158aacbd",
+      "size": 1017
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/command/atlas-faz3.md",
+      "sha256": "1c40d7aa5cf8b8d79c39f8669433d6c237481fc7bdd7edf6d64a7ac5da4f0b5c",
+      "size": 1103
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/.opencode/command/atlas-faz5-hakem.md",
+      "sha256": "95137f34298e139522648a7109a721ba7d229cf886eb532e38cff073fda6c719",
+      "size": 11258
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/command/atlas-gate-2a.md",
+      "sha256": "400f225f5e7c3cd05952bb72a2854061a19d2841d3d653c48b043ceb676bbefe",
+      "size": 487
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/command/atlas-gate-2b.md",
+      "sha256": "c59db1a01289b72b9a4225f4997ba6379fbc87717d6ae7d90b1c52cce3f37eb4",
+      "size": 1165
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/.opencode/command/atlas-verify.md",
+      "sha256": "e0cb0a3d55ff3d5b9bbec3214be7f5734cf3a2b7644bb4f50efa3fc7c24f8271",
+      "size": 1430
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/AGENTS.md",
+      "sha256": "4d37ec6e8d89a3981c93bd144f2126434c278d081543663ff2f30a38fded123c",
+      "size": 3339
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/README.md",
+      "sha256": "8dfa2d3365f26409c3d4ad92a94b3bd232e814fe53ba382a80c8a5148083e0d9",
+      "size": 1870
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/docs/AUDIT-v5.5.1.md",
+      "sha256": "4f8d5340a64a218f81d36ba6aed4022573ceb7f2317dcd59c75722047107359a",
+      "size": 4349
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/docs/AUDIT-v5.5.2.md",
+      "sha256": "495b182dc974cb66cd0cb17554032dc2cafe3b82746453f154b30f489b6d0623",
+      "size": 11164
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/docs/CHANGELOG-v5.md",
+      "sha256": "e8df5e1a8a3799f3a85be67e49b23fcbfbb85b45c2aeb0c1051ed17c96cebff7",
+      "size": 10966
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/docs/HANDOFF-CONTEXT.md",
+      "sha256": "5836397d963ada1a072c0364a780d22b47d459593fb4b9c564088261d40f6c00",
+      "size": 9106
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/docs/PIPELINE.md",
+      "sha256": "fcdd199bb3f678a02ba112bd2e5c61c7562a7a541c8e80f02a72b5341d464e87",
+      "size": 5783
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/opencode.json",
+      "sha256": "a0dbf4fb5174cfc783e4dbeaf096f17653070b4d274768212cc06cd56bc27462",
+      "size": 495
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/routing.profiles.json",
+      "sha256": "66bd53d2ab47a04a50dfc9941e92137c49236ce46dc27942b264116a4e3ce223",
+      "size": 7111
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/scripts/OZTEST-TABAN.json",
+      "sha256": "f15c1a0c46ee90f976d0922ad1c12d950f8feed9d65d4187985e284b86ff1be5",
+      "size": 1955
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/scripts/ai_disclosure.py",
+      "sha256": "cc91ba16fa9a7e96e2cad06893786f49b489878ed68c3c1117a0696a76b3f18e",
+      "size": 12461
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/scripts/apply_routing.py",
+      "sha256": "8ba8168bdc4f3452981539536d9884dbe2c8c522a17a10cd82fca9166f074fec",
+      "size": 9945
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/scripts/atlas_selftest.py",
+      "sha256": "17692cd5ed93ef50601f01d50b448617eccecfa3844714f149aec2ca87258ba9",
+      "size": 194073
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/scripts/budget_guard.py",
+      "sha256": "75fa54f2345eaa5795ea7e80a4e95c24a59deabb3ba9a8f9034375dd37dc5d2e",
+      "size": 11885
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/scripts/check_integrity.sh",
+      "sha256": "06ed41ca09abc280883bc52de8ceb271a91cfc19786163e2d610559be9105a2c",
+      "size": 11993
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/scripts/check_models.py",
+      "sha256": "5553264f3a45d52699e5dd67cabfdf052d3f0d827d8aad76afb9a1979eab6ce6",
+      "size": 4999
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/scripts/cite_match.py",
+      "sha256": "0505e71668ad7d475229a5e30d5e9b730490b878d2290cbacb2990a0818cc534",
+      "size": 19377
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/scripts/declaration_check.py",
+      "sha256": "21b89ef7ef2ab2c7d81e8c04426077f876ecdafa0d47136274f72ef69aa66283",
+      "size": 12326
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/scripts/fix_reconcile.py",
+      "sha256": "d03fb0fc953e50e7db38cef79128d99cf0485a588951e00c294e95ef2cff620c",
+      "size": 7808
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/scripts/gate_2c.py",
+      "sha256": "1fe054ecba4caee91e9b46ebdb0e41574eed05977c9ad8e8ee373b61df397b40",
+      "size": 27177
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/scripts/gate_merge.py",
+      "sha256": "ac7403cc50aeebd4ea4cfd3331b083d2fbedad3b8404cdd2f3d5b0ccaf28ef66",
+      "size": 19629
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/scripts/olgu_lint.py",
+      "sha256": "66a4611f3c55bd4451d4bcbb893e8252bd7f64c632aaaa7948eaf07bb9c8468c",
+      "size": 22256
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/scripts/oztest_attest.py",
+      "sha256": "d5831416a1c6b3bcf840a376d719d93d48363e3f6235aecbd0de931d3e172f32",
+      "size": 10143
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/scripts/prompt_lint.py",
+      "sha256": "ab383499e79573771bea321dcac62e45d278fb88a0a0e3ed9d8d0032d2f5c542",
+      "size": 10054
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/scripts/provenance_check.py",
+      "sha256": "50bf3ac64bd3bcd30ca6b7d15f91c2de7f42a03bbf799df04c9cc20043e0863e",
+      "size": 6667
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/scripts/quote_ratio.py",
+      "sha256": "582c2e97329bf581d247ecec1e3f260a0b0979b406ca5bb8ba2d7c97b47d7003",
+      "size": 12362
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/scripts/review_panel.py",
+      "sha256": "e7e25e2384ba5c3a418eaedcfe00711497eea5deaa05c52b719aeb3f746bb104",
+      "size": 16559
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/scripts/scope_profile_check.py",
+      "sha256": "691c74af553ad3224aa2b3ced4e8cfb3d3c90bdda2f92d9709ceca0d2646f4fc",
+      "size": 7283
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/scripts/source_class_check.py",
+      "sha256": "62b0a2dfb64488fde6500c0a08612818197970da9d14ba373fb78590b23a3bb1",
+      "size": 7719
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/scripts/teslim_imza.py",
+      "sha256": "468108ebb94e4ee1f0fc97636303b3d899743ea43cb1e131eaff9f34cff66a1d",
+      "size": 12626
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/scripts/translit_check.py",
+      "sha256": "2871e48718749373bbeb8e43a260b044be1d1ae809cf8a00d50bd3908b386327",
+      "size": 6102
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/scripts/verify_doi.py",
+      "sha256": "96463cd4e469d2f67f783211327434e87842ac3e6a6508b4f0737cd9006e73e8",
+      "size": 6190
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/templates/CHK-CHECKLIST.md",
+      "sha256": "9b1c2dbf4728f67e52d7bd844942756158e7786c9af4f3359565091ba7e90fa2",
+      "size": 1127
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/templates/DEC-REGISTER-TEMPLATE.md",
+      "sha256": "03447a3dc8c47bab4b73d8ddc1b5c50b6675c4a683b56a6801f488744f508c0b",
+      "size": 1883
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/templates/DEVIR-TEMPLATE.md",
+      "sha256": "ff8443ead3548a22a3177888909f4700b938b26935744ba59eec0e7ed84b1257",
+      "size": 706
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/templates/FIX-MANIFEST-TEMPLATE.md",
+      "sha256": "06b0193b74394a524005903b7f50cb835a9659ea40d182ce50c9999acce7c43d",
+      "size": 948
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/templates/GATE-2C-SCHEMA.json",
+      "sha256": "3754ede31595e071966f0057d2c9fdb8dcaef1ec14a16561d57d7801cc1e6359",
+      "size": 6003
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/templates/PROVENANCE-TEMPLATE.md",
+      "sha256": "532e5f26d37ecc077f4cbd4480103ecc0f5a415d75f85bf734f0cf055415d3a6",
+      "size": 1434
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/templates/REVIEW-PANEL-SCHEMA.json",
+      "sha256": "9cc3fefc99f6f28057277731ea3fbd1ee37b3215f68669029115c16a5fc9f080",
+      "size": 6949
+    },
+    {
+      "mode": "100644",
+      "path": "ATLAS_SABLONLAR/templates/RUN-MANIFEST-TEMPLATE.json",
+      "sha256": "6be775c56feea3ed2217f0fd5e168bdf4c7414769aee0546754bcd1b2f4fcd4e",
+      "size": 2172
+    },
+    {
+      "mode": "100755",
+      "path": "ATLAS_SABLONLAR/templates/SCOPE-CONTRACT-TEMPLATE.md",
+      "sha256": "8cc21b52b1cbe14c2b3385c4a34e45b21783108f71c56d121cb2a53fb6d028b7",
+      "size": 2671
+    },
+    {
+      "mode": "100644",
+      "path": "DENEME/00-FAZ-0-SCOPE-CONTRACT-ve-REGISTER.md",
+      "sha256": "77fe40c34e9bb2cc6c65be7550d27065fa06475609756359fcbb922d6c9bc29a",
+      "size": 1868
+    },
+    {
+      "mode": "100644",
+      "path": "DENEME/01-FAZ-1-LENS-ANALYSIS.json",
+      "sha256": "37e124bd4b45874b72b291147996cc3425252836801b0672ca149c438377acae",
+      "size": 6029
+    },
+    {
+      "mode": "100644",
+      "path": "DENEME/02-FAZ-2-FIX-MANIFEST.md",
+      "sha256": "cfe3aea7967eede43a33fe5f95d5d78b06e1e065052806e7ea8b63df2ea6e4e0",
+      "size": 2724
+    },
+    {
+      "mode": "100644",
+      "path": "DENEME/03-FAZ-3-MASTER-v5.5.md",
+      "sha256": "dcfd2f576542b4d0234b9ffc1d70fa09c95c2924ec8490b2369b566b7c97e240",
+      "size": 18922
+    },
+    {
+      "mode": "100644",
+      "path": "DENEME/04-FAZ-4-STRONG-GATE-RAPORU-v5.5.md",
+      "sha256": "1d6129e66c991486f98c43fd98e92872b9024cfec893886c7f34ddb2f1031ffa",
+      "size": 493
+    },
+    {
+      "mode": "100644",
+      "path": "DENEME/DENEME_NOTU.md",
+      "sha256": "29503b74604f974cd99c0870c5f170bb8b36e08597bab00d63a0f25b7e2e1671",
+      "size": 1897
+    },
+    {
+      "mode": "100644",
+      "path": "DENEME/gate/FINAL-GATE-v5.5.json",
+      "sha256": "281b7ddeb1f54e09bf5b8c1c54ee062ab4da7dfe951ad0dcfcb1b11888d1827a",
+      "size": 490
+    },
+    {
+      "mode": "100644",
+      "path": "DENEME/gate/STRONG-gate-2a-v5.5.json",
+      "sha256": "3c0b7ff677bb5ff506463b0f363dd6658f62ab9d77c8c0b4aca8d0fb3fedbcb1",
+      "size": 765
+    },
+    {
+      "mode": "100644",
+      "path": "DENEME/gate/STRONG-gate-2b-v5.5.json",
+      "sha256": "9ad7b3f5263fa9172a2b1ec89c57952165c8d5dcf509e32a083b13fe3f516cb1",
+      "size": 1066
+    },
+    {
+      "mode": "100755",
+      "path": "DENEME/scripts/budget_guard.py",
+      "sha256": "69525b54b7c2c8c37d9f1da3dc95c00921ba652ed02237fab5652e72b45743c7",
+      "size": 2873
+    },
+    {
+      "mode": "100755",
+      "path": "DENEME/scripts/check_integrity.sh",
+      "sha256": "8d006ef66a93dafebcf3df1c1646eb2587a42e18cdab33ec719e975d117ecc25",
+      "size": 2847
+    },
+    {
+      "mode": "100755",
+      "path": "DENEME/scripts/gate_merge.py",
+      "sha256": "4a797c554aaa0da9c355bcb9550cdf8a1c5eb7536a410df9d2958368cc63b82b",
+      "size": 6795
+    },
+    {
+      "mode": "100755",
+      "path": "DENEME/scripts/provenance_check.py",
+      "sha256": "9de1f5ec9513f20f0291df3f4fd56c8b2e77ba7ce7d58616838440788fb599ca",
+      "size": 4052
+    },
+    {
+      "mode": "100755",
+      "path": "DENEME/scripts/verify_doi.py",
+      "sha256": "190a440d791c34670e2f69d65462a01824bd2df97516ea1ccd9838550997e7f9",
+      "size": 5061
+    },
+    {
+      "mode": "100644",
+      "path": "HAKEM_HEYETI/HAKEM_BRUTAL_2TUR_KOMUT_v2.md",
+      "sha256": "7f97ac7acd86e4ce3ad481efb42a398fbe286ec8c993a3107eb1c9e321084d7d",
+      "size": 8357
+    },
+    {
+      "mode": "100644",
+      "path": "HAKEM_HEYETI/SOZLESME.md",
+      "sha256": "2bd16197b97b81bb713e7d317e8020a7fb1fe98709e860b180cad7c41d21b99b",
+      "size": 4791
+    },
+    {
+      "mode": "100644",
+      "path": "ISARETCILER.md",
+      "sha256": "774c1cfd54b721bad9849f6cac4f6bda19c60cb8b8d2df28db7a81c4e7e04a02",
+      "size": 1455
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/agent/kod-architect.md",
+      "sha256": "4493fddc2ff6fd5f04cd408d53a7a105c376c93a758cb010d9b006bff5b56248",
+      "size": 2178
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/agent/kod-gate-2a.md",
+      "sha256": "36907427a0a9ea982a0edb3d59f0072c6b60b308ff8e878dc2c58b709e3bd51f",
+      "size": 4510
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/agent/kod-gate-2b.md",
+      "sha256": "d9576c5b6239010243550f44c1c3c492c785bb3748d4bf99dc8aea8ba58bca67",
+      "size": 2776
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/agent/kod-gate-2c-security.md",
+      "sha256": "e057e4dd223fe1a2916831a38436cd2b6e7d9bf1c12624b778b8114ba6bc50ae",
+      "size": 2394
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/agent/kod-gate.md",
+      "sha256": "194fdf256271f52b48069d0e60445bb851bb704a0408300d8b5e471772117a60",
+      "size": 1437
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/agent/kod-implementer-heavy.md",
+      "sha256": "5423cbf79806f16c7cd5e2c69068c5431076066becf01b273a172a0bbadd860b",
+      "size": 3131
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/agent/kod-implementer.md",
+      "sha256": "ffa4f25479f9033100165067557ff6d12ad092485d117e8f9c04b8d6bdb24117",
+      "size": 2706
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/agent/kod-orchestrator.md",
+      "sha256": "dcff1f9e1167433cf3488802e771a13fc3430178880f4fb1c46f9c3f919130ba",
+      "size": 3179
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/agent/kod-scoper.md",
+      "sha256": "473273b7b751a1f87f7c0dbd40cfe83220d7d5415907f7b34c0fdc19ebb749c9",
+      "size": 4594
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/agent/kod-tester.md",
+      "sha256": "e0ab4d9881c3e33d18d30b0f8efb68fced7756d0439d911e8f4d6f8eb58d5d66",
+      "size": 2190
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/command/kod-devam.md",
+      "sha256": "0e31a56d84aed975ad8da74711438498353e327850ba61538c8e30c3f7f00cb1",
+      "size": 1326
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/command/kod-faz0.md",
+      "sha256": "78cd7ef927caa315493418365ff712a1aaca564a0ab42606246d4a9b6410bcfb",
+      "size": 1592
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/command/kod-faz1.md",
+      "sha256": "158888b40823d6ec4bc36795aaf853755c26aa371b41bc2bda4b63b4ef3073e8",
+      "size": 1580
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/command/kod-faz2.md",
+      "sha256": "42be5d686161cb6d864f0f7b52f918b174030d2c7108c50210b348a0cf46695d",
+      "size": 1697
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/command/kod-faz3.md",
+      "sha256": "9112a0683699a69ecb3f5fae66c7ffb11e199b61f14ecfa97e462a74421ebe43",
+      "size": 1306
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/command/kod-gate-2a.md",
+      "sha256": "9c44158299a3ae57b0a32581a280d9410c8e04303c0a21c2e47ed3984c60efdb",
+      "size": 1196
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/command/kod-gate-2b.md",
+      "sha256": "4a2ae612ab0499a7068a491c34182f80d996864c369e7b09ca8fdca2317944fa",
+      "size": 2520
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/command/kod-gate-2c.md",
+      "sha256": "f539a45d7bbc60f677e462241b90e4a3f42189260c3295eadab8f318c5d02831",
+      "size": 1339
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/command/kod-teslim.md",
+      "sha256": "a45b8f420c0864c761482e82f10fcad91a3f000bbfe1ba151b0257be0e3b5a44",
+      "size": 1317
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/.opencode/command/kod-verify.md",
+      "sha256": "3fa217446532deefe4338c318119ed21458cff1b4b108e9b7c0cb6525536f902",
+      "size": 1458
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/00_KOD_OKU_BENI.md",
+      "sha256": "d6ce80aeff5ef4a109aa47a613e77c874b9a3c097127210ef66719292a75f6b3",
+      "size": 5354
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/OPERATOR_SURME.md",
+      "sha256": "243599c3461a6719437dedfe6788b2b9a48f1d68822839bde493a995ddbc7586",
+      "size": 3134
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/opencode.json",
+      "sha256": "fbed4ce1b9b73ae64afeada50b5793046d3e94b33889c0db57a476de765a347a",
+      "size": 2816
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/routing.profiles.json",
+      "sha256": "5d45f7adb49a1c3a59dad7a16c8c81493f72ad70f00813f0775acf8e37df5a8a",
+      "size": 5314
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/scripts/README.md",
+      "sha256": "143dae29d65c2ba271da1b9f81985561ca9385c699800e167fd804f9e8ed7582",
+      "size": 1079
+    },
+    {
+      "mode": "100755",
+      "path": "KOD_SABLONLAR/scripts/api_surface.py",
+      "sha256": "29f9a51ea6fed91c145c06679f7d820205d94eef2d496c8a9331668dfd3a30eb",
+      "size": 4971
+    },
+    {
+      "mode": "100755",
+      "path": "KOD_SABLONLAR/scripts/apply_routing.py",
+      "sha256": "8ba8168bdc4f3452981539536d9884dbe2c8c522a17a10cd82fca9166f074fec",
+      "size": 9945
+    },
+    {
+      "mode": "100755",
+      "path": "KOD_SABLONLAR/scripts/budget_guard.py",
+      "sha256": "75fa54f2345eaa5795ea7e80a4e95c24a59deabb3ba9a8f9034375dd37dc5d2e",
+      "size": 11885
+    },
+    {
+      "mode": "100755",
+      "path": "KOD_SABLONLAR/scripts/check_code_integrity.sh",
+      "sha256": "0ff465c036eb8baee5f51b9750896c8b2c09fa609589922958e2a04957aef859",
+      "size": 7674
+    },
+    {
+      "mode": "100755",
+      "path": "KOD_SABLONLAR/scripts/chg_reconcile.py",
+      "sha256": "7ae0f385d7c5543313bedc2a6992c8ad490d00c90c9c6db2825951aaabb31713",
+      "size": 22549
+    },
+    {
+      "mode": "100755",
+      "path": "KOD_SABLONLAR/scripts/dep_audit.py",
+      "sha256": "cfee2f43098dec1f8081780df0f97052784d129470de06348d06684eea5bf56b",
+      "size": 6443
+    },
+    {
+      "mode": "100755",
+      "path": "KOD_SABLONLAR/scripts/freeze_check.py",
+      "sha256": "64c5b0fd60a0993ea7ae5e09dd5275abfdb4680ab3e4bd87ec4f1c094a36a99b",
+      "size": 18174
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/scripts/imzala.py",
+      "sha256": "1c58d6626eb3beb45da7bcaa917f0649b1d0ef649a6f07d109e1e4af213f40d5",
+      "size": 6086
+    },
+    {
+      "mode": "100755",
+      "path": "KOD_SABLONLAR/scripts/kod_gate_merge.py",
+      "sha256": "b6300c3ea25f5b4df26718f39e31ea819c659cd4ead790ab51e736254da8ead7",
+      "size": 3644
+    },
+    {
+      "mode": "100755",
+      "path": "KOD_SABLONLAR/scripts/kod_selftest.py",
+      "sha256": "8bdfac8a50c811a8054d4d01cb35458529f631b83b5151787b087909f211d704",
+      "size": 109481
+    },
+    {
+      "mode": "100755",
+      "path": "KOD_SABLONLAR/scripts/kos_faz.sh",
+      "sha256": "de32d27876a95f74a9cdb03f25471272a03c723d3fedd9b273455a34905235f1",
+      "size": 9068
+    },
+    {
+      "mode": "100755",
+      "path": "KOD_SABLONLAR/scripts/kur.sh",
+      "sha256": "706bf076aa55b3073c19dd659e5941298204524c419990b1f282e46a9dbeb322",
+      "size": 9331
+    },
+    {
+      "mode": "100755",
+      "path": "KOD_SABLONLAR/scripts/perm_lint.py",
+      "sha256": "868b920ee28a6c53a452e831e87213958c2e6dbad458775b311957315c0edb81",
+      "size": 11836
+    },
+    {
+      "mode": "100755",
+      "path": "KOD_SABLONLAR/scripts/secret_scan.py",
+      "sha256": "559308090dd59045939c8dba82c064297cd27baa3bdf6ee77c1f7810f82abebe",
+      "size": 14925
+    },
+    {
+      "mode": "100755",
+      "path": "KOD_SABLONLAR/scripts/sync_worktree.sh",
+      "sha256": "6a2d633f4deb2d3d371d88955e4350495e80cdd904f5f68d3e4afd7902068a42",
+      "size": 3377
+    },
+    {
+      "mode": "100755",
+      "path": "KOD_SABLONLAR/scripts/test_attest.py",
+      "sha256": "29ee64a8d6f6f09566a6ad2458182c57cf922f211a4437fb62c8951516f0cb3e",
+      "size": 12539
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/templates/00-KFAZ-0-SPEC-CONTRACT-ve-REGISTER.TEMPLATE.md",
+      "sha256": "36f9268fdf35a6b29a7fa3c8c7f3f32a1c2789515e03a10e84b556f76427a976",
+      "size": 907
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/templates/01-KFAZ-1-DESIGN-PLAN.TEMPLATE.md",
+      "sha256": "d9b27ea1a537abc3eab87b2cbbcf27958dbc5bc86a7463a626467de5459f9478",
+      "size": 611
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/templates/02-KFAZ-2-CHANGE-MANIFEST.TEMPLATE.md",
+      "sha256": "c8a04c675c38959bb706861af054a8ca6fc523a0b6c317708c3189d102b00798",
+      "size": 470
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/templates/05-KFAZ-5-TESLIM.TEMPLATE.md",
+      "sha256": "eeed750b0bc11afab3b35f0c24ae2ff604b4c964173df243b57a301aab1afc5c",
+      "size": 477
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/templates/BASELINE.ORNEK.json",
+      "sha256": "439eb606881308cb68ef3fe390106c35df221a415ba151799e36be6f72d6aeb8",
+      "size": 1534
+    },
+    {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/templates/kod_profil.ORNEK.json",
+      "sha256": "de98735388a20175f58aa0049d3e12d1d681c49d5deadfbd104a09be18c246ad",
+      "size": 831
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/000_ONCE_BUNU_YAPISTIR.md",
+      "sha256": "09476441872545eed1bffe658dbca54a4d855347989aaeb53e07034f3fa21073",
+      "size": 27054
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/001_SORUN_CIKARSA_OKU.md",
+      "sha256": "5418430651ead4e4be15d27b1a13f17b4b62e00111adaef5e863cdd49c510311",
+      "size": 4660
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/BAGIMSIZ_DENETIM_YENI_SOHBETE_YAPISTIR.md",
+      "sha256": "da9239c2144c4889133a4e8acf7d45b3fe7ecbdf04191e18e228d2fdd3a0ea56",
+      "size": 3929
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/KANIT/01_oztest.json",
+      "sha256": "1bc0b2eb806ba1212db9987316d1c9aa6c1a0d9d845585054feb0740d27518ed",
+      "size": 6670
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/KANIT/02_tutarlilik.json",
+      "sha256": "2ed77a36e12e0f6365b1cc80ff5edf852a2080bbfac18be3fd5de797e54b3341",
+      "size": 237
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/KANIT/03_arsiv.json",
+      "sha256": "1aae56f40bc30e94f6b0218aec175cc3144064c77c359c9386b2f28da322a25b",
+      "size": 1161
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/KANIT/04_koruma_kimlik.json",
+      "sha256": "a29f3933d2e08ed4ff9ba14e5f0eb47f8da81aabdb436040a270ad5048acd9dd",
+      "size": 827
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/KANIT/05_koruma_mutasyon.json",
+      "sha256": "d3e272906c79f1ed298d11df4d58a87491a445414ace089c3d251348a1af8dd8",
+      "size": 8399
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/KANIT/06_kapi_birlestirme.json",
+      "sha256": "a15ff7a597b7da6acdd94ff532dc5fd31a89fc3220c0dedd6a4926f28bc2d3b9",
+      "size": 782
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/MUAFIYET.json",
+      "sha256": "26d5723218a1671fd5f4c6306ba5e7b147ad522e2ee5133c1de3731bc8c5e7bc",
+      "size": 491
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/ORNEKLER/ORNEK_RAPOR.md",
+      "sha256": "e783558f4ec3d48457dc4111ac2e30d8d5919bf476961835e2d4d55f2b1e4fbc",
+      "size": 5268
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/SHA256SUMS.txt",
+      "sha256": "7c9213a1053c0bfa223fd9f17fe074878fb26caa6f1338b566eb021ac35c86fd",
+      "size": 2815
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/SURUM.md",
+      "sha256": "feacbb0c05484402ecc3e19d6e7ef7f96c484e3d053fdc23eba59c0832c75eae",
+      "size": 12630
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_common.py",
+      "sha256": "d1b717dea1494f72d5f271990cfa4497882bc21640611f00ecf08fe2c5a27ad0",
+      "size": 8869
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_consistency.py",
+      "sha256": "034d71c8bc8c463f5c2bb71c09a9190de69073983da407b454dda45d635ed007",
+      "size": 13850
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_gate.py",
+      "sha256": "04cf9be0e39429d6c2f6715207a1e41d198b16e8bb08dfa9a6a209535badb927",
+      "size": 11371
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_preserve.py",
+      "sha256": "db068c827e7bd03cf4ec0997514b78aa6ecdfb5adcf28907b40307297b32b40e",
+      "size": 25825
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_selftest.py",
+      "sha256": "c349c327e844a9c1ae857c4c8848a206ba9500b49636874aee055c1b8f3f5518",
+      "size": 30825
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_verify.py",
+      "sha256": "35f58b5dfa7a37e7f9b5f79a3e5db64c55a6073e873611fbcf55438bc410cba0",
+      "size": 14052
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/cekirdek/C1_SOZLESME.md",
+      "sha256": "90406744f29f678606c5eb72849511ce1b8f1176fb06c96519d60268c3cda2d6",
+      "size": 7123
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/cekirdek/C2_KORUMA.md",
+      "sha256": "924a2168b0727d207621ce180a061a7104d6c67143f138a559e71fce90320338",
+      "size": 7068
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/cekirdek/C3_SINIFLANDIRICI.md",
+      "sha256": "b437b5a4342dad4eb4dd147c578ae08cdb4df8efa283c04701dd10c55d83ac2e",
+      "size": 3851
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/cekirdek/C4_PIPELINE.md",
+      "sha256": "806f36aa5a2e0d8d7e69ae6002f671b3d6d3b37a5a35275603ad746fc7e53562",
+      "size": 6148
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/cekirdek/C5_KAPILAR.md",
+      "sha256": "fd897a7fcfd89d0a2f7beb9cdd5a0495c6da465aae3a74628b99021607e45269",
+      "size": 9866
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/cekirdek/C6_AHLAK.md",
+      "sha256": "0983ee5b5797fcd63208f4d2920c528ed36fb3a7f0af4939be3b00ef0e20832a",
+      "size": 4789
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/profiller/P_AKADEMIK.md",
+      "sha256": "eb1ff895804af9d325adcd578d86b3f280ee5797c9b21b050dbbdf186124af72",
+      "size": 5307
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/profiller/P_BELGE.md",
+      "sha256": "d93fa8ae7e1c884794723cb09af09a4465986d8f5a7b3a617164a25c713d93be",
+      "size": 4109
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/profiller/P_GIRISIM.md",
+      "sha256": "2798662f3f66601150b3ae96b9026249f9e02db05b30d07f1d3a02418b9292f9",
+      "size": 4526
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/profiller/P_KOD.md",
+      "sha256": "697600892b521854d3c97cafe59761d23fd2eaf15cd95f6d7fc7d0f2fcc00613",
+      "size": 5763
+    },
+    {
+      "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/profiller/P_VERI.md",
+      "sha256": "ec5c315a7dbcac9b348f066dfa45a6b78b313ff00379482b6d7148695bc53798",
+      "size": 3745
+    },
+    {
+      "mode": "100644",
+      "path": "LICENSE",
+      "sha256": "416153e1ee75e877d5f6b7e58a59a7dd06666ff291cdecc39cf50ae3a89acba7",
+      "size": 1069
+    },
+    {
+      "mode": "100644",
+      "path": "Makefile",
+      "sha256": "4432829ddc3c71b3b30bcb4174e5ec1a61c85a46f49413663b356030a12c170e",
+      "size": 2586
+    },
+    {
+      "mode": "100644",
+      "path": "ORTAK/scripts/apply_routing.py",
+      "sha256": "7e97fca8dc63b8bd06a5c4b5fa6a74302607ca1018d9c1d71c22245c6d15be85",
+      "size": 9656
+    },
+    {
+      "mode": "100644",
+      "path": "ORTAK/scripts/budget_guard.py",
+      "sha256": "75fa54f2345eaa5795ea7e80a4e95c24a59deabb3ba9a8f9034375dd37dc5d2e",
+      "size": 11885
+    },
+    {
+      "mode": "100644",
+      "path": "ORTAK/scripts/ortak_gate.py",
+      "sha256": "f59ff596725c2a6ac90b04c76378614b08d48ba309a616588f797d99dd4b4fb4",
+      "size": 13507
+    },
+    {
+      "mode": "100644",
+      "path": "RAFINE_SABLON/KAPANIS_KONTROL.md",
+      "sha256": "dd6fa309006b9045f8b97b9c1dcd97bad11200f6a9e5911caa03cad1d59b475a",
+      "size": 1012
+    },
+    {
+      "mode": "100644",
+      "path": "RAFINE_SABLON/KEEP-LISTESI-TEMPLATE.md",
+      "sha256": "b11f69dbf4ad4f585837658ed4d6c827bd3b63d7eaf82d0657addd4835cb935a",
+      "size": 616
+    },
+    {
+      "mode": "100644",
+      "path": "RAFINE_SABLON/RAFINE_KOMUT_SABLONU.md",
+      "sha256": "8cadaf580bdc7a0e29edace27bb5c151fc87922c15e98d429319c336bbd2894a",
+      "size": 3382
+    },
+    {
+      "mode": "100644",
+      "path": "RAFINE_SABLON/README.md",
+      "sha256": "e9657947aa57b736f54232eac61b621ee55f372297712f9153d227b70d75184c",
+      "size": 1548
+    },
+    {
+      "mode": "100644",
+      "path": "README.en.md",
+      "sha256": "e61e49f9fcd224115425aa5ec18ec162d615e2e3e4b31abebd53d3a29d02e7cd",
+      "size": 4430
+    },
+    {
+      "mode": "100644",
+      "path": "README.md",
+      "sha256": "40613653e13c1197ab64418bae21a60633a62520fd3994f62da4d65c7d0a75e4",
+      "size": 19392
+    },
+    {
+      "mode": "100644",
+      "path": "SURUM.md",
+      "sha256": "fa3e4a3d2265d45b61845164ca3d439e10f7f024d5fe2a676e7bb231884c3a1d",
+      "size": 574891
+    },
+    {
+      "mode": "100755",
+      "path": "demo",
+      "sha256": "1bff7623c7ee3893d9e01f2967aaacc175298fd5ca39646f0dbe8ca39a65a134",
+      "size": 335
+    },
+    {
+      "mode": "100644",
+      "path": "docs/CORRIGENDUM-KIMLIK-ENVANTER-2026-09-01.md",
+      "sha256": "965e032af48dfe5e56c6d3fd3cc84ba6cd6eecb8614e15019c9f38e19b6eb04c",
+      "size": 7041
+    },
+    {
+      "mode": "100644",
+      "path": "docs/DENETIM-2026-08-31-TAM-TARAMA.md",
+      "sha256": "1efa63beb0c1f332a2e831ce888b77ded9f0b6e19b11855efb776e40d3a9ad28",
+      "size": 15890
+    },
+    {
+      "mode": "100644",
+      "path": "docs/DENETIM_RAPORU_2026-08-30_v3_SIFIR_GOZLE.md",
+      "sha256": "398f3e10b6e15089e055c70cbb134880bd8014e5e33126eff32dc5d0ee5054dc",
+      "size": 21922
+    },
+    {
+      "mode": "100644",
+      "path": "docs/DERSLER_v1_2026-08-30.md",
+      "sha256": "7f9f4d17a42914f201e3528ef8efd29a6e270d1698d165063e270615b34b0f1d",
+      "size": 460031
+    },
+    {
+      "mode": "100644",
+      "path": "docs/DEVIR-2026-09-03-1945-AUD-06-07.md",
+      "sha256": "a340cb305aaf6d591ec93a749c1e13e06fd066b57b282542eab0344d342802df",
+      "size": 4831
+    },
+    {
+      "mode": "100644",
+      "path": "docs/EN/QUICKSTART.md",
+      "sha256": "4f9627e0f3ffd1f9ebfc0293e906742689f8ffa4d2cea050cffd227773f7a9c2",
+      "size": 5342
+    },
+    {
+      "mode": "100644",
+      "path": "docs/GUVENLIK.md",
+      "sha256": "d42737491b6f478c42f511f08c1d642cf82e74a7cf37ecd62565591ed569066e",
+      "size": 1917
+    },
+    {
+      "mode": "100644",
+      "path": "docs/MUTASYON_KAPSAM.md",
+      "sha256": "9c6150ee51304580c8b3f8fd90c73cd837d5d0c13ad27455ec65df775ba7d04f",
+      "size": 14897
+    },
+    {
+      "mode": "100644",
+      "path": "docs/MUTASYON_KOSUM.md",
+      "sha256": "c4174ba98293a10cf7d827d7ec59410e5f101769515f034afe078ab1acbee95f",
+      "size": 7385
+    },
+    {
+      "mode": "100644",
+      "path": "docs/OLCUM-01-IZIN-GLOB.md",
+      "sha256": "4383f6ab499487011a3cf9d0dcebabb7b533a562747f18afa6af2ea62e373c9c",
+      "size": 23041
+    },
+    {
+      "mode": "100644",
+      "path": "docs/OLCUM-02-CANLI-KOSU.md",
+      "sha256": "673fc0a9ae8524d890af8b4b62271dedfee9d7aa1733e24605ab08b38f5ae2d4",
+      "size": 52726
+    },
+    {
+      "mode": "100644",
+      "path": "docs/OLCUM-03-DUZELTME-SONRASI.md",
+      "sha256": "ea4312bf3b41e16273adf35e596523261047bfb0f52581140fa2674364afba55",
+      "size": 34287
+    },
+    {
+      "mode": "100644",
+      "path": "docs/OLCUM-04-CANLI-DOGRULAMA.md",
+      "sha256": "572f84e51ceec73aee36466fbe0ee1d41a29c42288e177d1ac6ed1d529df1658",
+      "size": 9046
+    },
+    {
+      "mode": "100644",
+      "path": "docs/OLCUM-05-ADIM1-TAZE-KURULUM-TARAMASI.md",
+      "sha256": "505b760ef6ca905ba13ff0e335055e47a50457e44cf498bd3809f8618d5a9c0b",
+      "size": 16142
+    },
+    {
+      "mode": "100644",
+      "path": "docs/OLCUM-05-CANLI-TAM-KOSU.md",
+      "sha256": "2dee8490a2d3e7a32f9c5ed62497f77d58090d558cc91d6f024b7a803443d5f7",
+      "size": 7504
+    },
+    {
+      "mode": "100644",
+      "path": "docs/OLCUM-06-CANLI-TAM-KOSU.md",
+      "sha256": "ebd5d84534523ec72edcd669aabf89fcbbeccfb1bbcd89d475a6c0daf1ed2b4a",
+      "size": 10979
+    },
+    {
+      "mode": "100644",
+      "path": "docs/OLCUM-07-CANLI-DENGE-TAM-KOSU.md",
+      "sha256": "b3a59c6c5422f2650723e41c270c104add1174c4a10d832c92f2e419c6536c3a",
+      "size": 20018
+    },
+    {
+      "mode": "100644",
+      "path": "docs/OLGULAR.md",
+      "sha256": "d36240c054f7cebc80c2e9bc6bcd8db1d65eb2e529e02698e38effa19f068b1f",
+      "size": 3170
+    },
+    {
+      "mode": "100644",
+      "path": "docs/README.md",
+      "sha256": "4bd43cac94e91847e53728380c02e193acb53a87c1c13da4e1e6dc40da33cabd",
+      "size": 19373
+    },
+    {
+      "mode": "100644",
+      "path": "opencode.json",
+      "sha256": "c97566fd9f005a38fc93a5ffd1c2c8a81c48b97fd698912b7892163c51098608",
+      "size": 526
+    },
+    {
+      "mode": "100644",
+      "path": "requirements-dev.txt",
+      "sha256": "fe2ca062d9a4d6da53a7951c6dc64e971ded13529883aa7b3954b9624e2c179d",
+      "size": 510
+    },
+    {
+      "mode": "100755",
+      "path": "scripts/kur_hooks.sh",
+      "sha256": "792cf812d0c725137913008c38be2c902d630d6d23d605c0464e77de5a2d250d",
+      "size": 358
+    },
+    {
+      "mode": "100644",
+      "path": "tools/demo.py",
+      "sha256": "72f17479bf3af67fb51dc0620a84804eb75bd4106ac67f888e076bb118512d5f",
+      "size": 5143
+    },
+    {
+      "mode": "100644",
+      "path": "tools/dogrula.py",
+      "sha256": "470ac4a2ab6ac8dfcec50a3a35118bf64765477da815c52aa667d533beb59c51",
+      "size": 15204
+    },
+    {
+      "mode": "100644",
+      "path": "tools/guvenlik.py",
+      "sha256": "5432a6a7cbca02be1eb3f203906379af89ea59415346615ff4a97a2afacf3831",
+      "size": 5780
+    },
+    {
+      "mode": "100644",
+      "path": "tools/iddia.py",
+      "sha256": "bf13b77f323b26bdbdcd80361c83f9be53068f1e036deb89aa761e10c952d654",
+      "size": 16394
+    },
+    {
+      "mode": "100644",
+      "path": "tools/iddia_defteri.json",
+      "sha256": "1d7ddc48342788cb26f5e4025646aa97322e842ec15f001870b1c8f6ad9de547",
+      "size": 20614
+    },
+    {
+      "mode": "100644",
+      "path": "tools/iddia_olcum.json",
+      "sha256": "9900f294b8210fe030e914ab38063989b4749ceea8770c555f882b36e35d62e1",
+      "size": 5698
+    },
+    {
+      "mode": "100644",
+      "path": "tools/kanit.py",
+      "sha256": "00d4d6553ce5181ac488a4ed3485b4f151046427fa9e442ffb9c384dc0f65d1f",
+      "size": 6138
+    },
+    {
+      "mode": "100644",
+      "path": "tools/kanit_dogrula.py",
+      "sha256": "9a45b0860181dc53e1caf87684bfe8c2793fce38cc680b165b58e8d88b0082e9",
+      "size": 11123
+    },
+    {
+      "mode": "100644",
+      "path": "tools/kapsam.py",
+      "sha256": "fb210f76a058501d9c51525ed18d0a3ff10a73c48406e7dfe79a784c984aa30d",
+      "size": 11175
+    },
+    {
+      "mode": "100644",
+      "path": "tools/katalog_kontrol.py",
+      "sha256": "73b3b3391d1bb27fb2c37cc985c044b88f38131a278cc00568a0ba68b3cf2930",
+      "size": 7574
+    },
+    {
+      "mode": "100644",
+      "path": "tools/katalog_kontrol_selftest.py",
+      "sha256": "dd95f47fe63c8bddf098231352c07101fbd207685c43211c596d9a7b3632a4e7",
+      "size": 3357
+    },
+    {
+      "mode": "100644",
+      "path": "tools/model_katalog.json",
+      "sha256": "0424fbde7ca3dd868c196e1388246d671ca2b481003e39727ea7430a41c87ee8",
+      "size": 1055
+    },
+    {
+      "mode": "100644",
+      "path": "tools/mutasyon_bataryasi.py",
+      "sha256": "a8380096c798c4e335277ddefe6f04f9a6ff59791e37d5e38215682ecfc2e5c5",
+      "size": 41482
+    },
+    {
+      "mode": "100644",
+      "path": "tools/mutasyon_katalog.json",
+      "sha256": "7d69a893badb33044563e02c5c1f3060dd244901eb990da3ba41410cc31826f8",
+      "size": 451
+    },
+    {
+      "mode": "100755",
+      "path": "tools/sir_kapisi.py",
+      "sha256": "4a264283ddfa805ebc3859eead0d34424c8960e4d9127bb18e944f6928eae4b9",
+      "size": 6356
+    },
+    {
+      "mode": "100644",
+      "path": "tools/sir_kapisi_selftest.py",
+      "sha256": "04784761eb7ab1d642039b5c96e33f9801e74e02faf9dd391c8e40aeac8e584d",
+      "size": 5254
+    },
+    {
+      "mode": "100644",
+      "path": "tools/yayinla.py",
+      "sha256": "f18daf006cf205247c6e2e8d1a48d64c55b3a06b71c61aec290e06f612d0ca20",
+      "size": 11250
+    }
+  ],
+  "generated_at": "2026-11-19T15:40:55Z",
+  "schema": "ATLAS-KANIT/v1",
+  "scope": {
+    "excludes": [
+      "attestation.json"
+    ],
+    "note": "Butun izlenen dosyalar; attestation.json kendini kapsamaz.",
+    "source": "git ls-tree -r --full-tree HEAD"
+  },
+  "tool_versions": {
+    "git": "git version 2.54.0 (Apple Git-157)",
+    "make": "GNU Make 3.81",
+    "platform": "macOS-27.2-arm64-arm-64bit",
+    "python": "3.9.6"
+  },
+  "tree": "f7009f04ef5f108665b852eaccf917643bbc5b2c",
+  "tree_sha256": "8f1d305e509c103ba73ff21f49aac4593a7efde5accaa12ccb5d45e25ada66e4"
+}
