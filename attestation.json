@@ -1,5 +1,5 @@
 {
-  "commit": "04ce3f6d9a82256649c9f676b36771001cd7f7e7",
+  "commit": "ab4c9fd0b4c035ab4da125f1fe3a56d5ce7f4614",
   "file_count": 242,
   "files": [
     {
@@ -461,8 +461,8 @@
     {
       "mode": "100644",
       "path": "ATLAS_SABLONLAR/scripts/olgu_lint.py",
-      "sha256": "66a4611f3c55bd4451d4bcbb893e8252bd7f64c632aaaa7948eaf07bb9c8468c",
-      "size": 22256
+      "sha256": "c940e4db0dc39d87df0c5a62ec5ce8adab9b98ce55c07da7cd7977e00bbc7379",
+      "size": 24588
     },
     {
       "mode": "100755",
@@ -1199,14 +1199,14 @@
     {
       "mode": "100644",
       "path": "README.en.md",
-      "sha256": "e61e49f9fcd224115425aa5ec18ec162d615e2e3e4b31abebd53d3a29d02e7cd",
-      "size": 4430
+      "sha256": "626648c4a10decda9d7002b6c76e9fac25cb18f61850866487aecd01dc3c63aa",
+      "size": 4437
     },
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "40613653e13c1197ab64418bae21a60633a62520fd3994f62da4d65c7d0a75e4",
-      "size": 19392
+      "sha256": "4c8eecdd7df4074eea6168c1daf09ed2494fc0566dd7cc55140fc05bebef0ffd",
+      "size": 19297
     },
     {
       "mode": "100644",
@@ -1241,8 +1241,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "7f9f4d17a42914f201e3528ef8efd29a6e270d1698d165063e270615b34b0f1d",
-      "size": 460031
+      "sha256": "9713971f8e7773f3519ed77d6c90d2cc07d714d15efa36a6026d517902c16d76",
+      "size": 461611
     },
     {
       "mode": "100644",
@@ -1253,8 +1253,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "dd7bf57ae414bb0c832f0336df881df5a48398496df5e8206bd494c969fd425d",
-      "size": 5342
+      "sha256": "a9bc4210060c35d0733aeccfb9b3c85afbccb7001aab20f186676e021ef86b97",
+      "size": 5309
     },
     {
       "mode": "100644",
@@ -1265,8 +1265,8 @@
     {
       "mode": "100644",
       "path": "docs/MUTASYON_KAPSAM.md",
-      "sha256": "9c6150ee51304580c8b3f8fd90c73cd837d5d0c13ad27455ec65df775ba7d04f",
-      "size": 14897
+      "sha256": "1a5a50af49cb37314dfc529dfa525720ee9dbbad33524062e44dbe935be5e060",
+      "size": 15019
     },
     {
       "mode": "100644",
@@ -1331,8 +1331,8 @@
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "4bd43cac94e91847e53728380c02e193acb53a87c1c13da4e1e6dc40da33cabd",
-      "size": 19373
+      "sha256": "0af14d599f2388ad6fa2c6dbc12c15d34ab3356e48abe1e7a3e341f0209a920d",
+      "size": 20083
     },
     {
       "mode": "100644",
@@ -1361,8 +1361,8 @@
     {
       "mode": "100644",
       "path": "tools/dogrula.py",
-      "sha256": "470ac4a2ab6ac8dfcec50a3a35118bf64765477da815c52aa667d533beb59c51",
-      "size": 15204
+      "sha256": "66548329014bdad7064f63776fd8f50c2e0b29f83528bb05875140712e626a29",
+      "size": 15150
     },
     {
       "mode": "100644",
@@ -1379,14 +1379,14 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "c5a8dd18ef6a94a6531362fb98abb3979f3a8ec0b7ba91e30a7b7ccdc38262ce",
-      "size": 20614
+      "sha256": "218acd94bd771beda397b725762df1fce7ad22e435100013d57648e4692828ca",
+      "size": 20589
     },
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "8b812e6d2733c3d04e31c4207e511525e6dab5a90bae82ec556f1212247b864d",
-      "size": 5698
+      "sha256": "42801ca5554ae80b4f88e1ef6fac925d42c3d36b7da8e50f83924cd8927866ec",
+      "size": 5676
     },
     {
       "mode": "100644",
@@ -1455,7 +1455,7 @@
       "size": 11250
     }
   ],
-  "generated_at": "2026-11-19T15:54:46Z",
+  "generated_at": "2026-11-19T16:31:25Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1470,6 +1470,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "e2771f8a90ec8e3eae71f1649b54bb4168388928",
-  "tree_sha256": "883b15e045bf50112623ea4a08817af865add3073aba636858ebc4b77f7b1cc9"
+  "tree": "48002074c36528fbb4cde4a2ff60fddc88a3a945",
+  "tree_sha256": "30be9f3c23f39ac90ae38b4ff3ecb0affe033db2a9451a31ed2d0d401747ef26"
 }
