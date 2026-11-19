@@ -9,6 +9,8 @@ NEDEN VAR:
 
 KONTROLLER:
   SRC-01  PROVENANCE tablosunda Kaynak Sinifi sutunu var mi? (yoksa CALISTIRILMADI)
+          Ayrica varsa KAYNAK SINIFLANDIRMA tablosundaki sinyal->sinif atamasiyla
+          celisen PROVENANCE satirini FAIL eder (yanlis sinif atamasi).
   SRC-02  Her satirda sinif degeri gecerli mi? BIRINCIL|IKINCIL|UCUNCUL|AKTARMA (bos/yanlis P1)
   SRC-03  AKTARMA satirlarinda "asil kaynak gorulmedi" beyanı var mi? (yoksa P1)
 
@@ -108,6 +110,39 @@ TR = str.maketrans("İIŞĞÜÖÇı", "IISGUOCI")
 def norm(s):
     return str(s or "").strip().upper().translate(TR).replace("-", "_").replace(" ", "_")
 
+# SRC-01 tablo capraz kontrolu: belgede KAYNAK SINIFLANDIRMA tablosu varsa
+# (Sinyal -> Sinif), PROVENANCE satirindaki sinif bu tabloyla celisemez.
+# Tablo yoksa eski davranis aynen korunur; bu bir geriye donuk uyum yoludur.
+sinif_tablosu = {}
+for _i, _ln in enumerate(lines):
+    if not re.match(r"^#{1,6}\s+KAYNAK\s+SINIFLANDIRMA(?:\s+TABLOSU)?\s*$", _ln.strip(), re.I):
+        continue
+    _baslik = None
+    for _j in range(_i + 1, len(lines)):
+        if re.match(r"^#{1,6}\s+", lines[_j]):
+            break
+        if not lines[_j].strip().startswith("|"):
+            continue
+        _kol = [c.strip() for c in lines[_j].strip().strip("|").split("|")]
+        _low = [c.lower() for c in _kol]
+        if _baslik is None and "sinyal" in _low and ("sınıf" in _low or "sinif" in _low):
+            _baslik = _low.index("sinyal")
+            _sinif_i = _low.index("sınıf") if "sınıf" in _low else _low.index("sinif")
+            continue
+        if _baslik is None:
+            continue
+        if len(_kol) <= max(_baslik, _sinif_i):
+            continue
+        if re.match(r"^\s*-+", _kol[0]):
+            continue
+        _sinyal = _kol[_baslik].strip().lower()
+        _sinif = norm(_kol[_sinif_i])
+        if _sinyal and _sinif in GECERLI:
+            sinif_tablosu[_sinyal] = _sinif
+    break
+
+kaynak_col = next((i for i, h in enumerate(cols_h) if re.fullmatch(r"Kaynak", h, re.I)), None)
+
 fail = False
 satir_say = 0
 for idx in range(header_idx + 2, prov_end_idx):
@@ -129,6 +164,20 @@ for idx in range(header_idx + 2, prov_end_idx):
     if pr not in GECERLI:
         print(f"FAIL SRC-02: {sid} Kaynak Sinifi bos/yanlis: '{ham}' — beklenen BIRINCIL|IKINCIL|UCUNCUL|AKTARMA")
         fail = True
+        continue
+    # SRC-01: sinyal tablosu varsa yanlis sinif atamasini yakala
+    tablo_ihlali = False
+    if sinif_tablosu and kaynak_col is not None and len(cols) > kaynak_col:
+        kaynak = cols[kaynak_col].strip().lower()
+        for sinyal, beklenen in sinif_tablosu.items():
+            if sinyal in kaynak:
+                if pr != beklenen:
+                    print(f"FAIL SRC-01: {sid} Kaynak '{cols[kaynak_col]}' siniflandirma "
+                          f"tablosunda {beklenen}, PROVENANCE'ta {pr} — yanlis sinif atamasi")
+                    fail = True
+                    tablo_ihlali = True
+                break
+    if tablo_ihlali:
         continue
     # normalize AKTARMA icin beyan kontrolu
     if pr == "AKTARMA":
