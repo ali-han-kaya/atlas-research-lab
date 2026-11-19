@@ -35,3 +35,8 @@ jobs:
       # modele/tarihçeye bağlıdır ve başka makinede aynı sayıyı üretmez.
       - name: make dogrula-ci
         run: make dogrula-ci
+
+      # Kapı kanıtı: her kural için temiz taban + tek ihlal + kırmızı hüküm.
+      # Model, ağ ve yerel katalog gerektirmez; bu yüzden runner'da hükme girer.
+      - name: make mutasyon
+        run: make mutasyon

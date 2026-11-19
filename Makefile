@@ -1,10 +1,11 @@
 PY ?= python3
 
-.PHONY: dogrula oztest yayinla yardim
+.PHONY: dogrula mutasyon oztest yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giriş: hijyen + sözdizimi + sır taraması + üç öz-test"
 	@echo "make dogrula-ci  runner kipi: ölçülebilen kalemler hükme girer, öz-testler rapor"
+	@echo "make mutasyon  kapı kuralları gerçekten ateşliyor mu (temiz taban + ihlal)"
 	@echo "make oztest    yalnız öz-test paketleri"
 	@echo "make yayinla   özel ağaçtan aktarım (ATLAS_LAB=<yol>; kuru koşu)"
 	@echo "make yayinla UYGULA=1  aktarımı yaz"
@@ -14,6 +15,9 @@ dogrula:
 
 dogrula-ci:
 	@$(PY) tools/dogrula.py --ci
+
+mutasyon:
+	@$(PY) tools/mutasyon_bataryasi.py
 
 oztest:
 	@$(PY) ATLAS_SABLONLAR/scripts/atlas_selftest.py --sessiz
