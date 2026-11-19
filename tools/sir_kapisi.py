@@ -8,7 +8,13 @@ KURALLAR
 
 YER TUTUCULAR GECER (engellenmez):
   NEON_KULLANICI:NEON_PAROLA · KULLANICI:PAROLA · USER:PASSWORD
-  <kullanici>:<parola> · ${DB_USER}:${DB_PASS}
+  <kullanici>:<parola> · ${DB_USER}:${DB_PASS} · $DB_USER:$DB_PASS
+
+  Karar PAROLA uzerinden verilir: parola sarili ($AD, ${AD}, $(...), <...>)
+  ya da adli yer tutucu degilse DSN canli sayilir; kullanici adinin yer
+  tutucu olmasi tek basina yetmez. Adli yer tutucu ancak iki taraf da adli
+  yer tutucuyse gecer. Maske (`***`, `...`) kabul edilmez: kisa bir gercek
+  degerden ayirt edilemez.
 
 KULLANIM
   python3 tools/sir_kapisi.py --staged          # indeksteki degisiklikler (pre-commit)
@@ -29,11 +35,14 @@ import sys
 
 PAT_DSN = re.compile(r'postgres(?:ql)?://([^\s:/@]+):([^\s@]+)@')
 PAT_NPG = re.compile(r'npg_[A-Za-z0-9]{8,}')
+PAT_HUNK = re.compile(r'@@ -\d+(?:,\d+)? \+(\d+)')
+PAT_KOSELI = re.compile(r'<[^<>]*>\Z')
+PAT_DEGISKEN = re.compile(r'\$(?:[A-Z_][A-Z0-9_]*|\{[^}]*\}|\([^)]*\))\Z')
 SIFIR = '0' * 40
 
 KULLANICI_YER = {'NEON_KULLANICI', 'KULLANICI', 'USER', 'USERNAME',
                  'DB_USER', 'DB_KULLANICI', 'ROL'}
-PAROLA_YER = {'NEON_PAROLA', 'PAROLA', 'PASSWORD', 'SIFRE', '***', '...',
+PAROLA_YER = {'NEON_PAROLA', 'PAROLA', 'PASSWORD', 'SIFRE',
               'CHANGEME', 'DEGISTIR', 'PLACEHOLDER'}
 
 ATLA_DIZIN = {'.git', '__pycache__', 'node_modules', '.pytest_cache',
@@ -43,27 +52,32 @@ ATLA_UZANTI = {'.pyc', '.pyo', '.png', '.jpg', '.jpeg', '.gif', '.pdf',
 
 
 def _sarili(x):
-    """<...>, ${...}, $(...), $VAR bicimleri yer tutucudur."""
-    return x[:1] == '<' or x[:2] in ('${', '$(') or x[:1] == '$'
+    """<...>, ${...}, $(...), $BUYUK_AD bicimleri yer tutucudur."""
+    return bool(PAT_KOSELI.match(x) or PAT_DEGISKEN.match(x))
 
 
 def yer_tutucu(kullanici, parola):
-    if _sarili(kullanici) or _sarili(parola):
+    """Parola yer tutucuysa DSN canli degildir; kullanici adi tek basina yetmez."""
+    if _sarili(parola):
         return True
     return (kullanici.upper() in KULLANICI_YER
             and parola.upper() in PAROLA_YER)
 
 
+def _satir_kurallari(satir):
+    """Tek satirdaki kural adlari; eslesen deger hicbir zaman dondurulmez."""
+    for k, p in PAT_DSN.findall(satir):
+        if not yer_tutucu(k, p):
+            yield 'canli-dsn'
+    if PAT_NPG.search(satir):
+        yield 'neon-token'
+
+
 def tara(metin, etiket):
-    """(etiket, satir, kural) listesi. Metin asla basilmaz."""
-    bulgular = []
-    for no, satir in enumerate(metin.splitlines(), 1):
-        for k, p in PAT_DSN.findall(satir):
-            if not yer_tutucu(k, p):
-                bulgular.append((etiket, no, 'canli-dsn'))
-        if PAT_NPG.search(satir):
-            bulgular.append((etiket, no, 'neon-token'))
-    return bulgular
+    """(commit, etiket, satir, kural) listesi. Metin asla basilmaz."""
+    return [(None, etiket, no, kural)
+            for no, satir in enumerate(metin.splitlines(), 1)
+            for kural in _satir_kurallari(satir)]
 
 
 def _git(*args):
@@ -80,9 +94,10 @@ def _rev_list(*args):
 def _commit_bulgulari(sha_listesi):
     """Commit'lerin EKLEDIGI satirlardaki eslesmeler; icerik basilmaz.
 
-    Tum agaci taramak, eski bir commit'te duran siri yeni commit'in agacinda
-    yeniden bulur ve push'u yanlislikla kilitler. Bu yuzden yalnizca diff'in
-    `+` satirlari taranir; eski sirlar yalniz uyari sayiminda kalir.
+    `--unified=0` baglam satiri uretmez: hunk basligindan sonra yalniz
+    `+`/`-` satirlari gelir. Tum agaci taramak, eski bir commit'te duran
+    siri yeni commit'in agacinda yeniden bulup push'u kilitler; bu yuzden
+    yalnizca diff'in `+` satirlari taranir.
     """
     bulgular = []
     for sha in sha_listesi:
@@ -92,33 +107,31 @@ def _commit_bulgulari(sha_listesi):
             capture_output=True, text=True)
         if g.returncode != 0:
             continue
+        kisa = sha[:8]
         yol = None
+        hunkta = False
         yeni_satir = 0
         for satir in g.stdout.splitlines():
-            if satir.startswith('+++ '):
-                p = satir[4:].strip()
-                if p == '/dev/null':
-                    yol = None
-                else:
-                    yol = p[2:] if p.startswith('b/') else p
+            if satir.startswith('diff --git '):
+                yol, hunkta = None, False
                 continue
-            m = re.match(r'@@ -\d+(?:,\d+)? \+(\d+)', satir)
+            m = PAT_HUNK.match(satir)
             if m:
-                yeni_satir = int(m.group(1))
+                yeni_satir, hunkta = int(m.group(1)), True
                 continue
-            if yol is None:
+            if not hunkta:
+                if satir.startswith('+++ '):
+                    p = satir[4:].strip()
+                    if p == '/dev/null':
+                        yol = None
+                    else:
+                        yol = p[2:] if p.startswith('b/') else p
                 continue
-            if satir.startswith('+') and not satir.startswith('+++'):
-                icerik = satir[1:]
-                etiket = '%s:%s' % (sha[:8], yol)
-                for k, p in PAT_DSN.findall(icerik):
-                    if not yer_tutucu(k, p):
-                        bulgular.append((etiket, yeni_satir, 'canli-dsn'))
-                if PAT_NPG.search(icerik):
-                    bulgular.append((etiket, yeni_satir, 'neon-token'))
-                yeni_satir += 1
-            elif satir.startswith(' '):
-                yeni_satir += 1
+            if not satir.startswith('+'):
+                continue
+            for kural in _satir_kurallari(satir[1:]):
+                bulgular.append((kisa, yol, yeni_satir, kural))
+            yeni_satir += 1
     return bulgular
 
 
@@ -182,50 +195,46 @@ def tarama_aralik(aralik):
     return _commit_bulgulari(sha_listesi)
 
 
-def _remote_ref_var(uzak_ad):
-    r = _git('for-each-ref', '--format=%(refname)',
-             'refs/remotes/%s' % uzak_ad)
-    return r.returncode == 0 and bool(r.stdout.strip())
-
-
 def yeni_commitler(yerel_sha, uzak_sha, uzak_ad):
     """Push ile remote'a YENI gidecek commit'ler.
 
     Yeni dalda uzak_sha sifirdir; remote'ta zaten bulunan tum commit'ler
     dislanir. Boylece 696 eski commit yeniden taranip push kilitlenmez.
-    Remote tamamen bos ise (ilk push) tum commit'ler yenidir ve taranir.
+    Remote tamamen bos ise (ilk push) `--remotes` bos kume verir ve tum
+    commit'ler yeni sayilir.
     """
-    if uzak_sha and uzak_sha != SIFIR:
+    if uzak_sha != SIFIR:
         return _rev_list('%s..%s' % (uzak_sha, yerel_sha))
-    if _remote_ref_var(uzak_ad):
-        return _rev_list(yerel_sha, '--not', '--remotes=%s' % uzak_ad)
-    return _rev_list(yerel_sha)
+    return _rev_list(yerel_sha, '--not', '--remotes=%s' % uzak_ad)
 
 
 def eski_commitler(uzak_sha, uzak_ad):
     """Remote'ta zaten bulunan eski commit'ler (yalniz uyari sayimi)."""
-    if uzak_sha and uzak_sha != SIFIR:
+    if uzak_sha != SIFIR:
         return _rev_list(uzak_sha)
-    if _remote_ref_var(uzak_ad):
-        return _rev_list('--remotes=%s' % uzak_ad)
-    return []
+    return _rev_list('--remotes=%s' % uzak_ad)
 
 
 def _kural_sayilari(bulgular):
     sayilar = {}
-    for _etiket, _no, kural in bulgular:
+    for _sha, _yol, _no, kural in bulgular:
         sayilar[kural] = sayilar.get(kural, 0) + 1
     return sayilar
 
 
 def _bulgu_ozeti(bulgular):
-    dosyalar = {}
-    for etiket, _no, kural in bulgular:
-        dosyalar.setdefault(etiket, set()).add(kural)
-    for etiket in sorted(dosyalar):
-        print('BULGU %s · %s' % (etiket, ','.join(sorted(dosyalar[etiket]))))
-    print('SIR-KAPISI FAIL — %d eslesme · %d commit-dosya'
-          % (len(bulgular), len(dosyalar)))
+    """Ayni (dosya, satir, kural) tek kez sayilir; commit'ler yaninda listelenir."""
+    tekil = {}
+    for sha, yol, no, kural in bulgular:
+        tekil.setdefault((yol, no, kural), set()).add(sha)
+    for yol, no, kural in sorted(tekil, key=lambda k: (k[0] or '', k[1], k[2])):
+        shalar = tekil[(yol, no, kural)]
+        ek = ''
+        if None not in shalar:
+            ek = ' · ' + ','.join(sorted(shalar))
+        print('BULGU %s:%d · %s%s' % (yol, no, kural, ek))
+    print('SIR-KAPISI FAIL — %d eslesme · %d dosya'
+          % (len(tekil), len({yol for yol, _no, _kural in tekil})))
 
 
 def push_kontrol(yerel_sha, uzak_sha, uzak_ad):
@@ -289,8 +298,7 @@ def main(argv):
         if i + 3 >= len(argv):
             print('HATA: --push <yerel_sha> <uzak_sha> <uzak_ad> ister')
             return 2
-        return push_kontrol(argv[i + 1], argv[i + 2],
-                            argv[i + 3] or 'origin')
+        return push_kontrol(argv[i + 1], argv[i + 2], argv[i + 3])
     else:
         print('kullanim: --staged | --tum | --dosyalar <yollar> | '
               '--aralik <A..B> | --push <yerel_sha> <uzak_sha> <uzak_ad>')
@@ -299,8 +307,8 @@ def main(argv):
     if not bulgular:
         print('SIR-KAPISI PASS — canli DSN/Neon token yok')
         return 0
-    for etiket, no, kural in bulgular:
-        print('FAIL %s:%d · %s' % (etiket, no, kural))
+    for _sha, yol, no, kural in bulgular:
+        print('FAIL %s:%d · %s' % (yol, no, kural))
     print('SIR-KAPISI FAIL — %d bulgu · deger BASILMADI' % len(bulgular))
     return 1
 
