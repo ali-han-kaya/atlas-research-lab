@@ -19,6 +19,10 @@ commit ve kanit setini arar; bu depo ozel agacin tarihcesini tasimaz. Test bu
 yuzden CALISTIRILMADI raporlanir — PASS degil, KOSULLU da degil: kosmadi.
 Her CALISTIRILMADI kalem nedenini yaninda tasir ve hukme SAYILMAZ.
 
+PARITE (OPSIYONEL): `ATLAS_LAB` tanimliysa once `tools/yayinla.py` kuru kosusu
+calisir; sifir suruklenme yoksa hukum FAIL olur. Tanimsizsa bu kontrol
+atlanir, cunku public klonda ozel agac yoktur; 7/8 hukmu degismez.
+
 MODEL KATALOGU: varsayilan kosu DEPODAKI sabit katalogu kullanir
 (`tools/model_katalog.json`) ve makinedeki `~/.cache/opencode/models.json`
 dosyasini OKUMAZ. Boylece ayni commit her klonda ayni sayiyi verir. Sabit
@@ -243,6 +247,33 @@ def _github_ozeti(kalemler, kalan, atlanan):
         pass
 
 
+def parite_kontrolu():
+    """ATLAS_LAB varsa yayin kuru kosusunu on kosul yapar.
+
+    Donus: (None, '') = tanimsiz/atlandi · (True, ozet) = temiz ·
+    (False, ozet) = drift ya da kosulamadi.
+    """
+    lab = os.environ.get('ATLAS_LAB')
+    if not lab:
+        return None, ''
+    lab = os.path.expanduser(lab)
+    if not os.path.isdir(lab):
+        return False, 'ATLAS_LAB dizini yok: %s' % lab
+    try:
+        r = subprocess.run(
+            [sys.executable, os.path.join(KOK, 'tools', 'yayinla.py'),
+             '--lab', lab], capture_output=True, text=True, timeout=180)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        return False, 'parite kosulamadi: %s' % e
+    cikti = ((r.stdout or '') + (r.stderr or '')).strip()
+    satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
+    parite = [s for s in satirlar if s.startswith('PARITE:')]
+    if r.returncode == 0:
+        return True, (parite[-1] if parite else 'PARITE: TEMIZ')
+    return False, (parite[-1] if parite else
+                   (satirlar[-1] if satirlar else 'rc=%d' % r.returncode))
+
+
 def main():
     kip = 'CI' if CI else ('HIZLI' if HIZLI else 'TAM')
     print('ATLAS — tek giris dogrulama · %s' % kip)
@@ -254,6 +285,15 @@ def main():
     else:
         print('model katalogu: YOK — model kalemleri CALISTIRILMADI olur')
     print()
+
+    parite, parite_not = parite_kontrolu()
+    if parite is not None:
+        print('  %-24s %s' % ('parite (yayinla)', parite_not))
+        if not parite:
+            print()
+            print('  HUKUM: FAIL — PARITE (yayinla kuru kosusu)')
+            return 1
+        print()
 
     kalemler = []
     for kid, ad, fn in (('H1', 'depo hijyeni', hijyen),

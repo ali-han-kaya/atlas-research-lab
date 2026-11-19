@@ -5,7 +5,7 @@ PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(
 .PHONY: dogrula dogrula-ci mutasyon oztest demo kapsam kapsam-yaz katalog-kontrol iddia iddia-ag iddia-yaz guvenlik kur yayinla yardim
 
 yardim:
-	@echo "make dogrula   tek giris: hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test"
+	@echo "make dogrula   tek giris: hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
 	@echo "make dogrula-ci  runner kipi: olculebilen kalemler hukme girer, oz-testler rapor"
 	@echo "make mutasyon  kapi kurallari gercekten atesliyor mu (temiz taban + ihlal)"
 	@echo "make demo      ince sarmalayici: ./demo (kod ayrimi icin ./demo; make her hatada 2 doner)"
@@ -18,7 +18,7 @@ yardim:
 	@echo "make guvenlik  pip-audit: bilinen CVE taramasi (requirements-dev.txt)"
 	@echo "make kur       commit/push korumasini bu klonda etkinlestir"
 	@echo "make oztest    yalniz oz-test paketleri"
-	@echo "make yayinla   ozel agactan aktarim (ATLAS_LAB=<yol>; kuru kosu)"
+	@echo "make yayinla   ozel agactan aktarim (ATLAS_LAB=<yol>; kuru kosu; drift varsa hata)"
 	@echo "make yayinla UYGULA=1  aktarimi yaz"
 
 dogrula:

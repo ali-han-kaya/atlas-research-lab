@@ -11,7 +11,8 @@ Kullanim:
     python3 tools/yayinla.py --lab ~/Desktop/MTRX/AI_ARASTIRMA_LABI            # kuru kosu
     python3 tools/yayinla.py --lab ~/Desktop/MTRX/AI_ARASTIRMA_LABI --uygula
 
-CIKIS: 0 = plan yazildi/temiz · 1 = sir bulgusu (HICBIR SEY yazilmadi) · 2 = kullanim hatasi
+CIKIS: 0 = plan yazildi/temiz (sifir suruklenme) · 1 = sir bulgusu veya parite
+       suruklenmesi (--uygula olmadan HICBIR SEY yazilmadi) · 2 = kullanim hatasi
 """
 import argparse
 import hashlib
@@ -23,15 +24,17 @@ import sys
 KOK = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # --- DAHIL LISTESI (tek kaynak; yeni yol buraya yazilmadan yayimlanmaz) ------
-# NOT: `scripts/` BILEREK yok. Oradaki batarya kisisel calisma sozlesmesine
-# baglidir; o dosya yayimlanmiyor ve betikler sahibin mutlak yolunu tasiyordu.
+# NOT: `scripts/` kok dizini BILEREK yok; yalniz `scripts/kur_hooks.sh`
+# acik listede. Oradaki batarya kisisel calisma sozlesmesine baglidir; o
+# dosyalar yayimlanmiyor ve betikler sahibin mutlak yolunu tasiyordu.
 # Laboratuvarin kendi mekanizmasi ATLAS + KOD + Toolkit icinde.
 KOKLER = ['ATLAS_SABLONLAR', 'KOD_SABLONLAR', 'ORTAK', 'RAFINE_SABLON',
           'HAKEM_HEYETI', 'DENEME', '.opencode']
-# Hedef depoda kalmasi yasak klu kokler (eski surumlerden kalirsa silinir).
+# Hedef depoda kalmasi yasak kokler (eski surumlerden kalirsa silinir).
+# `scripts/` istisnasi: yalniz `scripts/kur_hooks.sh` acik listede tasinir.
 KALDIRILAN_KOKLER = ['scripts']
 DOSYALAR = ['AGENTS.md', 'AI_CALISMA_SISTEMI_v1.md', 'ISARETCILER.md',
-            'opencode.json', 'SURUM.md']
+            'opencode.json', 'SURUM.md', 'scripts/kur_hooks.sh']
 TOOLKIT_DOSYALARI = ['KOMUT_TOOLKIT_v4/000_ONCE_BUNU_YAPISTIR.md',
                      'KOMUT_TOOLKIT_v4/001_SORUN_CIKARSA_OKU.md']
 TOOLKIT_KOKLER = ['KOMUT_TOOLKIT_v4/ARACLAR']
@@ -47,6 +50,7 @@ DOCS_DOSYALARI = [
     'MUTASYON_KOSUM.md', 'CORRIGENDUM-KIMLIK-ENVANTER-2026-09-01.md',
     # Kapıların pinlediği kanonik OLGU-06 devri — sürüm satırı buna bağlı.
     'DEVIR-2026-09-03-1945-AUD-06-07.md',
+    'EN/QUICKSTART.md', 'GUVENLIK.md', 'MUTASYON_KAPSAM.md',
 ]
 
 # --- HARIC -------------------------------------------------------------------
@@ -271,7 +275,12 @@ def main():
 
     if not a.uygula:
         print()
-        print('KURU KOSU — yazmak icin: --uygula')
+        if yeni or degisen or silinecek:
+            print('PARITE: DRIFT — yeni=%d degisen=%d silinecek=%d'
+                  % (len(yeni), len(degisen), len(silinecek)))
+            print('KURU KOSU — yazmak icin: --uygula')
+            return 1
+        print('PARITE: TEMIZ — 0 yeni / 0 degisen / 0 silinen')
         return 0
 
     n, s = yaz(istenen, silinecek)
