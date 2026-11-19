@@ -1,0 +1,12 @@
+#!/bin/sh
+# Push edilecek YENI commit'ler taranir; eski gecmis yeniden denetlenmez.
+durum=0
+while read yerel_ref yerel_sha uzak_ref uzak_sha; do
+  case "$yerel_sha" in 0000000000000000000000000000000000000000) continue ;; esac
+  case "$uzak_sha" in
+    0000000000000000000000000000000000000000) aralik="$yerel_sha" ;;
+    *) aralik="$uzak_sha..$yerel_sha" ;;
+  esac
+  python3 tools/sir_kapisi.py --aralik "$aralik" || durum=1
+done
+exit $durum

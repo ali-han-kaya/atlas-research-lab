@@ -1,3 +1,6 @@
-# Lab betiklerinin tek harici bagimliligi: DOI/URL dogrulamasi (verify_doi.py,
-# gate_2c.py) ağa `requests` ile çıkar. Yoksa bu betikler NOT_EXECUTED kalır.
-requests>=2.31
+# Lab betiklerinin harici bagimliliklari.
+# SABIT surum: dogrulama iddiasi tasiyan depoda ortam da sabit olmali.
+# requests: DOI/URL dogrulamasi (verify_doi.py, gate_2c.py) aga bununla cikar.
+# pip-audit: `make guvenlik` — bilinen CVE taramasi (yalniz gelistirme araci).
+requests==2.32.5
+pip-audit==2.9.0

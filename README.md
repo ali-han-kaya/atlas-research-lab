@@ -1,5 +1,7 @@
 ## ATLAS Research Lab — in brief
 
+[![dogrula](https://github.com/ali-han-kaya/atlas-research-lab/actions/workflows/dogrula.yml/badge.svg)](https://github.com/ali-han-kaya/atlas-research-lab/actions/workflows/dogrula.yml)
+
 **A verification-first, multi-agent research lab.** ATLAS treats verification as the
 product: a delivery is judged by gates that run over its own bytes, never by a model's
 claim that the work was done.
@@ -14,13 +16,17 @@ marker, source level — all eight must be zero); a closed severity list P0/P1/P
 unknown label becomes `SCHEMA_INVALID` → P0; KEEP fingerprints so silent deletion becomes
 visible; evidence levels (`BIRINCIL`/`DIJITAL`/`BEYAN`/`OLCULMEDI`); fail-closed handling
 (unmeasured is never a pass); and tamper detection (`GATE_TAMPERED` → P0).
-- **How claims are verified.** `make dogrula` (hygiene, syntax, secret scan, three
-self-test suites), `make mutasyon` (five gate rules must actually fire: clean baseline +
-one violation + a red verdict), and `tools/yayinla.py` (publish parity: 0 new / 0 changed
-/ 0 deleted). The same commands run in CI on GitHub Actions.
-- **Measured state.** `make dogrula` → **6 pass / 0 fail / 1 not run** (T1 is reported as
-`CALISTIRILMADI` and never counted as a pass); KOD self-test **174/174**; mutation battery
-**5/5**; CI green.
+- **How claims are verified.** `make dogrula` (hygiene, syntax, secret scan, secret-gate
+self-test, three self-test suites), `make mutasyon` (five gate rules must actually fire:
+clean baseline + one violation + a red verdict), and `tools/yayinla.py` (publish parity:
+0 new / 0 changed / 0 deleted). The same commands run in CI on GitHub Actions.
+- **Reproduce it.** `make demo` prints the frozen 8-vs-2 failure with a **red verdict**
+(`python3 tools/demo.py` exits 1; `make` itself exits 2 and prints the same verdict). `make dogrula` → **7 pass / 0 fail / 1 not run** (T1 is reported as
+`CALISTIRILMADI` and never counted as a pass — see *Accepted debt* below); KOD self-test
+**174/174**; mutation battery **5/5**. Mutation-tested vs untested gate rules are measured
+in [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md); dependent-package findings in
+[`docs/GUVENLIK.md`](docs/GUVENLIK.md); CI green. Non-Turkish readers:
+[`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md).
 
 ---
 
@@ -101,14 +107,61 @@ nüsha yoktur.
 ```bash
 git clone https://github.com/ali-han-kaya/atlas-research-lab.git
 cd atlas-research-lab
-python3 -m pip install -r requirements-dev.txt   # DOI doğrulaması için requests
+python3 -m pip install -r requirements-dev.txt   # sürümler sabit: requests + pip-audit
+make kur       # commit/push korumasını bu klonda etkinleştirir
 make dogrula
+make demo      # beklenen: rc=1 (kırmızı)
 ```
 
-`make dogrula` tek giriştir; yedi kalemi sırayla koşar ve **ham çıktılarını** yazar:
-depo hijyeni, Python sözdizimi, kabuk sözdizimi, sır taraması ve üç öz-test paketi
-(ATLAS · KOD · Toolkit). Sayıları README'ye elle yazmayız — betikler kendileri basar.
-Model çağrısı yoktur: yerel batarya **$0**.
+`make dogrula` tek giriştir; **sekiz kalemi** sırayla koşar ve **ham çıktılarını** yazar:
+depo hijyeni, Python sözdizimi, kabuk sözdizimi, sır taraması, sır kapısı öz-testi ve üç
+öz-test paketi (ATLAS · KOD · Toolkit). Sayıları README'ye elle yazmayız — betikler
+kendileri basar. Model çağrısı yoktur: yerel batarya **$0**. İngilizce hızlı başlangıç:
+[`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md).
+
+### `make demo` — tek komutla kırmızı hüküm
+
+`DENEME/` 23 Ağustos 2026'da dondurulmuş, bilerek kusurlu bir koşudur: manifesto 8 FIX'i
+"UYGULANMIŞ" ilan etti, MASTER'a yalnız 2'si yansıdı, o günün FINAL GATE'i yine de PASS
+dedi. Komut fikstürü olduğu gibi okur, bugünkü mutabakat kapısını (`fix_reconcile`) koşar
+ve **kırmızı** döner:
+
+```text
+DEMO — DENEME/ dondurulmus kusurlu kosu (v5.5.2, 23 Agustos 2026)
+kaynak: DENEME/ — bilerek duzeltilmedi; regresyon fiksturu.
+
+  manifesto iddiasi : 8 FIX "UYGULANMIS"
+  MASTER'da gorunen : 2 FIX
+  dondurulmus kapi  : PASS  (DENEME/gate/FINAL-GATE-v5.5.json)
+
+  bugunku mutabakat : FAIL  (fix_reconcile, rc=1)
+
+  PASS REC-01: FAZ1 8 bulgu == FAZ2 8 FIX
+  PASS REC-02: oncelik dagilimi ayni {'P0': 3, 'P1': 5}
+  PASS REC-03: 8 bulgunun tamami FAZ2'de atifli
+  PASS REC-06: MASTER'daki 2 FIX-ID manifestoda tanimli
+  FAIL REC-04: 6/8 'UYGULANMIS' FIX MASTER'da yok: ['FIX-003', 'FIX-004', 'FIX-005', 'FIX-006', 'FIX-007', 'FIX-008']
+  FAIL REC-05: gate 2B '6' FIX'i KANITLI ilan etti ama MASTER'da yok: ['FIX-003', 'FIX-004', 'FIX-005', 'FIX-006', 'FIX-007', 'FIX-008']
+
+HUKUM: FAIL — iddia 8, kanit 2; dondurulmus kapi PASS dedi.
+BEKLENEN KIRMIZI — bu komut bilerek rc=1 doner.
+```
+
+Çıkış kodları: `python3 tools/demo.py` → **1** (beklenen kırmızı), **2** (fikstür beklenen
+biçimden saptı). `make demo` ise GNU make'in tarif-hatası koduyla **2** döner ve
+`make: *** [demo] Error 1` basar; yani make üzerinden 1 ile 2 ayrımı görünmez. Ayrımı
+görmek isteyen betiği doğrudan koşar. Her iki durumda da kırmızı, bozulmuş bir testten
+değil iddia/kanıt farkından gelir; fikstür kayarsa demo `FIKSTUR DEGISTI` yazar.
+
+### Ölçülen süreler
+
+| Komut | Süre | Ölçüm |
+|---|---|---|
+| `make dogrula` | 52 s | macOS 27.2 · arm64 · Python 3.9.6 · 2026-11-19 |
+| `make mutasyon` | 5 s | aynı makine ve oturum |
+| `make demo` | < 1 s | aynı makine ve oturum |
+
+CI süreleri runner'a bağlıdır; burada iddia edilmez, iş akışı kaydı esastır.
 
 Paketleri ayrı ayrı koşmak istersen (yollar depo köküne görelidir):
 
@@ -177,7 +230,11 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 
 | Ne | Nasıl |
 |---|---|
-| Tek giriş doğrulama | `make dogrula` → `tools/dogrula.py` (yedi kalem, fail-closed) |
+| Tek giriş doğrulama | `make dogrula` → `tools/dogrula.py` (sekiz kalem, fail-closed) |
+| Kırmızı hüküm demosu | `make demo` → `tools/demo.py` (beklenen `rc=1`) |
+| Mutasyon kapsamı | `make kapsam` → `docs/MUTASYON_KAPSAM.md` güncel mi (üretilmiş tablo) |
+| Bağımlılık denetimi | `make guvenlik` → `pip-audit`; her bulgu `docs/GUVENLIK.md` içinde adıyla |
+| Commit/push koruması | `make kur` → `core.hooksPath=.githooks`; canlı DSN commit edilemez |
 | Runner doğrulaması | `make dogrula-ci` — yalnız o ortamda ölçülebilen kalemler hükme girer, öz-testler rapor |
 | Sürekli doğrulama | `.github/workflows/dogrula.yml` — her push/PR ve haftalık |
 | Özel ağaçtan aktarım | `tools/yayinla.py --lab <yol>` (kuru koşu) · `--uygula` (yazar) |
@@ -207,6 +264,24 @@ bulgu varsa hiçbir şey yazmaz.
   `CALISTIRILMADI` olur. Ayrıntı: [docs/README.md](docs/README.md).
 
 ---
+
+## Kabul edilen borç — T1
+
+`T1` (OLG-1), `SURUM.md` makine bloğunun bağlı olduğu commit ve kanıt setini arar; bu depo
+özel ağacın tarihçesini taşımadığı için test **koşmaz** ve `CALISTIRILMADI` basılır. Bunu
+PASS'a çevirmek için sahte commit çıpası üretmek yasaktır — depo kendi tezine aykırı
+düşerdi. Bu yüzden borç gizlenmez: `make dogrula` her koşuda
+`KABUL EDILEN BORC: T1 kosmuyor — ...` satırını basar, CI iş özetine yazar ve hüküm
+`PASS 7/8` olarak kalır. Ölçülebilir bir yedinci kalem ancak public tarihçeye ait gerçek
+bir kanıt seti tanımlandığında eklenebilir; o güne kadar 7/8, 8/8 gibi gösterilmez.
+
+## Mutasyon kapsamı
+
+`make mutasyon` beş kuralın gerçekten ateşlediğini kanıtlar; **kaç kuralın hiç test
+edilmediğini** ise [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md) söyler. Tablo
+`tools/kapsam.py` tarafından üretilir (elle yazılmaz) ve `GATE_TAMPERED` üreten `FRZ-01`
+/ `FRZ-02` satırlarını ayrıca işaretler. `make kapsam` tablonun güncelliğini denetler;
+CI'da bu adım kırılırsa tablo bayatlamış demektir.
 
 ## Lisans
 
