@@ -24,6 +24,9 @@ HEDEF = KOK / 'docs' / 'MUTASYON_KAPSAM.md'
 DIZINLER = ('ATLAS_SABLONLAR/scripts', 'KOD_SABLONLAR/scripts')
 
 KURAL = re.compile(r'^\s{0,8}([A-Z]{2,8}(?:-[A-Z0-9]{1,8}){0,2}-\d{2,3})\b')
+# Dosyanin herhangi bir yerindeki bolum basligi: `# --- FRZ-08 ...`.
+# Bu, ust KURALLAR listesine yazilmamis ama kodda hukum ureten kurali yakalar.
+BOLUM = re.compile(r'^\s*#+\s*-{2,}\s*([A-Z]{2,8}(?:-[A-Z0-9]{1,8}){0,2}-\d{2,3})\b')
 # OLCUM-* bir kapi kurali degil, olcum kaydinin referansidir.
 YOKSAY_PREFIX = {'OLCUM'}
 
@@ -66,17 +69,42 @@ def kapi_betikleri():
                 yield p
 
 
+def _kimlikler(p):
+    """(satir basi bildirimleri, bolum basligi kimlikleri) — TUM dosya.
+
+    Eski surum yalniz ilk 100 satiri okuyordu; FRZ-08 114. satirdaki bolum
+    basliginda kaldigi icin envanterde hic gorunmuyordu. Artik sinir yok.
+    """
+    baslik, bolum = set(), set()
+    for satir in p.read_text(encoding='utf-8').splitlines():
+        m = KURAL.match(satir)
+        if m and m.group(1).split('-')[0] not in YOKSAY_PREFIX:
+            baslik.add(m.group(1))
+        m = BOLUM.match(satir)
+        if m and m.group(1).split('-')[0] not in YOKSAY_PREFIX:
+            bolum.add(m.group(1))
+    return baslik, bolum
+
+
 def envanter():
-    """{betik_goreli: [kural, ...]} — yalniz basliktaki bildirimler."""
+    """{betik_goreli: [kural, ...]} — tum bildirimler + bolum basliklari."""
     sonuc = {}
     for p in kapi_betikleri():
-        kimlikler = set()
-        for satir in p.read_text(encoding='utf-8').splitlines()[:100]:
-            m = KURAL.match(satir)
-            if m and m.group(1).split('-')[0] not in YOKSAY_PREFIX:
-                kimlikler.add(m.group(1))
+        baslik, bolum = _kimlikler(p)
+        kimlikler = baslik | bolum
         if kimlikler:
             sonuc[str(p.relative_to(KOK))] = sorted(kimlikler)
+    return sonuc
+
+
+def tarama():
+    """Her kapinin baslik/bolum kimlik kumeleri; sayim kaniti icin."""
+    sonuc = []
+    for p in kapi_betikleri():
+        baslik, bolum = _kimlikler(p)
+        if baslik or bolum:
+            sonuc.append((str(p.relative_to(KOK)), sorted(baslik), sorted(bolum),
+                          sorted(baslik | bolum)))
     return sonuc
 
 
@@ -155,12 +183,23 @@ def sinif_tablosu(satirlar):
     return out
 
 
+def tarama_tablosu():
+    out = ['| Betik | Baslikta | Bolum basligi | Yeni | Envanter |',
+           '|---|---|---|---|---|']
+    for betik, baslik, bolum, birlesik in tarama():
+        yeni = len(set(bolum) - set(baslik))
+        out.append('| `%s` | %d | %d | %d | %d |' % (
+            betik.split('/')[-1], len(baslik), len(bolum), yeni, len(birlesik)))
+    return out
+
+
 def markdown():
     satirlar, envan, (test, disi, bosluk, oz_anilan) = olc()
     out = ['# Mutasyon kapsami — tam kural envanteri', '',
            'Kaynak: `tools/kapsam.py` (uretilmis dosya; elle duzenlenmez).',
-           'Envanter, ATLAS ve KOD kapi betiklerinin basliklarinda bildirdigi',
-           'kural kimlikleridir; `*_selftest.py` ve `OLCUM-*` referanslari sayilmaz.',
+           'Envanter, ATLAS ve KOD kapi betiklerinin satir basi kural bildirimlerinden',
+           've dosyanin herhangi bir yerindeki `# --- KIMLIK` bolum basliklarindan gelir;',
+           '`*_selftest.py` ve `OLCUM-*` referanslari sayilmaz.',
            '',
            'Her kural icin tek soru sorulur: **mutasyon bataryasinda onu ateslettiren',
            'bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus',
@@ -179,7 +218,21 @@ def markdown():
            'Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir',
            '(asagida betik adiyla birlikte yazili).', '']
     out += sinif_tablosu(satirlar)
-    out += ['', '## Tam envanter', '',
+    out += ['', '## Tarama kaniti', '',
+            '`Baslikta` satir basindaki kural bildirimleridir. `Bolum basligi`',
+            'dosyanin herhangi bir yerindeki `# --- KIMLIK` basliklaridir; ilk 100',
+            'satir siniri YOKTUR. `Yeni`, yalniz bolum basliginda gorunen ve ust',
+            'listeye yazilmamis kimliklerdir. Envanter, iki kumenin birlesimidir.', '',
+            '`DEC-10/12` ve `GM-17/18` gibi degisiklik etiketleri kural kimligi',
+            'degildir; yalnizca kural bildirimleri ve `# --- KIMLIK` basliklari',
+            'taranir. `CHK-00` gibi bolum basligi olmayan ara kodlar da bu',
+            'envanterin konusu degildir.', '']
+    _tarama = tarama()
+    out += tarama_tablosu()
+    out += ['', 'Toplam: %d betik · %d tekil kural; her satirda Envanter = '
+            'Baslikta ∪ Bolum basligi.' % (
+                len(_tarama), sum(len(x[3]) for x in _tarama)), '']
+    out += ['## Tam envanter', '',
             '| Betik | Kural | Mutasyon vakasi | Durum | Gerekce |',
             '|---|---|---|---|---|']
     for betik, k, vaka, durum, gerekce in satirlar:

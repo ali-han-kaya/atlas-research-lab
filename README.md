@@ -168,7 +168,7 @@ Kırmızı, bozulmuş bir testten değil iddia/kanıt farkından gelir; fikstür
 | Komut | Süre | Ölçüm |
 |---|---|---|
 | `make dogrula` | 52 s | macOS 27.2 · arm64 · Python 3.9.6 · 2026-11-19 |
-| `make mutasyon` | 65 s | aynı makine ve oturum |
+| `make mutasyon` | 66 s | aynı makine ve oturum |
 | `./demo` | < 1 s | aynı makine ve oturum |
 
 CI süreleri runner'a bağlıdır; burada iddia edilmez, iş akışı kaydı esastır.
@@ -296,7 +296,7 @@ bir kanıt seti tanımlandığında eklenebilir; o güne kadar 7/8, 8/8 gibi gö
   (`verify_doi`), gizli anahtar (`teslim_imza`), tarihçe (`olgu_lint`), koşu durumu
   (`api_surface`, `oztest_attest`), depo durumu (`dep_audit`), ölü kural kimliği
   (`secret_scan` SEC-04 hiçbir kod dalında basılmıyor)
-- **BOŞLUK** — 19 kural: 7'si yalnız öz-testte anılıyor, 12'si hiçbir testte geçmiyor
+- **BOŞLUK** — 23 kural: 11'i yalnız öz-testte anılıyor, 12'si hiçbir testte geçmiyor
 
 Boşluk "kapsam dışı" diye etiketlenmez; gerekçesi yoksa boşluk olarak kalır ve tabloda
 adıyla durur. `make kapsam` tablonun güncelliğini denetler; CI'da bu adım kırılırsa

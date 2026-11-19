@@ -1,8 +1,9 @@
 # Mutasyon kapsami — tam kural envanteri
 
 Kaynak: `tools/kapsam.py` (uretilmis dosya; elle duzenlenmez).
-Envanter, ATLAS ve KOD kapi betiklerinin basliklarinda bildirdigi
-kural kimlikleridir; `*_selftest.py` ve `OLCUM-*` referanslari sayilmaz.
+Envanter, ATLAS ve KOD kapi betiklerinin satir basi kural bildirimlerinden
+ve dosyanin herhangi bir yerindeki `# --- KIMLIK` bolum basliklarindan gelir;
+`*_selftest.py` ve `OLCUM-*` referanslari sayilmaz.
 
 Her kural icin tek soru sorulur: **mutasyon bataryasinda onu ateslettiren
 bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus
@@ -12,12 +13,12 @@ bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus
 
 | Olcum | Deger |
 |---|---|
-| Kapi betigi | 20 |
-| Bildirilen kural | 117 |
+| Kapi betigi | 21 |
+| Bildirilen kural | 121 |
 | Mutasyon vakasi olan (TEST EDILDI) | 71 |
 | Gerekceli kapsam disi | 27 |
-| Bosluk (gerekce yok) | 19 |
-| — bunlardan yalniz oz-testte anilan | 7 |
+| Bosluk (gerekce yok) | 23 |
+| — bunlardan yalniz oz-testte anilan | 11 |
 | — hicbir testte gecmeyen | 12 |
 
 ## Kapsam disi siniflari
@@ -33,6 +34,44 @@ Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir
 | kosu-durumu | butun agacin selftest hash tabanini ve ham kosu ciktisini ister | api_surface.py, oztest_attest.py | 11 |
 | olu-kimlik | SEC-04 yalniz baslikta bildirilir; hicbir kod dali bu kimligi basmiyor (atlanan dosyalar yalniz sayilir) | secret_scan.py | 1 |
 | tarihce | SURUM.md makine blogunu HEAD/commit hashleriyle karsilastirir | olgu_lint.py | 2 |
+
+## Tarama kaniti
+
+`Baslikta` satir basindaki kural bildirimleridir. `Bolum basligi`
+dosyanin herhangi bir yerindeki `# --- KIMLIK` basliklaridir; ilk 100
+satir siniri YOKTUR. `Yeni`, yalniz bolum basliginda gorunen ve ust
+listeye yazilmamis kimliklerdir. Envanter, iki kumenin birlesimidir.
+
+`DEC-10/12` ve `GM-17/18` gibi degisiklik etiketleri kural kimligi
+degildir; yalnizca kural bildirimleri ve `# --- KIMLIK` basliklari
+taranir. `CHK-00` gibi bolum basligi olmayan ara kodlar da bu
+envanterin konusu degildir.
+
+| Betik | Baslikta | Bolum basligi | Yeni | Envanter |
+|---|---|---|---|---|
+| `check_models.py` | 8 | 0 | 0 | 8 |
+| `cite_match.py` | 3 | 3 | 0 | 3 |
+| `declaration_check.py` | 7 | 0 | 0 | 7 |
+| `fix_reconcile.py` | 6 | 6 | 0 | 6 |
+| `olgu_lint.py` | 2 | 0 | 0 | 2 |
+| `oztest_attest.py` | 6 | 0 | 0 | 6 |
+| `prompt_lint.py` | 12 | 0 | 0 | 12 |
+| `provenance_check.py` | 0 | 3 | 3 | 3 |
+| `quote_ratio.py` | 2 | 1 | 0 | 2 |
+| `scope_profile_check.py` | 7 | 5 | 0 | 7 |
+| `source_class_check.py` | 3 | 0 | 0 | 3 |
+| `teslim_imza.py` | 6 | 0 | 0 | 6 |
+| `translit_check.py` | 2 | 2 | 0 | 2 |
+| `verify_doi.py` | 1 | 1 | 0 | 1 |
+| `api_surface.py` | 5 | 0 | 0 | 5 |
+| `chg_reconcile.py` | 9 | 0 | 0 | 9 |
+| `dep_audit.py` | 6 | 0 | 0 | 6 |
+| `freeze_check.py` | 7 | 3 | 1 | 8 |
+| `perm_lint.py` | 8 | 0 | 0 | 8 |
+| `secret_scan.py` | 5 | 0 | 0 | 5 |
+| `test_attest.py` | 12 | 1 | 0 | 12 |
+
+Toplam: 21 betik · 121 tekil kural; her satirda Envanter = Baslikta ∪ Bolum basligi.
 
 ## Tam envanter
 
@@ -82,6 +121,9 @@ Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir
 | `prompt_lint.py` | PL-16 | PL-16 | TEST EDILDI | mutasyon vakasi: PL-16 |
 | `prompt_lint.py` | PL-18 | PL-18 | TEST EDILDI | mutasyon vakasi: PL-18 |
 | `prompt_lint.py` | PL-19 | PL-19 | TEST EDILDI | mutasyon vakasi: PL-19 |
+| `provenance_check.py` | CHK-01 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
+| `provenance_check.py` | CHK-02 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
+| `provenance_check.py` | CHK-05 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
 | `quote_ratio.py` | QR-01 | QR-01 | TEST EDILDI | mutasyon vakasi: QR-01 |
 | `quote_ratio.py` | QR-02 | ATLAS-QR-02 | TEST EDILDI | mutasyon vakasi: ATLAS-QR-02 |
 | `scope_profile_check.py` | SP-01 | SP-01 | TEST EDILDI | mutasyon vakasi: SP-01 |
@@ -130,6 +172,7 @@ Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir
 | `freeze_check.py` | FRZ-05 | FRZ-05 | TEST EDILDI | mutasyon vakasi: FRZ-05 |
 | `freeze_check.py` | FRZ-06 | FRZ-06 | TEST EDILDI | mutasyon vakasi: FRZ-06 |
 | `freeze_check.py` | FRZ-07 | FRZ-07 | TEST EDILDI | mutasyon vakasi: FRZ-07 |
+| `freeze_check.py` | FRZ-08 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
 | `perm_lint.py` | PERM-01 | KOD-PERM-01 | TEST EDILDI | mutasyon vakasi: KOD-PERM-01 |
 | `perm_lint.py` | PERM-02 | PERM-02 | TEST EDILDI | mutasyon vakasi: PERM-02 |
 | `perm_lint.py` | PERM-03 | PERM-03 | TEST EDILDI | mutasyon vakasi: PERM-03 |
