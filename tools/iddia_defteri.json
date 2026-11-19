@@ -372,11 +372,11 @@
     },
     {
       "id": "IDD-18",
-      "iddia": "H5 sir kapisi oz-testi 6/6",
+      "iddia": "H5 sir kapisi oz-testi 8/8",
       "kaynaklar": [
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "  H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 6/6 gecti"
+          "alinti": "  H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 8/8 gecti"
         }
       ],
       "durum": "OLCULDU",
@@ -385,7 +385,7 @@
         "tools/dogrula.py"
       ],
       "ayikla": "SIR KAPISI OZ-TEST:\\s*(\\d+/\\d+)",
-      "beklenen": "6/6"
+      "beklenen": "8/8"
     },
     {
       "id": "IDD-19",

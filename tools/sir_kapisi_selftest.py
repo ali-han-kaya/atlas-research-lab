@@ -5,13 +5,13 @@
 NEDEN VAR
   Bir koruma "calisiyor" demek icin once temiz girdide sessiz kaldigini, sonra
   tek bir canli desende kirmiziya dondugunu olcmek gerekir. Bu test dort betik
-  vakasi ve iki gercek `git commit` vakasi kosar; canli DSN'in Ciktida
-  GORUNMEDIGINI de ayrica dogrular (sizinti testi).
+  vakasi, iki gercek `git commit` vakasi ve iki `git push` vakasi kosar; canli
+  DSN'in ciktida GORUNMEDIGINI de ayrica dogrular (sizinti testi).
 
 KULLANIM
   python3 tools/sir_kapisi_selftest.py
 
-CIKIS: 0 = 5/5 gecti · 1 = en az bir vaka kirmizi
+CIKIS: 0 = 8/8 gecti · 1 = en az bir vaka kirmizi
 """
 import os
 import shutil
@@ -95,6 +95,70 @@ def vaka_hook(icerik, beklenen_basarili, iz=None):
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+def vaka_push(yeni_sir, beklenen_basarili, iz, sizinti=None):
+    """Gercek git push: eski sirlu gecmis engellemez, yeni sir engeller."""
+    tmp = Path(tempfile.mkdtemp(prefix='sir_push_'))
+    try:
+        depo = tmp / 'depo'
+        uzak = tmp / 'uzak.git'
+        depo.mkdir()
+        r = _kos(['git', 'init', '--bare', '-q', str(uzak)], tmp)
+        if r.returncode != 0:
+            return False, 'uzak hazirlik: %s' % (r.stderr or r.stdout).strip()[:120]
+        for komut in (['git', 'init', '-q'],
+                      ['git', 'config', 'user.name', 'Oz Test'],
+                      ['git', 'config', 'user.email', 'oztest@example.invalid']):
+            r = _kos(komut, depo)
+            if r.returncode != 0:
+                return False, 'depo hazirlik: %s' % (r.stderr or r.stdout).strip()[:120]
+
+        # Eski commit'te canli desen var; hook kurulmadan remote'a gonderilir.
+        _yaz(depo / 'eski.md', CANLI)
+        _kos(['git', 'add', 'eski.md'], depo)
+        r = _kos(['git', 'commit', '-q', '-m', 'eski'], depo)
+        if r.returncode != 0:
+            return False, 'eski commit: %s' % (r.stderr or r.stdout).strip()[:120]
+        _kos(['git', 'remote', 'add', 'origin', str(uzak)], depo)
+        r = _kos(['git', 'push', '-q', 'origin', 'HEAD:refs/heads/main'], depo)
+        if r.returncode != 0:
+            return False, 'eski push: %s' % (r.stderr or r.stdout).strip()[:120]
+
+        # Yeni dal: eski sirlu tabandan bir commit daha.
+        _kos(['git', 'checkout', '-q', '-b', 'dene'], depo)
+        _yaz(depo / 'yeni.md', CANLI if yeni_sir else TEMIZ)
+        _kos(['git', 'add', 'yeni.md'], depo)
+        r = _kos(['git', 'commit', '-q', '-m', 'yeni'], depo)
+        if r.returncode != 0:
+            return False, 'yeni commit: %s' % (r.stderr or r.stdout).strip()[:120]
+
+        # Hook'lari simdi kur: commit'ler hazir, push korumasi devrede.
+        _yaz(depo / 'tools' / 'sir_kapisi.py', KAPI.read_text(encoding='utf-8'))
+        for ad in ('pre-commit', 'pre-push'):
+            _yaz(depo / '.githooks' / ad,
+                 (KOK / '.githooks' / ad).read_text(encoding='utf-8'))
+            os.chmod(str(depo / '.githooks' / ad), 0o755)
+        for komut in (['git', 'config', 'core.hooksPath', '.githooks'],):
+            r = _kos(komut, depo)
+            if r.returncode != 0:
+                return False, 'hook hazirlik: %s' % (r.stderr or r.stdout).strip()[:120]
+
+        ortam = dict(os.environ, GIT_TERMINAL_PROMPT='0')
+        r = subprocess.run(['git', 'push', 'origin', 'dene'], cwd=str(depo),
+                           capture_output=True, text=True, env=ortam)
+        cikti = (r.stdout or '') + (r.stderr or '')
+        basarili = r.returncode == 0
+        if basarili != beklenen_basarili:
+            return False, 'push rc=%d (beklenen basarili=%s) · %s' % (
+                r.returncode, beklenen_basarili, cikti.strip()[:160])
+        if iz and iz not in cikti:
+            return False, 'iz yok (%s) · %s' % (iz, cikti.strip()[:160])
+        if sizinti and sizinti in cikti:
+            return False, 'SIZINTI: deger ciktida gorundu'
+        return True, 'push rc=%d · %s' % (r.returncode, iz)
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def main():
     print('SIR KAPISI OZ-TESTI — canli desen kirmizi, yer tutucu sessiz')
     vakalar = [
@@ -106,6 +170,13 @@ def main():
         ('temiz dosya sessiz', lambda: vaka_dosya('temiz', TEMIZ, 0, None)),
         ('hook canli commit engeller', lambda: vaka_hook(CANLI, False, 'canli-dsn')),
         ('hook yer tutucuyu gecirir', lambda: vaka_hook(YER, True)),
+        ('push eski siri uyariyla gecirir',
+         lambda: vaka_push(False, True,
+                           'SIR-KAPISI UYARI: eski gecmis 1 commit · 1 desen',
+                           sizinti='gercekparola123')),
+        ('push yeni siri engeller',
+         lambda: vaka_push(True, False, 'canli-dsn',
+                           sizinti='gercekparola123')),
     ]
     gecen = 0
     for ad, fn in vakalar:
