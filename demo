@@ -1,0 +1,6 @@
+#!/bin/sh
+# Kanonik demo giris noktasi. Kabuk cikis kodu dogrudan tools/demo.py'den gelir:
+#   0 = yesil · 1 = beklenen kirmizi · 2 = fikstur bozuk
+# `make demo` yalnizca bunun ince bir sarmalayicisidir; make, tarif hatasini
+# her zaman 2 ile bildirdigi icin 1/2 ayrimini tasiyamaz.
+exec python3 "$(dirname "$0")/tools/demo.py" "$@"

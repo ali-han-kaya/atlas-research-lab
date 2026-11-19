@@ -60,18 +60,22 @@ jobs:
       # sorar. rc=0 (kirmizi yanmadi) veya rc=2 (fikstur bozuk) basarisizdir.
       - name: Demo beklenen kirmiziyi veriyor
         run: |
+          # Kanonik yol: ./demo. Kabuk kodu dogrudan betikten gelir.
           set +e
-          out=$(make demo 2>&1)
+          out=$(./demo 2>&1)
           rc=$?
           set -e
           echo "$out"
-          echo "demo rc=$rc"
-          test "$rc" -ne 0
+          echo "kanonik ./demo rc=$rc"
+          test "$rc" -eq 1
           echo "$out" | grep -q "BEKLENEN KIRMIZI"
           ! echo "$out" | grep -q "FIKSTUR DEGISTI"
-          # Betik dogrudan kosturulunca beklenen kirmizi tam olarak 1'dir.
+
+          # Sarmalayici sapmasi belgelenmis ve olculmus olmali: make her
+          # tarif hatasinda 2 doner; 1/2 ayrimini tasimaz.
           set +e
-          python3 tools/demo.py >/dev/null 2>&1
+          make demo >/dev/null 2>&1
           rc2=$?
           set -e
-          test "$rc2" -eq 1
+          echo "make demo rc=$rc2"
+          test "$rc2" -eq 2

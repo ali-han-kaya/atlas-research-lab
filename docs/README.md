@@ -1,5 +1,7 @@
 # docs/ — yayımlanan ölçüm ve öğrenim kayıtları
 
+Geri dönüş: [depo README'si](../README.md) · [English quickstart](EN/QUICKSTART.md)
+
 Bu klasör laboratuvarın **kendi üzerine** tuttuğu kayıtları taşır: canlı koşu
 ölçümleri, denetim raporları, ders defteri ve kanonik olgu tablosu. Amaç, deponun
 "biz iyiyiz" demesi değil, **hangi sayının hangi komuttan geldiğini** göstermesi.
