@@ -36,6 +36,17 @@ Bu sınır yüzünden `DERSLER` ve ölçüm dosyalarındaki bazı atıflar özel
 devir dosyalarını gösterir. Bu bir kırık bağ değil, **bilinçli yayın sınırıdır**:
 kayıt yerinde durur, kanıtı özel ağaçta kalır.
 
+## Ortam bağlı tek kalem
+
+`make dogrula` üç öz-test paketini koşar. ATLAS envanterindeki **OLG-1** testi,
+kanonik olgu tablosunun bağlı olduğu commit'i (`OLGU-04`) arar. Bu depo özel ağacın
+tarihçesini taşımadığı için o commit burada yoktur; test bu yüzden **`KOSULLU`**
+raporlanır — `PASS` değil. Koşul serttir: kalan tek test `OLG-1` olmalı **ve**
+gerekçesi `OLGU-04` çıpasını anmalıdır. Başka bir test kalırsa hüküm `FAIL`'dir.
+
+Neden düzeltilmiyor: testin kendisi sağlam; eksik olan, yayımlanmayan bir commit
+zinciridir. Testi "onarmak" kanıtı değil kaydı değiştirmek olurdu.
+
 ## Ağacı yenileme
 
 ```bash

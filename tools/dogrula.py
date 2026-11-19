@@ -4,14 +4,19 @@
 
 NEDEN VAR: "bitti" diyen sey bir his olmamali. Yedi kalem sirayla kosar, her
 kalemin ham ciktisinin son satiri basilir ve hukum rc'lerin toplamindan cikar.
-Eksik kosan kalem PASS sayilmaz; ilk kalem FAIL verdiginde de kalanlar kosar ki
+Eksik kosan kalem PASS sayilmaz; bir kalem FAIL verdiginde de kalanlar kosar ki
 tek turda tam manzara gorunsun.
+
+ORTAK BAGLI KALEM: ATLAS envanterindeki OLG-1 testi, kanonik olgu tablosunun
+bagli oldugu commit'i (OLGU-04) arar. Bu depo ozel agacin tarihcesini tasimaz;
+o commit burada yoktur. Bu tek test `KOSULLU` raporlanir — `PASS` DEGIL — ve
+gerekcesi basilir. Baska herhangi bir test kalirsa hukum FAIL'dir.
 
 Kullanim:
     python3 tools/dogrula.py            # tam
     python3 tools/dogrula.py --hizli    # agir oz-testler atlanir (KOSULLU)
 
-CIKIS: 0 = hepsi gecti · 1 = en az bir kalem FAIL · 2 = kosulamadi
+CIKIS: 0 = hepsi gecti veya kosullu · 1 = en az bir kalem FAIL · 2 = kosulamadi
 """
 import os
 import re
@@ -34,12 +39,15 @@ SIR_KALIPLARI = [
     ('slack', re.compile(r'xox[bap]-[A-Za-z0-9-]{10,}')),
     ('google', re.compile(r'AIza[0-9A-Za-z_-]{35}')),
 ]
-# Gercek PEM anahtarinin basligin ALTINDA uzun base64 govdesi vardir. Ornek
-# komutlarda gecen `-----BEGIN ... KEY-----\nMII...` bu desene uymaz; ham grep
-# saymak yerine gercek bicimi ariyoruz.
 # Kendi sir tarayicisinin test fiksturleri: deger uydurma, bicim gercek.
 FIKSTUR = ('AKIAXXX', 'AKIA1234567890')
+# Gercek PEM anahtarinin basligin ALTINDA uzun base64 govdesi vardir. Ornek
+# komutlarda gecen `-----BEGIN ... KEY-----\\nMII...` bu desene uymaz; ham grep
+# saymak yerine gercek bicimi ariyoruz.
 ANAHTAR = re.compile(r'-----BEGIN [A-Z ]*PRIVATE KEY-----\r?\n[A-Za-z0-9+/=]{64,}')
+
+# Ortam bagli tek test: kimligi ACIK, desenle degil.
+ORTAM_BAGLI = ('OLG-1', 'OLGU-04')
 
 
 def gez():
@@ -119,27 +127,41 @@ def sir_tarama():
 
 
 KOMUTLAR = [
-    ('T1', 'ATLAS oz-testi', [sys.executable,
-                              'ATLAS_SABLONLAR/scripts/atlas_selftest.py', '--sessiz']),
-    ('T2', 'KOD oz-testi', [sys.executable, 'KOD_SABLONLAR/scripts/kod_selftest.py']),
+    ('T1', 'ATLAS oz-testi',
+     [sys.executable, 'ATLAS_SABLONLAR/scripts/atlas_selftest.py', '--sessiz']),
+    ('T2', 'KOD oz-testi',
+     [sys.executable, 'KOD_SABLONLAR/scripts/kod_selftest.py']),
     ('T3', 'Toolkit oz-testi', [sys.executable, 'v4_selftest.py'],
      os.path.join(KOK, 'KOMUT_TOOLKIT_v4', 'ARACLAR', 'betikler')),
 ]
 
 
-def kos(ad, komut, cwd=None):
+def kos(komut, cwd=None):
     try:
         r = subprocess.run(komut, cwd=cwd or KOK, capture_output=True,
                            text=True, timeout=900)
-        cikti = ((r.stdout or '') + (r.stderr or '')).strip()
-        rc = r.returncode
+        return r.returncode, ((r.stdout or '') + (r.stderr or '')).strip()
     except subprocess.TimeoutExpired:
-        return False, 'ZAMAN ASIMI (900 s)', []
+        return 124, 'ZAMAN ASIMI (900 s)'
     except OSError as e:
-        return False, 'KOSULAMADI: %s' % e, []
-    satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
-    son = satirlar[-1][:110] if satirlar else '(bos cikti)'
-    return rc == 0, son, ([] if rc == 0 else satirlar[-6:])
+        return 125, 'KOSULAMADI: %s' % e
+
+
+def ortam_bagli_mi(kid, cikti):
+    """Yalnizca ACIK kimlikli ortam bagli test icin True doner.
+
+    Kosul sert: kalan tek satir OLG-1 olmali VE gerekcesi OLGU-04 cipasini
+    anmalidir. Baska bir test kalirsa bu dal kapali kalir.
+    """
+    if kid != 'T1':
+        return False
+    # Ayni satir stdout ve stderr'de tekrarlanabilir; kimlik kumesine bakilir.
+    kimlikler = set()
+    for satir in cikti.splitlines():
+        m = re.match(r'\s*KALDI\s+([A-Za-z0-9_.-]+):', satir)
+        if m:
+            kimlikler.add(m.group(1))
+    return kimlikler == {ORTAM_BAGLI[0]} and ORTAM_BAGLI[1] in cikti
 
 
 def main():
@@ -153,42 +175,52 @@ def main():
                         ('H3', 'kabuk sozdizimi', sh_sozdizimi),
                         ('H4', 'sir taramasi', sir_tarama)):
         gecti, ozet, detay = fn()
-        kalemler.append((kid, ad, gecti, ozet, detay))
+        kalemler.append((kid, ad, True if gecti else False, ozet,
+                         detay if not gecti else [], ''))
 
     for kalem in KOMUTLAR:
         kid, ad = kalem[0], kalem[1]
         if HIZLI:
-            kalemler.append((kid, ad, None, 'ATLANDI (--hizli)', []))
+            kalemler.append((kid, ad, None, '--hizli: agir kapi atlandi', [],
+                             'agir kapi atlandi'))
             continue
-        komut = kalem[2]
         cwd = kalem[3] if len(kalem) > 3 else None
-        gecti, son, detay = kos(ad, komut, cwd)
-        kalemler.append((kid, ad, gecti, son, detay))
+        rc, cikti = kos(kalem[2], cwd)
+        satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
+        son = satirlar[-1][:110] if satirlar else '(bos cikti)'
+        if rc == 0:
+            kalemler.append((kid, ad, True, son, [], ''))
+        elif ortam_bagli_mi(kid, cikti):
+            kalemler.append((kid, ad, None, son,
+                             [s for s in satirlar if s.startswith('KALDI')],
+                             'ortam bagli: %s cipasi bu depoda yok'
+                             % ORTAM_BAGLI[1]))
+        else:
+            kalemler.append((kid, ad, False, son, satirlar[-6:], ''))
 
-    for kid, ad, gecti, ozet, detay in kalemler:
-        durum = 'ATLANDI' if gecti is None else ('PASS' if gecti else 'FAIL')
-        print('  %-3s %-24s %-7s %s' % (kid, ad, durum, ozet))
+    for kid, ad, durum, ozet, detay, not_metni in kalemler:
+        etiket = 'ATLANDI' if durum is None else ('PASS' if durum else 'FAIL')
+        print('  %-3s %-24s %-7s %s' % (kid, ad, etiket, ozet))
+        if not_metni:
+            print('        · %s' % not_metni)
         for satir in detay:
-            print('        | %s' % satir)
+            print('        | %s' % satir[:400])
 
     kalan = [k for k in kalemler if k[2] is False]
     atlanan = [k for k in kalemler if k[2] is None]
     print()
-    print('  kalem=%d · gecen=%d · kalan=%d · atlanan=%d'
+    print('  kalem=%d · gecen=%d · kalan=%d · kosullu=%d'
           % (len(kalemler), len(kalemler) - len(kalan) - len(atlanan),
              len(kalan), len(atlanan)))
+    print('  NOT: bu betik hakem degildir; rc toplar (OZ_DENETIM).')
     if kalan:
         print('  HUKUM: FAIL — %s' % ', '.join(k[0] for k in kalan))
-        print()
-        print('  NOT: bu betik hakem degildir; rc toplar (OZ_DENETIM).')
         return 1
     if atlanan:
-        print('  HUKUM: KOSULLU — %s atlandi, tam kosu GEREKLI'
+        print('  HUKUM: KOSULLU — %s kosullu (gerekce yukarida); PASS degildir'
               % ', '.join(k[0] for k in atlanan))
         return 0
     print('  HUKUM: PASS — %d/%d kalem gecti' % (len(kalemler), len(kalemler)))
-    print()
-    print('  NOT: bu betik hakem degildir; rc toplar (OZ_DENETIM).')
     return 0
 
 
