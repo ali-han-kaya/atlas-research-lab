@@ -17,9 +17,9 @@ Bu klasör laboratuvarın **kendi üzerine** tuttuğu kayıtları taşır: canl�
 
 ## Yayın kapsamı
 
-**Dahil:** hatların mekanizması (ajanlar, komutlar, şablonlar, kapı betikleri,
-ölçüm bataryası), üç öz-test paketi, Toolkit v4 çekirdeği, kusurlu örnek koşu
-(`DENEME/`), yukarıdaki ölçüm ve ders kayıtları.
+**Dahil:** hatların mekanizması (ajanlar, komutlar, şablonlar, kapı betikleri),
+üç öz-test paketi, Toolkit v4 çekirdeği, kusurlu örnek koşu (`DENEME/`),
+yukarıdaki ölçüm ve ders kayıtları.
 
 **Hariç — ve neden:**
 
@@ -31,6 +31,9 @@ Bu klasör laboratuvarın **kendi üzerine** tuttuğu kayıtları taşır: canl�
 | `docs/DEVIR-*` (oturum devirleri) | Kişisel çalışma bağlamı taşır; en az biri **kimlik bilgisi** (veritabanı bağlantı dizesi) içerir. Böyle bir dosya hiçbir koşulda yayımlanmaz. **Tek istisna:** kapıların pinlediği kanonik OLGU-06 devri `DEVIR-2026-09-03-1945-AUD-06-07.md` — kimlik bilgisi içermez, sürüm satırı ve OLGU-06 lint'i ona bağlıdır. |
 | `SURUM.md` dışındaki iş günlükleri | `SURUM.md` **dahildir** (kapılar sürüm satırını oradan okur); proje-özel devir ve iş kayıtları hariçtir. |
 | `gate/FINAL-GATE-*.json` | Bir **projenin** kapı hükmü; mekanizmanın değil. |
+| `DENEME/gate/FINAL-GATE-v5.5.json` | **Bilinçli istisna:** kök `gate/` hükmü dışlanır, bu dosya ise `DENEME/` fikstürünün içindedir ve dondurulmuş yanlış `PASS`in kanıtıdır. Makale metni taşımaz (ölçüldü: `silat/makale` desenlerinde 0 eşleşme); yalnız kapı sayıları ve tarih. |
+| Kök `scripts/` (kişisel exocortex bataryası) | 33 dosya yayımlanmayan `SKILL.md`'yi okur; ayrıca sahibinin mutlak yolunu (`KOK = '/Users/…'`) taşıyordu. Laboratuvarın kendi mekanizması ATLAS/KOD ağaçlarındaki `scripts/` klasörlerindedir; bu küme kişisel çalışma sözleşmesine aittir (kendi başlığı: *Proprietary*). |
+| `silat-makale` gibi proje adları | Yalnız kod **yorumlarında** ("hangi gerçek koşuda ölçüldü" kanıtı) ve `SURUM.md` bakım kaydında geçer. Makale metni, PDF, veri dosyası yoktur; adı silmek ölçümün kanıt izini silmek olurdu. |
 
 Bu sınır yüzünden `DERSLER` ve ölçüm dosyalarındaki bazı atıflar özel ağaçtaki
 devir dosyalarını gösterir. Bu bir kırık bağ değil, **bilinçli yayın sınırıdır**:
@@ -79,3 +82,12 @@ make dogrula
 Aktarım yalnız `tools/yayinla.py` içindeki **açık listede** yazan yolları taşır.
 Listeye yeni bir yol eklemek bilinçli bir karardır: eklenen dosya bir daha
 sır taramasından geçer ve bulgu varsa hiçbir şey yazılmaz.
+
+Aktarımın iki mekanik kuralı vardır ve ikisi de ölçülebilir:
+
+1. **Yol normalizasyonu.** Metin dosyalarında sahibin ev yolu öneki (`/Users/…`)
+   `~/` olarak yazılır. Ölçüm kaydının anlamı değişmez; klonlayan için sert
+   referans kalmaz. Parite kontrolü **normalize kaynak ↔ ham hedef** üzerinden
+   yapılır, yani bu dönüşüm bir farkı gizlemez.
+2. **Ürün yasağı.** Planda `.pdf`, `.docx`, `.tex`, `.zip`, `.bundle` gibi üretilmiş
+   ürün/arşiv uzantısı görünürse aktarım **hiç yazmadan** çıkar.

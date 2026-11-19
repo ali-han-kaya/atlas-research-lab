@@ -1,6 +1,0 @@
-{"asama":"K3","cikti_turu":"makale","tur":"yoklama","yol":{"okuma":"","yazma":""},
- "acik_sorular":["soru-1"],"soru_butcesi":{"ilan":3,"kullanilan":1,"kalan":2,"butce_disi":0},
- "acik_bulgular":[{"id":"B1","siddet":"P1"}],"kirmizi_cizgi":[],"injection":["IG1"],
- "mod":"A","surum":"v1.0","plan":[{"vaat":"ornek","tur":"test","durum":"yapildi"}],
- "onceki_olcum":null,"onay":{"durum":"yok","tarih":"","soz":""},"sha256":"","terminal":"",
- "determinizm":{"PYTHONHASHSEED":"0","LC_ALL":"C","SOURCE_DATE_EPOCH":"0","sirala":"sorted()"}}

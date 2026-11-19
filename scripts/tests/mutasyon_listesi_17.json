@@ -1,9 +1,0 @@
-[
- {
-  "kapi": "C17",
-  "ad": "dogrulanan dosya sayisi bozuk dosyayi DUSMEZ (beyan/olcum celiskisi geri geldi)",
-  "dosya": "scripts/skill_lint.py",
-  "eski": "    _arsdo_n = len(ars_man) - len(_arsdo_eksik) - len(_arsdo_bozuk)",
-  "yeni": "    _arsdo_n = len(ars_man) - len(_arsdo_eksik)"
- }
-]

@@ -1,9 +1,0 @@
-[
- {
-  "kapi": "C14y",
-  "ad": "kaynak tarihi yerine duvar saati (date.today) — gece devri yanlis-kirmizisi geri geldi",
-  "dosya": "scripts/tur4_paket_uret.py",
-  "eski": "            return gun",
-  "yeni": "            return __import__('datetime').date.today().isoformat()"
- }
-]
