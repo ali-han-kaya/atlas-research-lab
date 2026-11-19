@@ -2,7 +2,7 @@ PY ?= python3
 # pip-audit yalniz gelistirme aracidir; varsa yerel sanal ortam kullanilir.
 PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(PY))
 
-.PHONY: dogrula dogrula-ci mutasyon oztest demo kapsam kapsam-yaz katalog-kontrol iddia iddia-ag guvenlik kur yayinla yardim
+.PHONY: dogrula dogrula-ci mutasyon oztest demo kapsam kapsam-yaz katalog-kontrol iddia iddia-ag iddia-yaz guvenlik kur yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giris: hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test"
@@ -14,6 +14,7 @@ yardim:
 	@echo "make katalog-kontrol  istege bagli ag kontrolu: sabit katalog models.dev'de guncel mi (CI'da yok)"
 	@echo "make iddia    README/docs sayisal iddialarini ureten komutla yeniden olc (ag haric)"
 	@echo "make iddia-ag  ag gerektiren iddialari da olc"
+	@echo "make iddia-yaz  ham kanit anlik goruntusunu yenile (tools/iddia_olcum.json)"
 	@echo "make guvenlik  pip-audit: bilinen CVE taramasi (requirements-dev.txt)"
 	@echo "make kur       commit/push korumasini bu klonda etkinlestir"
 	@echo "make oztest    yalniz oz-test paketleri"
@@ -46,6 +47,9 @@ iddia:
 
 iddia-ag:
 	@$(PY) tools/iddia.py --ag
+
+iddia-yaz:
+	@$(PY) tools/iddia.py --yaz
 
 guvenlik:
 	@$(PY_AUDIT) tools/guvenlik.py

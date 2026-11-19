@@ -251,7 +251,8 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 | Kırmızı hüküm demosu | `./demo` → `tools/demo.py` (kanonik; beklenen `rc=1`, fikstür bozuksa `rc=2`, yeşilde `rc=0`) |
 | Mutasyon kapsamı | `make kapsam` → `docs/MUTASYON_KAPSAM.md` güncel mi (üretilmiş tablo) |
 | Katalog tazeliği (isteğe bağlı) | `make katalog-kontrol` → models.dev canlı kataloğu; ağ gerekir, CI'da koşmaz |
-| İddia defteri | `make iddia` → README/docs sayısal iddialarını üreten komutla yeniden ölçer; tutmayan satır `IDD-*` ile kırmızı |
+| İddia defteri | `make iddia` → README/docs sayısal iddialarını üreten komutla ve ham kanıt satırıyla yeniden ölçer; tutmayan satır `IDD-*` ile kırmızı |
+| Ham kanıt yenileme | `make iddia-yaz` → bilinçli değişiklikten sonra `tools/iddia_olcum.json` anlık görüntüsünü yeniler |
 | Bağımlılık denetimi | `make guvenlik` → `pip-audit`; her bulgu `docs/GUVENLIK.md` içinde adıyla |
 | Commit/push koruması | `make kur` → `core.hooksPath=.githooks`; canlı DSN commit edilemez |
 | Runner doğrulaması | `make dogrula-ci` — yalnız o ortamda ölçülebilen kalemler hükme girer, öz-testler rapor |
@@ -266,14 +267,20 @@ bulgu varsa hiçbir şey yazmaz.
 
 Bu README'deki sayısal ölçümler `tools/iddia_defteri.json` içinde tek tek satırdır:
 iddia metni, geçtiği dosya ve **birebir cümle**, onu üreten komut ve son ölçülen
-değer. `make iddia` her satırı yeniden koşar; beyan ile ölçüm tutmazsa satırı
+değer. Son ölçümün **ham çıktı satırı** `tools/iddia_olcum.json` içinde aynı
+`IDD-*` anahtarıyla durur; `make iddia` bu satırın güncel çıktıda birebir aynı
+olmasını, kendi desenine uymasını ve beyanla aynı değeri vermesini ister. Kanıt
+bayatsa veya bozulursa satır kırmızıdır; `make iddia-yaz` anlık görüntüyü yeniler.
+
+`make iddia` her satırı yeniden koşar; beyan ile ölçüm tutmazsa satırı
 kimliğiyle (`IDD-07`) kırmızı basar ve `rc=1` döner. Alıntısı dosyasında birebir
 bulunmayan bir satır defteri bozuk sayar (`rc=2`): iddia metni uydurulamaz.
 
 Üç durum yeşile zorlanmaz, ayrı sayılır: `AG_GEREKLI` (ağ ister; varsayılan koşuda
 atlanır), `BEYAN` (tarihli/makineye bağlı kayıt) ve `OLCULMEDI` (bu ağaçta yeniden
-üretilemez; gerekçesi satırda yazılı). Defter `make dogrula` hükmüne girmez; 7/8
-borcu olduğu gibi kalır.
+üretilemez; gerekçesi satırda yazılı). Bu üç durumun ham kanıtı yoktur ve çıktıda
+`ham kanit yok (...)` olarak ayrıca işaretlenir; hiçbiri PASS sayılmaz. Defter
+`make dogrula` hükmüne girmez; 7/8 borcu olduğu gibi kalır.
 
 Defterin kapsamı üç public dokümandır: `README.md`, `docs/README.md`,
 `docs/EN/QUICKSTART.md`. Tarihli `docs/OLCUM-*`, `SURUM.md` ve üretilmiş
