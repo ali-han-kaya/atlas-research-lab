@@ -197,7 +197,9 @@ def main():
                              'HEAD ve kanit setine bagli (%s); bu depo o '
                              'tarihceyi tasimaz' % ORTAM_BAGLI[1]))
         else:
-            kalemler.append((kid, ad, False, son, satirlar[-6:], ''))
+            # Butun KALDI satirlari tasinir: kirpilan kuyruk test kimligini gizler.
+            detay = [s for s in satirlar if re.match(r'\s*KALDI', s)][:20]
+            kalemler.append((kid, ad, False, son, detay or satirlar[-6:], ''))
 
     for kid, ad, durum, ozet, detay, not_metni in kalemler:
         etiket = 'ATLANDI' if durum is None else ('PASS' if durum else 'FAIL')
