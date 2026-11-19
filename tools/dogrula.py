@@ -14,14 +14,14 @@ Iki kip vardir:
                       muafiyet yoktur. Kalan fark yalnizca basliktadir; sabit
                       katalog sayesinde sayilar runner'da da ayni cikar.
 
-CALISTIRILMADI KALEMI: ATLAS'taki OLG-1, SURUM.md makine blogunun bagli oldugu
-commit ve kanit setini arar; bu depo ozel agacin tarihcesini tasimaz. Test bu
-yuzden CALISTIRILMADI raporlanir — PASS degil, KOSULLU da degil: kosmadi.
-Her CALISTIRILMADI kalem nedenini yaninda tasir ve hukme SAYILMAZ.
+OLG-1: bu agac kendi `attestation.json` kanitini kullanir; `atlas_selftest`
+icindeki OLG-1 kosar. Attestation yoksa/bozuksa OLG-1 FAIL'dir.
+CALISTIRILMADI yalniz gercekten olculemeyen kalemler icin (or. --hizli veya
+model katalogu yoklugu) basilir ve hukme SAYILMAZ; her satir nedenini tasir.
 
 PARITE (OPSIYONEL): `ATLAS_LAB` tanimliysa once `tools/yayinla.py` kuru kosusu
 calisir; sifir suruklenme yoksa hukum FAIL olur. Tanimsizsa bu kontrol
-atlanir, cunku public klonda ozel agac yoktur; 7/8 hukmu degismez.
+atlanir, cunku public klonda ozel agac yoktur; 8/8 hukmu degismez.
 
 MODEL KATALOGU: varsayilan kosu DEPODAKI sabit katalogu kullanir
 (`tools/model_katalog.json`) ve makinedeki `~/.cache/opencode/models.json`
@@ -33,9 +33,8 @@ verin; fark yalnizca katalog ICERIGINDEN gelir, makineden degil.
 CIKIS: 0 = hukme giren kalemlerin hepsi gecti (CALISTIRILMADI varsa bile) ·
        1 = en az bir kalem FAIL · 2 = kosulamadi
 
-KABUL EDILEN BORC: kosmayan her kalem ozet satirinda ve HUKUM'de adiyla
-anilir; README'de nedeni yazilidir. Borcu PASS'a cevirmek icin sahte canak
-(commit, tarihce) uretilmez.
+OLG-1'in kaniti `attestation.json`'dir; yoksa/bozuksa FAIL'dir, CALISTIRILMADI
+degil. Sahte canak (commit, tarihce) uretilmez.
 """
 import os
 import re
@@ -67,9 +66,9 @@ FIKSTUR = ('AKIAXXX', 'AKIA1234567890')
 ANAHTAR = re.compile(r'-----BEGIN [A-Z ]*PRIVATE KEY-----\r?\n[A-Za-z0-9+/=]{64,}')
 
 # kid -> (izinli kimlikler, ciktida aranan ek kanit, gerekce)
+# T1 (OLG-1) artik attestation ile kosar; attestation arzasi CALISTIRILMADI
+# degil FAIL'dir. Bu yuzden T1 icin ortam istisnasi YOKTUR.
 ORTAM_BAGLI = {
-    'T1': ({'OLG-1', 'MOD-1', 'MOD-2'}, 'OLGU-04',
-           'SURUM.md makine blogu ozel agacin HEAD/kanit setine bagli (OLGU-04)'),
     # KOD'un katalog yoklugunda kosamayan dort testi AYRI AYRI adlandirilir;
     # kanit dizgisi olmadan bu kimlikler CALISTIRILMADI sayilmaz.
     'T2': ({'MOD-1', 'MOD-2', 'K8-1', 'K8-2', 'O3-09c', 'O3-09d'},

@@ -23,8 +23,8 @@ self-test, three self-test suites), `make mutasyon` (seventy-one gate rules, exe
 `make iddia` closes the remaining gap: it re-measures the numbers printed in this README.
 - **Reproduce it.** `./demo` prints the frozen 8-vs-2 failure with a **red verdict and
 exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin
-wrapper and cannot carry 1 vs 2, because GNU make always exits 2 on a failing recipe. `make dogrula` → **7 pass / 0 fail / 1 not run** (T1 is reported as
-`CALISTIRILMADI` and never counted as a pass — see *Accepted debt* below); KOD self-test
+wrapper and cannot carry 1 vs 2, because GNU make always exits 2 on a failing recipe. `make dogrula` → **8 pass / 0 fail / 0 not run** (T1, `OLG-1`, now
+runs against this tree's `attestation.json`); KOD self-test
 **174/174**; mutation battery **54/54 cases red + 17/17 expected findings** over 71 rules. Mutation-tested vs untested gate rules are measured
 in [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md); dependent-package findings in
 [`docs/GUVENLIK.md`](docs/GUVENLIK.md); CI green. Non-Turkish readers:
@@ -177,7 +177,7 @@ CI süreleri runner'a bağlıdır; burada iddia edilmez, iş akışı kaydı esa
 Paketleri ayrı ayrı koşmak istersen (yollar depo köküne görelidir):
 
 ```bash
-python3 ATLAS_SABLONLAR/scripts/atlas_selftest.py        # OLG-1 → CALISTIRILMADI
+python3 ATLAS_SABLONLAR/scripts/atlas_selftest.py        # OLG-1 → 145/145 (attestation)
 python3 KOD_SABLONLAR/scripts/kod_selftest.py
 (cd KOMUT_TOOLKIT_v4/ARACLAR/betikler && python3 v4_selftest.py)
 ```
@@ -280,7 +280,7 @@ bulunmayan bir satır defteri bozuk sayar (`rc=2`): iddia metni uydurulamaz.
 atlanır), `BEYAN` (tarihli/makineye bağlı kayıt) ve `OLCULMEDI` (bu ağaçta yeniden
 üretilemez; gerekçesi satırda yazılı). Bu üç durumun ham kanıtı yoktur ve çıktıda
 `ham kanit yok (...)` olarak ayrıca işaretlenir; hiçbiri PASS sayılmaz. Defter
-`make dogrula` hükmüne girmez; 7/8 borcu olduğu gibi kalır.
+`make dogrula` hükmüne girmez; 8/8 hükmü attestation ile ayrıca doğrulanır.
 
 Defterin kapsamı üç public dokümandır: `README.md`, `docs/README.md`,
 `docs/EN/QUICKSTART.md`. Tarihli `docs/OLCUM-*`, `SURUM.md` ve üretilmiş
@@ -303,23 +303,24 @@ kırmaz.
 - Makale içerikleri, kaynak korpusları ve oturum devir kayıtları bu depoda yoktur.
   Bu yüzden `DERSLER` ve ölçüm dosyalarındaki bazı atıflar özel ağaçtaki devir
   dosyalarına işaret eder; kapsam notu: [docs/README.md](docs/README.md).
-- Verisi bu depoda olmayan kalemler açıkça **`CALISTIRILMADI`** basılır ve hükme
-  sayılmaz: bugün yalnız **OLG-1** (özel ağacın commit zinciri ve canlı kanıt
-  seti). `PASS` da `KOSULLU` da yazılmaz; kimlik açık listededir ve gerekçe her
-  satırda yazılıdır. Model kalemleri sabit katalogla koşar; katalog yoksa onlar da
-  `CALISTIRILMADI` olur. Ayrıntı: [docs/README.md](docs/README.md).
+- Bu depoda standart `make dogrula` koşusunda **`CALISTIRILMADI` kalem yoktur**:
+  `OLG-1` bu ağacın kendi `attestation.json` kanıtıyla koşar. `attestation.json`
+  yoksa `OLG-1` tarihsel commit denetiminde **FAIL** olur; bozuksa
+  `KANIT_GECERSIZ` olur; ikisi de `CALISTIRILMADI` olarak gizlenmez. Model
+  kalemleri sabit katalogla koşar; katalog yoksa onlar `CALISTIRILMADI` olur.
+  Ayrıntı: [docs/README.md](docs/README.md).
 
 ---
 
-## Kabul edilen borç — T1
+## OLG-1 ve ağaç kanıtı
 
-`T1` (OLG-1), `SURUM.md` makine bloğunun bağlı olduğu commit ve kanıt setini arar; bu depo
-özel ağacın tarihçesini taşımadığı için test **koşmaz** ve `CALISTIRILMADI` basılır. Bunu
-PASS'a çevirmek için sahte commit çıpası üretmek yasaktır — depo kendi tezine aykırı
-düşerdi. Bu yüzden borç gizlenmez: `make dogrula` her koşuda
-`KABUL EDILEN BORC: T1 kosmuyor — ...` satırını basar, CI iş özetine yazar ve hüküm
-`PASS 7/8` olarak kalır. Ölçülebilir bir yedinci kalem ancak public tarihçeye ait gerçek
-bir kanıt seti tanımlandığında eklenebilir; o güne kadar 7/8, 8/8 gibi gösterilmez.
+`T1` (`OLG-1`) artık özel ağacın commit zincirini aramaz: `olgu_lint`, bu depodaki
+`attestation.json`'ı `make kanit-dogrula` ile doğrular ve gerçek commit/tree
+kanıtını kullanır. Tarihsel `docs/OLGULAR.md` kayıtları silinmedi; public ağaçta
+makine kanıtı sayılmaz. `OLGU-06` iki gerçek DERSLER satırıyla kapatıldı. Sahte
+commit çıpası yoktur; `make dogrula` bu depoda **8/8** verir ve T1 PASS'tir.
+Attestation yoksa/bozuksa OLG-1 FAIL olur. Ayrıntı ve negatif kontrol:
+[docs/README.md](docs/README.md).
 
 ## Mutasyon kapsamı
 

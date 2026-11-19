@@ -23,18 +23,18 @@ make kur                                         # enable commit/push guards in 
   H3  kabuk sozdizimi          PASS    7 dosya
   H4  sir taramasi             PASS    0 bulgu
   H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 6/6 gecti
-  T1  ATLAS oz-testi           CALISTIRILMADI ...
+  T1  ATLAS oz-testi           PASS    ATLAS OZ-TEST: 145/145 gecti
   T2  KOD oz-testi             PASS    KOD OZ-TEST: 174/174 gecti
   T3  Toolkit oz-testi         PASS    ...
 
-  kalem=8 · gecen=7 · kalan=0 · calistirilmadi=1
-  KABUL EDILEN BORC: T1 kosmuyor — SURUM.md makine blogu ozel agacin HEAD/kanit setine bagli (OLGU-04)
-  HUKUM: PASS 7/8 — T1 CALISTIRILMADI, PASS sayilmadi
+  kalem=8 · gecen=8 · kalan=0 · calistirilmadi=0
+  HUKUM: PASS — 8/8 kalem gecti
 ```
 
-Exit code 0. `T1` never runs in this repository by design (it needs the private
-tree's commit history); it is reported as **not run**, never as a pass. See
-*Accepted debt* in the Turkish README. Numbers are printed by the tools, not
+Exit code 0. `T1` runs against this repository's `attestation.json`; it no
+longer needs the private tree's commit history. If the attestation is missing
+or corrupt, `OLG-1` fails rather than being reported as not run. See *OLG-1 and
+tree evidence* in the Turkish README. Numbers are printed by the tools, not
 maintained by hand.
 
 ## 2. `make mutasyon` — do the gates actually fire?
@@ -101,7 +101,7 @@ claim/evidence gap, not from a broken test.
 | `make iddia` | numeric claims in README/docs, re-measured with their stored raw evidence line; named by `IDD-*` on mismatch |
 | `make iddia-yaz` | regenerate the raw evidence snapshot after an intentional change |
 
-`make iddia` is separate from `make dogrula`: it does not change the 7/8 verdict.
+`make iddia` is separate from `make dogrula`: it does not change the 8/8 verdict.
 Claims that cannot be re-run are not forced green — `AG_GEREKLI` (network; skipped
 unless `make iddia-ag`), `BEYAN` (dated/machine-bound) and `OLCULMEDI` (not
 reproducible here) are counted separately with their reason and marked
