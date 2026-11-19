@@ -121,6 +121,158 @@ Neden düzeltilmiyor: testler sağlam; eksik olan veri. Testi "onarmak" kanıtı
 değil kaydı değiştirmek olurdu. Sahte bir commit çıpası yazmak ise kaydı
 yanlışlardı; yapılmadı.
 
+## Sabit model kataloğunu yenileme
+
+`tools/model_katalog.json` canlı kataloğun tam kopyası değildir; **yalnız aktif
+hatlarda geçen** OpenRouter kimliklerinin allowlist'idir. Canlıdan bütün modelleri
+almak MOD-1/MOD-2'nin "depoda geçmeyen model" disiplinini bozar. Yenileme iki
+kümenin kesişimidir: **aktif hat kaynakları ∩ models.dev**.
+
+**Aktif kaynaklar:** `ATLAS_SABLONLAR/.opencode/agent/`,
+`KOD_SABLONLAR/.opencode/agent/`, iki `routing.profiles.json`, üç
+`opencode.json` (kök, ATLAS ve KOD). `docs/`, `SURUM.md`, tarihsel `OLCUM-*`
+ve test fikstürleri bilinçli olarak taranmaz: oradaki emekli kimlikler tarihsel
+kanıttır, güncel allowlist'e geri girmemelidir. Yeni bir aktif ajan ağacı
+eklenirse aşağıdaki `git grep` yol listesine de eklenir.
+
+### Ne zaman yenilenir
+
+- `python3 tools/katalog_kontrol.py` **rc=1** verdiğinde: allowlist'teki bir kimlik
+  canlıda yok, `deprecated` veya `reasoning`/`tool_call` değeri değişmiş.
+  (`make katalog-kontrol` bulguyu GNU make nedeniyle `rc=2`ye çevirir; kanonik
+  ölçüm Python çıkışıdır.)
+- Aktif kaynaklarda bir `model: openrouter/...` satırı eklendiğinde, silindiğinde
+  veya değiştiğinde. Yeni kimlik katalogda yoksa `make dogrula` MOD-1/MOD-2'de
+  kırmızıya döner; silinen kimlik ise "yalnız depoda geçen" kuralını bozar.
+- models.dev'de allowlist'teki bir modelin yetenek bayrağı değiştiğinde (yine
+  `rc=1`).
+
+### Ne zaman yenilenmez
+
+- `rc=0` ise: canlı katalogda yeni modeller görünse bile dosya yenilenmez;
+  allowlist bilinçli olarak dardır.
+- `rc=2` ise: ağ/JSON ölçülemedi; bu bir bayatlama bulgusu değildir, katalog
+  suçlanmaz.
+- Yalnız `docs/`, `SURUM.md`, tarihsel `OLCUM-*` veya test fikstürleri değiştiyse:
+  bunlar aktif model kaynağı değildir.
+- Sadece `_kaynak` tarihi değişsin diye: tarih, gerçek yenileme günüdür.
+
+### 1. Canlı kataloğu indir
+
+```bash
+curl -fsSL https://models.dev/api.json -o /tmp/models.dev-api.json
+```
+
+### 2. Yalnız aktif model kimliklerini çıkar
+
+```bash
+git grep -h -o -E 'openrouter/[A-Za-z0-9._:/-]+' -- \
+  ATLAS_SABLONLAR/.opencode/agent \
+  KOD_SABLONLAR/.opencode/agent \
+  ATLAS_SABLONLAR/routing.profiles.json \
+  KOD_SABLONLAR/routing.profiles.json \
+  ATLAS_SABLONLAR/opencode.json \
+  KOD_SABLONLAR/opencode.json \
+  opencode.json \
+| sort -u > /tmp/atlas-model-ids.txt
+test -s /tmp/atlas-model-ids.txt
+cat /tmp/atlas-model-ids.txt
+```
+
+`git grep` yalnız **izlenen** dosyaları tarar; yeni bir ajan dosyası henüz
+izlenmiyorsa önce `git add` ile izlemeye alın. Çıktıda emekli/tarihsel bir kimlik
+görünüyorsa yol listesi yanlıştır; o kimliği kataloğa geri eklemeyin.
+
+### 3. Canlı kayıttan allowlist'i üret
+
+```bash
+python3 - <<'PY'
+import datetime
+import json
+import pathlib
+import sys
+
+api = json.loads(pathlib.Path('/tmp/models.dev-api.json').read_text(encoding='utf-8'))
+ids = [s for s in pathlib.Path('/tmp/atlas-model-ids.txt').read_text(
+    encoding='utf-8').splitlines() if s.strip()]
+if not ids:
+    sys.exit('HATA: aktif model kimligi bulunamadi')
+
+aciklama = (
+    'Sabit model katalogu (allowlist anlik goruntusu). MOD-1/MOD-2 kapilari '
+    'ajanlarin BU listedeki modelleri kullandigini denetler; boylece sayi her '
+    'klonda ayni cikar. Canli katalogla denetim icin ATLAS_MODEL_KATALOG=<yol> '
+    'verin. Tazelik icin: make katalog-kontrol (ag gerekir; CI\'da kosmaz).')
+kaynak = ('models.dev semasi; yalniz depoda gecen model kimlikleri, %s'
+          % datetime.date.today().isoformat())
+
+saglayicilar = {}
+for tam in sorted(set(ids)):
+    saglayici, ayrac, model = tam.partition('/')
+    if not ayrac or not saglayici or not model:
+        sys.exit('HATA: gecersiz kimlik: %s' % tam)
+    modeller = ((api.get(saglayici) or {}).get('models') or {})
+    kayit = modeller.get(model)
+    if not isinstance(kayit, dict):
+        sys.exit('HATA: canli katalogda yok: %s' % tam)
+    if kayit.get('status') == 'deprecated':
+        sys.exit('HATA: canli katalogda deprecated: %s' % tam)
+    for alan in ('reasoning', 'tool_call'):
+        if not isinstance(kayit.get(alan), bool):
+            sys.exit('HATA: %s boolean degil: %s' % (alan, tam))
+    saglayicilar.setdefault(saglayici, {})[model] = {
+        'reasoning': kayit['reasoning'], 'tool_call': kayit['tool_call']}
+
+satirlar = ['{',
+            ' "_aciklama": %s,' % json.dumps(aciklama, ensure_ascii=False),
+            ' "_kaynak": %s,' % json.dumps(kaynak, ensure_ascii=False)]
+for i, (saglayici, modeller) in enumerate(sorted(saglayicilar.items())):
+    satirlar += [' %s: {' % json.dumps(saglayici), '  "models": {']
+    for j, (model, kayit) in enumerate(sorted(modeller.items())):
+        virgul = ',' if j < len(modeller) - 1 else ''
+        satirlar.append('   %s: %s%s' % (
+            json.dumps(model), json.dumps(kayit), virgul))
+    satirlar += ['  }', ' }' + (',' if i < len(saglayicilar) - 1 else '')]
+satirlar.append('}')
+pathlib.Path('/tmp/model_katalog.json').write_text(
+    '\n'.join(satirlar) + '\n', encoding='utf-8')
+print('yazildi: /tmp/model_katalog.json (%d model)'
+      % sum(len(v) for v in saglayicilar.values()))
+PY
+```
+
+Betik, canlıda bulunmayan veya `deprecated` olan tek bir kimlikte bile **hiçbir
+şey yazmadan** çıkar. Eksik modeli canlı katalogdan uydurmayın; önce aktif
+kaynak referansını düzeltin.
+
+### 4. Üretileni aynı anlık görüntüyle doğrula, sonra yerleştir
+
+```bash
+python3 tools/katalog_kontrol.py \
+  --katalog /tmp/model_katalog.json \
+  --api-dosya /tmp/models.dev-api.json
+
+diff -u tools/model_katalog.json /tmp/model_katalog.json
+cp /tmp/model_katalog.json tools/model_katalog.json
+```
+
+Kontrol `rc=0` vermeden `cp` yapmayın. `diff` yalnız beklenen model değişikliğini
+göstermiyorsa durun; dosyayı elle düzenleyerek farkı susturmayın.
+
+### 5. Canlı ve depo kontrolleri
+
+```bash
+python3 tools/katalog_kontrol.py
+make dogrula
+git diff --check
+```
+
+`make dogrula` bu yayımlanan ağaçta 7/8 verir; T1'in `CALISTIRILMADI` borcu
+katalogla ilgili değildir. MOD-1/MOD-2 katalogdan geçiyorsa ve canlı kontrol
+`rc=0` ise değişiklik commit edilebilir. Katalogla birlikte yalnız gerçekten
+değişen aktif referansları commit edin; tarihsel `OLCUM`/`SURUM` satırlarını
+katalog yenilemesi bahanesiyle yeniden yazmayın.
+
 ## Ağacı yenileme
 
 ```bash
@@ -141,3 +293,12 @@ Aktarımın iki mekanik kuralı vardır ve ikisi de ölçülebilir:
    yapılır, yani bu dönüşüm bir farkı gizlemez.
 2. **Ürün yasağı.** Planda `.pdf`, `.docx`, `.tex`, `.zip`, `.bundle` gibi üretilmiş
    ürün/arşiv uzantısı görünürse aktarım **hiç yazmadan** çıkar.
+
+## İddia defteri ve kapsam sınırı
+
+`make iddia`, bu depodaki public sayısal iddiaları `tools/iddia_defteri.json`
+üzerinden yeniden ölçer. Defter üç dokümanı tarar: kök `README.md`, bu dosya ve
+`docs/EN/QUICKSTART.md`. Tarihli kayıtlar (`OLCUM-*`, `SURUM.md`) ve üretilmiş
+tablolar (`MUTASYON_KAPSAM.md`, `GUVENLIK.md`) kapsam dışıdır: bunlar yeniden
+koşulacak iddia değil, ölçümün o günkü kaydıdır. Kapsam dışı dosyalar yeşil
+sayılmaz; defterin `kapsam.haric` bloğunda gerekçeleriyle listelenir.

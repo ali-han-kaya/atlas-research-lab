@@ -1,0 +1,703 @@
+{
+  "_aciklama": "Public sayisal iddia defteri. Her satir: iddia metni + gectigi dosyadaki birebir alinti + ureten komut + beklenen olcum. tools/iddia.py bu defteri denetler; alinti dosyada yoksa defter bozuktur. Tarihli kayitlar ve mekanizma sabitleri kapsam disidir (kapsam blogu).",
+  "kapsam": {
+    "dahil": [
+      "README.md",
+      "docs/README.md",
+      "docs/EN/QUICKSTART.md"
+    ],
+    "haric": [
+      {
+        "desen": "docs/OLCUM-*.md",
+        "neden": "tarihli canli kosu kaydi; yeniden kosulmaz, tarihsel kanit"
+      },
+      {
+        "desen": "SURUM.md",
+        "neden": "is gunlugu; tarihli bakim kaydi"
+      },
+      {
+        "desen": "docs/MUTASYON_KAPSAM.md",
+        "neden": "uretilmis tablo; kaynagi tools/kapsam.py, defter onun ozet sayilarini olcer"
+      },
+      {
+        "desen": "docs/GUVENLIK.md",
+        "neden": "uretilmis pip-audit raporu; makineye bagli"
+      }
+    ],
+    "sinif_disi": "Mekanizma adlari, protokol sabitleri (2-of-2, KFAZ0-5, P0/P1/P2) ve alintilanan yanlis beyanlar (or. '8/8 duzeltme uygulandi') olcum iddiasi degildir; sayisal olcum bildiren cumleler defterdedir."
+  },
+  "iddialar": [
+    {
+      "id": "IDD-01",
+      "iddia": "make dogrula hukmu 7/8 (7 pass, 0 fail, 1 not run)",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "`make dogrula` → **7 pass / 0 fail / 1 not run** (T1 is reported as"
+        },
+        {
+          "dosya": "docs/README.md",
+          "alinti": "`make dogrula` bu yayımlanan ağaçta 7/8 verir; T1'in `CALISTIRILMADI` borcu"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "  HUKUM: PASS 7/8 — T1 CALISTIRILMADI, PASS sayilmadi"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/dogrula.py"
+      ],
+      "ayikla": "HUKUM:\\s*PASS\\s+(\\d+/\\d+)",
+      "beklenen": "7/8"
+    },
+    {
+      "id": "IDD-02",
+      "iddia": "KOD oz-testi 174/174",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "**174/174**; mutation battery **54/54 cases red + 17/17 expected findings** over 71 rules. Mutation-tested vs untested gate rules are measured"
+        },
+        {
+          "dosya": "docs/README.md",
+          "alinti": "bu ağaçta ATLAS 144/145 (OLG-1), KOD 174/174; `make dogrula` T1'i"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "  T2  KOD oz-testi             PASS    KOD OZ-TEST: 174/174 gecti"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/dogrula.py"
+      ],
+      "ayikla": "KOD OZ-TEST:\\s*(\\d+/\\d+)",
+      "beklenen": "174/174"
+    },
+    {
+      "id": "IDD-03",
+      "iddia": "ATLAS oz-testi 144/145 (OLG-1 kosmuyor)",
+      "kaynaklar": [
+        {
+          "dosya": "docs/README.md",
+          "alinti": "bu ağaçta ATLAS 144/145 (OLG-1), KOD 174/174; `make dogrula` T1'i"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "ATLAS_SABLONLAR/scripts/atlas_selftest.py",
+        "--sessiz"
+      ],
+      "ayikla": "OZ-TEST:\\s*(\\d+/\\d+) gecti",
+      "beklenen": "144/145",
+      "rc_beklenen": 1
+    },
+    {
+      "id": "IDD-04",
+      "iddia": "mutasyon bataryasi 54/54 vaka atesledi",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "**174/174**; mutation battery **54/54 cases red + 17/17 expected findings** over 71 rules. Mutation-tested vs untested gate rules are measured"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "SONUC: 54/54 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/mutasyon_bataryasi.py"
+      ],
+      "ayikla": "SONUC:\\s*(\\d+/\\d+) kural atesledi",
+      "beklenen": "54/54"
+    },
+    {
+      "id": "IDD-05",
+      "iddia": "mutasyon bataryasi 17/17 beklenen bulgu",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "**174/174**; mutation battery **54/54 cases red + 17/17 expected findings** over 71 rules. Mutation-tested vs untested gate rules are measured"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "SONUC: 54/54 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/mutasyon_bataryasi.py"
+      ],
+      "ayikla": "(\\d+/\\d+) beklenen bulgu",
+      "beklenen": "17/17"
+    },
+    {
+      "id": "IDD-06",
+      "iddia": "mutasyon vakasi olan kural sayisi 71",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "**174/174**; mutation battery **54/54 cases red + 17/17 expected findings** over 71 rules. Mutation-tested vs untested gate rules are measured"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "- **TEST EDİLDİ** — 71 kural (mutasyon vakası adıyla)"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "of 121 rules, **71** are"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/kapsam.py"
+      ],
+      "ayikla": "\\|\\s*Mutasyon vakasi olan \\(TEST EDILDI\\)\\s*\\|\\s*(\\d+)\\s*\\|",
+      "beklenen": "71"
+    },
+    {
+      "id": "IDD-07",
+      "iddia": "bildirilen kapi kurali sayisi 121",
+      "kaynaklar": [
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "of 121 rules, **71** are"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/kapsam.py"
+      ],
+      "ayikla": "\\|\\s*Bildirilen kural\\s*\\|\\s*(\\d+)\\s*\\|",
+      "beklenen": "121"
+    },
+    {
+      "id": "IDD-08",
+      "iddia": "gerekceli kapsam disi kural sayisi 27",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "- **KAPSAM DIŞI** — 27 kural, her biri ölçülmüş bir gerekçeyle: ağ"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "mutation-tested, **27** are out of scope with a measured reason"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/kapsam.py"
+      ],
+      "ayikla": "\\|\\s*Gerekceli kapsam disi\\s*\\|\\s*(\\d+)\\s*\\|",
+      "beklenen": "27"
+    },
+    {
+      "id": "IDD-09",
+      "iddia": "gerekcesiz bosluk kural sayisi 23",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "- **BOŞLUK** — 23 kural: 11'i yalnız öz-testte anılıyor, 12'si hiçbir testte geçmiyor"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "code branch emits), and **23** are explicit gaps — 11 mentioned only in"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/kapsam.py"
+      ],
+      "ayikla": "\\|\\s*Bosluk \\(gerekce yok\\)\\s*\\|\\s*(\\d+)\\s*\\|",
+      "beklenen": "23"
+    },
+    {
+      "id": "IDD-10",
+      "iddia": "yalniz oz-testte anilan bosluk sayisi 11",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "- **BOŞLUK** — 23 kural: 11'i yalnız öz-testte anılıyor, 12'si hiçbir testte geçmiyor"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "code branch emits), and **23** are explicit gaps — 11 mentioned only in"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/kapsam.py"
+      ],
+      "ayikla": "bunlardan yalniz oz-testte anilan\\s*\\|\\s*(\\d+)\\s*\\|",
+      "beklenen": "11"
+    },
+    {
+      "id": "IDD-11",
+      "iddia": "hicbir testte gecmeyen bosluk sayisi 12",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "- **BOŞLUK** — 23 kural: 11'i yalnız öz-testte anılıyor, 12'si hiçbir testte geçmiyor"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "self-tests, 12 in no test at all. Gaps are"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/kapsam.py"
+      ],
+      "ayikla": "hicbir testte gecmeyen\\s*\\|\\s*(\\d+)\\s*\\|",
+      "beklenen": "12"
+    },
+    {
+      "id": "IDD-12",
+      "iddia": "make dogrula kalem sayisi 8",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "`make dogrula` tek giriştir; **sekiz kalemi** sırayla koşar ve **ham çıktılarını** yazar:"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "## 1. `make dogrula` — one entry point, eight checks"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/dogrula.py"
+      ],
+      "ayikla": "kalem=(\\d+)",
+      "beklenen": "8"
+    },
+    {
+      "id": "IDD-13",
+      "iddia": "dogrula ozeti 7 gecen / 0 kalan / 1 calistirilmadi",
+      "kaynaklar": [
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "  kalem=8 · gecen=7 · kalan=0 · calistirilmadi=1"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/dogrula.py"
+      ],
+      "ayikla": "kalem=\\d+ · gecen=(\\d+) · kalan=(\\d+) · calistirilmadi=(\\d+)",
+      "beklenen": "7/0/1"
+    },
+    {
+      "id": "IDD-14",
+      "iddia": "H1 depo hijyeni 0 bulgu",
+      "kaynaklar": [
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "  H1  depo hijyeni             PASS    0 bulgu"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/dogrula.py"
+      ],
+      "ayikla": "H1\\s+depo hijyeni\\s+PASS\\s+(\\d+) bulgu",
+      "beklenen": "0"
+    },
+    {
+      "id": "IDD-15",
+      "iddia": "H2 python sozdizimi dosya sayisi 57",
+      "kaynaklar": [
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "  H2  python sozdizimi         PASS    57 dosya"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/dogrula.py"
+      ],
+      "ayikla": "H2\\s+python sozdizimi\\s+PASS\\s+(\\d+) dosya",
+      "beklenen": "57"
+    },
+    {
+      "id": "IDD-16",
+      "iddia": "H3 kabuk sozdizimi dosya sayisi 7",
+      "kaynaklar": [
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "  H3  kabuk sozdizimi          PASS    7 dosya"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/dogrula.py"
+      ],
+      "ayikla": "H3\\s+kabuk sozdizimi\\s+PASS\\s+(\\d+) dosya",
+      "beklenen": "7"
+    },
+    {
+      "id": "IDD-17",
+      "iddia": "H4 sir taramasi 0 bulgu",
+      "kaynaklar": [
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "  H4  sir taramasi             PASS    0 bulgu"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/dogrula.py"
+      ],
+      "ayikla": "H4\\s+sir taramasi\\s+PASS\\s+(\\d+) bulgu",
+      "beklenen": "0"
+    },
+    {
+      "id": "IDD-18",
+      "iddia": "H5 sir kapisi oz-testi 6/6",
+      "kaynaklar": [
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "  H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 6/6 gecti"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/dogrula.py"
+      ],
+      "ayikla": "SIR KAPISI OZ-TEST:\\s*(\\d+/\\d+)",
+      "beklenen": "6/6"
+    },
+    {
+      "id": "IDD-19",
+      "iddia": "demo fiksturu 8 FIX beyan ediyor",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "`./demo` prints the frozen 8-vs-2 failure with a **red verdict and"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "manifest declared 8 fixes as applied, only 2 reached the master text, and the"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/demo.py"
+      ],
+      "ayikla": "manifesto iddiasi\\s*:\\s*(\\d+) FIX",
+      "beklenen": "8",
+      "rc_beklenen": 1
+    },
+    {
+      "id": "IDD-20",
+      "iddia": "demo fiksturunde MASTER'da gorunen 2 FIX",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "`./demo` prints the frozen 8-vs-2 failure with a **red verdict and"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "manifest declared 8 fixes as applied, only 2 reached the master text, and the"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/demo.py"
+      ],
+      "ayikla": "MASTER'da gorunen\\s*:\\s*(\\d+) FIX",
+      "beklenen": "2",
+      "rc_beklenen": 1
+    },
+    {
+      "id": "IDD-21",
+      "iddia": "./demo beklenen kirmiziyi rc=1 ile veriyor",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "asserts `./demo` exits **1** while `make demo` exits **2** (the wrapper cannot"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "bash",
+        "-c",
+        "./demo >/dev/null 2>&1; printf 'rc=%s\\n' $?"
+      ],
+      "ayikla": "rc=(\\d+)",
+      "beklenen": "1"
+    },
+    {
+      "id": "IDD-22",
+      "iddia": "make demo sarmalayicisi rc=2 veriyor (1/2 ayrimini tasimaz)",
+      "kaynaklar": [
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "asserts `./demo` exits **1** while `make demo` exits **2** (the wrapper cannot"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "bash",
+        "-c",
+        "make demo >/dev/null 2>&1; printf 'rc=%s\\n' $?"
+      ],
+      "ayikla": "rc=(\\d+)",
+      "beklenen": "2"
+    },
+    {
+      "id": "IDD-23",
+      "iddia": "ATLAS scripts/ altinda 22 denetim betigi",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "ATLAS_SABLONLAR/   akademik hat: ajanlar, komutlar, şablonlar, 22 denetim betiği"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "-c",
+        "import pathlib; p=pathlib.Path('ATLAS_SABLONLAR/scripts'); print(sum(1 for f in p.iterdir() if f.suffix in ('.py','.sh')))"
+      ],
+      "ayikla": "^(\\d+)$",
+      "beklenen": "22"
+    },
+    {
+      "id": "IDD-24",
+      "iddia": "sabit model katalogunda 9 model",
+      "kaynaklar": [
+        {
+          "dosya": "docs/README.md",
+          "alinti": "Farkın nereden geldiği ölçüldü (19 Kasım 2026): aynı 9 modellik içerik başka bir"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "-c",
+        "import json; d=json.load(open('tools/model_katalog.json')); print(sum(len(v.get('models',{})) for k,v in d.items() if not k.startswith('_')))"
+      ],
+      "ayikla": "^(\\d+)$",
+      "beklenen": "9"
+    },
+    {
+      "id": "IDD-25",
+      "iddia": "canli katalogda allowlist 9/9 gecerli",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "Allowlist'in canlı katalogda 9/9 geçerli olup olmadığı"
+        }
+      ],
+      "durum": "AG_GEREKLI",
+      "komut": [
+        "{py}",
+        "tools/katalog_kontrol.py"
+      ],
+      "ayikla": "SONUC:\\s*(\\d+/\\d+) gecerli",
+      "beklenen": "9/9",
+      "gerekce": "models.dev canli katalogu; ag ister, varsayilan kosuda atlanir"
+    },
+    {
+      "id": "IDD-26",
+      "iddia": "yayin paritesi 0 yeni / 0 degisen / 0 silinen",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "0 new / 0 changed / 0 deleted). The same commands run in CI on GitHub Actions."
+        }
+      ],
+      "durum": "OLCULMEDI",
+      "gerekce": "tools/yayinla.py --lab ozel agac yolunu ister; public klonda yeniden uretilemez"
+    },
+    {
+      "id": "IDD-27",
+      "iddia": "make dogrula suresi 52 s",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "| `make dogrula` | 52 s | macOS 27.2 · arm64 · Python 3.9.6 · 2026-11-19 |"
+        }
+      ],
+      "durum": "BEYAN",
+      "gerekce": "2026-11-19 macOS 27.2 arm64 Python 3.9.6 olcumu; makineye bagli, kapida yeniden kosulmaz"
+    },
+    {
+      "id": "IDD-28",
+      "iddia": "make mutasyon suresi 66 s",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "| `make mutasyon` | 66 s | aynı makine ve oturum |"
+        }
+      ],
+      "durum": "BEYAN",
+      "gerekce": "ayni makine ve oturumda 2026-11-19 olcumu; makineye bagli"
+    },
+    {
+      "id": "IDD-29",
+      "iddia": "./demo suresi 1 s altinda",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "| `./demo` | < 1 s | aynı makine ve oturum |"
+        }
+      ],
+      "durum": "BEYAN",
+      "gerekce": "ayni makine ve oturumda 2026-11-19 olcumu; makineye bagli"
+    },
+    {
+      "id": "IDD-30",
+      "iddia": "ozel depo tarihcesi 924 commit",
+      "kaynaklar": [
+        {
+          "dosya": "docs/README.md",
+          "alinti": "2. **Temiz geçmiş:** özel deponun 924 commit'lik tarihçesi yayımlanmaması gereken"
+        }
+      ],
+      "durum": "BEYAN",
+      "gerekce": "ozel depo tarihcesi; bu public depoda yok, yeniden olculemez"
+    },
+    {
+      "id": "IDD-31",
+      "iddia": "kok scripts/ 33 dosya (yayimlanmadi)",
+      "kaynaklar": [
+        {
+          "dosya": "docs/README.md",
+          "alinti": "33 dosya yayımlanmayan `SKILL.md`'yi okur"
+        }
+      ],
+      "durum": "BEYAN",
+      "gerekce": "kok scripts/ yayimlanmadi; sayi public agacta dogrulanamaz"
+    },
+    {
+      "id": "IDD-32",
+      "iddia": "yerel tam katalog 390 model; katalogsuz KOD 170/174",
+      "kaynaklar": [
+        {
+          "dosya": "docs/README.md",
+          "alinti": "yolda **174/174**, yerel tam katalog (390 model) **174/174**, katalog yok **170/174**"
+        }
+      ],
+      "durum": "BEYAN",
+      "gerekce": "19 Kasim 2026 yerel makine olcumu; katalog icerigi makineye bagli"
+    },
+    {
+      "id": "IDD-33",
+      "iddia": "ozel agacta ATLAS 145/145",
+      "kaynaklar": [
+        {
+          "dosya": "docs/README.md",
+          "alinti": "Özel ağaçta (145/145)"
+        }
+      ],
+      "durum": "BEYAN",
+      "gerekce": "ozel agac olcumu; public agacta tarihce ve kanit seti yok"
+    },
+    {
+      "id": "IDD-34",
+      "iddia": "demo REC-01: 8 bulgu == 8 FIX",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "  PASS REC-01: FAZ1 8 bulgu == FAZ2 8 FIX"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/demo.py"
+      ],
+      "ayikla": "PASS REC-01:\\s*FAZ1 (\\d+) bulgu == FAZ2 (\\d+) FIX",
+      "beklenen": "8/8",
+      "rc_beklenen": 1
+    },
+    {
+      "id": "IDD-35",
+      "iddia": "demo REC-02: oncelik dagilimi P0=3, P1=5",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "  PASS REC-02: oncelik dagilimi ayni {'P0': 3, 'P1': 5}"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/demo.py"
+      ],
+      "ayikla": "REC-02: oncelik dagilimi ayni \\{'P0': (\\d+), 'P1': (\\d+)\\}",
+      "beklenen": "3/5",
+      "rc_beklenen": 1
+    },
+    {
+      "id": "IDD-36",
+      "iddia": "demo REC-04: 8 FIX'in 6'si MASTER'da yok",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "  FAIL REC-04: 6/8 'UYGULANMIS' FIX MASTER'da yok"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/demo.py"
+      ],
+      "ayikla": "REC-04:\\s*(\\d+/\\d+) 'UYGULANMIS' FIX MASTER'da yok",
+      "beklenen": "6/8",
+      "rc_beklenen": 1
+    },
+    {
+      "id": "IDD-37",
+      "iddia": "tutarli fikstur yesil (rc=0)",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin"
+        }
+      ],
+      "durum": "BEYAN",
+      "gerekce": "yesil fikstur depoda yok; 0 cikis sozlesmesi beyandir, bagimsiz olculmedi"
+    },
+    {
+      "id": "IDD-38",
+      "iddia": "yerel batarya maliyeti $0 (model cagrisi yok)",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "kendileri basar. Model çağrısı yoktur: yerel batarya **$0**. İngilizce hızlı başlangıç:"
+        }
+      ],
+      "durum": "BEYAN",
+      "gerekce": "maliyet iddiasi; model cagrisi yok — olcum degil tasarim beyani"
+    }
+  ]
+}
