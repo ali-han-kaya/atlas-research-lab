@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-19T15:51:28Z",
+  "zaman": "2026-11-19T16:30:59Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -8,8 +8,8 @@
         "tools/dogrula.py"
       ],
       "rc": 0,
-      "ham": "  HUKUM: PASS 7/8 — T1 CALISTIRILMADI, PASS sayilmadi",
-      "deger": "7/8"
+      "ham": "  HUKUM: PASS — 8/8 kalem gecti",
+      "deger": "8/8"
     },
     "IDD-02": {
       "komut": [
@@ -26,9 +26,9 @@
         "ATLAS_SABLONLAR/scripts/atlas_selftest.py",
         "--sessiz"
       ],
-      "rc": 1,
-      "ham": "OZ-TEST: 144/145 gecti",
-      "deger": "144/145"
+      "rc": 0,
+      "ham": "OZ-TEST: 145/145 gecti",
+      "deger": "145/145"
     },
     "IDD-04": {
       "komut": [
@@ -63,8 +63,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Bildirilen kural | 121 |",
-      "deger": "121"
+      "ham": "| Bildirilen kural | 122 |",
+      "deger": "122"
     },
     "IDD-08": {
       "komut": [
@@ -72,8 +72,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Gerekceli kapsam disi | 27 |",
-      "deger": "27"
+      "ham": "| Gerekceli kapsam disi | 28 |",
+      "deger": "28"
     },
     "IDD-09": {
       "komut": [
@@ -108,7 +108,7 @@
         "tools/dogrula.py"
       ],
       "rc": 0,
-      "ham": "  kalem=8 · gecen=7 · kalan=0 · calistirilmadi=1",
+      "ham": "  kalem=8 · gecen=8 · kalan=0 · calistirilmadi=0",
       "deger": "8"
     },
     "IDD-13": {
@@ -117,8 +117,8 @@
         "tools/dogrula.py"
       ],
       "rc": 0,
-      "ham": "  kalem=8 · gecen=7 · kalan=0 · calistirilmadi=1",
-      "deger": "7/0/1"
+      "ham": "  kalem=8 · gecen=8 · kalan=0 · calistirilmadi=0",
+      "deger": "8/0/0"
     },
     "IDD-14": {
       "komut": [
