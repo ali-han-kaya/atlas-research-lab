@@ -1,5 +1,7 @@
 # ÖLÇÜM 02 — KOD HATTININ CANLI DUMAN KOŞUSU (KFAZ0 → KFAZ5)
 
+> **Tarihsel kimlik notu (19 Kasım 2026):** Bu kayıttaki eski Nemotron Super free kimliği models.dev'den kaldırılmıştır; güncel allowlist `nvidia/nemotron-3-ultra-550b-a55b:free` kullanır. Aşağıdaki ham çıktılar tarihsel kayıt olarak korunmuştur.
+
 Tarih: 24 Ağustos 2026 · opencode **1.18.21** · Python 3.14.6 · pytest 9.1.1
 Kaynak görev: `DEVIR-2026-08-24-0400.md` §2 · §3 madde 17 ("hattın ajanları gerçekten
 çalışıyor" — **DOGRULANMADI**, en kritik açık)

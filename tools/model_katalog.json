@@ -9,7 +9,7 @@
    "deepseek/deepseek-v4-pro": {"reasoning": true, "tool_call": true},
    "moonshotai/kimi-k2.7-code": {"reasoning": true, "tool_call": true},
    "moonshotai/kimi-k3": {"reasoning": true, "tool_call": true},
-   "nvidia/nemotron-3-super-120b-a12b:free": {"reasoning": true, "tool_call": true},
+   "nvidia/nemotron-3-ultra-550b-a55b:free": {"reasoning": true, "tool_call": true},
    "z-ai/glm-5.2": {"reasoning": true, "tool_call": true},
    "z-ai/glm-5.3": {"reasoning": true, "tool_call": true}
   }

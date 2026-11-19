@@ -1,5 +1,7 @@
 # SURUM — AI ARAŞTIRMA LABI
 
+> **Tarihsel kimlik notu (19 Kasım 2026):** 2026-08 kayıtlarındaki eski Nemotron Super free kimliği models.dev'den kaldırılmıştır; güncel allowlist `nvidia/nemotron-3-ultra-550b-a55b:free` kullanır. Tarihsel satırlar değiştirilmedi.
+
 Sürüm: v1.7.405 (güncel: Değişiklik Kaydı'nın ilk satırı) · Tarih: 17 Kasım 2026
 
 Kanonik OLGU-06 DEVIR: `docs/DEVIR-2026-09-03-1945-AUD-06-07.md`
