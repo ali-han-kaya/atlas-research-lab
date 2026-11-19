@@ -19,7 +19,7 @@ make kur                                         # enable commit/push guards in 
 
 ```text
   H1  depo hijyeni             PASS    0 bulgu
-  H2  python sozdizimi         PASS    57 dosya
+  H2  python sozdizimi         PASS    59 dosya
   H3  kabuk sozdizimi          PASS    7 dosya
   H4  sir taramasi             PASS    0 bulgu
   H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 6/6 gecti
