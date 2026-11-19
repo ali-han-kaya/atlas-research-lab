@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-19T12:26:46Z",
+  "zaman": "2026-11-19T15:51:28Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -135,8 +135,8 @@
         "tools/dogrula.py"
       ],
       "rc": 0,
-      "ham": "  H2  python sozdizimi         PASS    57 dosya",
-      "deger": "57"
+      "ham": "  H2  python sozdizimi         PASS    59 dosya",
+      "deger": "59"
     },
     "IDD-16": {
       "komut": [
