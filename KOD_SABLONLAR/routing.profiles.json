@@ -105,16 +105,16 @@
       "aciklama": "SIFIR MALIYET. On ajanin hepsi ucretsiz nemotron. UYARI: kapi bagimsizligi 1 AILEYE iner (2A=2B=2C=nvidia) — KFAZ4 sonuclari bagimsizlik acisindan KARAR DEGERI TASIMAZ. Duman/dogrulama kosulari icindir; uretim kosusu icin denge/ekonomi kullanin. OLCUM-03 O3-09: bu profil YOKTU ve $0 kosu icin 10 ajanin `model:` satirini elle sed'lemek gerekiyordu.",
       "bagimsizlik_feragati": true,
       "feragat_gerekcesi": "Sifir maliyet hedefi: tek ucretsiz model mevcut. KFAZ4 sonuclari bagimsizlik acisindan KARAR DEGERI TASIMAZ.",
-      "kod-orchestrator": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
-      "kod-scoper": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
-      "kod-architect": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
-      "kod-implementer": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
-      "kod-implementer-heavy": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
-      "kod-tester": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
-      "kod-gate-2a": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
-      "kod-gate-2b": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
-      "kod-gate-2c-security": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
-      "kod-gate": "openrouter/nvidia/nemotron-3-super-120b-a12b:free"
+      "kod-orchestrator": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "kod-scoper": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "kod-architect": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "kod-implementer": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "kod-implementer-heavy": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "kod-tester": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "kod-gate-2a": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "kod-gate-2b": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "kod-gate-2c-security": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "kod-gate": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free"
     }
   }
 }

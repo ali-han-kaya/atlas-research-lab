@@ -1,5 +1,7 @@
 # ÖLÇÜM-06 — CANLI TAM KOŞU (C1) — LAB v1.7.33
 
+> **Tarihsel kimlik notu (19 Kasım 2026):** Bu kayıttaki eski Nemotron Super free kimliği models.dev'den kaldırılmıştır; güncel allowlist `nvidia/nemotron-3-ultra-550b-a55b:free` kullanır. Aşağıdaki ham çıktılar tarihsel kayıt olarak korunmuştur.
+
 Tarih: 26 Ağustos 2026 · Pencere: yeni (devir `DEVIR-2026-08-26-0013.md` sonrası)
 Hedef: v1.7.26→32'de eklenen 7 yeni denetimin (declaration, quote_ratio, source_class,
 translit, philology, gate_merge import, imzalı taban) ardından **tam canlı KFAZ0→merge
