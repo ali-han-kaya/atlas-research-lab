@@ -24,7 +24,7 @@ clean baseline + one violation + a red verdict), and `tools/yayinla.py` (publish
 exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin
 wrapper and cannot carry 1 vs 2, because GNU make always exits 2 on a failing recipe. `make dogrula` → **7 pass / 0 fail / 1 not run** (T1 is reported as
 `CALISTIRILMADI` and never counted as a pass — see *Accepted debt* below); KOD self-test
-**174/174**; mutation battery **51/51 red + 18/18 expected finding**. Mutation-tested vs untested gate rules are measured
+**174/174**; mutation battery **52/52 red + 17/17 expected finding**. Mutation-tested vs untested gate rules are measured
 in [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md); dependent-package findings in
 [`docs/GUVENLIK.md`](docs/GUVENLIK.md); CI green. Non-Turkish readers:
 [`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md).
@@ -168,7 +168,7 @@ Kırmızı, bozulmuş bir testten değil iddia/kanıt farkından gelir; fikstür
 | Komut | Süre | Ölçüm |
 |---|---|---|
 | `make dogrula` | 52 s | macOS 27.2 · arm64 · Python 3.9.6 · 2026-11-19 |
-| `make mutasyon` | 68 s | aynı makine ve oturum |
+| `make mutasyon` | 63 s | aynı makine ve oturum |
 | `./demo` | < 1 s | aynı makine ve oturum |
 
 CI süreleri runner'a bağlıdır; burada iddia edilmez, iş akışı kaydı esastır.

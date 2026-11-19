@@ -102,6 +102,16 @@ SINIF_MD = (
     '| SC-001 | Giris | K | 1 | BIRINCIL | kapsandi |\n'
     '| SC-002 | Yontem | K | 2 | IKINCIL | kapsandi |\n')
 
+SINIF_SRC01_MD = (
+    '# Makale\n\n## KAYNAK SINIFLANDIRMA\n\n'
+    '| Sinyal | Sinif |\n|---|---|\n'
+    '| KURAN | BIRINCIL |\n| MAKALE | IKINCIL |\n\n'
+    '## PROVENANCE\n\n'
+    '| SCOPE-ID | Bolum | Kaynak | Satir Referansi | Kaynak Sinifi | Durum |\n'
+    '|---|---|---|---|---|---|\n'
+    '| SC-001 | Giris | KURAN | 1 | BIRINCIL | kapsandi |\n'
+    '| SC-002 | Yontem | MAKALE | 2 | IKINCIL | kapsandi |\n')
+
 SCOPE_TR = '# SCOPE\n\nTransliterasyon sistemi: DMG (DIN 31635).\n'
 METIN_TR = '# Makale\n\nMetinde sek\u00eene terimi bir kez ge\u00e7er.\n'
 
@@ -197,14 +207,9 @@ def _frz07(k):
 
 
 def _src01(k):
-    p = k / 'sandbox' / 'sinif_src01.md'
-    t = p.read_text(encoding='utf-8')
-    t = t.replace('| SCOPE-ID | Bolum | Kaynak | Satir Referansi | Kaynak Sinifi | Durum |',
-                  '| SCOPE-ID | Bolum | Kaynak | Satir Referansi | Durum |')
-    t = t.replace('| BIRINCIL | kapsandi |', '| kapsandi |')
-    t = t.replace('| IKINCIL | kapsandi |', '| kapsandi |')
-    p.write_text(t, encoding='utf-8')
-    return None
+    return degistir(k, 'sandbox/sinif_src01.md',
+                    '| SC-002 | Yontem | MAKALE | 2 | IKINCIL | kapsandi |',
+                    '| SC-002 | Yontem | MAKALE | 2 | BIRINCIL | kapsandi |')
 
 
 def _satir_sil(k, rel, anahtar):
@@ -597,10 +602,10 @@ def vakalar():
          lambda k: (k / 'sandbox_mod/.opencode/agent/kirik.md').symlink_to(
              k / 'sandbox_mod' / 'yok-hedef.md'),
          'MOD-08', 'BULGU'),
-        ('SRC-01', 'ATLAS', 'sinif sutunu var', 'ATLAS_SABLONLAR/scripts/source_class_check.py',
+        ('SRC-01', 'ATLAS', 'sinyal tablosu ile sinif uyumu', 'ATLAS_SABLONLAR/scripts/source_class_check.py',
          lambda k: ['--dosya', str(k / 'sandbox' / 'sinif_src01.md')],
          _src01,
-         'SRC-01', 'BULGU'),
+         'SRC-01'),
         ('PL-19', 'ATLAS', 'prompt-sema alan uyumu', 'ATLAS_SABLONLAR/scripts/prompt_lint.py',
          lambda k: ['--dizin', str(k)],
          lambda k: _satir_sil(k, 'ATLAS_SABLONLAR/.opencode/agent/atlas-review-main.md',
@@ -652,7 +657,7 @@ def hazirla(kok):
     yaz(kok / 'sandbox_qr' / 'makale.md', QR_BASE)
     yaz(kok / 'sandbox_sec' / 'notlar.md', '# Notlar\n\nBu dosyada sir yok.\n')
     yaz(kok / 'sandbox' / 'cite_yil.md', CITE_MD)
-    yaz(kok / 'sandbox' / 'sinif_src01.md', SINIF_MD)
+    yaz(kok / 'sandbox' / 'sinif_src01.md', SINIF_SRC01_MD)
 
 
 def main():
