@@ -22,7 +22,7 @@ make kur                                         # enable commit/push guards in 
   H2  python sozdizimi         PASS    59 dosya
   H3  kabuk sozdizimi          PASS    7 dosya
   H4  sir taramasi             PASS    0 bulgu
-  H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 6/6 gecti
+  H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 8/8 gecti
   T1  ATLAS oz-testi           PASS    ATLAS OZ-TEST: 145/145 gecti
   T2  KOD oz-testi             PASS    KOD OZ-TEST: 174/174 gecti
   T3  Toolkit oz-testi         PASS    ...
