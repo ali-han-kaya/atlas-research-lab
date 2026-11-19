@@ -30,7 +30,7 @@ from pathlib import Path
 
 KOK = Path(__file__).resolve().parents[1]
 # check_models sabit katalogu kullanir (ag/canli models.dev gerekmez).
-os.environ.setdefault('ATLAS_MODEL_KATALOG', str(KOK / 'tools' / 'model_katalog.json'))
+os.environ.setdefault('ATLAS_MODEL_KATALOG', str(KOK / 'tools' / 'mutasyon_katalog.json'))
 AYRINTILI = '--ayrintili' in sys.argv
 ATLA = shutil.ignore_patterns('.git', '__pycache__', 'node_modules', '.pytest_cache',
                               '.ruff_cache', '.DS_Store')
@@ -107,6 +107,17 @@ METIN_TR = '# Makale\n\nMetinde sek\u00eene terimi bir kez ge\u00e7er.\n'
 
 CITE_MD = ('# Makale\n\nGovde metni (Yazar, 2020).\n\n## Kaynakca\n\n'
            '- Yazar, A. (2020). Kitap. Yayin.\n')
+
+PL_MD = ('---\ndescription: uyari testi\nmode: subagent\n---\n\n'
+         'CALISTIRILMADI. python3 scripts/mevcut.py cikis kodunu denetler.\n')
+PERM_MD = ('---\ndescription: izin testi\nmode: subagent\npermission:\n'
+           '  read:\n    "*": allow\n  edit:\n    "*": allow\n'
+           '  bash:\n    "*": allow\n---\n\nCALISTIRILMADI\n')
+QR_BASE = ('# Baslik\n\n' + ('Bu govde metni oran olcumunu dengelemek icin '
+           'yeterince uzun tutulmustur ve alinti icermez. ' * 8) + '\n')
+QR_MUT = ('# Baslik\n\n' + ('"Bu uzun bir alinti metnidir ve oran esigini asar."\n\n'
+          'Kisa govde.\n'))
+SEC_ORNEK = ('api_key = "sk-' + 'test-AbCdEfGhIjKlMnOpQrStUvWxYz012345"\n')
 
 DEC_MD = ('# Makale\n\n'
           '## Etik Kurul\n\nGerekmedi; gerekce: insan katilimci yok.\n\n'
@@ -185,6 +196,17 @@ def _frz07(k):
                          lambda v: v.__setitem__('temiz_agac', False))
 
 
+def _src01(k):
+    p = k / 'sandbox' / 'sinif_src01.md'
+    t = p.read_text(encoding='utf-8')
+    t = t.replace('| SCOPE-ID | Bolum | Kaynak | Satir Referansi | Kaynak Sinifi | Durum |',
+                  '| SCOPE-ID | Bolum | Kaynak | Satir Referansi | Durum |')
+    t = t.replace('| BIRINCIL | kapsandi |', '| kapsandi |')
+    t = t.replace('| IKINCIL | kapsandi |', '| kapsandi |')
+    p.write_text(t, encoding='utf-8')
+    return None
+
+
 def _satir_sil(k, rel, anahtar):
     """Verilen anahtari tasiyan satiri fiksturden cikarir."""
     p = k / rel
@@ -201,8 +223,29 @@ def _pl04(k):
     return None
 
 
+def taban_ve_bulgu(kok, kapi, argumanlar, mutasyon, iz):
+    """Kirmizi uretmeyen kural icin: temiz tabanda iz YOK, ihlalde iz VAR."""
+    betik = kok / kapi
+    if not betik.is_file():
+        return 'EKSIK', 'kapi betigi yok: %s' % kapi
+    komut = [sys.executable, betik] + argumanlar(kok)
+    rc0, o0 = kos(komut, cwd=kok)
+    if rc0 != 0:
+        return 'TABAN_KIRIK', 'taban rc=%d (beklenen 0) · %s' % (
+            rc0, o0.strip().splitlines()[-1] if o0.strip() else '')
+    if iz in o0:
+        return 'TABAN_KIRLI', 'beklenen bulgu (%s) temiz tabanda da var' % iz
+    hata = mutasyon(kok)
+    if hata:
+        return 'MUTASYON_UYGULANMADI', hata
+    rc1, o1 = kos(komut, cwd=kok)
+    if iz not in o1:
+        return 'ATESLEMEDI', 'beklenen bulgu (%s) mutasyon sonrasi ciktida yok (rc=%d)' % (iz, rc1)
+    return 'GECTI-BULGU', 'taban sessiz · mutasyon bulgusu=%s (rc=%d)' % (iz, rc1)
+
+
 def vakalar():
-    """Her vaka: (kimlik, katman, kural, kapi, argumanlar, mutasyon, iz)."""
+    """Her vaka: (kimlik, katman, kural, kapi, argumanlar, mutasyon, iz[, 'BULGU'])."""
     return [
         ('KOD-SEC-02', 'KOD', 'gercek sir kalibi P0', 'KOD_SABLONLAR/scripts/secret_scan.py',
          lambda k: ['--tum', '--dizin', str(k / 'sandbox')],
@@ -463,6 +506,106 @@ def vakalar():
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          _frz07,
          'FRZ-07'),
+        # --- uyari/bilgi kurallari: beklenen bulgu (rc=0 olabilir) ------------
+        ('PL-12', 'ATLAS', 'belirsizlik cikisi var', 'ATLAS_SABLONLAR/scripts/prompt_lint.py',
+         lambda k: ['--dizin', str(k / 'sandbox_pl')],
+         lambda k: degistir(k, 'sandbox_pl/.opencode/agent/ajan.md',
+                            'CALISTIRILMADI', 'Karar verildi'),
+         'PL-12', 'BULGU'),
+        ('PL-14', 'ATLAS', 'exit kodu fail-closed', 'ATLAS_SABLONLAR/scripts/prompt_lint.py',
+         lambda k: ['--dizin', str(k / 'sandbox_pl')],
+         lambda k: degistir(k, 'sandbox_pl/.opencode/agent/ajan.md',
+                            'cikis kodunu denetler', 'denetler'),
+         'PL-14', 'BULGU'),
+        ('QR-01', 'ATLAS', 'alinti orani esigi', 'ATLAS_SABLONLAR/scripts/quote_ratio.py',
+         lambda k: ['--dosya', str(k / 'sandbox_qr' / 'makale.md'), '--esik', '50'],
+         lambda k: yaz(k / 'sandbox_qr' / 'makale.md', QR_MUT),
+         'UYARI QR-01', 'BULGU'),
+        ('PERM-03', 'KOD', 'uzanti kalibi kok seviye', 'KOD_SABLONLAR/scripts/perm_lint.py',
+         lambda k: ['--dizin', str(k / 'sandbox_perm')],
+         lambda k: degistir(k, 'sandbox_perm/.opencode/agent/ajan.md',
+                            '  read:\n    "*": allow\n',
+                            '  read:\n    "*": allow\n    "**/*.log": deny\n'),
+         'PERM-03', 'BULGU'),
+        ('PERM-05', 'KOD', 'tek deny dize bicimi', 'KOD_SABLONLAR/scripts/perm_lint.py',
+         lambda k: ['--dizin', str(k / 'sandbox_perm')],
+         lambda k: degistir(k, 'sandbox_perm/.opencode/agent/ajan.md',
+                            '  bash:\n    "*": allow\n',
+                            '  bash:\n    "*": deny\n'),
+         'PERM-05', 'BULGU'),
+        ('PERM-06', 'KOD', 'kirmizi cizgi ask degil', 'KOD_SABLONLAR/scripts/perm_lint.py',
+         lambda k: ['--dizin', str(k / 'sandbox_perm')],
+         lambda k: degistir(k, 'sandbox_perm/.opencode/agent/ajan.md',
+                            '  bash:\n    "*": allow\n',
+                            '  bash:\n    "*": allow\n    "ATLAS/*": ask\n'),
+         'PERM-06', 'BULGU'),
+        ('PERM-07', 'KOD', 'yol kalibi goreli', 'KOD_SABLONLAR/scripts/perm_lint.py',
+         lambda k: ['--dizin', str(k / 'sandbox_perm')],
+         lambda k: degistir(k, 'sandbox_perm/.opencode/agent/ajan.md',
+                            '  read:\n    "*": allow\n',
+                            '  read:\n    "*": allow\n    "/etc/passwd": deny\n'),
+         'PERM-07', 'BULGU'),
+        ('PERM-08', 'KOD', 'bash deny tek sinir degil', 'KOD_SABLONLAR/scripts/perm_lint.py',
+         lambda k: ['--dizin', str(k / 'sandbox_perm')],
+         lambda k: degistir(k, 'sandbox_perm/.opencode/agent/ajan.md',
+                            '  bash:\n    "*": allow\n',
+                            '  bash:\n    "*": allow\n    "rm *": deny\n'),
+         'PERM-08', 'BULGU'),
+        ('SEC-03', 'KOD', 'yer tutucu gorunur kalir', 'KOD_SABLONLAR/scripts/secret_scan.py',
+         lambda k: ['--tum', '--dizin', str(k / 'sandbox_sec')],
+         lambda k: ekle(k, 'sandbox_sec/notlar.md', '\n' + SEC_ORNEK),
+         'SEC-03', 'BULGU'),
+        ('SEC-05', 'KOD', 'pyc onbellegi loglanir', 'KOD_SABLONLAR/scripts/secret_scan.py',
+         lambda k: ['--tum', '--dizin', str(k / 'sandbox_sec')],
+         lambda k: yaz(k / 'sandbox_sec' / '__pycache__' / 'x.pyc', 'onbellek\n'),
+         'SEC-05', 'BULGU'),
+        ('SP-05', 'ATLAS', 'DPIA kosullu beyan', 'ATLAS_SABLONLAR/scripts/scope_profile_check.py',
+         lambda k: ['--scope', str(k / 'sandbox' / 'scope.md')],
+         lambda k: degistir(k, 'sandbox/scope.md',
+                            '\nKisisel veri islenmemektedir.\n', '\n'),
+         'SP-05', 'BULGU'),
+        ('CITE-03', 'ATLAS', 'ayni soyad yil celiskisi', 'ATLAS_SABLONLAR/scripts/cite_match.py',
+         lambda k: ['--dosya', str(k / 'sandbox' / 'cite_yil.md')],
+         lambda k: (degistir(k, 'sandbox/cite_yil.md', '## Kaynakca',
+                             '(Yazar, 2021).\n\n## Kaynakca') or
+                    ekle(k, 'sandbox/cite_yil.md', '- Yazar, A. (2021). Ikinci. Yayin.\n')),
+         'UYARI CITE-03', 'BULGU'),
+        ('MOD-01', 'ATLAS', 'model satiri var', 'ATLAS_SABLONLAR/scripts/check_models.py',
+         lambda k: ['--dizin', str(k / 'sandbox_mod')],
+         lambda k: degistir(k, 'sandbox_mod/.opencode/agent/ajan.md',
+                            'model: openrouter/anthropic/claude-opus-5\n', ''),
+         'MOD-01', 'BULGU'),
+        ('MOD-04', 'ATLAS', 'deprecated model yok', 'ATLAS_SABLONLAR/scripts/check_models.py',
+         lambda k: ['--dizin', str(k / 'sandbox_mod')],
+         lambda k: degistir(k, 'sandbox_mod/.opencode/agent/ajan.md',
+                            'openrouter/anthropic/claude-opus-5',
+                            'openrouter/deprecated/old-model'),
+         'MOD-04', 'BULGU'),
+        ('MOD-05', 'ATLAS', 'reasoning+tool_call var', 'ATLAS_SABLONLAR/scripts/check_models.py',
+         lambda k: ['--dizin', str(k / 'sandbox_mod')],
+         lambda k: degistir(k, 'sandbox_mod/.opencode/agent/ajan.md',
+                            'openrouter/anthropic/claude-opus-5',
+                            'openrouter/weak/model'),
+         'MOD-05', 'BULGU'),
+        ('MOD-07', 'ATLAS', 'govde-frontmatter celismez', 'ATLAS_SABLONLAR/scripts/check_models.py',
+         lambda k: ['--dizin', str(k / 'sandbox_mod')],
+         lambda k: ekle(k, 'sandbox_mod/.opencode/agent/ajan.md',
+                        '\nDeepSeek modeli anildi.\n'),
+         'MOD-07', 'BULGU'),
+        ('MOD-08', 'ATLAS', 'symlink hedefi gecerli', 'ATLAS_SABLONLAR/scripts/check_models.py',
+         lambda k: ['--dizin', str(k / 'sandbox_mod')],
+         lambda k: (k / 'sandbox_mod/.opencode/agent/kirik.md').symlink_to(
+             k / 'sandbox_mod' / 'yok-hedef.md'),
+         'MOD-08', 'BULGU'),
+        ('SRC-01', 'ATLAS', 'sinif sutunu var', 'ATLAS_SABLONLAR/scripts/source_class_check.py',
+         lambda k: ['--dosya', str(k / 'sandbox' / 'sinif_src01.md')],
+         _src01,
+         'SRC-01', 'BULGU'),
+        ('PL-19', 'ATLAS', 'prompt-sema alan uyumu', 'ATLAS_SABLONLAR/scripts/prompt_lint.py',
+         lambda k: ['--dizin', str(k)],
+         lambda k: _satir_sil(k, 'ATLAS_SABLONLAR/.opencode/agent/atlas-review-main.md',
+                              '"input_sha256"'),
+         'PL-19'),
     ]
 
 
@@ -500,44 +643,68 @@ def hazirla(kok):
             '| SC-022 | Provenance Durumu | ZORUNLU | \u00dcretilecek | CHK-02 |',
             '| SC-022 | Provenance Durumu | ZORUNLU | \u00dcretilecek | CHK-02 |\n'
             '| SC-030 | Kapsam Kapanisi | ZORUNLU | \u00dcretilecek | Kapanis kontrolu |')
-    yaz(kok / 'sandbox' / 'scope.md', 'ALAN_PROFILI: ampirik\n\n' + sozlesme)
+    yaz(kok / 'sandbox' / 'scope.md',
+        'ALAN_PROFILI: ampirik\n\n' + sozlesme + '\nKisisel veri islenmemektedir.\n')
+    # Uyari-seviyeli kurallar icin yalitilmis fiksturler.
+    yaz(kok / 'sandbox_pl' / '.opencode' / 'agent' / 'ajan.md', PL_MD)
+    yaz(kok / 'sandbox_pl' / 'scripts' / 'mevcut.py', '# test betigi\n')
+    yaz(kok / 'sandbox_perm' / '.opencode' / 'agent' / 'ajan.md', PERM_MD)
+    yaz(kok / 'sandbox_qr' / 'makale.md', QR_BASE)
+    yaz(kok / 'sandbox_sec' / 'notlar.md', '# Notlar\n\nBu dosyada sir yok.\n')
+    yaz(kok / 'sandbox' / 'cite_yil.md', CITE_MD)
+    yaz(kok / 'sandbox' / 'sinif_src01.md', SINIF_MD)
 
 
 def main():
     print('MUTASYON BATARYASI — ATLAS + KOD kapi kurallari')
     print('kaynak: %s' % KOK.name)
-    print('kural: once TEMIZ TABAN (rc=0), sonra tek ihlal, sonra KIRMIZI (rc!=0 + iz).')
+    print('kural: once TEMIZ TABAN, sonra tek ihlal; kirmizi veya beklenen bulgu.')
     print()
 
     gecen = 0
+    gecen_bulgu = 0
     satirlar = []
-    for kimlik, katman, kural, kapi, argumanlar, mutasyon, iz in vakalar():
+    tum = vakalar()
+    for vaka in tum:
+        if len(vaka) == 8 and vaka[7] == 'BULGU':
+            kimlik, katman, kural, kapi, argumanlar, mutasyon, iz, _ = vaka
+            bulgu_modu = True
+        else:
+            kimlik, katman, kural, kapi, argumanlar, mutasyon, iz = vaka
+            bulgu_modu = False
         tmp = Path(tempfile.mkdtemp(prefix='atlas_mut_'))
         try:
             hedef = tmp / 'depo'
             shutil.copytree(KOK, hedef, symlinks=True, ignore=ATLA)
             hazirla(hedef)
-            durum, ayrinti = taban_ve_mutasyon(hedef, kapi, argumanlar, mutasyon, iz)
+            if bulgu_modu:
+                durum, ayrinti = taban_ve_bulgu(hedef, kapi, argumanlar, mutasyon, iz)
+            else:
+                durum, ayrinti = taban_ve_mutasyon(hedef, kapi, argumanlar, mutasyon, iz)
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
 
         if durum == 'GECTI':
             gecen += 1
+        elif durum == 'GECTI-BULGU':
+            gecen_bulgu += 1
         satirlar.append((kimlik, katman, kural, durum, ayrinti))
         print('  [%d/%d] %-13s %-6s %-34s %s' % (
-            len(satirlar), len(vakalar()), kimlik, katman, durum, kural))
+            len(satirlar), len(tum), kimlik, katman, durum, kural))
         print('         %s' % ayrinti)
 
     print()
-    print('SONUC: %d/%d kural atesledi · taban temiz olmayan=%d' % (
-        gecen, len(vakalar()),
-        sum(1 for s in satirlar if s[3] == 'TABAN_KIRIK')))
+    toplam_bulgu = sum(1 for v in tum if len(v) == 8 and v[7] == 'BULGU')
+    print('SONUC: %d/%d kural atesledi · %d/%d beklenen bulgu dogrulandi · '
+          'taban temiz olmayan=%d' % (
+              gecen, len(tum) - toplam_bulgu, gecen_bulgu, toplam_bulgu,
+              sum(1 for s in satirlar if s[3] in ('TABAN_KIRIK', 'TABAN_KIRLI'))))
 
-    kirik = [s for s in satirlar if s[3] != 'GECTI']
+    kirik = [s for s in satirlar if s[3] not in ('GECTI', 'GECTI-BULGU')]
     if kirik:
         print('HUKUM: FAIL — ateslemeyen vaka var; kapi kaniti eksik.')
         return 1
-    print('HUKUM: PASS — her kural temiz tabanda sessiz, ihlalde kirmizi.')
+    print('HUKUM: PASS — her vaka temiz tabanda sessiz, ihlalde kirmizi/beklenen bulgu.')
     return 0
 
 

@@ -984,7 +984,7 @@ K4'ü sınarken bulundu: KISMI moda geçirilen tarayıcı, deponun içine bırak
 gerçek bir özel anahtarı yakalamadı.
 
 ```
-printf -- "-----BEGIN RSA PRIVATE KEY-----\nMII...\n" > src/gizli.pem   # IZLENMEYEN
+printf -- "-----BEGIN RSA ""PRIVATE KEY-----\nMII...\n" > src/gizli.pem   # IZLENMEYEN (parcali literal: ayni PEM basligi)
 python3 scripts/secret_scan.py     ->  EXIT=3 · P0=0        # GORMEDI
 ```
 

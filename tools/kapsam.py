@@ -50,6 +50,12 @@ KAPSAM_DISI = {
                         'envanter yoksa CALISTIRILMADI'),
     'KOD_SABLONLAR/scripts/dep_audit.py':
         ('depo-durumu', '`git diff --name-only HEAD` ile degisen dosyalari okur'),
+    # OLCULDU (19.11.2026): SEC-04 baslikta bildirilir ama secret_scan'in
+    # hicbir dalinda bu kimlikle bulgu BASILMAZ; atlanan dosyalar yalniz sayilir.
+    # Kural kimligi olu oldugu icin mutasyonla ateslenemez; gercek bulgu uretmez.
+    'KOD_SABLONLAR/scripts/secret_scan.py':
+        ('olu-kimlik', 'SEC-04 yalniz baslikta bildirilir; hicbir kod dali bu '
+                       'kimligi basmiyor (atlanan dosyalar yalniz sayilir)'),
 }
 
 
