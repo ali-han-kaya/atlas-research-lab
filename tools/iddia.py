@@ -283,7 +283,7 @@ def main(argv):
         durum = kayit['durum']
         ilk_kaynak = kayit['kaynaklar'][0]['dosya']
         kanit_metni = ''
-        if durum == 'OLCULDU' or (durum == 'AG_GEREKLI' and ag):
+        if durum == 'OLCULDU':
             if yaz:
                 gecti, deger, ayrinti, ham, rc = taze(kayit, onbellek)
                 if gecti:
@@ -299,6 +299,13 @@ def main(argv):
             not_metni = ayrinti or ('= %s' % kayit['beklenen'])
             satirlar.append((etiket, eid, kayit['iddia'], deger, not_metni,
                              ilk_kaynak, durum, kanit_metni))
+        elif durum == 'AG_GEREKLI' and ag:
+            # Canli olcumun kalici ham kaniti yoktur; --ag anlik olcer.
+            gecti, deger, ayrinti, ham, _rc = taze(kayit, onbellek)
+            etiket = 'PASS' if gecti else 'FAIL'
+            not_metni = ayrinti or ('= %s (canli)' % kayit['beklenen'])
+            satirlar.append((etiket, eid, kayit['iddia'], deger, not_metni,
+                             ilk_kaynak, durum, ham if gecti else ''))
         elif durum == 'AG_GEREKLI':
             satirlar.append(('AG', eid, kayit['iddia'], '—',
                              'ham kanit yok (ag gerekli) — kosulmadi',
