@@ -135,6 +135,7 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 | Ne | Nasıl |
 |---|---|
 | Tek giriş doğrulama | `make dogrula` → `tools/dogrula.py` (yedi kalem, fail-closed) |
+| Runner doğrulaması | `make dogrula-ci` — yalnız o ortamda ölçülebilen kalemler hükme girer, öz-testler rapor |
 | Sürekli doğrulama | `.github/workflows/dogrula.yml` — her push/PR ve haftalık |
 | Özel ağaçtan aktarım | `tools/yayinla.py --lab <yol>` (kuru koşu) · `--uygula` (yazar) |
 

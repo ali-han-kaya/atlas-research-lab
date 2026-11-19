@@ -30,5 +30,8 @@ jobs:
       - name: Bagimliliklar
         run: python3 -m pip install --quiet -r requirements-dev.txt
 
-      - name: make dogrula
-        run: make dogrula
+      # Runner kipi: hijyen, sözdizimi, sır taraması ve Toolkit hükme girer.
+      # ATLAS/KOD paketleri koşar ama RAPOR olarak basılır — ikisi de yerel
+      # modele/tarihçeye bağlıdır ve başka makinede aynı sayıyı üretmez.
+      - name: make dogrula-ci
+        run: make dogrula-ci

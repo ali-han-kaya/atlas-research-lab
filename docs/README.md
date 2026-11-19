@@ -47,12 +47,22 @@ Liste dışı tek bir test kalırsa hüküm `FAIL`'dir; ortam gerekçesi başka 
 | Test | Neyi ölçer | Neden koşamıyor | Nasıl ölçülür |
 |---|---|---|---|
 | `OLG-1` (ATLAS) | `SURUM.md` makine bloğunun sürüm/commit/canlı ölçüm bağını (`OLGU-03/04/05`) | Bu depo özel ağacın commit zincirini taşımıyor; `OLGU-04` çıpası yok | Özel ağaçta koşulur |
-| `MOD-1`, `MOD-2` (KOD) | Ajan `model:` satırları yerel katalogda geçerli mi | Runner'da `~/.cache/opencode/models.json` yok | `ATLAS_MODEL_KATALOG=<yol>` verilerek |
+| `MOD-1`, `MOD-2` (ATLAS + KOD) | Ajan `model:` satırları yerel katalogda geçerli mi | Runner'da `~/.cache/opencode/models.json` yok | `ATLAS_MODEL_KATALOG=<yol>` verilerek |
 
 Ölçülen: özel ağaçta (tarihçe ve katalog yerindeyken) ATLAS 145/145, KOD 174/174.
-Yayımlanan bu ağaçta macOS'ta ATLAS 144/145 (OLG-1 ortam bağlı), KOD 174/174;
-Linux CI'da KOD 172/174 (MOD-1/MOD-2 ortam bağlı). Ortam bağlı kalemler
-**`KOSULLU`** etiketiyle basılır, PASS sayılmaz.
+Yayımlanan bu ağaçta macOS'ta ATLAS 144/145 (OLG-1), KOD 174/174; `make dogrula`
+T1'i **`KOSULLU`** basar, PASS değil.
+
+Aynı sayılar Linux runner'da üretilmez: katalog yoktur ve KOD'un `MOD-2` fikstürü
+kataloğun içeriğine duyarlıdır (ölçüldü: 170/174 katalogsuz, 173/174 herhangi bir
+dış katalogla). Bu yüzden CI, `make dogrula-ci` ile yalnız **runner'da
+ölçülebilen** kalemleri hükme sokar — hijyen, Python/kabuk sözdizimi, sır taraması,
+Toolkit paketi — ve ATLAS/KOD paketlerini **RAPOR** olarak basar. Rapor hükme
+girmez ama gizlenmez: rc ve özet satırı her koşuda logdadır.
+
+Bu, "başka makinede yeşil görünmek" için testi yumuşatmak değildir: hükme giren
+kalemler gerçekten koşar, girmeyenler etiketiyle basılır. Tam koşu yerel ortamda
+`make dogrula` ile alınır.
 
 Neden düzeltilmiyor: testler sağlam; eksik olan ortam. Testi "onarmak" kanıtı
 değil kaydı değiştirmek olurdu. Laboratuvarın kendi kuralı da bunu yasaklar

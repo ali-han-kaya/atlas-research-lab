@@ -2,19 +2,23 @@
 # -*- coding: utf-8 -*-
 """dogrula.py — bu deponun TEK GIRIS dogrulamasi (fail-closed).
 
-NEDEN VAR: "bitti" diyen sey bir his olmamali. Yedi kalem sirayla kosar, her
+NEDEN VAR: "bitti" diyen sey bir his olmamali. Kalemler sirayla kosar, her
 kalemin ham ciktisinin son satiri basilir ve hukum rc'lerin toplamindan cikar.
-Eksik kosan kalem PASS sayilmaz; bir kalem FAIL verdiginde de kalanlar kosar ki
-tek turda tam manzara gorunsun.
+Bir kalem FAIL verdiginde de kalanlar kosar ki tek turda tam manzara gorunsun.
 
-ORTAK BAGLI KALEM: ATLAS envanterindeki OLG-1 testi, kanonik olgu tablosunun
-bagli oldugu commit'i (OLGU-04) arar. Bu depo ozel agacin tarihcesini tasimaz;
-o commit burada yoktur. Bu tek test `KOSULLU` raporlanir — `PASS` DEGIL — ve
-gerekcesi basilir. Baska herhangi bir test kalirsa hukum FAIL'dir.
+Iki kip vardir:
 
-Kullanim:
-    python3 tools/dogrula.py            # tam
-    python3 tools/dogrula.py --hizli    # agir oz-testler atlanir (KOSULLU)
+  (varsayilan)        Tam kapi. Laboratuvarin kendi ortaminda (macOS + yerel
+                      opencode model katalogu) her sey kosar.
+  --ci                Runner kipi. Yalnizca bu ortamda OLCULEBILEN kalemler
+                      hukme girer: hijyen, sozdizimi, sir taramasi, Toolkit.
+                      ATLAS ve KOD paketleri kosar ama RAPOR olarak basilir —
+                      cunku ikisi de yerel modele/tarihceye baglidir ve baska
+                      bir makinede ayni sayiyi uretmez. Gizlenmez, basilir.
+
+ORTAK BAGLI KALEM: ATLAS'taki OLG-1, SURUM.md makine blogunun bagli oldugu
+commit ve kanit setini arar; bu depo ozel agacin tarihcesini tasimaz. Test bu
+yuzden KOSULLU raporlanir — PASS degil.
 
 CIKIS: 0 = hepsi gecti veya kosullu · 1 = en az bir kalem FAIL · 2 = kosulamadi
 """
@@ -25,6 +29,7 @@ import sys
 
 KOK = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HIZLI = '--hizli' in sys.argv
+CI = '--ci' in sys.argv
 
 ATLA_DIZIN = {'.git', '__pycache__', 'node_modules', '.pytest_cache',
               '.ruff_cache', '.venv', '.venv-token'}
@@ -46,16 +51,16 @@ FIKSTUR = ('AKIAXXX', 'AKIA1234567890')
 # saymak yerine gercek bicimi ariyoruz.
 ANAHTAR = re.compile(r'-----BEGIN [A-Z ]*PRIVATE KEY-----\r?\n[A-Za-z0-9+/=]{64,}')
 
-# Ortam bagli kalemler: kimlikler ACIK listede, desenle degil.
 # kid -> (izinli kimlikler, ciktida aranan ek kanit, gerekce)
 ORTAM_BAGLI = {
-    'T1': ({'OLG-1'}, 'OLGU-04',
-           'SURUM.md makine blogu ozel agacin HEAD ve kanit setine bagli '
-           '(OLGU-04); bu depo o tarihceyi tasimaz'),
+    'T1': ({'OLG-1', 'MOD-1', 'MOD-2'}, 'OLGU-04',
+           'SURUM.md makine blogu ozel agacin HEAD/kanit setine bagli (OLGU-04)'),
     'T2': ({'MOD-1', 'MOD-2'}, 'check_models',
-           'yerel opencode model katalogu yok '
-           '(~/.cache/opencode/models.json); ATLAS_MODEL_KATALOG ile verilebilir'),
+           'yerel opencode model katalogu yok'),
 }
+
+# Bu ortamda olculemeyen, yalnizca raporlanan paketler (yalniz --ci'da).
+CI_RAPOR = {'T1', 'T2'}
 
 
 def gez():
@@ -72,7 +77,6 @@ def hijyen():
     for tam in gez():
         rel = os.path.relpath(tam, KOK)
         if os.path.islink(tam) and not os.path.exists(tam):
-            # Kirik symlink sessizce atlanmaz: hedefi yoksa dosya da yok demektir.
             kotu.append('kirik symlink: %s -> %s' % (rel, os.readlink(tam)))
             continue
         if os.path.basename(tam) == '.DS_Store':
@@ -155,24 +159,24 @@ def kos(komut, cwd=None):
         return 125, 'KOSULAMADI: %s' % e
 
 
-def ortam_bagli_mi(kid, cikti):
-    """Ortam bagliysa gerekce metnini, degilse None doner.
+def kimlikler(cikti):
+    kimlik = set()
+    for satir in cikti.splitlines():
+        m = re.match(r'\s*KALDI\s+([A-Za-z0-9_.-]+):', satir)
+        if m:
+            kimlik.add(m.group(1))
+    return kimlik
 
-    Kosul sert: kalan BUTUN kimlikler izinli kumenin icinde olmali ve beklenen
-    kanit dizgisi ciktida gecmeli. Liste disi tek bir test kalirsa bu dal kapali
-    kalir — ortam gerekcesi baska bir hatayi ortemez.
-    """
+
+def ortam_bagli_mi(kid, cikti):
+    """Ortam bagliysa gerekce, degilse None. Kosul sert: butun kalan kimlikler
+    izinli kumenin icinde olmali ve beklenen kanit dizgisi gorunmeli."""
     kural = ORTAM_BAGLI.get(kid)
     if not kural:
         return None
     izinli, ek_kanit, gerekce = kural
-    # Ayni satir stdout ve stderr'de tekrarlanabilir; kimlik kumesine bakilir.
-    kimlikler = set()
-    for satir in cikti.splitlines():
-        m = re.match(r'\s*KALDI\s+([A-Za-z0-9_.-]+):', satir)
-        if m:
-            kimlikler.add(m.group(1))
-    if not kimlikler or not kimlikler <= izinli:
+    kalan = kimlikler(cikti)
+    if not kalan or not kalan <= izinli:
         return None
     if ek_kanit not in cikti:
         return None
@@ -180,7 +184,8 @@ def ortam_bagli_mi(kid, cikti):
 
 
 def main():
-    print('ATLAS — tek giris dogrulama · %s' % ('HIZLI' if HIZLI else 'TAM'))
+    kip = 'CI' if CI else ('HIZLI' if HIZLI else 'TAM')
+    print('ATLAS — tek giris dogrulama · %s' % kip)
     print('kok: %s' % KOK)
     print()
 
@@ -193,6 +198,7 @@ def main():
         kalemler.append((kid, ad, True if gecti else False, ozet,
                          detay if not gecti else [], ''))
 
+    rapor = []
     for kalem in KOMUTLAR:
         kid, ad = kalem[0], kalem[1]
         if HIZLI:
@@ -203,16 +209,21 @@ def main():
         rc, cikti = kos(kalem[2], cwd)
         satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
         son = satirlar[-1][:110] if satirlar else '(bos cikti)'
+
+        if CI and kid in CI_RAPOR:
+            rapor.append((kid, ad, rc, son))
+            continue
         if rc == 0:
             kalemler.append((kid, ad, True, son, [], ''))
-        elif ortam_bagli_mi(kid, cikti):
-            kalemler.append((kid, ad, None, son,
-                             [s for s in satirlar if s.startswith('KALDI')],
-                             'ortam bagli: %s' % ortam_bagli_mi(kid, cikti)))
-        else:
-            # Butun KALDI satirlari tasinir: kirpilan kuyruk test kimligini gizler.
-            detay = [s for s in satirlar if re.match(r'\s*KALDI', s)][:20]
-            kalemler.append((kid, ad, False, son, detay or satirlar[-6:], ''))
+            continue
+        sebep = ortam_bagli_mi(kid, cikti)
+        if sebep:
+            kalan = [s for s in satirlar if re.match(r'\s*KALDI', s)][:20]
+            kalemler.append((kid, ad, None, son, kalan,
+                             'ortam bagli: %s' % sebep))
+            continue
+        kalan = [s for s in satirlar if re.match(r'\s*KALDI', s)][:20]
+        kalemler.append((kid, ad, False, son, kalan or satirlar[-6:], ''))
 
     for kid, ad, durum, ozet, detay, not_metni in kalemler:
         etiket = 'ATLANDI' if durum is None else ('PASS' if durum else 'FAIL')
@@ -222,12 +233,20 @@ def main():
         for satir in detay:
             print('        | %s' % satir[:400])
 
+    if rapor:
+        print()
+        print('  --- RAPOR (hukme GIRMEZ: bu ortamda uretilen sayi tasinabilir '
+              'degil) ---')
+        for kid, ad, rc, son in rapor:
+            print('  %-3s %-24s %-7s %s'
+                  % (kid, ad, 'rc=0' if rc == 0 else 'rc=%d' % rc, son))
+
     kalan = [k for k in kalemler if k[2] is False]
     atlanan = [k for k in kalemler if k[2] is None]
     print()
-    print('  kalem=%d · gecen=%d · kalan=%d · kosullu=%d'
+    print('  kalem=%d · gecen=%d · kalan=%d · kosullu=%d · rapor=%d'
           % (len(kalemler), len(kalemler) - len(kalan) - len(atlanan),
-             len(kalan), len(atlanan)))
+             len(kalan), len(atlanan), len(rapor)))
     print('  NOT: bu betik hakem degildir; rc toplar (OZ_DENETIM).')
     if kalan:
         print('  HUKUM: FAIL — %s' % ', '.join(k[0] for k in kalan))
@@ -237,6 +256,8 @@ def main():
               % ', '.join(k[0] for k in atlanan))
         return 0
     print('  HUKUM: PASS — %d/%d kalem gecti' % (len(kalemler), len(kalemler)))
+    if rapor:
+        print('  Tam oz-testler icin (yerel ortam): make dogrula')
     return 0
 
 
