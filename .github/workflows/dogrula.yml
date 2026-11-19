@@ -19,6 +19,10 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Kanit kendi commit'ini degil, uretildigi HEAD'i cikalar; kayitli
+          # commit'in runner'da cozulmesi icin tam gecmis gerekir.
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -36,6 +40,11 @@ jobs:
       # özetine yazılır; 7/8 ile yeşil CI arasındaki fark gizlenmez.
       - name: make dogrula-ci
         run: make dogrula-ci
+
+      # Agac kaniti: gercek commit + dosya sha256'lari + guncel agac uyumu.
+      # Kayitli commit'in cozulmesi icin checkout tam gecmisi indirir.
+      - name: Agac kaniti guncel mi
+        run: make kanit-dogrula
 
       # Kapı kanıtı: her kural için temiz taban + tek ihlal + kırmızı hüküm.
       # Model, ağ ve yerel katalog gerektirmez; bu yüzden runner'da hükme girer.
