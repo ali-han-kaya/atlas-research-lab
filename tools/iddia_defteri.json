@@ -152,7 +152,7 @@
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "of 121 rules, **71** are"
+          "alinti": "of 122 rules, **71** are"
         }
       ],
       "durum": "OLCULDU",
@@ -165,11 +165,11 @@
     },
     {
       "id": "IDD-07",
-      "iddia": "bildirilen kapi kurali sayisi 121",
+      "iddia": "bildirilen kapi kurali sayisi 122",
       "kaynaklar": [
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "of 121 rules, **71** are"
+          "alinti": "of 122 rules, **71** are"
         }
       ],
       "durum": "OLCULDU",
@@ -178,19 +178,19 @@
         "tools/kapsam.py"
       ],
       "ayikla": "\\|\\s*Bildirilen kural\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "121"
+      "beklenen": "122"
     },
     {
       "id": "IDD-08",
-      "iddia": "gerekceli kapsam disi kural sayisi 27",
+      "iddia": "gerekceli kapsam disi kural sayisi 28",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "- **KAPSAM DIŞI** — 27 kural, her biri ölçülmüş bir gerekçeyle: ağ"
+          "alinti": "- **KAPSAM DIŞI** — 28 kural, her biri ölçülmüş bir gerekçeyle: ağ"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "mutation-tested, **27** are out of scope with a measured reason"
+          "alinti": "mutation-tested, **28** are out of scope with a measured reason"
         }
       ],
       "durum": "OLCULDU",
@@ -199,7 +199,7 @@
         "tools/kapsam.py"
       ],
       "ayikla": "\\|\\s*Gerekceli kapsam disi\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "27"
+      "beklenen": "28"
     },
     {
       "id": "IDD-09",

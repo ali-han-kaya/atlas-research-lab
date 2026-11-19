@@ -49,8 +49,8 @@ HUKUM: PASS — her vaka temiz tabanda sessiz, ihlalde kirmizi/beklenen bulgu.
 ```
 
 Exit code 0. Every published gate rule is listed in
-[`../MUTASYON_KAPSAM.md`](../MUTASYON_KAPSAM.md): of 121 rules, **71** are
-mutation-tested, **27** are out of scope with a measured reason
+[`../MUTASYON_KAPSAM.md`](../MUTASYON_KAPSAM.md): of 122 rules, **71** are
+mutation-tested, **28** are out of scope with a measured reason
 (network, secret key, commit history, run state, repo state, or a rule id no
 code branch emits), and **23** are explicit gaps — 11 mentioned only in
 self-tests, 12 in no test at all. Gaps are
