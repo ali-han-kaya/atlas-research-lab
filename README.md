@@ -287,11 +287,19 @@ bir kanıt seti tanımlandığında eklenebilir; o güne kadar 7/8, 8/8 gibi gö
 
 ## Mutasyon kapsamı
 
-`make mutasyon` beş kuralın gerçekten ateşlediğini kanıtlar; **kaç kuralın hiç test
-edilmediğini** ise [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md) söyler. Tablo
-`tools/kapsam.py` tarafından üretilir (elle yazılmaz) ve `GATE_TAMPERED` üreten `FRZ-01`
-/ `FRZ-02` satırlarını ayrıca işaretler. `make kapsam` tablonun güncelliğini denetler;
-CI'da bu adım kırılırsa tablo bayatlamış demektir.
+`make mutasyon` beş kuralın gerçekten ateşlediğini kanıtlar; **her kuralın** durumu ise
+[`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md) içinde tek tek yazılıdır. Tablo
+`tools/kapsam.py` tarafından üretilir (elle yazılmaz) ve üç durum ayırır:
+
+- **TEST EDİLDİ** — 5 kural (mutasyon vakası adıyla)
+- **KAPSAM DIŞI** — 26 kural, her biri ölçülmüş bir bağımlılıkla gerekçeli: ağ
+  (`verify_doi`), gizli anahtar (`teslim_imza`), tarihçe (`olgu_lint`), koşu durumu
+  (`api_surface`, `oztest_attest`), depo durumu (`dep_audit`)
+- **BOŞLUK** — 86 kural: 46'sı yalnız öz-testte anılıyor, 40'ı hiçbir testte geçmiyor
+
+Boşluk "kapsam dışı" diye etiketlenmez; gerekçesi yoksa boşluk olarak kalır ve tabloda
+adıyla durur. `make kapsam` tablonun güncelliğini denetler; CI'da bu adım kırılırsa
+tablo bayatlamış demektir.
 
 ## Lisans
 

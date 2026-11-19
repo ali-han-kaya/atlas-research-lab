@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""kapsam — mutasyon bataryasinin hangi kapi kuralini gercekten atesledigini olcer.
+"""kapsam — yayimlanan ATLAS/KOD kapı kurallarinin TAM envanteri ve kapsami.
 
 NEDEN VAR
-  "5/5 kural atesledi" cumlesi, kac kuralin HIC test edilmedigini soylemez.
-  Bu betik kapi betiklerinin kendi basliklarinda bildirdigi kural kimliklerini
-  tarar, mutasyon bataryasindaki vakalarla ve oz-testlerdeki anmalarla esler;
-  cikti docs/MUTASYON_KAPSAM.md'ye yazilir. Sayilar kosarken olculur, elle
-  yazilmaz.
+  "5/5 kural atesledi" cumlesi, kac kuralin hic test edilmedigini soylemez.
+  Bu betik her kurali tek tek listeler; mutasyon vakasi olmayan her kural icin
+  ya OLCULMUS bir kapsam-disi gerekcesi ya da "BOSLUK" yazar. Gerekce uydurulmaz:
+  siniflandirma betiklerin gercek bagimliliklarina dayanir (asagidaki tablo).
+  Cikti docs/MUTASYON_KAPSAM.md'ye yazilir.
 
 KULLANIM
   python3 tools/kapsam.py            # markdown'i ekrana bas
@@ -21,11 +21,36 @@ from pathlib import Path
 
 KOK = Path(__file__).resolve().parents[1]
 HEDEF = KOK / 'docs' / 'MUTASYON_KAPSAM.md'
-DIZINLER = ('ATLAS_SABLONLAR/scripts', 'KOD_SABLONLAR/scripts', 'ORTAK/scripts')
+DIZINLER = ('ATLAS_SABLONLAR/scripts', 'KOD_SABLONLAR/scripts')
 
 KURAL = re.compile(r'^\s{0,8}([A-Z]{2,8}(?:-[A-Z0-9]{1,8}){0,2}-\d{2,3})\b')
 # OLCUM-* bir kapi kurali degil, olcum kaydinin referansidir.
 YOKSAY_PREFIX = {'OLCUM'}
+
+# Kapsam disi gerekceleri BETIKLERIN GERCEK BAGIMLILIKLARINA dayanir:
+#   api_surface  : _KOSU/gate/BASELINE.json (KFAZ0 imza envanteri) yoksa CALISTIRILMADI
+#   dep_audit    : `git diff --name-only HEAD` ile degisen dosyalari okur
+#   olgu_lint    : SURUM.md makine blogunu HEAD/commit hashleriyle karsilastirir
+#   oztest_attest: butun agacin selftest hash tabanini + ham kosu ciktisini ister
+#   teslim_imza  : HMAC anahtari (LAB_IMZA_ANAHTARI veya ~/.config/lab_imza.key)
+#   verify_doi   : requests ile api.crossref.org'a cikar (ag)
+KAPSAM_DISI = {
+    'ATLAS_SABLONLAR/scripts/verify_doi.py':
+        ('ag', 'requests ile api.crossref.org sorgusu; batarya agsiz kosar'),
+    'ATLAS_SABLONLAR/scripts/teslim_imza.py':
+        ('gizli-anahtar', 'HMAC anahtari ister (LAB_IMZA_ANAHTARI / '
+                          '~/.config/lab_imza.key); anahtar depoya konmaz'),
+    'ATLAS_SABLONLAR/scripts/olgu_lint.py':
+        ('tarihce', 'SURUM.md makine blogunu HEAD/commit hashleriyle karsilastirir'),
+    'ATLAS_SABLONLAR/scripts/oztest_attest.py':
+        ('kosu-durumu', 'butun agacin selftest hash tabanini ve ham kosu '
+                        'ciktisini ister'),
+    'KOD_SABLONLAR/scripts/api_surface.py':
+        ('kosu-durumu', 'KFAZ0 _KOSU/gate/BASELINE.json imza envanterini ister; '
+                        'envanter yoksa CALISTIRILMADI'),
+    'KOD_SABLONLAR/scripts/dep_audit.py':
+        ('depo-durumu', '`git diff --name-only HEAD` ile degisen dosyalari okur'),
+}
 
 
 def kapi_betikleri():
@@ -73,103 +98,87 @@ def oz_testler():
 
 
 def olc():
+    """[(betik, kural, vaka|None, durum, gerekce)] + ozet sayilari."""
     envan = envanter()
     testler = {}
     for kimlik, _katman, _kural, betik, *_ in batarya():
-        testler.setdefault(betik, set()).add(normalize(kimlik))
+        testler.setdefault(betik, {})[normalize(kimlik)] = kimlik
     oz = oz_testler()
 
     satirlar = []
-    toplam = 0
-    mutasyon = 0
-    yalniz_oz = 0
-    hic = 0
+    test = disi = bosluk = oz_anilan = 0
     for betik, kurallar in envan.items():
-        m = testler.get(betik, set())
-        s_mut, s_oz, s_yok = [], [], []
         for k in kurallar:
-            toplam += 1
-            if k in m:
-                mutasyon += 1
-                s_mut.append(k)
-            elif k in oz:
-                yalniz_oz += 1
-                s_oz.append(k)
+            vaka = testler.get(betik, {}).get(k)
+            if vaka:
+                test += 1
+                satirlar.append((betik, k, vaka, 'TEST EDILDI',
+                                 'mutasyon vakasi: %s' % vaka))
+            elif betik in KAPSAM_DISI:
+                disi += 1
+                sinif, gerekce = KAPSAM_DISI[betik]
+                satirlar.append((betik, k, None, 'KAPSAM DISI',
+                                 '%s: %s' % (sinif, gerekce)))
             else:
-                hic += 1
-                s_yok.append(k)
-        satirlar.append((betik, kurallar, s_mut, s_oz, s_yok))
+                bosluk += 1
+                if k in oz:
+                    oz_anilan += 1
+                    gerekce = 'BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok'
+                else:
+                    gerekce = 'BOSLUK — hicbir testte gecmiyor'
+                satirlar.append((betik, k, None, 'BOSLUK', gerekce))
+    return satirlar, envan, (test, disi, bosluk, oz_anilan)
 
-    tamper = []
-    for betik in envan:
-        metin = (KOK / betik).read_text(encoding='utf-8')
-        if 'GATE_TAMPERED' not in metin:
+
+def sinif_tablosu(satirlar):
+    siniflar = {}
+    for betik, k, _v, durum, gerekce in satirlar:
+        if durum != 'KAPSAM DISI':
             continue
-        # Yalniz GATE_TAMPERED'i URETEN satirlar: ayni satirda gecen kural ID'si.
-        ureten = set()
-        for satir in metin.splitlines():
-            if 'GATE_TAMPERED' not in satir:
-                continue
-            for k in envan[betik]:
-                if k in satir:
-                    ureten.add(k)
-        m = testler.get(betik, set())
-        for k in sorted(ureten):
-            durum = ('mutasyon' if k in m else
-                     ('yalniz oz-test' if k in oz else 'HIC TEST YOK'))
-            tamper.append((betik, k, durum))
-    return satirlar, (toplam, mutasyon, yalniz_oz, hic), tamper
+        sinif = gerekce.split(':', 1)[0]
+        siniflar.setdefault(sinif, {'gerekce': gerekce.split(': ', 1)[1],
+                                    'betik': set(), 'kural': 0})
+        siniflar[sinif]['betik'].add(betik.split('/')[-1])
+        siniflar[sinif]['kural'] += 1
+    out = ['| Sinif | Gerekce (betikte olculen bagimlilik) | Betik | Kural |',
+           '|---|---|---|---|']
+    for sinif in sorted(siniflar):
+        v = siniflar[sinif]
+        out.append('| %s | %s | %s | %d |' % (
+            sinif, v['gerekce'], ', '.join(sorted(v['betik'])), v['kural']))
+    return out
 
 
 def markdown():
-    satirlar, (toplam, mutasyon, yalniz_oz, hic), tamper = olc()
-    out = []
-    out.append('# Mutasyon kapsami — olculmus')
-    out.append('')
-    out.append('Kaynak: `tools/kapsam.py` (uretilmis dosya; elle duzenlenmez).')
-    out.append('Envanter, kapi betiklerinin basliklarinda bildirdigi kural')
-    out.append('kimlikleridir; `*_selftest.py` ve `OLCUM-*` referanslari sayilmaz.')
-    out.append('')
-    out.append('## Ozet')
-    out.append('')
-    out.append('| Olcum | Deger |')
-    out.append('|---|---|')
-    out.append('| Kapi betigi | %d |' % len(satirlar))
-    out.append('| Bildirilen kural | %d |' % toplam)
-    out.append('| Mutasyonla ateslenen | %d |' % mutasyon)
-    out.append('| Yalniz oz-testte gecen | %d |' % yalniz_oz)
-    out.append('| Hicbir testte gecmeyen | %d |' % hic)
-    out.append('')
-    out.append('**Okuma:** "mutasyonla ateslenen", bataryanin temiz taban + tek')
-    out.append('ihlal + kirmizi huküm ucluyle o kurali gercekten kosturdugu')
-    out.append('anlamina gelir. "Yalniz oz-testte gecen" kural, bir testte')
-    out.append('anilir ama ihlalde atesledigi ayri bir mutasyonla kanitlanmamis')
-    out.append('demektir; "hicbir testte gecmeyen" ise hicbir kaniti olmayan')
-    out.append('kuraldir.')
-    out.append('')
-    out.append('## GATE_TAMPERED — kritik kural')
-    out.append('')
-    if tamper:
-        out.append('| Betik | Kural | Durum |')
-        out.append('|---|---|---|')
-        for betik, k, durum in tamper:
-            out.append('| `%s` | %s | %s |' % (betik.split('/')[-1], k, durum))
-        out.append('')
-        out.append('`GATE_TAMPERED` bir kural degil bir koddur; onu ureten')
-        out.append('kurallar yukaridadir. Mutasyon bataryasinda bu betik icin')
-        out.append('vaka yoktur; KOD oz-testi bu davranisi ayri fiksturlerle')
-        out.append('kilitler. Fark kapatilmadikca tablo bunu gizlemez.')
-    else:
-        out.append('Bu depoda `GATE_TAMPERED` ureten betik bulunamadi.')
-    out.append('')
-    out.append('## Betik bazinda')
-    out.append('')
-    out.append('| Kapi betigi | Kural | Mutasyon | Yalniz oz-test | Hic test yok |')
-    out.append('|---|---|---|---|---|')
-    for betik, kurallar, s_mut, s_oz, s_yok in satirlar:
-        out.append('| `%s` | %d | %s | %s | %s |' % (
-            betik.split('/')[-1], len(kurallar),
-            ', '.join(s_mut) or '—', ', '.join(s_oz) or '—', ', '.join(s_yok) or '—'))
+    satirlar, envan, (test, disi, bosluk, oz_anilan) = olc()
+    out = ['# Mutasyon kapsami — tam kural envanteri', '',
+           'Kaynak: `tools/kapsam.py` (uretilmis dosya; elle duzenlenmez).',
+           'Envanter, ATLAS ve KOD kapi betiklerinin basliklarinda bildirdigi',
+           'kural kimlikleridir; `*_selftest.py` ve `OLCUM-*` referanslari sayilmaz.',
+           '',
+           'Her kural icin tek soru sorulur: **mutasyon bataryasinda onu ateslettiren',
+           'bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus',
+           '**KAPSAM DISI** ya da **BOSLUK**. Bosluk gizlenmez.', '',
+           '## Ozet', '',
+           '| Olcum | Deger |', '|---|---|',
+           '| Kapi betigi | %d |' % len(envan),
+           '| Bildirilen kural | %d |' % len(satirlar),
+           '| Mutasyon vakasi olan (TEST EDILDI) | %d |' % test,
+           '| Gerekceli kapsam disi | %d |' % disi,
+           '| Bosluk (gerekce yok) | %d |' % bosluk,
+           '| — bunlardan yalniz oz-testte anilan | %d |' % oz_anilan,
+           '| — hicbir testte gecmeyen | %d |' % (bosluk - oz_anilan),
+           '',
+           '## Kapsam disi siniflari', '',
+           'Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir',
+           '(asagida betik adiyla birlikte yazili).', '']
+    out += sinif_tablosu(satirlar)
+    out += ['', '## Tam envanter', '',
+            '| Betik | Kural | Mutasyon vakasi | Durum | Gerekce |',
+            '|---|---|---|---|---|']
+    for betik, k, vaka, durum, gerekce in satirlar:
+        out.append('| `%s` | %s | %s | %s | %s |' % (
+            betik.split('/')[-1], k, vaka or '—', durum, gerekce))
     out.append('')
     return '\n'.join(out)
 
@@ -180,8 +189,7 @@ def main(argv):
         if not HEDEF.is_file():
             print('KAPSAM: %s yok — `make kapsam-yaz` kosun' % HEDEF.name)
             return 1
-        mevcut = HEDEF.read_text(encoding='utf-8')
-        if mevcut != metin:
+        if HEDEF.read_text(encoding='utf-8') != metin:
             print('KAPSAM: docs/MUTASYON_KAPSAM.md guncel degil — `make kapsam-yaz`')
             return 1
         print('KAPSAM: guncel (%d satir)' % len(metin.splitlines()))
