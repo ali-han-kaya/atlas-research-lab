@@ -20,8 +20,9 @@ visible; evidence levels (`BIRINCIL`/`DIJITAL`/`BEYAN`/`OLCULMEDI`); fail-closed
 self-test, three self-test suites), `make mutasyon` (five gate rules must actually fire:
 clean baseline + one violation + a red verdict), and `tools/yayinla.py` (publish parity:
 0 new / 0 changed / 0 deleted). The same commands run in CI on GitHub Actions.
-- **Reproduce it.** `make demo` prints the frozen 8-vs-2 failure with a **red verdict**
-(`python3 tools/demo.py` exits 1; `make` itself exits 2 and prints the same verdict). `make dogrula` → **7 pass / 0 fail / 1 not run** (T1 is reported as
+- **Reproduce it.** `./demo` prints the frozen 8-vs-2 failure with a **red verdict and
+exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin
+wrapper and cannot carry 1 vs 2, because GNU make always exits 2 on a failing recipe. `make dogrula` → **7 pass / 0 fail / 1 not run** (T1 is reported as
 `CALISTIRILMADI` and never counted as a pass — see *Accepted debt* below); KOD self-test
 **174/174**; mutation battery **5/5**. Mutation-tested vs untested gate rules are measured
 in [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md); dependent-package findings in
@@ -110,7 +111,7 @@ cd atlas-research-lab
 python3 -m pip install -r requirements-dev.txt   # sürümler sabit: requests + pip-audit
 make kur       # commit/push korumasını bu klonda etkinleştirir
 make dogrula
-make demo      # beklenen: rc=1 (kırmızı)
+./demo         # beklenen: rc=1 (kırmızı)
 ```
 
 `make dogrula` tek giriştir; **sekiz kalemi** sırayla koşar ve **ham çıktılarını** yazar:
@@ -119,7 +120,7 @@ depo hijyeni, Python sözdizimi, kabuk sözdizimi, sır taraması, sır kapısı
 kendileri basar. Model çağrısı yoktur: yerel batarya **$0**. İngilizce hızlı başlangıç:
 [`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md).
 
-### `make demo` — tek komutla kırmızı hüküm
+### `./demo` — tek komutla kırmızı hüküm
 
 `DENEME/` 23 Ağustos 2026'da dondurulmuş, bilerek kusurlu bir koşudur: manifesto 8 FIX'i
 "UYGULANMIŞ" ilan etti, MASTER'a yalnız 2'si yansıdı, o günün FINAL GATE'i yine de PASS
@@ -147,11 +148,20 @@ HUKUM: FAIL — iddia 8, kanit 2; dondurulmus kapi PASS dedi.
 BEKLENEN KIRMIZI — bu komut bilerek rc=1 doner.
 ```
 
-Çıkış kodları: `python3 tools/demo.py` → **1** (beklenen kırmızı), **2** (fikstür beklenen
-biçimden saptı). `make demo` ise GNU make'in tarif-hatası koduyla **2** döner ve
-`make: *** [demo] Error 1` basar; yani make üzerinden 1 ile 2 ayrımı görünmez. Ayrımı
-görmek isteyen betiği doğrudan koşar. Her iki durumda da kırmızı, bozulmuş bir testten
-değil iddia/kanıt farkından gelir; fikstür kayarsa demo `FIKSTUR DEGISTI` yazar.
+Kanonik komut kökteki `./demo`'dur; kabuk çıkış kodu doğrudan `tools/demo.py`'den gelir
+(bu turda `echo $?` ile ölçüldü):
+
+| Durum | Kod |
+|---|---|
+| Kırmızı — iddia > kanıt, dondurulmuş kapi PASS | **1** |
+| Fikstür bozuk — dosya yok/bozuk, kapi PASS değil, beklenen çelişki yok | **2** |
+| Yeşil — iddia == kanıt ve mutabakat PASS | **0** |
+
+`make demo` yalnız bunun ince bir sarmalayıcısıdır ve GNU make tarif hatasını her zaman
+**2** ile bildirdiği için 1/2 ayrımını **taşımaz**. Kod ayrımı gerekiyorsa `./demo`
+(veya `python3 tools/demo.py`) koşulur; README hiçbir yerde make için "1 döner" demez.
+Kırmızı, bozulmuş bir testten değil iddia/kanıt farkından gelir; fikstür kayarsa demo
+`FIKSTUR DEGISTI` yazar ve 2 döner.
 
 ### Ölçülen süreler
 
@@ -159,7 +169,7 @@ değil iddia/kanıt farkından gelir; fikstür kayarsa demo `FIKSTUR DEGISTI` ya
 |---|---|---|
 | `make dogrula` | 52 s | macOS 27.2 · arm64 · Python 3.9.6 · 2026-11-19 |
 | `make mutasyon` | 5 s | aynı makine ve oturum |
-| `make demo` | < 1 s | aynı makine ve oturum |
+| `./demo` | < 1 s | aynı makine ve oturum |
 
 CI süreleri runner'a bağlıdır; burada iddia edilmez, iş akışı kaydı esastır.
 
@@ -231,7 +241,7 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 | Ne | Nasıl |
 |---|---|
 | Tek giriş doğrulama | `make dogrula` → `tools/dogrula.py` (sekiz kalem, fail-closed) |
-| Kırmızı hüküm demosu | `make demo` → `tools/demo.py` (beklenen `rc=1`) |
+| Kırmızı hüküm demosu | `./demo` → `tools/demo.py` (kanonik; beklenen `rc=1`, fikstür bozuksa `rc=2`, yeşilde `rc=0`) |
 | Mutasyon kapsamı | `make kapsam` → `docs/MUTASYON_KAPSAM.md` güncel mi (üretilmiş tablo) |
 | Bağımlılık denetimi | `make guvenlik` → `pip-audit`; her bulgu `docs/GUVENLIK.md` içinde adıyla |
 | Commit/push koruması | `make kur` → `core.hooksPath=.githooks`; canlı DSN commit edilemez |

@@ -8,7 +8,7 @@ yardim:
 	@echo "make dogrula   tek giris: hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test"
 	@echo "make dogrula-ci  runner kipi: olculebilen kalemler hukme girer, oz-testler rapor"
 	@echo "make mutasyon  kapi kurallari gercekten atesliyor mu (temiz taban + ihlal)"
-	@echo "make demo      DENEME/ fiksturunu gosterir: 8 iddia, 2 kanit, dondurulmus PASS — rc=1"
+	@echo "make demo      ince sarmalayici: ./demo (kod ayrimi icin ./demo; make her hatada 2 doner)"
 	@echo "make kapsam    mutasyon kapsam tablosu guncel mi (docs/MUTASYON_KAPSAM.md)"
 	@echo "make kapsam-yaz  kapsam tablosunu yeniden uret"
 	@echo "make guvenlik  pip-audit: bilinen CVE taramasi (requirements-dev.txt)"
@@ -27,7 +27,7 @@ mutasyon:
 	@$(PY) tools/mutasyon_bataryasi.py
 
 demo:
-	@$(PY) tools/demo.py
+	@./demo
 
 kapsam:
 	@$(PY) tools/kapsam.py --kontrol
