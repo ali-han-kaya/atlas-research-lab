@@ -5,7 +5,7 @@
 koşan kapılar** üzerine kurar.
 
 Bu depo laboratuvarın kendisidir: hatlar, ajanlar, şablonlar, kapı betikleri,
-ölçüm bataryası ve öğrenim defteri. Laboratuvarın ürettiği makaleler ve kitapçıklar
+ölçüm kayıtları ve öğrenim defteri. Laboratuvarın ürettiği makaleler ve kitapçıklar
 burada **yoktur** — kapsam ve gerekçesi: [docs/README.md](docs/README.md).
 
 Sürüm: ATLAS hattı **v5.5.4** · Komut Toolkit **v4** · KOD hattı **KFAZ0–5**
@@ -43,7 +43,6 @@ olarak saklandı.
 | **Rafine** | `RAFINE_SABLON/` | Elde metin varken bir sürüm ileri taşıma: asgari müdahale + KEEP parmak izi + kapanış kontrolü. Yeni iddia üretmez. |
 | **Hakem** | `HAKEM_HEYETI/` | Çok modelli hakem paneli sözleşmesi (F0–F6) ve iki turlu acımasız denetim komutu. |
 | **Ortak** | `ORTAK/` | İki hattın paylaştığı kapı (`ortak_gate.py`), yönlendirme ve bütçe koruması. |
-| **Ölçüm** | `scripts/` | Mutasyon koşucusu, kapı farkı, bağımsızlık doğrulaması, enjeksiyon sayacı, kaynak/token ölçümü ve bunların tabanları. |
 | **Kayıt** | `docs/` | Ölçüm koşuları, denetim raporları, ders defteri, kanonik olgu tablosu. |
 
 Ajan tanımları `.opencode/agent/` ve `.opencode/command/` altındadır; her girdi
@@ -123,7 +122,6 @@ RAFINE_SABLON/     sürüm yükseltme: KEEP listesi, komut şablonu, kapanış k
 HAKEM_HEYETI/      hakem paneli sözleşmesi + iki turlu denetim komutu
 ORTAK/             paylaşılan kapı, yönlendirme, bütçe koruması
 DENEME/            bilerek kusurlu, dondurulmuş örnek koşu
-scripts/           ölçüm bataryası ve tabanları
 docs/              ölçümler, denetimler, ders defteri, olgu tablosu
 tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 ```

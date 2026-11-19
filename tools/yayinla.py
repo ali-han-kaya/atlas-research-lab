@@ -23,8 +23,13 @@ import sys
 KOK = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # --- DAHIL LISTESI (tek kaynak; yeni yol buraya yazilmadan yayimlanmaz) ------
+# NOT: `scripts/` BILEREK yok. Oradaki batarya kisisel exocortex skill'ine
+# (SKILL.md) baglidir; SKILL.md yayimlanmiyor ve betikler sahibin mutlak yolunu
+# tasiyordu. Laboratuvarin kendi mekanizmasi ATLAS + KOD + Toolkit icinde.
 KOKLER = ['ATLAS_SABLONLAR', 'KOD_SABLONLAR', 'ORTAK', 'RAFINE_SABLON',
-          'HAKEM_HEYETI', 'DENEME', 'scripts', '.opencode']
+          'HAKEM_HEYETI', 'DENEME', '.opencode']
+# Hedef depoda kalmasi yasak klu kokler (eski surumlerden kalirsa silinir).
+KALDIRILAN_KOKLER = ['scripts']
 DOSYALAR = ['AGENTS.md', 'AI_CALISMA_SISTEMI_v1.md', 'ISARETCILER.md',
             'opencode.json', 'SURUM.md']
 TOOLKIT_DOSYALARI = ['KOMUT_TOOLKIT_v4/000_ONCE_BUNU_YAPISTIR.md',
@@ -66,8 +71,31 @@ FIKSTUR = ('AKIAXXX', 'AKIA1234567890')
 ANAHTAR = re.compile(r'-----BEGIN [A-Z ]*PRIVATE KEY-----\r?\n[A-Za-z0-9+/=]{64,}')
 
 
+# Uretilmis urun/arsiv izleri yayina giremez: bu depo mekanizmadir.
+YASAK_UZANTI = {'.pdf', '.docx', '.doc', '.tex', '.aux', '.bcf', '.zip',
+                '.bundle', '.epub'}
+
+EV_ONEK = '/Users/alikaya'
+
+
 def atilabilir(ad):
     return ad in ATLA_AD or os.path.splitext(ad)[1] in ATLA_UZANTI
+
+
+def icerik(tam):
+    """Yayimlanacak BAYTLAR. Tek donusum: sahibin ev yolu -> `~`.
+
+    Neden: klonlayan icin `/Users/alikaya` sert referanstir; olcum kaydinda
+    gecen yol ise bilgi tasir. `~/` ikisini de korur, kaydin anlamini degistirmez.
+    """
+    with open(tam, 'rb') as f:
+        veri = f.read()
+    if b'\x00' in veri[:1024]:
+        return veri
+    try:
+        return veri.decode('utf-8').replace(EV_ONEK, '~').encode('utf-8')
+    except UnicodeDecodeError:
+        return veri
 
 
 def topla(lab):
@@ -99,6 +127,16 @@ def ozet_oku(tam):
     if os.path.islink(tam):
         return ('link', os.readlink(tam))
     try:
+        return ('sha', hashlib.sha256(icerik(tam)).hexdigest())
+    except OSError:
+        return ('yok', '')
+
+
+def ozet_ham(tam):
+    """Hedefteki GERCEK baytlar (normalizasyon uygulanmaz; fark gizlenmesin)."""
+    if os.path.islink(tam):
+        return ('link', os.readlink(tam))
+    try:
         with open(tam, 'rb') as f:
             return ('sha', hashlib.sha256(f.read()).hexdigest())
     except OSError:
@@ -111,7 +149,7 @@ def plan(istenen):
         hedef = os.path.join(KOK, rel)
         if not os.path.exists(hedef):
             yeni.append(rel)
-        elif ozet_oku(kaynak) != ozet_oku(hedef):
+        elif ozet_oku(kaynak) != ozet_ham(hedef):
             degisen.append(rel)
         else:
             ayni.append(rel)
@@ -121,7 +159,8 @@ def plan(istenen):
 def fazlalik(istenen):
     """Hedefte olup planda olmayan, bu deponun kendi katmani disindaki dosyalar."""
     silinecek = []
-    tabanlar = KOKLER + TOOLKIT_KOKLER + ['KOMUT_TOOLKIT_v4', 'docs']
+    tabanlar = (KOKLER + TOOLKIT_KOKLER + ['KOMUT_TOOLKIT_v4', 'docs']
+                + KALDIRILAN_KOKLER)
     for taban in tabanlar:
         dizin = os.path.join(KOK, taban)
         if not os.path.isdir(dizin):
@@ -169,7 +208,9 @@ def yaz(istenen, silinecek):
                 os.remove(hedef)
             os.symlink(os.readlink(kaynak), hedef)
         else:
-            shutil.copy2(kaynak, hedef)
+            with open(hedef, 'wb') as f:
+                f.write(icerik(kaynak))
+            shutil.copymode(kaynak, hedef)
     for rel in silinecek:
         os.remove(os.path.join(KOK, rel))
     return len(istenen), len(silinecek)
@@ -194,6 +235,14 @@ def main():
         return 2
 
     istenen = topla(lab)
+    yasak = [rel for rel in istenen if os.path.splitext(rel)[1] in YASAK_UZANTI]
+    if yasak:
+        print('HATA: uretilmis urun/arsiv izi planda: %s' % ', '.join(sorted(yasak)),
+              file=sys.stderr)
+        print('Bu depo mekanizmadir; makale ciktisi/PDF/arsiv yayimlanmaz.',
+              file=sys.stderr)
+        return 1
+
     yeni, degisen, ayni = plan(istenen)
     silinecek = fazlalik(istenen)
     bulgular = sir_tara(istenen)
