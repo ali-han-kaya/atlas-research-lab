@@ -51,6 +51,11 @@ jobs:
       - name: Bagimlilik denetimi (pip-audit)
         run: make guvenlik
 
+      # Surumler sabit oldugu icin rapor her runner'da ayni olmali; farkliysa
+      # ortam cozunurlugu kaymis demektir ve bu sessizce gecmemeli.
+      - name: Guvenlik raporu guncel mi
+        run: git diff --exit-code docs/GUVENLIK.md
+
       # Demo bilerek rc=1 doner; bu adim "kirmizi gercekten geldi mi" sorusunu
       # sorar. rc=0 (kirmizi yanmadi) veya rc=2 (fikstur bozuk) basarisizdir.
       - name: Demo beklenen kirmiziyi veriyor
