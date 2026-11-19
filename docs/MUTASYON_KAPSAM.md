@@ -14,10 +14,10 @@ bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus
 |---|---|
 | Kapi betigi | 20 |
 | Bildirilen kural | 117 |
-| Mutasyon vakasi olan (TEST EDILDI) | 69 |
+| Mutasyon vakasi olan (TEST EDILDI) | 71 |
 | Gerekceli kapsam disi | 27 |
-| Bosluk (gerekce yok) | 21 |
-| — bunlardan yalniz oz-testte anilan | 9 |
+| Bosluk (gerekce yok) | 19 |
+| — bunlardan yalniz oz-testte anilan | 7 |
 | — hicbir testte gecmeyen | 12 |
 
 ## Kapsam disi siniflari
@@ -110,7 +110,7 @@ Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir
 | `api_surface.py` | API-05 | — | KAPSAM DISI | kosu-durumu: KFAZ0 _KOSU/gate/BASELINE.json imza envanterini ister; envanter yoksa CALISTIRILMADI |
 | `chg_reconcile.py` | RECK-01 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
 | `chg_reconcile.py` | RECK-02 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `chg_reconcile.py` | RECK-03 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
+| `chg_reconcile.py` | RECK-03 | RECK-03 | TEST EDILDI | mutasyon vakasi: RECK-03 |
 | `chg_reconcile.py` | RECK-04 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
 | `chg_reconcile.py` | RECK-05 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
 | `chg_reconcile.py` | RECK-06 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
@@ -146,7 +146,7 @@ Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir
 | `test_attest.py` | TST-01 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
 | `test_attest.py` | TST-02 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
 | `test_attest.py` | TST-03 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `test_attest.py` | TST-04 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
+| `test_attest.py` | TST-04 | TST-04 | TEST EDILDI | mutasyon vakasi: TST-04 |
 | `test_attest.py` | TST-05 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
 | `test_attest.py` | TST-06 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
 | `test_attest.py` | TST-07 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
