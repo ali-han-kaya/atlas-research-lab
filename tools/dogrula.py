@@ -208,7 +208,7 @@ def main():
         elif ortam_bagli_mi(kid, cikti):
             kalemler.append((kid, ad, None, son,
                              [s for s in satirlar if s.startswith('KALDI')],
-                             'ortam bagli: %s' % ortam_bagli_mi(kid, cikti))
+                             'ortam bagli: %s' % ortam_bagli_mi(kid, cikti)))
         else:
             # Butun KALDI satirlari tasinir: kirpilan kuyruk test kimligini gizler.
             detay = [s for s in satirlar if re.match(r'\s*KALDI', s)][:20]
