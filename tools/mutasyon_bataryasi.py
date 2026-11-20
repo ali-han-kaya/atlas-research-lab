@@ -22,6 +22,7 @@ CIKIS
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -240,7 +241,7 @@ def _git_kur(d):
 
 
 def _reck_hazirla(k):
-    """RECK-03: KFAZ0/1 makine bloklari + temiz kucuk git deposu."""
+    """RECK-01/02/03/04/06: KFAZ0/1/2 makine bloklari + temiz kucuk git deposu."""
     kosu = k / 'sandbox_reck' / '_KOSU'
     yaz(kosu / '00-KFAZ-0-SPEC.md', '# spec\n\n```json\n' + json.dumps({
         'sema': 'KFAZ0/v1',
@@ -258,6 +259,54 @@ def _reck_hazirla(k):
     yaz(depo / 'src' / 'eski.py', 'x = 1\n')
     yaz(depo / 'dondurulan.md', '# dondurulmus bolge\n')
     _git_kur(depo)
+
+
+def _reck_plan_hazirla(k):
+    """RECK-01/02/04: planli, henuz uygulanmamis tek CHG + bos 2B raporu."""
+    _reck_hazirla(k)
+    kosu = k / 'sandbox_reck' / '_KOSU'
+    yaz(kosu / '02-KFAZ-2-MANIFEST.md', '# manifest\n\n```json\n' + json.dumps({
+        'sema': 'KFAZ2/v1',
+        'chg': [{'id': 'CHG-001', 'dosya': 'src/eski.py',
+                 'durum': 'PLANLANDI', 'req': 'REQ-001'}],
+    }, ensure_ascii=False) + '\n```\n')
+    # Bos rapor: RECK-04 temiz tabanda sessiz kalsin; mutasyon tek iddia ekler.
+    yaz(kosu / 'gate' / 'KOD-gate-2b.json',
+        json.dumps({'manifest_reconciliation': []}, ensure_ascii=False) + '\n')
+
+
+def _md_json_duzenle(k, rel, fn):
+    """Markdown icindeki ```json blogunu duzenler; blogu YENIDEN yazar."""
+    p = k / rel
+    metin = p.read_text(encoding='utf-8')
+    m = re.search(r'```json\s*(\{.*?\})\s*```', metin, re.S)
+    if not m:
+        return 'HATA: %s icinde json blogu yok' % rel
+    veri = json.loads(m.group(1))
+    fn(veri)
+    yeni = json.dumps(veri, ensure_ascii=False, indent=2)
+    p.write_text(metin[:m.start(1)] + yeni + metin[m.end(1):], encoding='utf-8')
+    return None
+
+
+def _reck01(k):
+    """Tek ihlal: KFAZ0'daki REQ-001 planin req_test eslemesinden cikarilir."""
+    return _md_json_duzenle(k, 'sandbox_reck/_KOSU/01-KFAZ-1-PLAN.md',
+                            lambda v: v.__setitem__('req_test', {}))
+
+
+def _reck02(k):
+    """Tek ihlal: CHG-001 PLANLANDI -> UYGULANMIS; dosya diff'te yok."""
+    return _md_json_duzenle(k, 'sandbox_reck/_KOSU/02-KFAZ-2-MANIFEST.md',
+                            lambda v: v['chg'][0].__setitem__('durum', 'UYGULANMIS'))
+
+
+def _reck04(k):
+    """Tek ihlal: 2B, diff'te olmayan CHG-001 icin KANITLI der."""
+    return yaz(k / 'sandbox_reck' / '_KOSU' / 'gate' / 'KOD-gate-2b.json',
+               json.dumps({'manifest_reconciliation': [
+                   {'chg_id': 'CHG-001', 'status': 'KANITLI'}]},
+                   ensure_ascii=False) + '\n')
 
 
 def _reck03(k):
@@ -616,6 +665,28 @@ def vakalar():
          lambda k: yaz(k / 'LICENSES.json', '{"paket": "GPL-3.0"}\n'),
          'DEP-05'),
         # --- chg_reconcile: git diff + plan kapsami ----------------------------
+        ('RECK-01', 'KOD', 'her REQ planinda karsilik bulur',
+         'KOD_SABLONLAR/scripts/chg_reconcile.py',
+         lambda k: ['--kosu', str(k / 'sandbox_reck' / '_KOSU'),
+                    '--taban', str(k / 'sandbox_reck' / '_KOSU' / 'gate' / 'BASELINE.json'),
+                    '--faz', 'KFAZ2'],
+         _reck01,
+         'RECK-01', {'cwd': 'sandbox_reck/gitdepo', 'kur': _reck_plan_hazirla}),
+        ('RECK-02', 'KOD', 'UYGULANMIS CHG diff te olmali',
+         'KOD_SABLONLAR/scripts/chg_reconcile.py',
+         lambda k: ['--kosu', str(k / 'sandbox_reck' / '_KOSU'),
+                    '--taban', str(k / 'sandbox_reck' / '_KOSU' / 'gate' / 'BASELINE.json'),
+                    '--faz', 'KFAZ2'],
+         _reck02,
+         'RECK-02', {'cwd': 'sandbox_reck/gitdepo', 'kur': _reck_plan_hazirla}),
+        ('RECK-04', 'KOD', '2B KANITLI iddiasi diff te dogrulanir',
+         'KOD_SABLONLAR/scripts/chg_reconcile.py',
+         lambda k: ['--kosu', str(k / 'sandbox_reck' / '_KOSU'),
+                    '--taban', str(k / 'sandbox_reck' / '_KOSU' / 'gate' / 'BASELINE.json'),
+                    '--faz', 'KFAZ2',
+                    '--gate2b', str(k / 'sandbox_reck' / '_KOSU' / 'gate' / 'KOD-gate-2b.json')],
+         _reck04,
+         'RECK-04', {'cwd': 'sandbox_reck/gitdepo', 'kur': _reck_plan_hazirla}),
         ('RECK-03', 'KOD', 'plansiz urun dosyasi kapsam ihlali',
          'KOD_SABLONLAR/scripts/chg_reconcile.py',
          lambda k: ['--kosu', str(k / 'sandbox_reck' / '_KOSU'),
