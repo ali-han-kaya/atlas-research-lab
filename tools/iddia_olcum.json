@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-20T17:32:22Z",
+  "zaman": "2026-11-20T17:48:57Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -23,11 +23,10 @@
     "IDD-03": {
       "komut": [
         "{py}",
-        "ATLAS_SABLONLAR/scripts/atlas_selftest.py",
-        "--sessiz"
+        "tools/dogrula.py"
       ],
       "rc": 0,
-      "ham": "OZ-TEST: 145/145 gecti",
+      "ham": "ATLAS oz-testi           PASS    OZ-TEST: 145/145 gecti",
       "deger": "145/145"
     },
     "IDD-04": {
