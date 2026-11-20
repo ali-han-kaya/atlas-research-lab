@@ -1,5 +1,7 @@
 # ATLAS Research Lab — English summary
 
+[![dogrula](https://github.com/ali-han-kaya/atlas-research-lab/actions/workflows/dogrula.yml/badge.svg)](https://github.com/ali-han-kaya/atlas-research-lab/actions/workflows/dogrula.yml)
+
 ATLAS Research Lab proves that a delivery's correctness must be judged by gates that run over its own bytes, not by a model's claim that the work was done. It ships the production mechanism itself — the academic audit and code pipelines, agents, templates, executable gates, self-tests and a mutation battery — and deliberately excludes the papers, corpora and session handoffs it produces. Its sharpest evidence is a frozen defective run (`DENEME/`): the fix manifest declared every fix applied while only a fraction reached the master text, and the gate of that day still said `PASS`; `./demo` reproduces that false `PASS` and returns a red verdict by design.
 
 **Canonical document:** [`README.md`](README.md) (Turkish) is the canonical description of this repository. This English file is a summary, not a translation; where the two differ, `README.md` wins.
