@@ -45,8 +45,8 @@ DEC_BASLIKLAR = ['Etik Kurul', 'Cikar Catismasi', 'Finansman', 'credit',
                  'Veri Erisilebilirligi', 'Yapay Zeka']
 
 
-def kos(komut, cwd=None):
-    r = subprocess.run([str(k) for k in komut], cwd=str(cwd or KOK),
+def kos(komut, cwd=None, env=None):
+    r = subprocess.run([str(k) for k in komut], cwd=str(cwd or KOK), env=env,
                        capture_output=True, text=True, timeout=300)
     return r.returncode, (r.stdout or '') + (r.stderr or '')
 
@@ -172,7 +172,7 @@ def qr_govde(uzun_mu):
 
 
 def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None,
-                      terminal=False):
+                      terminal=False, env=None):
     """(durum, ayrinti) dondurur. taban_rc: temiz kopyada beklenen cikis kodu.
 
     `iz` bir dize veya dize dizisi olabilir; hepsi mutasyon ciktisinda aranir.
@@ -188,7 +188,7 @@ def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None,
     komut = [sys.executable, betik] + argumanlar(kok)
     calisma = cwd or kok
 
-    rc0, o0 = kos(komut, cwd=calisma)
+    rc0, o0 = kos(komut, cwd=calisma, env=env)
     if rc0 != taban_rc:
         return 'TABAN_KIRIK', 'taban rc=%d (beklenen %d) · %s' % (
             rc0, taban_rc, o0.strip().splitlines()[-1] if o0.strip() else '')
@@ -200,7 +200,7 @@ def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None,
     if hata:
         return 'MUTASYON_UYGULANMADI', hata
 
-    rc1, o1 = kos(komut, cwd=calisma)
+    rc1, o1 = kos(komut, cwd=calisma, env=env)
     if terminal:
         if rc1 != 2:
             return 'ATESLEMEDI', 'mutasyon rc=%d (terminal icin 2 bekleniyordu)' % rc1
@@ -240,6 +240,25 @@ def _frz06(k):
 def _frz07(k):
     return _json_duzenle(k, '_KOSU/gate/BASELINE.json',
                          lambda v: v.__setitem__('temiz_agac', False))
+
+
+def _frz08_hazirla(k):
+    """FRZ-08: temiz tabanda imza iddiasi YOK; imza kontrolu sessiz kalir."""
+    return _json_duzenle(k, '_KOSU/gate/BASELINE.json',
+                         lambda v: (v.pop('temiz_agac', None),
+                                    v.pop('temiz_agac_imzasi', None)))
+
+
+def _frz08(k):
+    """Tek ihlal: temiz_agac:true + gecersiz imza; anahtar ortamda var."""
+    return _json_duzenle(k, '_KOSU/gate/BASELINE.json',
+                         lambda v: (v.__setitem__('temiz_agac', True),
+                                    v.__setitem__('temiz_agac_imzasi', '0' * 64)))
+
+
+def _frz08_env():
+    # Anahtar yalniz bu vaka icin ortamda; depoya yazilmaz.
+    return dict(os.environ, LAB_IMZA_ANAHTARI='a' * 64)
 
 
 def _frz01_02(k):
@@ -350,6 +369,18 @@ def _reck06(k):
     return yaz(k / 'sandbox_reck' / 'gitdepo' / 'dondurulan.md', '# bozulmus bolge\n')
 
 
+def _reck09_hazirla(k):
+    """RECK-09: KFAZ0 var, KFAZ1 plani henuz yok; temiz agacta diff bos."""
+    _reck_hazirla(k)
+    (k / 'sandbox_reck' / '_KOSU' / '01-KFAZ-1-PLAN.md').unlink()
+    return None
+
+
+def _reck09(k):
+    """Tek ihlal: plan yokken URUN kodu eklenir."""
+    return yaz(k / 'sandbox_reck' / 'gitdepo' / 'src' / 'plansiz.py', 'y = 1\n')
+
+
 def _tst08(k):
     """Tek ihlal: kanit JSON'undan ham rapor baglantisi cikarilir."""
     return _json_duzenle(k, 'sandbox_tst/03-KFAZ-3-TEST-EVIDENCE.json',
@@ -405,6 +436,87 @@ def _tst05(k):
                          lambda v: v['sonuc'].__setitem__('atlanan', 1))
 
 
+def _tst06(k):
+    """Tek ihlal: kapsam tabanin bir altindan da dusuk (80 -> 70)."""
+    return _json_duzenle(k, 'sandbox_tst/03-KFAZ-3-TEST-EVIDENCE.json',
+                         lambda v: v['sonuc'].__setitem__('kapsam_yuzde', 70))
+
+
+def _tst10(k):
+    """Tek ihlal: rapor, takipli kaynak dosyadan daha eski zaman damgasi tasir."""
+    rapor = k / 'sandbox_tst' / 'gate' / 'junit.xml'
+    kaynak = k / 'sandbox_tst' / 'gitdepo' / 'olcum.py'
+    eski = kaynak.stat().st_mtime - 30
+    os.utime(rapor, (eski, eski))
+    return None
+
+
+def _tst11(k):
+    """Tek ihlal: kanittaki komut kod_profil.test_komutu ile uyusmaz."""
+    return _json_duzenle(k, 'sandbox_tst/03-KFAZ-3-TEST-EVIDENCE.json',
+                         lambda v: v.__setitem__('komut', 'pytest -x'))
+
+
+def _tst12(k):
+    """Tek ihlal: kanit baska bir rapor dosyasini gosterir."""
+    rapor = k / 'sandbox_tst' / 'gate' / 'baska.xml'
+    yaz(rapor, JUNIT_TST5)
+    return _json_duzenle(k, 'sandbox_tst/03-KFAZ-3-TEST-EVIDENCE.json',
+                         lambda v: v.__setitem__('rapor', str(rapor)))
+
+
+CHK_SCOPE = '''# SCOPE
+
+| ID | Baslik | Zorunluluk | Kaynak | Gerekce |
+|---|---|---|---|---|
+| SC-001 | Giris | ZORUNLU | K | x |
+| SC-002 | Yontem | ZORUNLU | K | x |
+'''
+CHK_MASTER = '''# CHK MASTER
+
+## SC-001 Giris
+
+Metin.
+
+## SC-002 Yontem
+
+Metin.
+
+## PROVENANCE
+
+| SCOPE-ID | Bolum | Kaynak | Satir Referansi | Durum |
+|---|---|---|---|---|
+| SC-001 | Giris | K | 1 | kapsiyor |
+| SC-002 | Yontem | K | 2 | kapsiyor |
+'''
+
+
+def _chk_hazirla(k):
+    d = k / 'sandbox_chk'
+    yaz(d / '00-FAZ-0-SCOPE-CONTRACT-ve-REGISTER.md', CHK_SCOPE)
+    yaz(d / '03-FAZ-3-MASTER-v5.5.md', CHK_MASTER)
+    return None
+
+
+def _chk01(k):
+    """Tek ihlal: zorunlu SC-002 basligi kaybolur."""
+    return degistir(k, 'sandbox_chk/03-FAZ-3-MASTER-v5.5.md',
+                    '## SC-002 Yontem', '## Yontem')
+
+
+def _chk02(k):
+    """Tek ihlal: SC-002 PROVENANCE durumu kapsiyor degil."""
+    return degistir(k, 'sandbox_chk/03-FAZ-3-MASTER-v5.5.md',
+                    '| SC-002 | Yontem | K | 2 | kapsiyor |',
+                    '| SC-002 | Yontem | K | 2 | MISSING |')
+
+
+def _chk05(k):
+    """Tek ihlal: ayni markdown basligi ikinci kez eklenir (WARN)."""
+    return ekle(k, 'sandbox_chk/03-FAZ-3-MASTER-v5.5.md',
+                '\n## SC-001 Giris\n')
+
+
 def _reck08(k):
     """Tek ihlal: KFAZ2.chg liste degil; sema RECK-08 P0 verir."""
     return _md_json_duzenle(k, 'sandbox_reck/_KOSU/02-KFAZ-2-MANIFEST.md',
@@ -437,7 +549,7 @@ def _tst_hazirla(k):
     # Rapor ve kanit COMMIT'TEN SONRA yazilir: TST-10 onlari kaynaktan yeni gorur.
     yaz(tst / 'gate' / 'junit.xml', JUNIT_TST5)
     yaz(tst / 'gate' / 'BASELINE.json', json.dumps({
-        'test': {'kosan': 5, 'atlanan': 0},
+        'test': {'kosan': 5, 'atlanan': 0, 'kapsam_yuzde': 80},
         'test_adlari': [],
     }, ensure_ascii=False, indent=2) + '\n')
     yaz(tst / '03-KFAZ-3-TEST-EVIDENCE.json', json.dumps({
@@ -445,7 +557,14 @@ def _tst_hazirla(k):
         'cikis_kodu': 0,
         'rapor': str(tst / 'gate' / 'junit.xml'),
         'rapor_formati': 'junit-xml',
-        'sonuc': {'kosan': 5, 'basarisiz': 0, 'hata': 0, 'atlanan': 0},
+        'sonuc': {'kosan': 5, 'basarisiz': 0, 'hata': 0, 'atlanan': 0,
+                  'kapsam_yuzde': 80},
+    }, ensure_ascii=False, indent=2) + '\n')
+    # TST-11/12 koken karsilastirmasi: profil kanittaki komut/raporla ayni olmali.
+    yaz(k / 'kod_profil.json', json.dumps({
+        'profil': 'test',
+        'test_komutu': 'pytest -q',
+        'test_raporu': str(tst / 'gate' / 'junit.xml'),
     }, ensure_ascii=False, indent=2) + '\n')
 
 
@@ -476,13 +595,14 @@ def _pl04(k):
     return None
 
 
-def taban_ve_bulgu(kok, kapi, argumanlar, mutasyon, iz):
+def taban_ve_bulgu(kok, kapi, argumanlar, mutasyon, iz, cwd=None, env=None):
     """Kirmizi uretmeyen kural icin: temiz tabanda iz YOK, ihlalde iz VAR."""
     betik = kok / kapi
     if not betik.is_file():
         return 'EKSIK', 'kapi betigi yok: %s' % kapi
     komut = [sys.executable, betik] + argumanlar(kok)
-    rc0, o0 = kos(komut, cwd=kok)
+    calisma = cwd or kok
+    rc0, o0 = kos(komut, cwd=calisma, env=env)
     if rc0 != 0:
         return 'TABAN_KIRIK', 'taban rc=%d (beklenen 0) · %s' % (
             rc0, o0.strip().splitlines()[-1] if o0.strip() else '')
@@ -491,7 +611,7 @@ def taban_ve_bulgu(kok, kapi, argumanlar, mutasyon, iz):
     hata = mutasyon(kok)
     if hata:
         return 'MUTASYON_UYGULANMADI', hata
-    rc1, o1 = kos(komut, cwd=kok)
+    rc1, o1 = kos(komut, cwd=calisma, env=env)
     if iz not in o1:
         return 'ATESLEMEDI', 'beklenen bulgu (%s) mutasyon sonrasi ciktida yok (rc=%d)' % (iz, rc1)
     return 'GECTI-BULGU', 'taban sessiz · mutasyon bulgusu=%s (rc=%d)' % (iz, rc1)
@@ -768,6 +888,10 @@ def vakalar():
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          _frz07,
          'FRZ-07'),
+        ('FRZ-08', 'KOD', 'temiz agac imzasi dogrulanir', 'KOD_SABLONLAR/scripts/freeze_check.py',
+         lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
+         _frz08,
+         'FRZ-08', {'terminal': True, 'kur': _frz08_hazirla, 'env': _frz08_env()}),
         ('DEP-05', 'KOD', 'lisans catismasi P0', 'KOD_SABLONLAR/scripts/dep_audit.py',
          lambda k: [],
          lambda k: yaz(k / 'LICENSES.json', '{"paket": "GPL-3.0"}\n'),
@@ -830,6 +954,13 @@ def vakalar():
                     '--faz', 'KFAZ1'],
          _reck06,
          'RECK-06', {'cwd': 'sandbox_reck/gitdepo', 'kur': _reck_hazirla}),
+        ('RECK-09', 'KOD', 'plan yokken urun kodu degismez',
+         'KOD_SABLONLAR/scripts/chg_reconcile.py',
+         lambda k: ['--kosu', str(k / 'sandbox_reck' / '_KOSU'),
+                    '--taban', str(k / 'sandbox_reck' / '_KOSU' / 'gate' / 'BASELINE.json'),
+                    '--faz', 'KFAZ0'],
+         _reck09,
+         'RECK-09', {'cwd': 'sandbox_reck/gitdepo', 'kur': _reck09_hazirla}),
         # --- test_attest: ham JUnit taban karsilastirmasi ----------------------
         ('TST-04', 'KOD', 'test silinerek yesil olmaz',
          'KOD_SABLONLAR/scripts/test_attest.py',
@@ -895,6 +1026,38 @@ def vakalar():
                     '--kosu', str(k / 'sandbox_tst')],
          _tst05,
          'TST-05', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_hazirla}),
+        ('TST-06', 'KOD', 'kapsam tabanin bir altina kadar korunur',
+         'KOD_SABLONLAR/scripts/test_attest.py',
+         lambda k: ['--kanit', str(k / 'sandbox_tst' / '03-KFAZ-3-TEST-EVIDENCE.json'),
+                    '--taban', str(k / 'sandbox_tst' / 'gate' / 'BASELINE.json'),
+                    '--profil', str(k / 'kod_profil.json'),
+                    '--kosu', str(k / 'sandbox_tst')],
+         _tst06,
+         'TST-06', 'BULGU', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_hazirla}),
+        ('TST-10', 'KOD', 'rapor kaynaktan eski olamaz',
+         'KOD_SABLONLAR/scripts/test_attest.py',
+         lambda k: ['--kanit', str(k / 'sandbox_tst' / '03-KFAZ-3-TEST-EVIDENCE.json'),
+                    '--taban', str(k / 'sandbox_tst' / 'gate' / 'BASELINE.json'),
+                    '--profil', str(k / 'kod_profil.json'),
+                    '--kosu', str(k / 'sandbox_tst')],
+         _tst10,
+         'TST-10', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_hazirla}),
+        ('TST-11', 'KOD', 'kanit komutu kod_profil ile ayni',
+         'KOD_SABLONLAR/scripts/test_attest.py',
+         lambda k: ['--kanit', str(k / 'sandbox_tst' / '03-KFAZ-3-TEST-EVIDENCE.json'),
+                    '--taban', str(k / 'sandbox_tst' / 'gate' / 'BASELINE.json'),
+                    '--profil', str(k / 'kod_profil.json'),
+                    '--kosu', str(k / 'sandbox_tst')],
+         _tst11,
+         'TST-11', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_hazirla}),
+        ('TST-12', 'KOD', 'kanit raporu kod_profil ile ayni',
+         'KOD_SABLONLAR/scripts/test_attest.py',
+         lambda k: ['--kanit', str(k / 'sandbox_tst' / '03-KFAZ-3-TEST-EVIDENCE.json'),
+                    '--taban', str(k / 'sandbox_tst' / 'gate' / 'BASELINE.json'),
+                    '--profil', str(k / 'kod_profil.json'),
+                    '--kosu', str(k / 'sandbox_tst')],
+         _tst12,
+         'TST-12', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_hazirla}),
         # --- uyari/bilgi kurallari: beklenen bulgu (rc=0 olabilir) ------------
         ('PL-12', 'ATLAS', 'belirsizlik cikisi var', 'ATLAS_SABLONLAR/scripts/prompt_lint.py',
          lambda k: ['--dizin', str(k / 'sandbox_pl')],
@@ -995,6 +1158,22 @@ def vakalar():
          lambda k: _satir_sil(k, 'ATLAS_SABLONLAR/.opencode/agent/atlas-review-main.md',
                               '"input_sha256"'),
          'PL-19'),
+        # --- provenance_check: SCOPE sozlesmesi + MASTER + PROVENANCE -------------
+        ('CHK-01', 'ATLAS', 'zorunlu SCOPE-ID baslik olmali',
+         'ATLAS_SABLONLAR/scripts/provenance_check.py',
+         lambda k: [],
+         _chk01,
+         'CHK-01', {'cwd': 'sandbox_chk', 'kur': _chk_hazirla}),
+        ('CHK-02', 'ATLAS', 'zorunlu ID provenance tablosunda kapsiyor',
+         'ATLAS_SABLONLAR/scripts/provenance_check.py',
+         lambda k: [],
+         _chk02,
+         'CHK-02', {'cwd': 'sandbox_chk', 'kur': _chk_hazirla}),
+        ('CHK-05', 'ATLAS', 'baslik benzersizligi',
+         'ATLAS_SABLONLAR/scripts/provenance_check.py',
+         lambda k: [],
+         _chk05,
+         'WARN CHK-05', 'BULGU', {'cwd': 'sandbox_chk', 'kur': _chk_hazirla}),
     ]
 
 
@@ -1061,6 +1240,8 @@ def main():
         if len(vaka) >= 8 and vaka[7] == 'BULGU':
             kimlik, katman, kural, kapi, argumanlar, mutasyon, iz = vaka[:7]
             bulgu_modu = True
+            if len(vaka) >= 9 and isinstance(vaka[8], dict):
+                opsiyon = vaka[8]
         else:
             kimlik, katman, kural, kapi, argumanlar, mutasyon, iz = vaka[:7]
             bulgu_modu = False
@@ -1073,11 +1254,14 @@ def main():
             hazirla(hedef, opsiyon)
             calisma = hedef / opsiyon['cwd'] if opsiyon.get('cwd') else hedef
             if bulgu_modu:
-                durum, ayrinti = taban_ve_bulgu(hedef, kapi, argumanlar, mutasyon, iz)
+                durum, ayrinti = taban_ve_bulgu(
+                    hedef, kapi, argumanlar, mutasyon, iz, cwd=calisma,
+                    env=opsiyon.get('env'))
             else:
                 durum, ayrinti = taban_ve_mutasyon(
                     hedef, kapi, argumanlar, mutasyon, iz, cwd=calisma,
-                    terminal=bool(opsiyon.get('terminal')))
+                    terminal=bool(opsiyon.get('terminal')),
+                    env=opsiyon.get('env'))
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
 
@@ -1091,7 +1275,7 @@ def main():
         print('         %s' % ayrinti)
 
     print()
-    toplam_bulgu = sum(1 for v in tum if len(v) == 8 and v[7] == 'BULGU')
+    toplam_bulgu = sum(1 for v in tum if len(v) >= 8 and v[7] == 'BULGU')
     print('SONUC: %d/%d kural atesledi · %d/%d beklenen bulgu dogrulandi · '
           'taban temiz olmayan=%d' % (
               gecen, len(tum) - toplam_bulgu, gecen_bulgu, toplam_bulgu,

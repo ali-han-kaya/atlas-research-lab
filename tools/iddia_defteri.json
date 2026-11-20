@@ -58,7 +58,7 @@
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **71/71 cases red + 17/17 expected findings** over 86 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "**174/174**; mutation battery **78/78 cases red + 19/19 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured"
         },
         {
           "dosya": "docs/README.md",
@@ -98,15 +98,15 @@
     },
     {
       "id": "IDD-04",
-      "iddia": "mutasyon bataryasi 71/71 vaka atesledi",
+      "iddia": "mutasyon bataryasi 78/78 vaka atesledi",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **71/71 cases red + 17/17 expected findings** over 86 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "**174/174**; mutation battery **78/78 cases red + 19/19 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "SONUC: 71/71 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+          "alinti": "SONUC: 78/78 kural atesledi · 19/19 beklenen bulgu dogrulandi · taban temiz olmayan=0"
         }
       ],
       "durum": "OLCULDU",
@@ -115,19 +115,19 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "ayikla": "SONUC:\\s*(\\d+/\\d+) kural atesledi",
-      "beklenen": "71/71"
+      "beklenen": "78/78"
     },
     {
       "id": "IDD-05",
-      "iddia": "mutasyon bataryasi 17/17 beklenen bulgu",
+      "iddia": "mutasyon bataryasi 19/19 beklenen bulgu",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **71/71 cases red + 17/17 expected findings** over 86 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "**174/174**; mutation battery **78/78 cases red + 19/19 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "SONUC: 71/71 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+          "alinti": "SONUC: 78/78 kural atesledi · 19/19 beklenen bulgu dogrulandi · taban temiz olmayan=0"
         }
       ],
       "durum": "OLCULDU",
@@ -136,23 +136,23 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "ayikla": "(\\d+/\\d+) beklenen bulgu",
-      "beklenen": "17/17"
+      "beklenen": "19/19"
     },
     {
       "id": "IDD-06",
-      "iddia": "mutasyon vakasi olan kural sayisi 86",
+      "iddia": "mutasyon vakasi olan kural sayisi 95",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **71/71 cases red + 17/17 expected findings** over 86 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "**174/174**; mutation battery **78/78 cases red + 19/19 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured"
         },
         {
           "dosya": "README.md",
-          "alinti": "- **TEST EDİLDİ** — 86 kural (mutasyon vakası adıyla)"
+          "alinti": "- **TEST EDİLDİ** — 95 kural (mutasyon vakası adıyla)"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "of 121 rules, **86** are"
+          "alinti": "of 121 rules, **95** are"
         }
       ],
       "durum": "OLCULDU",
@@ -161,7 +161,7 @@
         "tools/kapsam.py"
       ],
       "ayikla": "\\|\\s*Mutasyon vakasi olan \\(TEST EDILDI\\)\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "86"
+      "beklenen": "95"
     },
     {
       "id": "IDD-07",
@@ -169,7 +169,7 @@
       "kaynaklar": [
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "of 121 rules, **86** are"
+          "alinti": "of 121 rules, **95** are"
         }
       ],
       "durum": "OLCULDU",
@@ -203,15 +203,15 @@
     },
     {
       "id": "IDD-09",
-      "iddia": "gerekcesiz bosluk kural sayisi 9",
+      "iddia": "gerekcesiz bosluk kural sayisi 0",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "- **BOŞLUK** — 9 kural: 8'i yalnız öz-testte anılıyor, 1'i hiçbir testte geçmiyor"
+          "alinti": "- **BOŞLUK** — 0 kural: 9 boşluğun tamamı mutasyon vakasıyla kapandı; yalnız öz-testte anılan 0, hiçbir testte geçmeyen 0."
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "code branch emits), and **9** are explicit gaps — 8 mentioned only in"
+          "alinti": "code branch emits), and **0** are explicit gaps — 0 mentioned only in"
         }
       ],
       "durum": "OLCULDU",
@@ -220,19 +220,19 @@
         "tools/kapsam.py"
       ],
       "ayikla": "\\|\\s*Bosluk \\(gerekce yok\\)\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "9"
+      "beklenen": "0"
     },
     {
       "id": "IDD-10",
-      "iddia": "yalniz oz-testte anilan bosluk sayisi 8",
+      "iddia": "yalniz oz-testte anilan bosluk sayisi 0",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "- **BOŞLUK** — 9 kural: 8'i yalnız öz-testte anılıyor, 1'i hiçbir testte geçmiyor"
+          "alinti": "- **BOŞLUK** — 0 kural: 9 boşluğun tamamı mutasyon vakasıyla kapandı; yalnız öz-testte anılan 0, hiçbir testte geçmeyen 0."
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "code branch emits), and **9** are explicit gaps — 8 mentioned only in"
+          "alinti": "code branch emits), and **0** are explicit gaps — 0 mentioned only in"
         }
       ],
       "durum": "OLCULDU",
@@ -241,19 +241,19 @@
         "tools/kapsam.py"
       ],
       "ayikla": "bunlardan yalniz oz-testte anilan\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "8"
+      "beklenen": "0"
     },
     {
       "id": "IDD-11",
-      "iddia": "hicbir testte gecmeyen bosluk sayisi 1",
+      "iddia": "hicbir testte gecmeyen bosluk sayisi 0",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "- **BOŞLUK** — 9 kural: 8'i yalnız öz-testte anılıyor, 1'i hiçbir testte geçmiyor"
+          "alinti": "- **BOŞLUK** — 0 kural: 9 boşluğun tamamı mutasyon vakasıyla kapandı; yalnız öz-testte anılan 0, hiçbir testte geçmeyen 0."
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "self-tests, 1 in no test at all. Gaps are"
+          "alinti": "self-tests, 0 in no test at all. All nine previous gaps now have mutation"
         }
       ],
       "durum": "OLCULDU",
@@ -262,7 +262,7 @@
         "tools/kapsam.py"
       ],
       "ayikla": "hicbir testte gecmeyen\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "1"
+      "beklenen": "0"
     },
     {
       "id": "IDD-12",
