@@ -119,8 +119,7 @@ make dogrula
 depo hijyeni, Python sözdizimi, kabuk sözdizimi, sır taraması, sır kapısı öz-testi ve üç
 öz-test paketi (ATLAS · KOD · Toolkit). Her koşuda ayrıca demo 0/2 öz-testi geçici
 fikstürlerle ön kontrol olarak çalışır; sayılan sekiz kaleme dahil değildir. Sayıları
-README'ye elle yazmayız — betikler kendileri basar. Model çağrısı yoktur: yerel batarya
-**$0**. İngilizce hızlı başlangıç: [`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md).
+README'ye elle yazmayız — betikler kendileri basar. Model çağrısı yoktur: yerel batarya **$0**. İngilizce hızlı başlangıç: [`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md).
 
 ### `./demo` — tek komutla kırmızı hüküm
 
