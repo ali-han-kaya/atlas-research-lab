@@ -23,7 +23,7 @@ Kullanim: python3 scripts/secret_scan.py [--diff] [--dizin .] [--json]
   --diff : yalniz `git diff --name-only HEAD` dosyalarini tarar (varsayilan)
   --tum  : calisma agacindaki tum metin dosyalarini tarar
 """
-import importlib.util, json, os, pathlib, re, subprocess, sys
+import hashlib, importlib.util, json, os, pathlib, re, subprocess, sys
 
 JSON_CIK = "--json" in sys.argv
 TUM = "--tum" in sys.argv
@@ -33,6 +33,66 @@ if "--dizin" in sys.argv:
     if i + 1 < len(sys.argv):
         dizin = sys.argv[i + 1]
 KOK = pathlib.Path(dizin).resolve()
+ARAC_KOK = pathlib.Path(__file__).resolve().parents[2]
+
+# Tam agac taramasinda UCUNCU TARAF agaclarini gezme. Bunlar taranan urunun
+# kaynagi degil, kurulumun getirdigi bagimliliklardir; burada bulunan bir ornek
+# deponun sizintisi degildir. .git zaten disaridaydi; .venv/node_modules gibi
+# agaclar ayni sinifta. KOD'un kendi `tools/secret_fixtures.json` gibi istisna
+# kayitlari bu filtreden etkilenmez (onlar birinci taraf agacindadir).
+TUM_ATLA_DIZIN = {".git", ".venv", "venv", "node_modules", "site-packages",
+                  ".pytest_cache", ".mypy_cache", ".ruff_cache"}
+
+# Fikstur muafiyeti YALNIZ bu iki birinci taraf dosyada ve YALNIZ tam satir
+# hash'i eslesirse gecerlidir. Dosya adi tek basina yetmez; desen, uzanti veya
+# dizin adiyla toplu muafiyet YOKTUR. Boylece ayni sahte deger baska bir dosyaya
+# tasinir ya da ayni satira gercek bir sir eklenirse kapi yine atesler.
+FIKSTUR_DOSYALARI = {
+    "docs/OLCUM-02-CANLI-KOSU.md",
+    "KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_selftest.py",
+}
+FIKSTUR_DOSYASI = ARAC_KOK / "tools" / "secret_fixtures.json"
+
+def _satir_hash(satir):
+    return hashlib.sha256(satir.encode("utf-8")).hexdigest()
+
+
+def fikstur_kayitlari():
+    """(dosya, satir_sha256) -> kayit. Manifest yoksa bos; bozuksa FAIL-CLOSED.
+
+    Manifest TARANAN agactan degil, ARACIN KENDI deposundan okunur. `--dizin`
+    ile baska bir depo taranirken hedefin kendi manifestiyle kendini muaf
+    tutmasi boylece MUMKUN DEGILDIR. Yalniz KOK == ARAC_KOK iken uygulanir.
+    """
+    if not FIKSTUR_DOSYASI.is_file() or KOK != ARAC_KOK:
+        return {}
+    try:
+        d = json.loads(FIKSTUR_DOSYASI.read_text(encoding="utf-8"))
+    except Exception as e:
+        print(f"FAIL SEC-00: fikstur manifesti okunamadi: {e}", file=sys.stderr)
+        sys.exit(1)
+    if not isinstance(d, dict) or not isinstance(d.get("fiksturler"), list):
+        print("FAIL SEC-00: fikstur manifesti semasi gecersiz", file=sys.stderr)
+        sys.exit(1)
+    kayitlar = {}
+    for k in d["fiksturler"]:
+        if not isinstance(k, dict):
+            print("FAIL SEC-00: fikstur kaydi nesne degil", file=sys.stderr)
+            sys.exit(1)
+        dosya = str(k.get("dosya", "")).replace("\\", "/")
+        h = str(k.get("satir_sha256", ""))
+        if (dosya not in FIKSTUR_DOSYALARI or
+                not re.fullmatch(r"[0-9a-f]{64}", h) or
+                not str(k.get("gerekce", "")).strip() or
+                not str(k.get("kanit", "")).strip()):
+            print(f"FAIL SEC-00: fikstur kaydi gecersiz/izinli dosya disinda: {dosya!r}",
+                  file=sys.stderr)
+            sys.exit(1)
+        if (dosya, h) in kayitlar:
+            print(f"FAIL SEC-00: yinelenen fikstur kaydi: {dosya}", file=sys.stderr)
+            sys.exit(1)
+        kayitlar[(dosya, h)] = k
+    return kayitlar
 
 
 def v4_aday_yollar():
@@ -133,6 +193,7 @@ def v4_yukle():
 
 v4, v4_yol = v4_yukle()
 KISMI = v4 is None
+FIKSTUR = {} if KISMI else fikstur_kayitlari()
 if KISMI:
     # Kalip TABANI yok. Yine de YAPISAL (kalip listesine bagli OLMAYAN)
     # kontroller kosar; bunlar tek basina "temiz" beyani URETEMEZ.
@@ -151,7 +212,9 @@ if KISMI:
 
 def hedef_dosyalar():
     if TUM:
-        return [p for p in KOK.rglob("*") if p.is_file() and ".git" not in p.parts]
+        return [p for p in KOK.rglob("*")
+                if p.is_file()
+                and not any(x in TUM_ATLA_DIZIN for x in p.relative_to(KOK).parts[:-1])]
     # K19 (bu turda olculdu): yalniz `git diff` okumak, EKLENEN (izlenmeyen) bir
     # sir dosyasini HIC gormemek demektir — `src/gizli.pem` fikstürü kanit.
     # `chg_reconcile` ayni bosluğu 24.08'de kapatmisti; burada acik kalmisti.
@@ -219,7 +282,7 @@ def _onbellek_yolu(rel):
     return ONBELLEK_DIZIN_ADI in pathlib.PurePosixPath(rel.replace(os.sep, "/")).parts[:-1]
 KISMI_DOC_ENV = re.compile(r"(^|/)(\.env\.example|\.env\.sample|\.env\.template)$")
 
-bulgular, notlar, atlanan = [], [], []
+bulgular, notlar, atlanan, fikstur_muaf = [], [], [], []
 for p in hedef_dosyalar():
     if not p.exists() or not p.is_file():
         continue
@@ -246,6 +309,7 @@ for p in hedef_dosyalar():
     except Exception:
         atlanan.append(rel); continue
 
+    satirlar = metin.splitlines()
     if KISMI:
         # Kalip TABANI yok. Yalniz YAPISAL olarak tartismasiz gostergeler:
         # bunlar bir "kalip listesi" degildir, dosya bicimi imzasidir.
@@ -262,6 +326,10 @@ for p in hedef_dosyalar():
         for m in re.finditer(kalip, metin):       # D2: ilk eslesmede DURMA
             satir = metin[: m.start()].count("\n") + 1
             konum = f"{rel}:{satir}"
+            _h = _satir_hash(satirlar[satir - 1]) if 0 < satir <= len(satirlar) else ""
+            if (rel.replace("\\", "/"), _h) in FIKSTUR:
+                fikstur_muaf.append(konum)
+                continue
             yer_tutucu = v4.looks_like_placeholder(m.group(0))
             if yer_tutucu or dokuman_env:
                 # OTOMATIK INDIRGEME YOK: gorunur kalir, insana birakilir
@@ -278,7 +346,9 @@ rapor = {"sema": "SECRET-SCAN/v1", "kalip_kaynagi": v4_yol or "YOK (KISMI MOD)",
          "kismi_mod": KISMI,
          "kalip_sayisi": len(KISMI_IMZALAR) if KISMI else len(v4.SECRET_PATTERNS),
          "taranan_kapsam": "tum-agac" if TUM else "git-diff-HEAD",
-         "atlanan_dosya": len(atlanan), "p0": p0, "p1": p1, "bulgular": bulgular}
+         "haric_dizinler": sorted(TUM_ATLA_DIZIN) if TUM else [],
+         "atlanan_dosya": len(atlanan), "fikstur_muafiyeti": len(fikstur_muaf),
+         "p0": p0, "p1": p1, "bulgular": bulgular}
 
 if JSON_CIK:
     print(json.dumps(rapor, ensure_ascii=False, indent=2))
@@ -291,6 +361,7 @@ else:
         print("       Bu sonuc 'temiz' DEGILDIR. OLCULMEYEN kaydi acilmali.")
     else:
         print(f"SECRET-SCAN {'FAIL' if p0 else 'PASS'} — kalip kaynagi: {v4_yol} "
-              f"({len(v4.SECRET_PATTERNS)} kalip) · P0={p0} P1={p1} · atlanan={len(atlanan)}")
+              f"({len(v4.SECRET_PATTERNS)} kalip) · P0={p0} P1={p1} · "
+              f"atlanan={len(atlanan)} · fikstur={len(fikstur_muaf)}")
 # exit: 1 = bulgu var · 3 = KISMI (bulgu yok ama TAM tarama kosmadi) · 0 = temiz
 sys.exit(1 if p0 else (3 if KISMI else 0))

@@ -439,9 +439,9 @@ def _run_all(tmp, pkg_root):
     # SP-6: yer tutucu ipucu iceren GERCEK formatli anahtarlar -> P0 kalmali
     sec = j(tmp, "sirli")
     write(j(sec, "conf.py"), (
-        'OPENAI_KEY = "' + 'sk-' + 'test-AbCdEfGhIjKlMnOpQrStUvWxYz012345' + '"\n' +
-        'AWS = "' + 'AKIA' + 'XXXQ7PLXR4TYB8NC' + '"\n' +
-        'password = "' + 'prod-live-' + 'key-9f2ac31bd77e4a10' + '"\n'))
+        'OPENAI_KEY = "sk-test-AbCdEfGhIjKlMnOpQrStUvWxYz012345"\n'
+        'AWS = "AKIAXXXQ7PLXR4TYB8NC"\n'
+        'password = "prod-live-key-9f2ac31bd77e4a10"\n'))
     rc, d, _ = run(VERIFY, sec, "--sessiz")
     check("SP-6", "yer tutucu ipucu gercek anahtari otomatik indirgemez",
           rc == 1 and d["counts"]["P0"] >= 3,
