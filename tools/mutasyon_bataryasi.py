@@ -3,10 +3,13 @@
 """mutasyon_bataryasi — yayimlanan kapilarin GERCEKTEN atesledigini olcer.
 
 NEDEN VAR
-  Bir kapi "PASS" diyorsa, o kapinin bir ihlali yakalayabildigi ayri bir olcumle
-  gosterilmelidir. Aksi halde yesil, kapinin degil girdinin ozelligidir. Bu betik
-  her vaka icin once TEMIZ TABAN alir, sonra ayni kopyada tek bir ihlal uretir ve
-  kapinin kirmiziya dondugunu olcer. Ikisi birlikte olmadan vaka GECMEZ.
+  Bir kapi "PASS" diyorsa, o kapinin tanimli sozlesmesini uyguladigi ayri bir
+  olcumle gosterilmelidir. Aksi halde yesil, kapinin degil girdinin ozelligidir.
+  Bu betik her vaka icin once TEMIZ TABAN alir (hedef bulgu tabanda YOKTUR), sonra
+  ayni kopyada tek bir ihlal uretir. Hata vakasinda kapi rc!=0 vermeli ve yalniz
+  hedef kural kimligini basmalidir; beklenen-bulgu vakasinda rc=0 olabilir, ama
+  hedef uyari/bulgu isareti mutasyon sonrasi ciktida BULUNMALIDIR. Temiz taban ve
+  sozlesme birlikte saglanmadan vaka GECMEZ.
 
 NE OLCMEZ
   Model cagirmaz, ag kullanmaz, gercek makale uretmez. Olctugu sey kapi
@@ -16,7 +19,8 @@ KULLANIM
   python3 tools/mutasyon_bataryasi.py [--ayrintili]
 
 CIKIS
-  0  : butun vakalar atesledi (taban temiz + mutasyon kirmizi)
+  0  : butun vakalar sozlesmesini sagladi (taban sessiz; hata rc!=0 veya
+       beklenen-bulgu isaretli)
   1  : en az bir vaka ateslemedi / taban kirlendi / mutasyon uygulanamadi
 """
 import hashlib
