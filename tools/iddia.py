@@ -38,6 +38,7 @@ KULLANIM
   python3 tools/iddia.py --sadece IDD-01,IDD-24
   python3 tools/iddia.py --yaz            # ham kanit anlik goruntusunu yenile
 """
+import concurrent.futures
 import datetime
 import json
 import re
@@ -170,21 +171,53 @@ def denetle_olcum(defter, olcum):
             raise DefterHatasi('%s: ham kanit komutu liste degil' % eid)
 
 
-def komut_kos(argv, onbellek):
-    anahtar = tuple(argv)
-    if anahtar in onbellek:
-        return onbellek[anahtar]
+def _komut_calistir(argv):
     gercek = [sys.executable if a == '{py}' else a for a in argv]
     try:
         sonuc = subprocess.run(gercek, cwd=str(KOK), capture_output=True,
                                text=True, timeout=ZAMAN_ASIMI)
-        kayit = (sonuc.returncode, (sonuc.stdout or '') + (sonuc.stderr or ''))
+        return (sonuc.returncode, (sonuc.stdout or '') + (sonuc.stderr or ''))
     except subprocess.TimeoutExpired:
-        kayit = (124, 'ZAMAN ASIMI (%d s)' % ZAMAN_ASIMI)
+        return (124, 'ZAMAN ASIMI (%d s)' % ZAMAN_ASIMI)
     except OSError as e:
-        kayit = (125, 'KOSULAMADI: %s' % e)
+        return (125, 'KOSULAMADI: %s' % e)
+
+
+def komut_kos(argv, onbellek):
+    anahtar = tuple(argv)
+    if anahtar in onbellek:
+        return onbellek[anahtar]
+    kayit = _komut_calistir(argv)
     onbellek[anahtar] = kayit
     return kayit
+
+
+def _tekil_komutlar(defter, sadece, ag, yaz):
+    """Ayni olcum komutunu bir kez kos; defter sirasini koru."""
+    komutlar = []
+    gorulen = set()
+    for kayit in defter['iddialar']:
+        if sadece and kayit['id'] not in sadece:
+            continue
+        durum = kayit['durum']
+        if durum == 'OLCULDU' or (durum == 'AG_GEREKLI' and ag and not yaz):
+            anahtar = tuple(kayit['komut'])
+            if anahtar not in gorulen:
+                gorulen.add(anahtar)
+                komutlar.append(anahtar)
+    return komutlar
+
+
+def _paralel_olc(komutlar, onbellek):
+    """Bagimsiz olcumleri paralel kos; cikti sirasi defter sirasinda kalir."""
+    if not komutlar:
+        return
+    with concurrent.futures.ThreadPoolExecutor(
+            max_workers=min(4, len(komutlar))) as havuz:
+        gelecekler = {anahtar: havuz.submit(_komut_calistir, list(anahtar))
+                      for anahtar in komutlar}
+        for anahtar, gelecek in gelecekler.items():
+            onbellek[anahtar] = gelecek.result()
 
 
 def taze(kayit, onbellek):
@@ -258,6 +291,7 @@ def main(argv):
             denetle_olcum(defter, olcum)
     except DefterHatasi as e:
         print('DEFTER BOZUK: %s' % e)
+        print('IDDIA FAIL — defter: %s' % e)
         print('HUKUM: DEFTER BOZUK — hicbir iddia olculmedi')
         return 2
 
@@ -274,6 +308,10 @@ def main(argv):
     print()
 
     onbellek = {}
+    komutlar = _tekil_komutlar(defter, sadece, ag, yaz)
+    if komutlar:
+        print('  olcum: %d tekil komut paralel kosuldu' % len(komutlar))
+    _paralel_olc(komutlar, onbellek)
     satirlar = []
     yeni_olcum = {}
     for kayit in defter['iddialar']:
@@ -330,6 +368,18 @@ def main(argv):
 
     olculen = [s for s in satirlar if s[0] in ('PASS', 'FAIL')]
     kalan = [s for s in satirlar if s[0] == 'FAIL']
+
+    if kalan:
+        beklenenler = {k['id']: k.get('beklenen', '—')
+                       for k in defter['iddialar']}
+        kaynaklar = {}
+        for kayit in defter['iddialar']:
+            kaynaklar[kayit['id']] = ', '.join(dict.fromkeys(
+                x['dosya'] for x in kayit['kaynaklar']))
+        print('IDDIA FAIL — ' + ' | '.join(
+            '%s: beyan=%s · olcum=%s · kaynak=%s · %s'
+            % (s[1], beklenenler.get(s[1], '—'), s[3],
+               kaynaklar.get(s[1], '—'), s[4]) for s in kalan))
     ag_sayisi = len([s for s in satirlar if s[0] == 'AG'])
     beyan = len([s for s in satirlar if s[0] == 'BEYAN'])
     olculmedi = len([s for s in satirlar if s[0] == 'OLCULMEDI'])
