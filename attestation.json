@@ -1,5 +1,5 @@
 {
-  "commit": "381574635b5f087b82d7bd22f88023487f056ad4",
+  "commit": "d7db2158cc50cd749edcb599b77faf61f5e12f57",
   "file_count": 243,
   "files": [
     {
@@ -1205,8 +1205,8 @@
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "3dd23d154955f866dc9bdb106b88cadb720af4c682d68ba0b0ab5d07f0e53a1c",
-      "size": 20265
+      "sha256": "9ebb079986d8945954f882f88bde459e4af4471b1da419fda80b139780423640",
+      "size": 20366
     },
     {
       "mode": "100644",
@@ -1253,8 +1253,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "4d2d92dceb507a9dc78bc6d5e78d8cbf12937fce0c33c7c91367eeb9d208f5bb",
-      "size": 7291
+      "sha256": "d0df87c10ca26f892e66a9c99479007b3b9a0e4d62cfe486218fa08bf0e732f3",
+      "size": 7282
     },
     {
       "mode": "100644",
@@ -1265,8 +1265,8 @@
     {
       "mode": "100644",
       "path": "docs/MUTASYON_KAPSAM.md",
-      "sha256": "2028854558559cdb7c4c467971c47253a63e19585310b60ff4f3227f34a245e1",
-      "size": 24196
+      "sha256": "811f1a2484ac957458e5162f8520626bd4265ef642eae4f04d9b8c29d7ccd4cd",
+      "size": 25101
     },
     {
       "mode": "100644",
@@ -1385,8 +1385,8 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "476324dc629ee490744e79317deccf42d0b1dd7d00b1d45e19f6b6498d32a361",
-      "size": 20566
+      "sha256": "42f4f3cce0ed735363d5163ad5add4455128adfa33a7f9802551f84fd832eb9f",
+      "size": 20576
     },
     {
       "mode": "100644",
@@ -1409,8 +1409,8 @@
     {
       "mode": "100644",
       "path": "tools/kapsam.py",
-      "sha256": "2f8e8851811baeabffb33ecd30ac2155a06fb945672341a5fd6b8336baf9483d",
-      "size": 19232
+      "sha256": "a69b5bb8ee75d29c4bda249641ec168c8d1be4ff088d98e59fb6cd77b30b6d40",
+      "size": 21140
     },
     {
       "mode": "100644",
@@ -1461,7 +1461,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-20T13:31:29Z",
+  "generated_at": "2026-11-20T14:16:46Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1476,6 +1476,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "2f9d5b6a35aeb205384a8ff25ea92eba6d4314aa",
-  "tree_sha256": "8e18630a3d43264aaa069784c7c977a351a21ba2c9995c36f1e66bd45b498cfd"
+  "tree": "66226484380a9c5372c1ef79c797437f2a20cace",
+  "tree_sha256": "baccd8b0968032f1fd434e6ebc675b06a8ada1342976f614487fb2e426592bd0"
 }
