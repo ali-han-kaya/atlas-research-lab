@@ -15,11 +15,11 @@ bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus
 |---|---|
 | Kapi betigi | 21 |
 | Bildirilen kural | 122 |
-| Mutasyon vakasi olan (TEST EDILDI) | 80 |
+| Mutasyon vakasi olan (TEST EDILDI) | 83 |
 | Gerekceli kapsam disi | 27 |
-| Bosluk (gerekce yok) | 15 |
+| Bosluk (gerekce yok) | 12 |
 | — bunlardan yalniz oz-testte anilan | 10 |
-| — hicbir testte gecmeyen | 5 |
+| — hicbir testte gecmeyen | 2 |
 
 ## Risk sirasi (51 kural)
 
@@ -45,9 +45,9 @@ vaka aldi; durum sutunu guncel envanterden okunur.
 | 14 | TST-11 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | Kanittaki komut kod_profil ile ayni olmali; baska komutun kaniti sayilmaz. |
 | 15 | TST-12 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | Kanittaki rapor yolu kod_profil ile ayni olmali; baska rapor gosterilemez. |
 | 16 | TST-09 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Test komutunun cikis kodu kayitli olmali; kosup kosmadigi bilinmeyen test yesil sayilmaz. |
-| 17 | TST-01 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | Basarisiz test sayisi sifir olmali; kirmizi testle PASS verilemez. |
-| 18 | TST-02 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | Hatali test sayisi sifir olmali; altyapi hatasi yesil sayilmaz. |
-| 19 | TST-03 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | En az bir test kosmali; sifir test temiz degildir. |
+| 17 | TST-01 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Basarisiz test sayisi sifir olmali; kirmizi testle PASS verilemez. |
+| 18 | TST-02 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Hatali test sayisi sifir olmali; altyapi hatasi yesil sayilmaz. |
+| 19 | TST-03 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | En az bir test kosmali; sifir test temiz degildir. |
 | 20 | TST-05 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | Atlanan test tabandan fazla olamaz; test atlayarak yesil olunmaz. |
 | 21 | TST-06 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | Kapsam tabanin bir altina kadar korunmali; sessiz kapsam kaybi P1. |
 | 22 | DEP-01 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
@@ -83,15 +83,14 @@ vaka aldi; durum sutunu guncel envanterden okunur.
 
 ## Sonraki dilim
 
-Asagidaki uc kural bu turda kapatilmadi; hala hicbir testte
-gorunmeyen 5 kuralin risk sirasindaki ilk ucudur. Bir sonraki
+Asagidaki kural(lar) bu turda kapatilmadi; hala hicbir testte
+gorunmeyen 2 kuralin risk sirasindaki ilk 2 tanesidir. Bir sonraki
 dilimde gercek vakayla kapatilacak; sessizce sayidan dusulmedi.
 
 | Kural | Betik | Neden test edilemedi / neyi korur |
 |---|---|---|
-| TST-01 | `test_attest.py` | Basarisiz test sayisi sifir olmali; kirmizi testle PASS verilemez. |
-| TST-02 | `test_attest.py` | Hatali test sayisi sifir olmali; altyapi hatasi yesil sayilmaz. |
-| TST-03 | `test_attest.py` | En az bir test kosmali; sifir test temiz degildir. |
+| TST-05 | `test_attest.py` | Atlanan test tabandan fazla olamaz; test atlayarak yesil olunmaz. |
+| TST-06 | `test_attest.py` | Kapsam tabanin bir altina kadar korunmali; sessiz kapsam kaybi P1. |
 
 ## Kapsam disi siniflari
 
@@ -259,9 +258,9 @@ Toplam: 21 betik · 122 tekil kural; her satirda Envanter = Baslikta ∪ Bolum b
 | `secret_scan.py` | SEC-03 | SEC-03 | TEST EDILDI | mutasyon vakasi: SEC-03 |
 | `secret_scan.py` | SEC-04 | — | KAPSAM DISI | olu-kimlik: SEC-04 yalniz baslikta bildirilir; hicbir kod dali bu kimligi basmiyor (atlanan dosyalar yalniz sayilir) |
 | `secret_scan.py` | SEC-05 | SEC-05 | TEST EDILDI | mutasyon vakasi: SEC-05 |
-| `test_attest.py` | TST-01 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `test_attest.py` | TST-02 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `test_attest.py` | TST-03 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
+| `test_attest.py` | TST-01 | TST-01 | TEST EDILDI | mutasyon vakasi: TST-01 |
+| `test_attest.py` | TST-02 | TST-02 | TEST EDILDI | mutasyon vakasi: TST-02 |
+| `test_attest.py` | TST-03 | TST-03 | TEST EDILDI | mutasyon vakasi: TST-03 |
 | `test_attest.py` | TST-04 | TST-04 | TEST EDILDI | mutasyon vakasi: TST-04 |
 | `test_attest.py` | TST-05 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
 | `test_attest.py` | TST-06 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |

@@ -117,6 +117,12 @@ JUNIT_TST5 = ('<?xml version="1.0"?><testsuite tests="5" failures="0" errors="0"
               'skipped="0"></testsuite>')
 JUNIT_TST2 = ('<?xml version="1.0"?><testsuite tests="2" failures="0" errors="0" '
               'skipped="0"></testsuite>')
+JUNIT_TST5_FAIL = ('<?xml version="1.0"?><testsuite tests="5" failures="1" errors="0" '
+                   'skipped="0"></testsuite>')
+JUNIT_TST5_ERROR = ('<?xml version="1.0"?><testsuite tests="5" failures="0" errors="1" '
+                    'skipped="0"></testsuite>')
+JUNIT_TST0 = ('<?xml version="1.0"?><testsuite tests="0" failures="0" errors="0" '
+              'skipped="0"></testsuite>')
 
 SCOPE_TR = '# SCOPE\n\nTransliterasyon sistemi: DMG (DIN 31635).\n'
 METIN_TR = '# Makale\n\nMetinde sek\u00eene terimi bir kez ge\u00e7er.\n'
@@ -340,6 +346,36 @@ def _tst09(k):
     """Tek ihlal: kanittan test komutunun cikis kodu silinir."""
     return _json_duzenle(k, 'sandbox_tst/03-KFAZ-3-TEST-EVIDENCE.json',
                          lambda v: v.pop('cikis_kodu', None))
+
+
+def _tst01(k):
+    """Tek ihlal: ham JUnit 1 basarisiz test der; beyan da ayni gercegi soyler."""
+    yaz(k / 'sandbox_tst' / 'gate' / 'junit.xml', JUNIT_TST5_FAIL)
+    return _json_duzenle(k, 'sandbox_tst/03-KFAZ-3-TEST-EVIDENCE.json',
+                         lambda v: (v['sonuc'].__setitem__('basarisiz', 1),
+                                    v.__setitem__('cikis_kodu', 1)))
+
+
+def _tst02(k):
+    """Tek ihlal: ham JUnit 1 hatali test der; beyan da ayni gercegi soyler."""
+    yaz(k / 'sandbox_tst' / 'gate' / 'junit.xml', JUNIT_TST5_ERROR)
+    return _json_duzenle(k, 'sandbox_tst/03-KFAZ-3-TEST-EVIDENCE.json',
+                         lambda v: (v['sonuc'].__setitem__('hata', 1),
+                                    v.__setitem__('cikis_kodu', 1)))
+
+
+def _tst_zero_hazirla(k):
+    """TST-03: taban kosan=0; boylece sifir-test ihlali TST-04'u tetiklemez."""
+    _tst_hazirla(k)
+    return _json_duzenle(k, 'sandbox_tst/gate/BASELINE.json',
+                         lambda v: v['test'].__setitem__('kosan', 0))
+
+
+def _tst03(k):
+    """Tek ihlal: ham JUnit sifir test der; beyan da sifir kosan der."""
+    yaz(k / 'sandbox_tst' / 'gate' / 'junit.xml', JUNIT_TST0)
+    return _json_duzenle(k, 'sandbox_tst/03-KFAZ-3-TEST-EVIDENCE.json',
+                         lambda v: v['sonuc'].__setitem__('kosan', 0))
 
 
 def _tst_hazirla(k):
@@ -759,6 +795,30 @@ def vakalar():
                     '--kosu', str(k / 'sandbox_tst')],
          _tst09,
          'TST-09', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_hazirla}),
+        ('TST-01', 'KOD', 'basarisiz test sifir olmali',
+         'KOD_SABLONLAR/scripts/test_attest.py',
+         lambda k: ['--kanit', str(k / 'sandbox_tst' / '03-KFAZ-3-TEST-EVIDENCE.json'),
+                    '--taban', str(k / 'sandbox_tst' / 'gate' / 'BASELINE.json'),
+                    '--profil', str(k / 'kod_profil.json'),
+                    '--kosu', str(k / 'sandbox_tst')],
+         _tst01,
+         'TST-01', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_hazirla}),
+        ('TST-02', 'KOD', 'hatali test sifir olmali',
+         'KOD_SABLONLAR/scripts/test_attest.py',
+         lambda k: ['--kanit', str(k / 'sandbox_tst' / '03-KFAZ-3-TEST-EVIDENCE.json'),
+                    '--taban', str(k / 'sandbox_tst' / 'gate' / 'BASELINE.json'),
+                    '--profil', str(k / 'kod_profil.json'),
+                    '--kosu', str(k / 'sandbox_tst')],
+         _tst02,
+         'TST-02', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_hazirla}),
+        ('TST-03', 'KOD', 'sifir test temiz degildir',
+         'KOD_SABLONLAR/scripts/test_attest.py',
+         lambda k: ['--kanit', str(k / 'sandbox_tst' / '03-KFAZ-3-TEST-EVIDENCE.json'),
+                    '--taban', str(k / 'sandbox_tst' / 'gate' / 'BASELINE.json'),
+                    '--profil', str(k / 'kod_profil.json'),
+                    '--kosu', str(k / 'sandbox_tst')],
+         _tst03,
+         'TST-03', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_zero_hazirla}),
         # --- uyari/bilgi kurallari: beklenen bulgu (rc=0 olabilir) ------------
         ('PL-12', 'ATLAS', 'belirsizlik cikisi var', 'ATLAS_SABLONLAR/scripts/prompt_lint.py',
          lambda k: ['--dizin', str(k / 'sandbox_pl')],
