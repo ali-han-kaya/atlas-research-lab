@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-20T11:42:18Z",
+  "zaman": "2026-11-20T11:58:24Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -36,8 +36,8 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 67/67 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
-      "deger": "67/67"
+      "ham": "SONUC: 70/70 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "deger": "70/70"
     },
     "IDD-05": {
       "komut": [
@@ -45,7 +45,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 67/67 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "ham": "SONUC: 70/70 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
       "deger": "17/17"
     },
     "IDD-06": {
@@ -54,8 +54,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Mutasyon vakasi olan (TEST EDILDI) | 83 |",
-      "deger": "83"
+      "ham": "| Mutasyon vakasi olan (TEST EDILDI) | 86 |",
+      "deger": "86"
     },
     "IDD-07": {
       "komut": [
@@ -81,8 +81,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Bosluk (gerekce yok) | 12 |",
-      "deger": "12"
+      "ham": "| Bosluk (gerekce yok) | 9 |",
+      "deger": "9"
     },
     "IDD-10": {
       "komut": [
@@ -90,8 +90,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| — bunlardan yalniz oz-testte anilan | 10 |",
-      "deger": "10"
+      "ham": "| — bunlardan yalniz oz-testte anilan | 8 |",
+      "deger": "8"
     },
     "IDD-11": {
       "komut": [
@@ -99,8 +99,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| — hicbir testte gecmeyen | 2 |",
-      "deger": "2"
+      "ham": "| — hicbir testte gecmeyen | 1 |",
+      "deger": "1"
     },
     "IDD-12": {
       "komut": [
