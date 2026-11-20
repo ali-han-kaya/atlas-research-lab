@@ -68,6 +68,11 @@ jobs:
       - name: Guvenlik raporu guncel mi
         run: git diff --exit-code docs/GUVENLIK.md
 
+      # Demo 0/2: gecici fiksturlerle yesil (rc=0) ve bozuk (rc=2) sozlesmesini
+      # ayri ayri dogrula. DENEME/ degismez; kaynak yalnizca gecici kopyada okunur.
+      - name: Demo 0/2 öz-testi
+        run: make demo-selftest
+
       # Demo bilerek rc=1 doner; bu adim "kirmizi gercekten geldi mi" sorusunu
       # sorar. rc=0 (kirmizi yanmadi) veya rc=2 (fikstur bozuk) basarisizdir.
       - name: Demo beklenen kirmiziyi veriyor
