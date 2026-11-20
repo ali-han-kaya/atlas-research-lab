@@ -36,6 +36,7 @@ CIKIS: 0 = hukme giren kalemlerin hepsi gecti (CALISTIRILMADI varsa bile) ·
 OLG-1'in kaniti `attestation.json`'dir; yoksa/bozuksa FAIL'dir, CALISTIRILMADI
 degil. Sahte canak (commit, tarihce) uretilmez.
 """
+import hashlib
 import json
 import os
 import re
@@ -59,8 +60,10 @@ SIR_KALIPLARI = [
     ('slack', re.compile(r'xox[bap]-[A-Za-z0-9-]{10,}')),
     ('google', re.compile(r'AIza[0-9A-Za-z_-]{35}')),
 ]
-# Kendi sir tarayicisinin test fiksturleri: deger uydurma, bicim gercek.
-FIKSTUR = ('AKIAXXX', 'AKIA1234567890')
+# Kendi sir tarayicisinin test fiksturleri DESEN/DOSYA ile degil, tam satir
+# SHA-256'siyla susturulur. Manifest aracin kendi deposundadir; hedefin
+# getirdigi bir manifest otomatik okunmaz.
+FIKSTUR_DOSYASI = os.path.join(KOK, 'tools', 'secret_fixtures.json')
 # Gercek PEM anahtarinin basligin ALTINDA uzun base64 govdesi vardir. Ornek
 # komutlarda gecen `-----BEGIN ... KEY-----\\nMII...` bu desene uymaz; ham grep
 # saymak yerine gercek bicimi ariyoruz.
@@ -138,7 +141,36 @@ def sh_sozdizimi():
     return not kotu, '%d dosya' % sayi, kotu
 
 
+def _fikstur_kumesi():
+    try:
+        with open(FIKSTUR_DOSYASI, encoding='utf-8') as f:
+            veri = json.load(f)
+        if not isinstance(veri, dict) or not isinstance(veri.get('fiksturler'), list):
+            raise ValueError('fiksturler listesi yok')
+        kume = set()
+        for k in veri['fiksturler']:
+            if not isinstance(k, dict):
+                raise ValueError('fikstur kaydi nesne degil')
+            rel = str(k.get('dosya', '')).replace('\\', '/')
+            h = str(k.get('satir_sha256', ''))
+            if (not rel or rel.startswith('/') or '..' in rel.split('/')
+                    or not re.fullmatch(r'[0-9a-f]{64}', h)
+                    or not str(k.get('gerekce', '')).strip()
+                    or not str(k.get('kanit', '')).strip()):
+                raise ValueError('gecersiz kayit: %r' % rel)
+            if (rel, h) in kume:
+                raise ValueError('yinelenen kayit: %r' % rel)
+            kume.add((rel, h))
+        return kume, None
+    except Exception as e:
+        # Fail-closed: manifest okunamazsa sir taramasi temiz sayilmaz.
+        return None, str(e)[:180]
+
+
 def sir_tarama():
+    fikstur, hata = _fikstur_kumesi()
+    if fikstur is None:
+        return False, 'fikstur manifesti hatasi', [hata]
     kotu = []
     for tam in gez():
         if os.path.getsize(tam) > 2 * 1024 * 1024:
@@ -148,16 +180,17 @@ def sir_tarama():
                 metin = f.read()
         except (UnicodeDecodeError, OSError):
             continue
+        rel = os.path.relpath(tam, KOK)
         for no, satir in enumerate(metin.splitlines(), 1):
-            if any(f in satir for f in FIKSTUR):
+            h = hashlib.sha256(satir.encode('utf-8')).hexdigest()
+            if (rel, h) in fikstur:
                 continue
             for ad, kalip in SIR_KALIPLARI:
                 if kalip.search(satir):
-                    kotu.append('%s:%d (%s)' % (os.path.relpath(tam, KOK), no, ad))
+                    kotu.append('%s:%d (%s)' % (rel, no, ad))
         for m in ANAHTAR.finditer(metin):
             kotu.append('%s:%d (private-key)'
-                        % (os.path.relpath(tam, KOK),
-                           metin[:m.start()].count('\n') + 1))
+                        % (rel, metin[:m.start()].count('\n') + 1))
     return not kotu, '%d bulgu' % len(kotu), kotu
 
 
