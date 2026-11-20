@@ -17,15 +17,15 @@ unknown label becomes `SCHEMA_INVALID` → P0; KEEP fingerprints so silent delet
 visible; evidence levels (`BIRINCIL`/`DIJITAL`/`BEYAN`/`OLCULMEDI`); fail-closed handling
 (unmeasured is never a pass); and tamper detection (`GATE_TAMPERED` → P0).
 - **How claims are verified.** `make dogrula` (hygiene, syntax, secret scan, secret-gate
-self-test, three self-test suites), `make mutasyon` (seventy-one gate rules, exercised by
-55 battery cases: clean baseline + one violation + a red verdict), and `tools/yayinla.py`
+self-test, three self-test suites), `make mutasyon` (seventy-four gate rules, exercised by
+58 battery cases: clean baseline + one violation + a red verdict), and `tools/yayinla.py`
 (publish parity: 0 new / 0 changed / 0 deleted). The same commands run in CI on GitHub Actions.
 `make iddia` closes the remaining gap: it re-measures the numbers printed in this README.
 - **Reproduce it.** `./demo` prints the frozen 8-vs-2 failure with a **red verdict and
 exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin
 wrapper and cannot carry 1 vs 2, because GNU make always exits 2 on a failing recipe. `make dogrula` → **8 pass / 0 fail / 0 not run** (T1, `OLG-1`, now
 runs against this tree's `attestation.json`); KOD self-test
-**174/174**; mutation battery **55/55 cases red + 17/17 expected findings** over 71 rules. Mutation-tested vs untested gate rules are measured
+**174/174**; mutation battery **58/58 cases red + 17/17 expected findings** over 74 rules. Mutation-tested vs untested gate rules are measured
 in [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md); dependent-package findings in
 [`docs/GUVENLIK.md`](docs/GUVENLIK.md); CI green. Non-Turkish readers:
 [`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md).
@@ -329,16 +329,16 @@ yazılır; 8/8 denmez. Ayrıntı ve negatif kontrol:
 
 ## Mutasyon kapsamı
 
-`make mutasyon` yetmiş iki vakanın gerçekten ateşlediğini kanıtlar; **her kuralın** durumu ise
+`make mutasyon` yetmiş beş vakanın gerçekten ateşlediğini kanıtlar; **her kuralın** durumu ise
 [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md) içinde tek tek yazılıdır. Tablo
 `tools/kapsam.py` tarafından üretilir (elle yazılmaz) ve üç durum ayırır:
 
-- **TEST EDİLDİ** — 71 kural (mutasyon vakası adıyla)
-- **KAPSAM DIŞI** — 28 kural, her biri ölçülmüş bir gerekçeyle: ağ
+- **TEST EDİLDİ** — 74 kural (mutasyon vakası adıyla)
+- **KAPSAM DIŞI** — 27 kural, her biri ölçülmüş bir gerekçeyle: ağ
   (`verify_doi`), gizli anahtar (`teslim_imza`), tarihçe (`olgu_lint`), koşu durumu
   (`api_surface`, `oztest_attest`), depo durumu (`dep_audit`), ölü kural kimliği
   (`secret_scan` SEC-04 hiçbir kod dalında basılmıyor)
-- **BOŞLUK** — 23 kural: 11'i yalnız öz-testte anılıyor, 12'si hiçbir testte geçmiyor
+- **BOŞLUK** — 21 kural: 10'u yalnız öz-testte anılıyor, 11'i hiçbir testte geçmiyor
 
 Boşluk "kapsam dışı" diye etiketlenmez; gerekçesi yoksa boşluk olarak kalır ve tabloda
 adıyla durur. `make kapsam` tablonun güncelliğini denetler; CI'da bu adım kırılırsa

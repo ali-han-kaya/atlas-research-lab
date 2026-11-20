@@ -249,18 +249,30 @@ def _reck_hazirla(k):
     yaz(kosu / '01-KFAZ-1-PLAN.md', '# plan\n\n```json\n' + json.dumps({
         'sema': 'KFAZ1/v1',
         'degisecek': ['src/eski.py'],
-        'dondurulan': [],
+        'dondurulan': ['dondurulan.md'],
         'req_test': {'REQ-001': []},
     }, ensure_ascii=False) + '\n```\n')
     yaz(kosu / 'gate' / 'BASELINE.json',
         json.dumps({'test_adlari': []}, ensure_ascii=False, indent=2) + '\n')
     depo = k / 'sandbox_reck' / 'gitdepo'
     yaz(depo / 'src' / 'eski.py', 'x = 1\n')
+    yaz(depo / 'dondurulan.md', '# dondurulmus bolge\n')
     _git_kur(depo)
 
 
 def _reck03(k):
     return yaz(k / 'sandbox_reck' / 'gitdepo' / 'src' / 'plansiz.py', 'y = 1\n')
+
+
+def _reck06(k):
+    """Tek ihlal: KFAZ1 planinda dondurulan dosya degistirilir."""
+    return yaz(k / 'sandbox_reck' / 'gitdepo' / 'dondurulan.md', '# bozulmus bolge\n')
+
+
+def _tst08(k):
+    """Tek ihlal: kanit JSON'undan ham rapor baglantisi cikarilir."""
+    return _json_duzenle(k, 'sandbox_tst/03-KFAZ-3-TEST-EVIDENCE.json',
+                         lambda v: v.pop('rapor', None))
 
 
 def _tst_hazirla(k):
@@ -599,6 +611,10 @@ def vakalar():
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          _frz07,
          'FRZ-07'),
+        ('DEP-05', 'KOD', 'lisans catismasi P0', 'KOD_SABLONLAR/scripts/dep_audit.py',
+         lambda k: [],
+         lambda k: yaz(k / 'LICENSES.json', '{"paket": "GPL-3.0"}\n'),
+         'DEP-05'),
         # --- chg_reconcile: git diff + plan kapsami ----------------------------
         ('RECK-03', 'KOD', 'plansiz urun dosyasi kapsam ihlali',
          'KOD_SABLONLAR/scripts/chg_reconcile.py',
@@ -607,6 +623,13 @@ def vakalar():
                     '--faz', 'KFAZ1'],
          _reck03,
          'RECK-03', {'cwd': 'sandbox_reck/gitdepo', 'kur': _reck_hazirla}),
+        ('RECK-06', 'KOD', 'dondurulmus bolge degismez',
+         'KOD_SABLONLAR/scripts/chg_reconcile.py',
+         lambda k: ['--kosu', str(k / 'sandbox_reck' / '_KOSU'),
+                    '--taban', str(k / 'sandbox_reck' / '_KOSU' / 'gate' / 'BASELINE.json'),
+                    '--faz', 'KFAZ1'],
+         _reck06,
+         'RECK-06', {'cwd': 'sandbox_reck/gitdepo', 'kur': _reck_hazirla}),
         # --- test_attest: ham JUnit taban karsilastirmasi ----------------------
         ('TST-04', 'KOD', 'test silinerek yesil olmaz',
          'KOD_SABLONLAR/scripts/test_attest.py',
@@ -616,6 +639,14 @@ def vakalar():
                     '--kosu', str(k / 'sandbox_tst')],
          _tst04,
          'TST-04', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_hazirla}),
+        ('TST-08', 'KOD', 'test kaniti olmadan PASS yok',
+         'KOD_SABLONLAR/scripts/test_attest.py',
+         lambda k: ['--kanit', str(k / 'sandbox_tst' / '03-KFAZ-3-TEST-EVIDENCE.json'),
+                    '--taban', str(k / 'sandbox_tst' / 'gate' / 'BASELINE.json'),
+                    '--profil', str(k / 'kod_profil.json'),
+                    '--kosu', str(k / 'sandbox_tst')],
+         _tst08,
+         'TST-08', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_hazirla}),
         # --- uyari/bilgi kurallari: beklenen bulgu (rc=0 olabilir) ------------
         ('PL-12', 'ATLAS', 'belirsizlik cikisi var', 'ATLAS_SABLONLAR/scripts/prompt_lint.py',
          lambda k: ['--dizin', str(k / 'sandbox_pl')],

@@ -15,11 +15,71 @@ bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus
 |---|---|
 | Kapi betigi | 21 |
 | Bildirilen kural | 122 |
-| Mutasyon vakasi olan (TEST EDILDI) | 71 |
-| Gerekceli kapsam disi | 28 |
-| Bosluk (gerekce yok) | 23 |
-| — bunlardan yalniz oz-testte anilan | 11 |
-| — hicbir testte gecmeyen | 12 |
+| Mutasyon vakasi olan (TEST EDILDI) | 74 |
+| Gerekceli kapsam disi | 27 |
+| Bosluk (gerekce yok) | 21 |
+| — bunlardan yalniz oz-testte anilan | 10 |
+| — hicbir testte gecmeyen | 11 |
+
+## Risk sirasi (51 kural)
+
+19.11.2026 itibariyla mutation kapsami olmayan 51 kural; siralama
+saglamlik/etki sirasina gore sabittir. Ilk ucu bu turda vaka aldi;
+durum sutunu guncel envanterden okunur.
+
+| # | Kural | Betik | Grup | Durum | Gerekce |
+|---|---|---|---|---|---|
+| 1 | TST-08 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Ham test raporu yok/okunamiyor — kanitsiz PASS P0; kapinin kanit temeli. |
+| 2 | RECK-06 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | Dondurulmus bolge diff'te — dogrudan tamper sinyali, P0. |
+| 3 | DEP-05 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI (bu tur) | Izinli lisans listesi disinda bagimlilik — tedarik/uyum P0. |
+| 4 | FRZ-08 | `freeze_check.py` | Kapsam/degisiklik butunlugu — P0 | BOSLUK | Kapsam/degisiklik butunlugu — P0 |
+| 5 | RECK-01 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | BOSLUK | Kapsam/degisiklik butunlugu — P0 |
+| 6 | RECK-02 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | BOSLUK | Kapsam/degisiklik butunlugu — P0 |
+| 7 | RECK-08 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | BOSLUK | Kapsam/degisiklik butunlugu — P0 |
+| 8 | RECK-09 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | BOSLUK | Kapsam/degisiklik butunlugu — P0 |
+| 9 | RECK-04 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | BOSLUK | Kapsam/degisiklik butunlugu — P0 |
+| 10 | RECK-05 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | BOSLUK | Kapsam/degisiklik butunlugu — P0 |
+| 11 | RECK-07 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | BOSLUK | Kapsam/degisiklik butunlugu — P0 |
+| 12 | TST-07 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK | Kanit/yesil butunlugu — P0 |
+| 13 | TST-10 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK | Kanit/yesil butunlugu — P0 |
+| 14 | TST-11 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK | Kanit/yesil butunlugu — P0 |
+| 15 | TST-12 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK | Kanit/yesil butunlugu — P0 |
+| 16 | TST-09 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK | Kanit/yesil butunlugu — P0 |
+| 17 | TST-01 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK | Kanit/yesil butunlugu — P0 |
+| 18 | TST-02 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK | Kanit/yesil butunlugu — P0 |
+| 19 | TST-03 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK | Kanit/yesil butunlugu — P0 |
+| 20 | TST-05 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK | Kanit/yesil butunlugu — P0 |
+| 21 | TST-06 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK | Kanit/yesil butunlugu — P0 |
+| 22 | DEP-01 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
+| 23 | DEP-02 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
+| 24 | DEP-06 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
+| 25 | DEP-03 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
+| 26 | DEP-04 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
+| 27 | TSL-03 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
+| 28 | TSL-04 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
+| 29 | TSL-06 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
+| 30 | TSL-01 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
+| 31 | TSL-02 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
+| 32 | TSL-05 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
+| 33 | API-02 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
+| 34 | API-03 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
+| 35 | API-01 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
+| 36 | API-05 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
+| 37 | API-04 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
+| 38 | OZT-01 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
+| 39 | OZT-02 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
+| 40 | OZT-03 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
+| 41 | OZT-04 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
+| 42 | OZT-05 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
+| 43 | OZT-06 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
+| 44 | OLGU-04 | `olgu_lint.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
+| 45 | OLGU-05 | `olgu_lint.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
+| 46 | OLGU-06 | `olgu_lint.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
+| 47 | CHK-01 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | BOSLUK | Test envanteri, olcum ve provenance — P0/P1 |
+| 48 | CHK-02 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | BOSLUK | Test envanteri, olcum ve provenance — P0/P1 |
+| 49 | CHK-05 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | BOSLUK | Test envanteri, olcum ve provenance — P0/P1 |
+| 50 | DEC-027 | `verify_doi.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
+| 51 | SEC-04 | `secret_scan.py` | Bilgi seviyesi / olu kimlik — P1 | KAPSAM DISI | Bilgi seviyesi / olu kimlik — P1 |
 
 ## Kapsam disi siniflari
 
@@ -29,7 +89,7 @@ Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir
 | Sinif | Gerekce (betikte olculen bagimlilik) | Betik | Kural |
 |---|---|---|---|
 | ag | requests ile api.crossref.org sorgusu; batarya agsiz kosar | verify_doi.py | 1 |
-| depo-durumu | `git diff --name-only HEAD` ile degisen dosyalari okur | dep_audit.py | 6 |
+| depo-durumu | `git diff --name-only HEAD` ile degisen dosyalari okur | dep_audit.py | 5 |
 | gizli-anahtar | HMAC anahtari ister (LAB_IMZA_ANAHTARI / ~/.config/lab_imza.key); anahtar depoya konmaz | teslim_imza.py | 6 |
 | kosu-durumu | butun agacin selftest hash tabanini ve ham kosu ciktisini ister | api_surface.py, oztest_attest.py | 11 |
 | olu-kimlik | SEC-04 yalniz baslikta bildirilir; hicbir kod dali bu kimligi basmiyor (atlanan dosyalar yalniz sayilir) | secret_scan.py | 1 |
@@ -156,7 +216,7 @@ Toplam: 21 betik · 122 tekil kural; her satirda Envanter = Baslikta ∪ Bolum b
 | `chg_reconcile.py` | RECK-03 | RECK-03 | TEST EDILDI | mutasyon vakasi: RECK-03 |
 | `chg_reconcile.py` | RECK-04 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
 | `chg_reconcile.py` | RECK-05 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `chg_reconcile.py` | RECK-06 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
+| `chg_reconcile.py` | RECK-06 | RECK-06 | TEST EDILDI | mutasyon vakasi: RECK-06 |
 | `chg_reconcile.py` | RECK-07 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
 | `chg_reconcile.py` | RECK-08 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
 | `chg_reconcile.py` | RECK-09 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
@@ -164,7 +224,7 @@ Toplam: 21 betik · 122 tekil kural; her satirda Envanter = Baslikta ∪ Bolum b
 | `dep_audit.py` | DEP-02 | — | KAPSAM DISI | depo-durumu: `git diff --name-only HEAD` ile degisen dosyalari okur |
 | `dep_audit.py` | DEP-03 | — | KAPSAM DISI | depo-durumu: `git diff --name-only HEAD` ile degisen dosyalari okur |
 | `dep_audit.py` | DEP-04 | — | KAPSAM DISI | depo-durumu: `git diff --name-only HEAD` ile degisen dosyalari okur |
-| `dep_audit.py` | DEP-05 | — | KAPSAM DISI | depo-durumu: `git diff --name-only HEAD` ile degisen dosyalari okur |
+| `dep_audit.py` | DEP-05 | DEP-05 | TEST EDILDI | mutasyon vakasi: DEP-05 |
 | `dep_audit.py` | DEP-06 | — | KAPSAM DISI | depo-durumu: `git diff --name-only HEAD` ile degisen dosyalari okur |
 | `freeze_check.py` | FRZ-01 | FRZ-01 | TEST EDILDI | mutasyon vakasi: FRZ-01 |
 | `freeze_check.py` | FRZ-02 | FRZ-02 | TEST EDILDI | mutasyon vakasi: FRZ-02 |
@@ -194,7 +254,7 @@ Toplam: 21 betik · 122 tekil kural; her satirda Envanter = Baslikta ∪ Bolum b
 | `test_attest.py` | TST-05 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
 | `test_attest.py` | TST-06 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
 | `test_attest.py` | TST-07 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `test_attest.py` | TST-08 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
+| `test_attest.py` | TST-08 | TST-08 | TEST EDILDI | mutasyon vakasi: TST-08 |
 | `test_attest.py` | TST-09 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
 | `test_attest.py` | TST-10 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
 | `test_attest.py` | TST-11 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
