@@ -261,6 +261,18 @@ def _frz08_env():
     return dict(os.environ, LAB_IMZA_ANAHTARI='a' * 64)
 
 
+def _frz01_kayip(k):
+    """FRZ-01 kayip dali: profil dosyasi silinir; terminal GATE_TAMPERED."""
+    (k / 'kod_profil.json').unlink()
+    return None
+
+
+def _frz02_kayip(k):
+    """FRZ-02 kayip dali: dondurulmus kapi betigi silinir; terminal GATE_TAMPERED."""
+    (k / 'scripts' / 'kapi.py').unlink()
+    return None
+
+
 def _frz01_02(k):
     """Tek ihlal: profil ve kapi betigi birlikte degistirilir (FRZ-01+FRZ-02)."""
     hata = degistir(k, 'kod_profil.json', '{"profil": "test"}\n',
@@ -851,10 +863,16 @@ def vakalar():
                             'openrouter/anthropic/claude-opus-5', '~/anthropic/claude-opus-5'),
          'MOD-06'),
         # --- freeze_check: SHA256 taban karsilastirmasi ----------------------
-        ('FRZ-01', 'KOD', 'kod profili dondurulmus', 'KOD_SABLONLAR/scripts/freeze_check.py',
+        ('FRZ-01', 'KOD', 'profil tamperi GATE_TAMPERED terminal',
+         'KOD_SABLONLAR/scripts/freeze_check.py',
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          lambda k: yaz(k / 'kod_profil.json', '{"profil": "degisti"}\n'),
-         'FRZ-01'),
+         'FRZ-01', {'terminal': True}),
+        ('FRZ-01-KAYIP', 'KOD', 'profil kaybi GATE_TAMPERED terminal',
+         'KOD_SABLONLAR/scripts/freeze_check.py',
+         lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
+         _frz01_kayip,
+         'FRZ-01', {'terminal': True}),
         ('FRZ-01T', 'KOD', 'profil tamperi GATE_TAMPERED terminal',
          'KOD_SABLONLAR/scripts/freeze_check.py',
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
@@ -867,6 +885,11 @@ def vakalar():
         ('FRZ-02', 'KOD', 'kapi betigi dondurulmus', 'KOD_SABLONLAR/scripts/freeze_check.py',
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          lambda k: yaz(k / 'scripts' / 'kapi.py', '# degistirilmis kapi\n'),
+         'FRZ-02', {'terminal': True}),
+        ('FRZ-02-KAYIP', 'KOD', 'betik kaybi GATE_TAMPERED terminal',
+         'KOD_SABLONLAR/scripts/freeze_check.py',
+         lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
+         _frz02_kayip,
          'FRZ-02', {'terminal': True}),
         ('FRZ-03', 'KOD', 'dondurulan bolge degismez', 'KOD_SABLONLAR/scripts/freeze_check.py',
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],

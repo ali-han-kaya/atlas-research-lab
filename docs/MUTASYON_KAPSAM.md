@@ -17,8 +17,8 @@ TAMAMINI gezer; baska kurala/karara yapilan atiflar kural sayilmaz.
 | Taranan betik | 31 |
 | Kural bildiren betik | 20 |
 | Bildirilen kural | 121 |
-| Batarya vakasi (toplam) | 97 |
-| — kural ateslettiren | 78 |
+| Batarya vakasi (toplam) | 99 |
+| — kural ateslettiren | 80 |
 | — beklenen bulgu | 19 |
 | Mutasyon vakasi olan (TEST EDILDI) | 95 |
 | Gerekceli kapsam disi | 26 |
