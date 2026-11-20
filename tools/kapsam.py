@@ -36,10 +36,8 @@ YOKSAY_PREFIX = {'OLCUM'}
 #   olgu_lint    : SURUM.md makine blogunu HEAD/commit hashleriyle karsilastirir
 #   oztest_attest: butun agacin selftest hash tabanini + ham kosu ciktisini ister
 #   teslim_imza  : HMAC anahtari (LAB_IMZA_ANAHTARI veya ~/.config/lab_imza.key)
-#   verify_doi   : requests ile api.crossref.org'a cikar (ag)
+#   verify_doi   : kural kimligi bildirmiyor; DEC-027 bir karar referansi
 KAPSAM_DISI = {
-    'ATLAS_SABLONLAR/scripts/verify_doi.py':
-        ('ag', 'requests ile api.crossref.org sorgusu; batarya agsiz kosar'),
     'ATLAS_SABLONLAR/scripts/teslim_imza.py':
         ('gizli-anahtar', 'HMAC anahtari ister (LAB_IMZA_ANAHTARI / '
                           '~/.config/lab_imza.key); anahtar depoya konmaz'),
@@ -61,6 +59,16 @@ KAPSAM_DISI = {
                        'kimligi basmiyor (atlanan dosyalar yalniz sayilir)'),
 }
 
+
+# Baska kurala/karara yapilan atiflar envantere girmez. Her satir
+# (betik, kimlik) -> olculmus gerekce. Ornek: verify_doi.py icindeki DEC-027
+# bir karar kimligidir; verify_doi bu kurali uygulamaz, yalniz
+# bolum-farkindaligi politikasina atif yapar.
+REFERANS = {
+    ('ATLAS_SABLONLAR/scripts/verify_doi.py', 'DEC-027'):
+        'DEC karar kimligi; verify_doi bu kurali uygulamaz, DEC-027 '
+        'bolum-farkindaligi politikasina atif yapar',
+}
 
 # Risk sirasi — 19.11.2026'daki 51 mutation-kapsamsiz kuralin tamami.
 # Siralama ilkesi: once sahte yesil/tamper (P0), sonra tedarik/teslim/yuzey,
@@ -90,7 +98,7 @@ RISK_SIRASI = [
     ('OZT-03', 'ENVANTER'), ('OZT-04', 'ENVANTER'), ('OZT-05', 'ENVANTER'),
     ('OZT-06', 'ENVANTER'), ('OLGU-04', 'ENVANTER'), ('OLGU-05', 'ENVANTER'),
     ('OLGU-06', 'ENVANTER'), ('CHK-01', 'ENVANTER'), ('CHK-02', 'ENVANTER'),
-    ('CHK-05', 'ENVANTER'), ('DEC-027', 'ENVANTER'), ('SEC-04', 'BILGI'),
+    ('CHK-05', 'ENVANTER'), ('SEC-04', 'BILGI'),
 ]
 RISK_EKLENEN = {'TST-08', 'RECK-06', 'DEP-05',
                'RECK-01', 'RECK-02', 'RECK-04',
@@ -152,8 +160,8 @@ SONRAKI_NOT = {
 def risk_tablosu(satirlar):
     durum = {k: d for _b, k, _v, d, _g in satirlar}
     betik = {k: b.split('/')[-1] for b, k, _v, _d, _g in satirlar}
-    if len(RISK_SIRASI) != 51 or len({r for r, _g in RISK_SIRASI}) != 51:
-        raise SystemExit('RISK_SIRASI 51 tekil kural icermeli')
+    if len(RISK_SIRASI) != 50 or len({r for r, _g in RISK_SIRASI}) != 50:
+        raise SystemExit('RISK_SIRASI 50 tekil kural icermeli')
     eksik = [r for r, _g in RISK_SIRASI if r not in durum]
     if eksik:
         raise SystemExit('RISK_SIRASI envanterde yok: %s' % ', '.join(eksik))
@@ -184,6 +192,7 @@ def _kimlikler(p):
 
     Eski surum yalniz ilk 100 satiri okuyordu; FRZ-08 114. satirdaki bolum
     basliginda kaldigi icin envanterde hic gorunmuyordu. Artik sinir yok.
+    Baska kurala/karara yapilan atiflar `REFERANS` ile ayiklanir; ornek DEC-027.
     """
     baslik, bolum = set(), set()
     for satir in p.read_text(encoding='utf-8').splitlines():
@@ -193,17 +202,24 @@ def _kimlikler(p):
         m = BOLUM.match(satir)
         if m and m.group(1).split('-')[0] not in YOKSAY_PREFIX:
             bolum.add(m.group(1))
+    yol = str(p.relative_to(KOK))
+    for (ref_yol, ref_kimlik) in REFERANS:
+        if ref_yol == yol:
+            baslik.discard(ref_kimlik)
+            bolum.discard(ref_kimlik)
     return baslik, bolum
 
 
 def envanter():
-    """{betik_goreli: [kural, ...]} — tum bildirimler + bolum basliklari."""
+    """{betik_goreli: [kural, ...]} — tum bildirimler + bolum basliklari.
+
+    Kural bildirmeyen betik de anahtarla yer alir (bos liste); boylece
+    'kac betik tarandi' sayisi ile 'kac kural bildirildi' sayisi karismaz.
+    """
     sonuc = {}
     for p in kapi_betikleri():
         baslik, bolum = _kimlikler(p)
-        kimlikler = baslik | bolum
-        if kimlikler:
-            sonuc[str(p.relative_to(KOK))] = sorted(kimlikler)
+        sonuc[str(p.relative_to(KOK))] = sorted(baslik | bolum)
     return sonuc
 
 
@@ -212,9 +228,8 @@ def tarama():
     sonuc = []
     for p in kapi_betikleri():
         baslik, bolum = _kimlikler(p)
-        if baslik or bolum:
-            sonuc.append((str(p.relative_to(KOK)), sorted(baslik), sorted(bolum),
-                          sorted(baslik | bolum)))
+        sonuc.append((str(p.relative_to(KOK)), sorted(baslik), sorted(bolum),
+                      sorted(baslik | bolum)))
     return sonuc
 
 
@@ -303,6 +318,13 @@ def tarama_tablosu():
     return out
 
 
+def referans_tablosu():
+    out = ['| Betik | Ayiklanan kimlik | Gerekce |', '|---|---|---|']
+    for (yol, kimlik), gerekce in sorted(REFERANS.items()):
+        out.append('| `%s` | %s | %s |' % (yol.split('/')[-1], kimlik, gerekce))
+    return out
+
+
 def markdown():
     satirlar, envan, (test, disi, bosluk, oz_anilan) = olc()
     vakalar = batarya()
@@ -316,10 +338,12 @@ def markdown():
            '',
            'Her kural icin tek soru sorulur: **mutasyon bataryasinda onu ateslettiren',
            'bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus',
-           '**KAPSAM DISI** ya da **BOSLUK**. Bosluk gizlenmez.', '',
+           '**KAPSAM DISI** ya da **BOSLUK**. Bosluk gizlenmez. Tarama dosyanin',
+           'TAMAMINI gezer; baska kurala/karara yapilan atiflar kural sayilmaz.', '',
            '## Ozet', '',
            '| Olcum | Deger |', '|---|---|',
-           '| Kapi betigi | %d |' % len(envan),
+           '| Taranan betik | %d |' % len(envan),
+           '| Kural bildiren betik | %d |' % sum(1 for v in envan.values() if v),
            '| Bildirilen kural | %d |' % len(satirlar),
            '| Batarya vakasi (toplam) | %d |' % toplam_vaka,
            '| — kural ateslettiren | %d |' % (toplam_vaka - beklenen_bulgu),
@@ -330,8 +354,9 @@ def markdown():
            '| — bunlardan yalniz oz-testte anilan | %d |' % oz_anilan,
            '| — hicbir testte gecmeyen | %d |' % (bosluk - oz_anilan),
            '',
-           '## Risk sirasi (51 kural)', '',
-           '19.11.2026 itibariyla mutation kapsami olmayan 51 kural; siralama',
+           '## Risk sirasi (50 kural)', '',
+           '19.11.2026 envanterinde 51 kural vardi; `DEC-027` bir karar',
+           'referansi olarak ayiklandi, kalan 50 kural risk sirasinda. Siralama',
            'saglamlik/etki sirasina gore sabittir. Kapatilan her kural bu turda',
            'vaka aldi; durum sutunu guncel envanterden okunur.', '']
     out += risk_tablosu(satirlar)
@@ -350,16 +375,22 @@ def markdown():
     if _risk_durum.get('TST-06') == 'BOSLUK':
         out += ['', 'Not: TST-06 yalniz P1 uretir; rc=1 sartini karsilamadigi',
                 'icin bu dilimde sayiya eklenmedi, P1 kaydi olarak ayri tutulur.']
-    out += ['',
-           '## Kapsam disi siniflari', '',
-           'Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir',
-           '(asagida betik adiyla birlikte yazili).', '']
+    out += ['', '## Kapsam disi siniflari', '',
+            'Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir',
+            '(asagida betik adiyla birlikte yazili).', '']
     out += sinif_tablosu(satirlar)
+    if not envan.get('ATLAS_SABLONLAR/scripts/verify_doi.py'):
+        out += ['', 'Not: `verify_doi.py` tarandi; bildirilen kural kimligi yok.',
+                'Dosyadaki `DEC-027` bir karar referansidir, kural degil; bu',
+                'yuzden `ag` sinifi envanterde kural olarak temsil edilmiyor.', '']
     out += ['', '## Tarama kaniti', '',
             '`Baslikta` satir basindaki kural bildirimleridir. `Bolum basligi`',
             'dosyanin herhangi bir yerindeki `# --- KIMLIK` basliklaridir; ilk 100',
             'satir siniri YOKTUR. `Yeni`, yalniz bolum basliginda gorunen ve ust',
-            'listeye yazilmamis kimliklerdir. Envanter, iki kumenin birlesimidir.', '',
+            'listeye yazilmamis kimliklerdir. Envanter, iki kumenin birlesimidir.',
+            'Tarama `read_text().splitlines()` uzerinden tum dosyayi gezer;',
+            '`FRZ-08` 114. satirda bildirildigi halde envanterdedir. Bu, ilk 100',
+            'satir sinirinin olmadiginin canli kanitidir.', '',
             '`DEC-10/12` ve `GM-17/18` gibi degisiklik etiketleri kural kimligi',
             'degildir; yalnizca kural bildirimleri ve `# --- KIMLIK` basliklari',
             'taranir. `CHK-00` gibi bolum basligi olmayan ara kodlar da bu',
@@ -369,7 +400,11 @@ def markdown():
     out += ['', 'Toplam: %d betik · %d tekil kural; her satirda Envanter = '
             'Baslikta ∪ Bolum basligi.' % (
                 len(_tarama), sum(len(x[3]) for x in _tarama)), '']
-    out += ['## Tam envanter', '',
+    out += ['## Referans olarak ayiklanan kimlikler', '',
+            'Asagidaki kimlikler bir betigin urettigi kural degil, baska bir',
+            'kurala/karara yapilan atiftir; envantere sayilmaz.', '']
+    out += referans_tablosu()
+    out += ['', '## Tam envanter', '',
             '| Betik | Kural | Mutasyon vakasi | Durum | Gerekce |',
             '|---|---|---|---|---|']
     for betik, k, vaka, durum, gerekce in satirlar:

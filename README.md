@@ -340,11 +340,14 @@ yazılır; 8/8 denmez. Ayrıntı ve negatif kontrol:
 `tools/kapsam.py` tarafından üretilir (elle yazılmaz) ve üç durum ayırır:
 
 - **TEST EDİLDİ** — 86 kural (mutasyon vakası adıyla)
-- **KAPSAM DIŞI** — 27 kural, her biri ölçülmüş bir gerekçeyle: ağ
-  (`verify_doi`), gizli anahtar (`teslim_imza`), tarihçe (`olgu_lint`), koşu durumu
-  (`api_surface`, `oztest_attest`), depo durumu (`dep_audit`), ölü kural kimliği
+- **KAPSAM DIŞI** — 26 kural, her biri ölçülmüş bir gerekçeyle: gizli anahtar
+  (`teslim_imza`), tarihçe (`olgu_lint`), koşu durumu (`api_surface`,
+  `oztest_attest`), depo durumu (`dep_audit`), ölü kural kimliği
   (`secret_scan` SEC-04 hiçbir kod dalında basılmıyor)
 - **BOŞLUK** — 9 kural: 8'i yalnız öz-testte anılıyor, 1'i hiçbir testte geçmiyor
+
+`verify_doi.py` tarandı; bildirilen kural kimliği yok — dosyadaki `DEC-027`
+bir karar referansıdır, kural değil.
 
 Boşluk "kapsam dışı" diye etiketlenmez; gerekçesi yoksa boşluk olarak kalır ve tabloda
 adıyla durur. `make kapsam` tablonun güncelliğini denetler; CI'da bu adım kırılırsa
