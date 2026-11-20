@@ -229,6 +229,10 @@ def taze(kayit, onbellek):
     parcalar = [g for g in eslesme.groups() if g is not None]
     deger = '/'.join(parcalar)
     satir = cikti.splitlines()[cikti[:eslesme.start()].count('\n')]
+    # Bazi ham kanit satirlari commit/tree gibi degisken provenance tasir;
+    # ham_grup yalniz eslesen sayisal parcayi saklar, iddia zayiflamaz.
+    if kayit.get('ham_grup'):
+        satir = eslesme.group(0)
     beklenen_rc = int(kayit.get('rc_beklenen', 0))
     if rc != beklenen_rc:
         return False, deger, 'rc=%d (beklenen %d)' % (rc, beklenen_rc), satir, rc

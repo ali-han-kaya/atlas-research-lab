@@ -89,9 +89,9 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "ATLAS_SABLONLAR/scripts/atlas_selftest.py",
-        "--sessiz"
+        "tools/dogrula.py"
       ],
+      "ham_grup": true,
       "ayikla": "OZ-TEST:\\s*(\\d+/\\d+) gecti",
       "beklenen": "145/145",
       "rc_beklenen": 0
