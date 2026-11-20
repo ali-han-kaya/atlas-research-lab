@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-20T11:58:24Z",
+  "zaman": "2026-11-20T14:28:05Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -63,8 +63,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Bildirilen kural | 122 |",
-      "deger": "122"
+      "ham": "| Bildirilen kural | 121 |",
+      "deger": "121"
     },
     "IDD-08": {
       "komut": [
@@ -72,8 +72,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Gerekceli kapsam disi | 27 |",
-      "deger": "27"
+      "ham": "| Gerekceli kapsam disi | 26 |",
+      "deger": "26"
     },
     "IDD-09": {
       "komut": [
