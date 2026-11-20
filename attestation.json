@@ -1,5 +1,5 @@
 {
-  "commit": "db57326c2055d04eaa4e93615962ed09b281bd3e",
+  "commit": "8b0747f11200ff63b0e661677d5657b9e76cbe0c",
   "file_count": 242,
   "files": [
     {
@@ -1253,8 +1253,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "b432ade37b3fd8ee4c1912c4ae0845aa09347efd6ed7b0def6c8d603aa910692",
-      "size": 6628
+      "sha256": "c952f2ca20b78a644abd0c67c1c7712660064a3a36c6c9e19601490090115a30",
+      "size": 7185
     },
     {
       "mode": "100644",
@@ -1451,11 +1451,11 @@
     {
       "mode": "100644",
       "path": "tools/yayinla.py",
-      "sha256": "f18daf006cf205247c6e2e8d1a48d64c55b3a06b71c61aec290e06f612d0ca20",
-      "size": 11250
+      "sha256": "5a450473f6f5c8502bbb6e3c9eba760708ce88c672cb9d41a80ccdba89077b03",
+      "size": 11819
     }
   ],
-  "generated_at": "2026-11-20T09:12:11Z",
+  "generated_at": "2026-11-20T09:21:30Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1470,6 +1470,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "8a8e18ad6f850105f071b2dd3ba4e72656668e8b",
-  "tree_sha256": "a48127d064829bd73eb562c85ea8396106e25bd03b4f5358a8286d01bedf24c5"
+  "tree": "9b5afdf8b4beb91edfd42b405f6ebad9f63edb23",
+  "tree_sha256": "c90c5421b7b7c6b378fedadcae4335928162d3f5d3c912b2d804427a893b3bf3"
 }
