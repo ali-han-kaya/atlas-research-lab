@@ -138,6 +138,27 @@ CITE_MD = ('# Makale\n\nGovde metni (Yazar, 2020).\n\n## Kaynakca\n\n'
 
 PL_MD = ('---\ndescription: uyari testi\nmode: subagent\n---\n\n'
          'CALISTIRILMADI. python3 scripts/mevcut.py cikis kodunu denetler.\n')
+
+# PL-19 icin izole sema fiksturu: gercek prompt agacini ve symlink'lerini
+# taramadan yalniz bir prompt + bir hedef sema kurulur. Gerekli alan
+# eksiltmek kirmizi, semada olmayan alan eklemek uyaridir; ikisi karistirilmaz.
+PL19_SCHEMA = {
+    "$defs": {
+        "main": {
+            "type": "object",
+            "required": ["schema", "run_id", "input_sha256"],
+            "properties": {
+                "schema": {"type": "string"},
+                "run_id": {"type": "string"},
+                "input_sha256": {"type": "string"},
+            },
+        }
+    }
+}
+PL19_MD = ('---\ndescription: PL-19 izole sema testi\nmode: subagent\n---\n\n'
+           'CALISTIRILMADI.\n\n```json\n'
+           '{\n  "schema": "ATLAS-TEST/v1",\n  "run_id": "run-test-001",\n'
+           '  "input_sha256": "sha256:test"\n}\n```\n')
 PERM_MD = ('---\ndescription: izin testi\nmode: subagent\npermission:\n'
            '  read:\n    "*": allow\n  edit:\n    "*": allow\n'
            '  bash:\n    "*": allow\n---\n\nCALISTIRILMADI\n')
@@ -651,6 +672,22 @@ def _pl04(k):
     hedef = k.parent / 'atlas-dis-hedef.md'
     hedef.write_text('# dis\n', encoding='utf-8')
     (k / 'ATLAS_SABLONLAR/.opencode/agent/atlas-dis-link.md').symlink_to(hedef)
+    return None
+
+
+def _mod08_kok_disi(k):
+    """MOD-08 kok-disi symlink dali: hedef gercek bir dosya ama kok disinda."""
+    hedef = k.parent / 'atlas-mod08-dis.md'
+    hedef.write_text('# dis hedef\n', encoding='utf-8')
+    (k / 'sandbox_mod/.opencode/agent/kokdisi.md').symlink_to(hedef)
+    return None
+
+
+def _mod08_dosya_degil(k):
+    """MOD-08 symlink hedefi dosya degil dali: hedef kok icinde bir dizin."""
+    hedef = k / 'sandbox_mod' / 'hedef-dizin'
+    hedef.mkdir()
+    (k / 'sandbox_mod/.opencode/agent/dizin-link.md').symlink_to(hedef)
     return None
 
 
@@ -1254,14 +1291,20 @@ def vakalar():
          lambda k: ['--dizin', str(k / 'sandbox_mod')],
          lambda k: degistir(k, 'sandbox_mod/.opencode/agent/ajan.md',
                             'openrouter/anthropic/claude-opus-5',
-                            'openrouter/deprecated/old-model'),
-         'MOD-04', 'BULGU'),
-        ('MOD-05', 'ATLAS', 'reasoning+tool_call var', 'ATLAS_SABLONLAR/scripts/check_models.py',
+                            'openrouter/deepseek/deepseek-v4-flash'),
+         'MOD-04', {'kontrol': True, 'yalniz': True}),
+        ('MOD-05', 'ATLAS', 'reasoning destekli', 'ATLAS_SABLONLAR/scripts/check_models.py',
          lambda k: ['--dizin', str(k / 'sandbox_mod')],
          lambda k: degistir(k, 'sandbox_mod/.opencode/agent/ajan.md',
                             'openrouter/anthropic/claude-opus-5',
-                            'openrouter/weak/model'),
-         'MOD-05', 'BULGU'),
+                            'openrouter/z-ai/glm-5.2'),
+         'MOD-05', {'kontrol': True, 'yalniz': True}),
+        ('MOD-05-TOOLCALL', 'ATLAS', 'tool_call destekli', 'ATLAS_SABLONLAR/scripts/check_models.py',
+         lambda k: ['--dizin', str(k / 'sandbox_mod')],
+         lambda k: degistir(k, 'sandbox_mod/.opencode/agent/ajan.md',
+                            'openrouter/anthropic/claude-opus-5',
+                            'openrouter/moonshotai/kimi-k3'),
+         'MOD-05', {'kontrol': True, 'yalniz': True}),
         ('MOD-07', 'ATLAS', 'govde-frontmatter celismez', 'ATLAS_SABLONLAR/scripts/check_models.py',
          lambda k: ['--dizin', str(k / 'sandbox_mod')],
          lambda k: ekle(k, 'sandbox_mod/.opencode/agent/ajan.md',
@@ -1271,16 +1314,39 @@ def vakalar():
          lambda k: ['--dizin', str(k / 'sandbox_mod')],
          lambda k: (k / 'sandbox_mod/.opencode/agent/kirik.md').symlink_to(
              k / 'sandbox_mod' / 'yok-hedef.md'),
-         'MOD-08', 'BULGU'),
+         'MOD-08', {'kontrol': True, 'yalniz': True}),
+        ('MOD-08-KOK-DISI', 'ATLAS', 'kök-dışı symlink reddedilir',
+         'ATLAS_SABLONLAR/scripts/check_models.py',
+         lambda k: ['--dizin', str(k / 'sandbox_mod')],
+         _mod08_kok_disi,
+         'MOD-08', {'kontrol': True, 'yalniz': True}),
+        ('MOD-08-DOSYA-DEGIL', 'ATLAS', 'symlink hedefi dosya olmalı',
+         'ATLAS_SABLONLAR/scripts/check_models.py',
+         lambda k: ['--dizin', str(k / 'sandbox_mod')],
+         _mod08_dosya_degil,
+         'MOD-08', {'kontrol': True, 'yalniz': True}),
         ('SRC-01', 'ATLAS', 'sinyal tablosu ile sinif uyumu', 'ATLAS_SABLONLAR/scripts/source_class_check.py',
          lambda k: ['--dosya', str(k / 'sandbox' / 'sinif_src01.md')],
          _src01,
          'SRC-01'),
-        ('PL-19', 'ATLAS', 'prompt-sema alan uyumu', 'ATLAS_SABLONLAR/scripts/prompt_lint.py',
-         lambda k: ['--dizin', str(k)],
-         lambda k: _satir_sil(k, 'ATLAS_SABLONLAR/.opencode/agent/atlas-review-main.md',
+        ('PL-19', 'ATLAS', 'prompt-sema zorunlu alan', 'ATLAS_SABLONLAR/scripts/prompt_lint.py',
+         lambda k: ['--dizin', str(k.parent / 'sandbox_pl19')],
+         lambda k: _satir_sil(k.parent, 'sandbox_pl19/.opencode/agent/atlas-review-main.md',
                               '"input_sha256"'),
-         'PL-19'),
+         'PL-19', {'yalniz': True}),
+        ('PL-19-UYARI', 'ATLAS', 'semada olmayan alan uyarıdır',
+         'ATLAS_SABLONLAR/scripts/prompt_lint.py',
+         lambda k: ['--dizin', str(k.parent / 'sandbox_pl19')],
+         lambda k: degistir(k.parent, 'sandbox_pl19/.opencode/agent/atlas-review-main.md',
+                            '  "run_id": "run-test-001",',
+                            '  "run_id": "run-test-001",\n  "beklenmeyen_alan": true,'),
+         'UYARI PL-19', 'BULGU'),
+        ('PL-19-JSON-YOK', 'ATLAS', 'JSON orneği yoksa kırmızı',
+         'ATLAS_SABLONLAR/scripts/prompt_lint.py',
+         lambda k: ['--dizin', str(k.parent / 'sandbox_pl19')],
+         lambda k: _satir_sil(k.parent, 'sandbox_pl19/.opencode/agent/atlas-review-main.md',
+                              '```json'),
+         'PL-19', {'yalniz': True}),
         # --- provenance_check: SCOPE sozlesmesi + MASTER + PROVENANCE -------------
         ('CHK-01', 'ATLAS', 'zorunlu SCOPE-ID baslik olmali',
          'ATLAS_SABLONLAR/scripts/provenance_check.py',
@@ -1339,6 +1405,13 @@ def hazirla(kok, opsiyon=None):
     # Uyari-seviyeli kurallar icin yalitilmis fiksturler.
     yaz(kok / 'sandbox_pl' / '.opencode' / 'agent' / 'ajan.md', PL_MD)
     yaz(kok / 'sandbox_pl' / 'scripts' / 'mevcut.py', '# test betigi\n')
+    # PL-19 fiksturu diger prompt taramalarinin kokunun DISINDA durur; aksi
+    # halde gercek schema ile eslesen ayni adli dosya, ilgisiz PL-XX tabanlarini
+    # da kirletir. Testler bu kardes dizini acikca hedefler.
+    pl19 = kok.parent / 'sandbox_pl19'
+    yaz(pl19 / '.opencode' / 'agent' / 'atlas-review-main.md', PL19_MD)
+    yaz(pl19 / 'ATLAS_SABLONLAR' / 'templates' / 'REVIEW-PANEL-SCHEMA.json',
+        json.dumps(PL19_SCHEMA, ensure_ascii=False, indent=2) + '\n')
     yaz(kok / 'sandbox_perm' / '.opencode' / 'agent' / 'ajan.md', PERM_MD)
     yaz(kok / 'sandbox_qr' / 'makale.md', QR_BASE)
     yaz(kok / 'sandbox_sec' / 'notlar.md', '# Notlar\n\nBu dosyada sir yok.\n')

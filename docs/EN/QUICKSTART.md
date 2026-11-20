@@ -51,7 +51,7 @@ requires a red verdict plus a specific marker. A green baseline without a red
 mutation does not pass.
 
 ```text
-SONUC: 84/84 kural atesledi · 19/19 beklenen bulgu dogrulandi · taban temiz olmayan=0
+SONUC: 91/91 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0
 HUKUM: PASS — her vaka temiz tabanda sessiz, ihlalde kirmizi/beklenen bulgu.
 ```
 
