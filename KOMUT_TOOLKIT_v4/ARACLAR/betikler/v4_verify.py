@@ -3,7 +3,7 @@
 
     python3 v4_verify.py <klasor|arsiv.zip> [--manifest SHA256SUMS.txt]
                          [--kanit-dizin RAPORLAR] [--muafiyet muafiyet.json]
-                         [--out rapor.json] [--sessiz]
+                         [--fikstur fikstur.json] [--out rapor.json] [--sessiz]
 
 Kapatilan somut delikler (hepsi gercek kod uzerinde olculdu):
   D1  Bos klasore dogrultuldugunda olumlu karar veriyordu (files=0, PASS).
@@ -25,6 +25,7 @@ Cikis: 0 = engel yok, 1 = engel var, 2 = kullanim hatasi.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -137,6 +138,8 @@ def main(argv=None):
     ap.add_argument("--kanit-dizin", action="append", default=[],
                     help="hijyenden muaf kanit/rapor dizini (birden fazla verilebilir)")
     ap.add_argument("--muafiyet", help="imzali muafiyet kayitlari (JSON liste)")
+    ap.add_argument("--fikstur",
+                    help="satir SHA-256'li fikstur manifesti (JSON); yalniz acikca verilirse")
     ap.add_argument("--out")
     ap.add_argument("--sessiz", action="store_true")
     args = ap.parse_args(argv)
@@ -170,6 +173,34 @@ def main(argv=None):
             addf("SCHEMA_INVALID", "P0", str(w.get("konum", "?")),
                  "UNSIGNED_WAIVER: muafiyet kaydinda imza veya gerekce yok",
                  "muafiyet insan imzasi ister; imza+gerekce+konum zorunlu")
+
+    # Fikstur muafiyeti DESEN/DOSYA degil, TAM (dosya, satir SHA-256) ciftidir.
+    # Manifest ancak --fikstur ile ACIKCA verilirse okunur; hedef agacta bulunan
+    # bir manifest kendiliginden uygulanmaz. Böylece hedef depo kendini muaf
+    # tutamaz; bozuk veya izinli olmayan kayit fail-closed olur.
+    fixtures = set()
+    if args.fikstur:
+        try:
+            with open(args.fikstur, encoding="utf-8") as f:
+                fd = json.load(f)
+        except Exception as e:
+            fail_closed(f"fikstur manifesti okunamadi: {e}", args.out)
+        if not isinstance(fd, dict) or not isinstance(fd.get("fiksturler"), list):
+            fail_closed("fikstur manifesti semasi gecersiz: {\"fiksturler\": []} bekleniyor",
+                        args.out)
+        for k in fd["fiksturler"]:
+            if not isinstance(k, dict):
+                fail_closed("fikstur kaydi nesne degil", args.out)
+            rel = str(k.get("dosya", "")).replace("\\", "/")
+            h = str(k.get("satir_sha256", ""))
+            if (not rel or rel.startswith("/") or ".." in rel.split("/") or
+                    not re.fullmatch(r"[0-9a-f]{64}", h) or
+                    not str(k.get("gerekce", "")).strip() or
+                    not str(k.get("kanit", "")).strip()):
+                fail_closed(f"fikstur kaydi gecersiz: {rel!r}", args.out)
+            if (rel, h) in fixtures:
+                fail_closed(f"yinelenen fikstur kaydi: {rel}", args.out)
+            fixtures.add((rel, h))
 
     tmp = None
     root = os.path.abspath(args.hedef)
@@ -233,11 +264,18 @@ def main(argv=None):
         except OSError:
             continue
         is_doc_env = bool(DOC_ENV_RE.search(rel))
+        satirlar = txt.splitlines()
         for pat, why in SECRET_PATTERNS:
             for m in re.finditer(pat, txt):  # D2: ilk eslesmede DURMA
                 snippet = m.group(0)[:48]
                 line = txt[: m.start()].count("\n") + 1
                 loc = f"{rel}:{line}"
+                _h = (hashlib.sha256(satirlar[line - 1].encode("utf-8")).hexdigest()
+                      if 0 < line <= len(satirlar) else "")
+                if (rel, _h) in fixtures:
+                    noted.append({"konum": loc, "tur": why,
+                                  "not": "fikstur satir SHA-256"})
+                    continue
                 hint = looks_like_placeholder(m.group(0))
                 if is_signed(loc, rel):
                     noted.append({"konum": loc, "tur": why, "not": "imzali muafiyet"})
@@ -309,6 +347,8 @@ def main(argv=None):
         "toplam_bayt": total_bytes,
         "hijyen_ihlali": len(hygiene),
         "sir_bulgusu": len(real_secrets),
+        "fikstur_muafiyeti": sum(1 for n in noted
+                                if n.get("not") == "fikstur satir SHA-256"),
         "sir_notu": noted[:20],
         "manifest": manifest_report,
         "counts": {"P0": p0, "P1": p1, "P2": p2},
