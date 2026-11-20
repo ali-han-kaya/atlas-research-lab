@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-20T14:28:05Z",
+  "zaman": "2026-11-20T15:05:08Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -36,8 +36,8 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 71/71 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
-      "deger": "71/71"
+      "ham": "SONUC: 78/78 kural atesledi · 19/19 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "deger": "78/78"
     },
     "IDD-05": {
       "komut": [
@@ -45,8 +45,8 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 71/71 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
-      "deger": "17/17"
+      "ham": "SONUC: 78/78 kural atesledi · 19/19 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "deger": "19/19"
     },
     "IDD-06": {
       "komut": [
@@ -54,8 +54,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Mutasyon vakasi olan (TEST EDILDI) | 86 |",
-      "deger": "86"
+      "ham": "| Mutasyon vakasi olan (TEST EDILDI) | 95 |",
+      "deger": "95"
     },
     "IDD-07": {
       "komut": [
@@ -81,8 +81,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Bosluk (gerekce yok) | 9 |",
-      "deger": "9"
+      "ham": "| Bosluk (gerekce yok) | 0 |",
+      "deger": "0"
     },
     "IDD-10": {
       "komut": [
@@ -90,8 +90,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| — bunlardan yalniz oz-testte anilan | 8 |",
-      "deger": "8"
+      "ham": "| — bunlardan yalniz oz-testte anilan | 0 |",
+      "deger": "0"
     },
     "IDD-11": {
       "komut": [
@@ -99,8 +99,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| — hicbir testte gecmeyen | 1 |",
-      "deger": "1"
+      "ham": "| — hicbir testte gecmeyen | 0 |",
+      "deger": "0"
     },
     "IDD-12": {
       "komut": [
