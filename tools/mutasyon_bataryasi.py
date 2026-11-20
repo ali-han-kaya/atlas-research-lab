@@ -309,6 +309,12 @@ def _reck04(k):
                    ensure_ascii=False) + '\n')
 
 
+def _reck05(k):
+    """Tek ihlal: CHG-001, KFAZ0'da olmayan REQ-999'a baglanir."""
+    return _md_json_duzenle(k, 'sandbox_reck/_KOSU/02-KFAZ-2-MANIFEST.md',
+                            lambda v: v['chg'][0].__setitem__('req', 'REQ-999'))
+
+
 def _reck03(k):
     return yaz(k / 'sandbox_reck' / 'gitdepo' / 'src' / 'plansiz.py', 'y = 1\n')
 
@@ -322,6 +328,18 @@ def _tst08(k):
     """Tek ihlal: kanit JSON'undan ham rapor baglantisi cikarilir."""
     return _json_duzenle(k, 'sandbox_tst/03-KFAZ-3-TEST-EVIDENCE.json',
                          lambda v: v.pop('rapor', None))
+
+
+def _tst07(k):
+    """Tek ihlal: beyan basarisiz=1 der; ham JUnit 0 basarisizdir."""
+    return _json_duzenle(k, 'sandbox_tst/03-KFAZ-3-TEST-EVIDENCE.json',
+                         lambda v: v['sonuc'].__setitem__('basarisiz', 1))
+
+
+def _tst09(k):
+    """Tek ihlal: kanittan test komutunun cikis kodu silinir."""
+    return _json_duzenle(k, 'sandbox_tst/03-KFAZ-3-TEST-EVIDENCE.json',
+                         lambda v: v.pop('cikis_kodu', None))
 
 
 def _tst_hazirla(k):
@@ -687,6 +705,13 @@ def vakalar():
                     '--gate2b', str(k / 'sandbox_reck' / '_KOSU' / 'gate' / 'KOD-gate-2b.json')],
          _reck04,
          'RECK-04', {'cwd': 'sandbox_reck/gitdepo', 'kur': _reck_plan_hazirla}),
+        ('RECK-05', 'KOD', 'hayalet CHG olmayan REQ e baglanamaz',
+         'KOD_SABLONLAR/scripts/chg_reconcile.py',
+         lambda k: ['--kosu', str(k / 'sandbox_reck' / '_KOSU'),
+                    '--taban', str(k / 'sandbox_reck' / '_KOSU' / 'gate' / 'BASELINE.json'),
+                    '--faz', 'KFAZ2'],
+         _reck05,
+         'RECK-05', {'cwd': 'sandbox_reck/gitdepo', 'kur': _reck_plan_hazirla}),
         ('RECK-03', 'KOD', 'plansiz urun dosyasi kapsam ihlali',
          'KOD_SABLONLAR/scripts/chg_reconcile.py',
          lambda k: ['--kosu', str(k / 'sandbox_reck' / '_KOSU'),
@@ -718,6 +743,22 @@ def vakalar():
                     '--kosu', str(k / 'sandbox_tst')],
          _tst08,
          'TST-08', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_hazirla}),
+        ('TST-07', 'KOD', 'kanit beyani ham raporla celisemez',
+         'KOD_SABLONLAR/scripts/test_attest.py',
+         lambda k: ['--kanit', str(k / 'sandbox_tst' / '03-KFAZ-3-TEST-EVIDENCE.json'),
+                    '--taban', str(k / 'sandbox_tst' / 'gate' / 'BASELINE.json'),
+                    '--profil', str(k / 'kod_profil.json'),
+                    '--kosu', str(k / 'sandbox_tst')],
+         _tst07,
+         'TST-07', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_hazirla}),
+        ('TST-09', 'KOD', 'test komutunun cikis kodu kayitli',
+         'KOD_SABLONLAR/scripts/test_attest.py',
+         lambda k: ['--kanit', str(k / 'sandbox_tst' / '03-KFAZ-3-TEST-EVIDENCE.json'),
+                    '--taban', str(k / 'sandbox_tst' / 'gate' / 'BASELINE.json'),
+                    '--profil', str(k / 'kod_profil.json'),
+                    '--kosu', str(k / 'sandbox_tst')],
+         _tst09,
+         'TST-09', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_hazirla}),
         # --- uyari/bilgi kurallari: beklenen bulgu (rc=0 olabilir) ------------
         ('PL-12', 'ATLAS', 'belirsizlik cikisi var', 'ATLAS_SABLONLAR/scripts/prompt_lint.py',
          lambda k: ['--dizin', str(k / 'sandbox_pl')],
