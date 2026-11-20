@@ -1,6 +1,6 @@
 {
-  "commit": "3fad4643cc77877fc05a3c255299f785e44a6b05",
-  "file_count": 242,
+  "commit": "bd33b22c9fc2be2ddc5add5a4e891719e077bdf8",
+  "file_count": 243,
   "files": [
     {
       "mode": "100755",
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "4d22cebf88482bb333aee0c3a549737e8c461e81882fc6dfb8ccba75f00725d9",
-      "size": 3245
+      "sha256": "6ad7340d5cdcf5d5d00730c8e84305675e419680d6767cd576827134b7bbe9aa",
+      "size": 3475
     },
     {
       "mode": "100644",
@@ -1151,8 +1151,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "4432829ddc3c71b3b30bcb4174e5ec1a61c85a46f49413663b356030a12c170e",
-      "size": 2586
+      "sha256": "07b5c95c0f9dcafba0c8cd9a7d56f136e64663e0edc8aed82330fc52b49dd921",
+      "size": 2724
     },
     {
       "mode": "100644",
@@ -1205,8 +1205,8 @@
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "8674da19946902f8048b275bcda93343c7737439ba9e2c01d3e93b13a4646bc9",
-      "size": 19667
+      "sha256": "48e64356dd8125cf87b5177cd5c205b644de9608bc0f7e30ca744a34c08befe3",
+      "size": 20264
     },
     {
       "mode": "100644",
@@ -1360,9 +1360,15 @@
     },
     {
       "mode": "100644",
+      "path": "tools/demo_selftest.py",
+      "sha256": "6ea05528ebd71ac731411caaa2f7ab2bb332271d0d11822f0b608d2bb3a29861",
+      "size": 3539
+    },
+    {
+      "mode": "100644",
       "path": "tools/dogrula.py",
-      "sha256": "bb32ed8d05a46092a578edbeb357fe1ec2c624003e019d03bcfe2478b91f76fd",
-      "size": 15975
+      "sha256": "fa78a42d57e97852c0df1ab4b7d7b59557a1b088b48deba41956a1d1d2d78f50",
+      "size": 16875
     },
     {
       "mode": "100644",
@@ -1455,7 +1461,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-20T11:58:39Z",
+  "generated_at": "2026-11-20T12:52:28Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1470,6 +1476,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "912ad07278705282951d59657602f4cd81b68cae",
-  "tree_sha256": "ba0a011d4b8d8dc0c7df085a22cfa2d91620a2d8b7cb2e13f80a358fb8eca49d"
+  "tree": "423c7b395d89789e0a99fa33cc2893ea6ab8dd5a",
+  "tree_sha256": "164494733521c0dbe3dff66fe5447cf73deffd7d9f3d9adf7a1908b2d77c3763"
 }
