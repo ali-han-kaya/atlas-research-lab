@@ -34,6 +34,14 @@ jobs:
       - name: Bagimliliklar
         run: python3 -m pip install --quiet -r requirements-dev.txt
 
+      # Ham agac: H4'un kendi tarayicisindan bagimsiz, dogrudan secret_scan.
+      # Once agacin temiz oldugunu dogrula; boylece "--tum" yalniz izlenen
+      # agaci tarar. Gercek sir (P0) veya KISMI mod cikisi bu adimi kirmizi yapar.
+      - name: Ham sir taramasi (secret_scan --tum)
+        run: |
+          test -z "$(git status --porcelain --untracked-files=all)"
+          python3 KOD_SABLONLAR/scripts/secret_scan.py --tum
+
       # Runner kipi: aynı kurallar, ayrı muafiyet yok. Sekiz kalemin tamamı
       # koşar; T1 (OLG-1) bu ağacın attestation.json kanıtıyla çalışır ve
       # çıktısında kendi commit/tree çıpasını basar
