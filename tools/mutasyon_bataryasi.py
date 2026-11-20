@@ -175,13 +175,16 @@ def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None,
                       terminal=False):
     """(durum, ayrinti) dondurur. taban_rc: temiz kopyada beklenen cikis kodu.
 
-    terminal=True ise mutasyon sonrasi rc=2, `GATE_TAMPERED` ve `TERMINAL FAIL`
-    birlikte aranir; yalniz kirmizi yanmak terminal sozlesmesini kanitlamaz.
+    `iz` bir dize veya dize dizisi olabilir; hepsi mutasyon ciktisinda aranir.
+    terminal=True ise temiz tabanda GATE_TAMPERED/TERMINAL izi BULUNMAZ, mutasyon
+    sonrasi rc=2, `GATE_TAMPERED` ve `TERMINAL FAIL` birlikte aranir; yalniz
+    kirmizi yanmak terminal sozlesmesini kanitlamaz.
     """
     betik = kok / kapi
     if not betik.is_file():
         return 'EKSIK', 'kapi betigi yok: %s' % kapi
 
+    izler = [iz] if isinstance(iz, str) else list(iz)
     komut = [sys.executable, betik] + argumanlar(kok)
     calisma = cwd or kok
 
@@ -189,6 +192,9 @@ def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None,
     if rc0 != taban_rc:
         return 'TABAN_KIRIK', 'taban rc=%d (beklenen %d) · %s' % (
             rc0, taban_rc, o0.strip().splitlines()[-1] if o0.strip() else '')
+    if terminal and any(x in o0 for x in ('GATE_TAMPERED', 'TERMINAL FAIL') + tuple(izler)):
+        return 'TABAN_KIRLI', 'temiz tabanda terminal/iz bulgusu var: %s' % (
+            o0.strip().splitlines()[-1] if o0.strip() else 'bos cikti')
 
     hata = mutasyon(kok)
     if hata:
@@ -203,11 +209,13 @@ def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None,
             return 'ATESLEMEDI', 'rc=2 ama terminal izi eksik: %s' % ', '.join(eksik)
     elif rc1 == 0:
         return 'ATESLEMEDI', 'mutasyon sonrasi rc=0 (kapi kirmiziya donmedi)'
-    if iz not in o1:
-        return 'ATESLEMEDI', 'rc=%d ama beklenen iz (%s) ciktida yok' % (rc1, iz)
+    eksik_iz = [x for x in izler if x not in o1]
+    if eksik_iz:
+        return 'ATESLEMEDI', 'rc=%d ama beklenen iz(ler) (%s) ciktida yok' % (
+            rc1, ', '.join(eksik_iz))
     if terminal:
-        return 'GECTI', 'taban rc=0 · mutasyon rc=2 · GATE_TAMPERED+TERMINAL · iz=%s' % iz
-    return 'GECTI', 'taban rc=0 · mutasyon rc=%d · iz=%s' % (rc1, iz)
+        return 'GECTI', 'taban rc=0 · mutasyon rc=2 · GATE_TAMPERED+TERMINAL · iz=%s' % '+'.join(izler)
+    return 'GECTI', 'taban rc=0 · mutasyon rc=%d · iz=%s' % (rc1, '+'.join(izler))
 
 
 def _sha(p):
@@ -232,6 +240,16 @@ def _frz06(k):
 def _frz07(k):
     return _json_duzenle(k, '_KOSU/gate/BASELINE.json',
                          lambda v: v.__setitem__('temiz_agac', False))
+
+
+def _frz01_02(k):
+    """Tek ihlal: profil ve kapi betigi birlikte degistirilir (FRZ-01+FRZ-02)."""
+    hata = degistir(k, 'kod_profil.json', '{"profil": "test"}\n',
+                    '{"profil": "degisti"}\n')
+    if hata:
+        return hata
+    return degistir(k, 'scripts/kapi.py', '# test kapi betigi\n',
+                    '# degistirilmis kapi\n')
 
 
 def _src01(k):
@@ -722,6 +740,10 @@ def vakalar():
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          lambda k: yaz(k / 'kod_profil.json', '{"profil": "degisti"}\n'),
          'FRZ-01', {'terminal': True}),
+        ('FRZ-01-02', 'KOD', 'profil+betik tamperi GATE_TAMPERED terminal',
+         'KOD_SABLONLAR/scripts/freeze_check.py',
+         lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
+         _frz01_02, ('FRZ-01', 'FRZ-02'), {'terminal': True}),
         ('FRZ-02', 'KOD', 'kapi betigi dondurulmus', 'KOD_SABLONLAR/scripts/freeze_check.py',
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          lambda k: yaz(k / 'scripts' / 'kapi.py', '# degistirilmis kapi\n'),
