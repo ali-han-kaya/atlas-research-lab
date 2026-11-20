@@ -162,8 +162,13 @@ def qr_govde(uzun_mu):
             '"%s" %s\n\n## Kaynakca\n\nKaya, A. (2020). Deneme.\n' % (alinti, atif))
 
 
-def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None):
-    """(durum, ayrinti) dondurur. taban_rc: temiz kopyada beklenen cikis kodu."""
+def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None,
+                      terminal=False):
+    """(durum, ayrinti) dondurur. taban_rc: temiz kopyada beklenen cikis kodu.
+
+    terminal=True ise mutasyon sonrasi rc=2, `GATE_TAMPERED` ve `TERMINAL FAIL`
+    birlikte aranir; yalniz kirmizi yanmak terminal sozlesmesini kanitlamaz.
+    """
     betik = kok / kapi
     if not betik.is_file():
         return 'EKSIK', 'kapi betigi yok: %s' % kapi
@@ -181,10 +186,18 @@ def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None)
         return 'MUTASYON_UYGULANMADI', hata
 
     rc1, o1 = kos(komut, cwd=calisma)
-    if rc1 == 0:
+    if terminal:
+        if rc1 != 2:
+            return 'ATESLEMEDI', 'mutasyon rc=%d (terminal icin 2 bekleniyordu)' % rc1
+        eksik = [x for x in ('GATE_TAMPERED', 'TERMINAL FAIL') if x not in o1]
+        if eksik:
+            return 'ATESLEMEDI', 'rc=2 ama terminal izi eksik: %s' % ', '.join(eksik)
+    elif rc1 == 0:
         return 'ATESLEMEDI', 'mutasyon sonrasi rc=0 (kapi kirmiziya donmedi)'
     if iz not in o1:
         return 'ATESLEMEDI', 'rc=%d ama beklenen iz (%s) ciktida yok' % (rc1, iz)
+    if terminal:
+        return 'GECTI', 'taban rc=0 · mutasyon rc=2 · GATE_TAMPERED+TERMINAL · iz=%s' % iz
     return 'GECTI', 'taban rc=0 · mutasyon rc=%d · iz=%s' % (rc1, iz)
 
 
@@ -557,10 +570,15 @@ def vakalar():
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          lambda k: yaz(k / 'kod_profil.json', '{"profil": "degisti"}\n'),
          'FRZ-01'),
+        ('FRZ-01T', 'KOD', 'profil tamperi GATE_TAMPERED terminal',
+         'KOD_SABLONLAR/scripts/freeze_check.py',
+         lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
+         lambda k: yaz(k / 'kod_profil.json', '{"profil": "degisti"}\n'),
+         'FRZ-01', {'terminal': True}),
         ('FRZ-02', 'KOD', 'kapi betigi dondurulmus', 'KOD_SABLONLAR/scripts/freeze_check.py',
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          lambda k: yaz(k / 'scripts' / 'kapi.py', '# degistirilmis kapi\n'),
-         'FRZ-02'),
+         'FRZ-02', {'terminal': True}),
         ('FRZ-03', 'KOD', 'dondurulan bolge degismez', 'KOD_SABLONLAR/scripts/freeze_check.py',
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          lambda k: yaz(k / 'dondurulan.md', '# bozulmus bolge\n'),
@@ -778,8 +796,9 @@ def main():
             if bulgu_modu:
                 durum, ayrinti = taban_ve_bulgu(hedef, kapi, argumanlar, mutasyon, iz)
             else:
-                durum, ayrinti = taban_ve_mutasyon(hedef, kapi, argumanlar, mutasyon, iz,
-                                                   cwd=calisma)
+                durum, ayrinti = taban_ve_mutasyon(
+                    hedef, kapi, argumanlar, mutasyon, iz, cwd=calisma,
+                    terminal=bool(opsiyon.get('terminal')))
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
 
