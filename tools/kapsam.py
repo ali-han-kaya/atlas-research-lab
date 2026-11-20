@@ -93,7 +93,8 @@ RISK_SIRASI = [
     ('CHK-05', 'ENVANTER'), ('DEC-027', 'ENVANTER'), ('SEC-04', 'BILGI'),
 ]
 RISK_EKLENEN = {'TST-08', 'RECK-06', 'DEP-05',
-               'RECK-01', 'RECK-02', 'RECK-04'}
+               'RECK-01', 'RECK-02', 'RECK-04',
+               'RECK-05', 'TST-07', 'TST-09'}
 RISK_NOT = {
     'TST-08': 'Ham test raporu yok/okunamiyor — kanitsiz PASS P0; kapinin kanit temeli.',
     'RECK-06': 'Dondurulmus bolge diff\'te — dogrudan tamper sinyali, P0.',
@@ -135,13 +136,11 @@ RISK_NOT = {
 
 # Bu dilimde kapatilamayan, hala hicbir testte gorunmeyen 8 kuralin risk
 # sirasindaki ilk ucu. Bunlar silinmez; bir sonraki dilimin acik kaydidir.
-SONRAKI_DILIM = ['RECK-05', 'TST-07', 'TST-09']
+SONRAKI_DILIM = ['TST-01', 'TST-02', 'TST-03']
 SONRAKI_NOT = {
-    'RECK-05': 'Hayalet CHG yok: olmayan REQ\'e veya plansiz dosyaya baglanan '
-               'degisiklik P0; manifest-diff bagini korur.',
-    'TST-07': 'Kanit beyani ham JUnit ile celisemez; kapi kendi beyanina guvenmez.',
-    'TST-09': 'Test komutunun cikis kodu kayitli olmali; kosup kosmadigi '
-              'bilinmeyen test yesil sayilmaz.',
+    'TST-01': 'Basarisiz test sayisi sifir olmali; kirmizi testle PASS verilemez.',
+    'TST-02': 'Hatali test sayisi sifir olmali; altyapi hatasi yesil sayilmaz.',
+    'TST-03': 'En az bir test kosmali; sifir test temiz degildir.',
 }
 
 
@@ -322,13 +321,12 @@ def markdown():
            '',
            '## Risk sirasi (51 kural)', '',
            '19.11.2026 itibariyla mutation kapsami olmayan 51 kural; siralama',
-           'saglamlik/etki sirasina gore sabittir. Ilk uc ve kalan bosluk',
-           'diliminin ucu bu turda vaka aldi; durum sutunu guncel envanterden',
-           'okunur.', '']
+           'saglamlik/etki sirasina gore sabittir. Kapatilan her kural bu turda',
+           'vaka aldi; durum sutunu guncel envanterden okunur.', '']
     out += risk_tablosu(satirlar)
     out += ['', '## Sonraki dilim', '',
             'Asagidaki uc kural bu turda kapatilmadi; hala hicbir testte',
-            'gorunmeyen 8 kuralin risk sirasindaki ilk ucudur. Bir sonraki',
+            'gorunmeyen %d kuralin risk sirasindaki ilk ucudur. Bir sonraki' % (bosluk - oz_anilan),
             'dilimde gercek vakayla kapatilacak; sessizce sayidan dusulmedi.', '',
             '| Kural | Betik | Neden test edilemedi / neyi korur |',
             '|---|---|---|']

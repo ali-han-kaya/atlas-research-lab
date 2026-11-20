@@ -15,18 +15,17 @@ bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus
 |---|---|
 | Kapi betigi | 21 |
 | Bildirilen kural | 122 |
-| Mutasyon vakasi olan (TEST EDILDI) | 77 |
+| Mutasyon vakasi olan (TEST EDILDI) | 80 |
 | Gerekceli kapsam disi | 27 |
-| Bosluk (gerekce yok) | 18 |
+| Bosluk (gerekce yok) | 15 |
 | — bunlardan yalniz oz-testte anilan | 10 |
-| — hicbir testte gecmeyen | 8 |
+| — hicbir testte gecmeyen | 5 |
 
 ## Risk sirasi (51 kural)
 
 19.11.2026 itibariyla mutation kapsami olmayan 51 kural; siralama
-saglamlik/etki sirasina gore sabittir. Ilk uc ve kalan bosluk
-diliminin ucu bu turda vaka aldi; durum sutunu guncel envanterden
-okunur.
+saglamlik/etki sirasina gore sabittir. Kapatilan her kural bu turda
+vaka aldi; durum sutunu guncel envanterden okunur.
 
 | # | Kural | Betik | Grup | Durum | Gerekce |
 |---|---|---|---|---|---|
@@ -39,13 +38,13 @@ okunur.
 | 7 | RECK-08 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | BOSLUK (sonraki dilim) | Makine bloklarinin alan bicimi semaya uymali; sessizce dusen girdi RECK-01/07'yi devre disi birakir. |
 | 8 | RECK-09 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | BOSLUK (sonraki dilim) | Plan yokken urun kodu degismemeli; KFAZ0 oncesi degisiklik kapsamsiz ve denetimsiz kalir. |
 | 9 | RECK-04 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | 2B kapisinin "KANITLI" dedigi her CHG diff'te olmali; ikinci gozun iddiasi manifest ve diff ile dogrulanir. |
-| 10 | RECK-05 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | BOSLUK (sonraki dilim) | Hayalet CHG yok: olmayan REQ veya plansiz dosyaya baglanan degisiklik P0; manifest-diff bagini korur. |
+| 10 | RECK-05 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | Hayalet CHG yok: olmayan REQ veya plansiz dosyaya baglanan degisiklik P0; manifest-diff bagini korur. |
 | 11 | RECK-07 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | BOSLUK (sonraki dilim) | Davranissal her REQ tabanda olmayan YENI bir test adina eslenmeli; eski testi gostermek bedava yesildir. |
-| 12 | TST-07 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | Kanit beyani ham JUnit ile celisemez; kapi kendi beyanina guvenmez. |
+| 12 | TST-07 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Kanit beyani ham JUnit ile celisemez; kapi kendi beyanina guvenmez. |
 | 13 | TST-10 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | Rapor kaynaktan eski olamaz; bayat kanit mevcut kodu olcmemis olabilir. |
 | 14 | TST-11 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | Kanittaki komut kod_profil ile ayni olmali; baska komutun kaniti sayilmaz. |
 | 15 | TST-12 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | Kanittaki rapor yolu kod_profil ile ayni olmali; baska rapor gosterilemez. |
-| 16 | TST-09 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | Test komutunun cikis kodu kayitli olmali; kosup kosmadigi bilinmeyen test yesil sayilmaz. |
+| 16 | TST-09 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Test komutunun cikis kodu kayitli olmali; kosup kosmadigi bilinmeyen test yesil sayilmaz. |
 | 17 | TST-01 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | Basarisiz test sayisi sifir olmali; kirmizi testle PASS verilemez. |
 | 18 | TST-02 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | Hatali test sayisi sifir olmali; altyapi hatasi yesil sayilmaz. |
 | 19 | TST-03 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | En az bir test kosmali; sifir test temiz degildir. |
@@ -85,14 +84,14 @@ okunur.
 ## Sonraki dilim
 
 Asagidaki uc kural bu turda kapatilmadi; hala hicbir testte
-gorunmeyen 8 kuralin risk sirasindaki ilk ucudur. Bir sonraki
+gorunmeyen 5 kuralin risk sirasindaki ilk ucudur. Bir sonraki
 dilimde gercek vakayla kapatilacak; sessizce sayidan dusulmedi.
 
 | Kural | Betik | Neden test edilemedi / neyi korur |
 |---|---|---|
-| RECK-05 | `chg_reconcile.py` | Hayalet CHG yok: olmayan REQ'e veya plansiz dosyaya baglanan degisiklik P0; manifest-diff bagini korur. |
-| TST-07 | `test_attest.py` | Kanit beyani ham JUnit ile celisemez; kapi kendi beyanina guvenmez. |
-| TST-09 | `test_attest.py` | Test komutunun cikis kodu kayitli olmali; kosup kosmadigi bilinmeyen test yesil sayilmaz. |
+| TST-01 | `test_attest.py` | Basarisiz test sayisi sifir olmali; kirmizi testle PASS verilemez. |
+| TST-02 | `test_attest.py` | Hatali test sayisi sifir olmali; altyapi hatasi yesil sayilmaz. |
+| TST-03 | `test_attest.py` | En az bir test kosmali; sifir test temiz degildir. |
 
 ## Kapsam disi siniflari
 
@@ -228,7 +227,7 @@ Toplam: 21 betik · 122 tekil kural; her satirda Envanter = Baslikta ∪ Bolum b
 | `chg_reconcile.py` | RECK-02 | RECK-02 | TEST EDILDI | mutasyon vakasi: RECK-02 |
 | `chg_reconcile.py` | RECK-03 | RECK-03 | TEST EDILDI | mutasyon vakasi: RECK-03 |
 | `chg_reconcile.py` | RECK-04 | RECK-04 | TEST EDILDI | mutasyon vakasi: RECK-04 |
-| `chg_reconcile.py` | RECK-05 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
+| `chg_reconcile.py` | RECK-05 | RECK-05 | TEST EDILDI | mutasyon vakasi: RECK-05 |
 | `chg_reconcile.py` | RECK-06 | RECK-06 | TEST EDILDI | mutasyon vakasi: RECK-06 |
 | `chg_reconcile.py` | RECK-07 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
 | `chg_reconcile.py` | RECK-08 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
@@ -266,9 +265,9 @@ Toplam: 21 betik · 122 tekil kural; her satirda Envanter = Baslikta ∪ Bolum b
 | `test_attest.py` | TST-04 | TST-04 | TEST EDILDI | mutasyon vakasi: TST-04 |
 | `test_attest.py` | TST-05 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
 | `test_attest.py` | TST-06 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
-| `test_attest.py` | TST-07 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
+| `test_attest.py` | TST-07 | TST-07 | TEST EDILDI | mutasyon vakasi: TST-07 |
 | `test_attest.py` | TST-08 | TST-08 | TEST EDILDI | mutasyon vakasi: TST-08 |
-| `test_attest.py` | TST-09 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
+| `test_attest.py` | TST-09 | TST-09 | TEST EDILDI | mutasyon vakasi: TST-09 |
 | `test_attest.py` | TST-10 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
 | `test_attest.py` | TST-11 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
 | `test_attest.py` | TST-12 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
