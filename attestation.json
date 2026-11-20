@@ -1,5 +1,5 @@
 {
-  "commit": "5f32f89aa43028ad5424d11e2e3f6ce09cecd35c",
+  "commit": "095a2ed82bd55ab651297d9cc92f79fdc9bde46d",
   "file_count": 243,
   "files": [
     {
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "6ad7340d5cdcf5d5d00730c8e84305675e419680d6767cd576827134b7bbe9aa",
-      "size": 3475
+      "sha256": "0ecfebec459fcca58065fdebee8c44a9d556350c8a3cf8061dce0e75cd33ef5c",
+      "size": 4039
     },
     {
       "mode": "100644",
@@ -1205,8 +1205,8 @@
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "cc0fa1ffdf113939a3f57f0d4b4989e0260d1878315217d7b616a87ed6fea0fa",
-      "size": 20430
+      "sha256": "991d1bfed0cf0d34e1cdfa876839ae430dd855345375328fdb5a35f572708cf5",
+      "size": 20462
     },
     {
       "mode": "100644",
@@ -1379,8 +1379,8 @@
     {
       "mode": "100644",
       "path": "tools/iddia.py",
-      "sha256": "bf13b77f323b26bdbdcd80361c83f9be53068f1e036deb89aa761e10c952d654",
-      "size": 16394
+      "sha256": "a7b3e5461fd1be79db09b343ced69a08693ed377201ceccebc5957c1eeede6e5",
+      "size": 18275
     },
     {
       "mode": "100644",
@@ -1461,7 +1461,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-20T17:11:53Z",
+  "generated_at": "2026-11-20T17:30:25Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1476,6 +1476,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "17906b12d4524036b9cbdb5cb7903c9cb6044ecc",
-  "tree_sha256": "e514a8f6f72f5ba76d9ada3a7b746d3ac8d3c28ddf80c615e9500b570ff72db8"
+  "tree": "d19e852b79675ecad4085be71873982fbe91ec8f",
+  "tree_sha256": "a9aa0a16264ab6c07b3c08ddd4711b36353556ab02cd90b6938ddc70b1946d25"
 }
