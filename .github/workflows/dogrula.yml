@@ -36,7 +36,9 @@ jobs:
 
       # Runner kipi: aynı kurallar, ayrı muafiyet yok. Sekiz kalemin tamamı
       # koşar; T1 (OLG-1) bu ağacın attestation.json kanıtıyla çalışır ve
-      # çıktısında kendi commit/tree çıpasını basar. Bir kalem koşmazsa satır
+      # çıktısında kendi commit/tree çıpasını basar
+      # (ör. `OZ-TEST: 145/145 gecti · KANIT commit=<sha> tree=<sha>`).
+      # Bir kalem koşmazsa satır
       # `KABUL EDİLEN BORÇ: <id> koşmuyor — <sebep>` olarak görünür ve PASS
       # sayılmaz; koşan 8/8 ile eksik koşu arasındaki fark gizlenmez.
       - name: make dogrula-ci

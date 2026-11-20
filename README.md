@@ -320,7 +320,7 @@ kanıtını kullanır. Tarihsel `docs/OLGULAR.md` kayıtları silinmedi; public 
 makine kanıtı sayılmaz. `OLGU-06` iki gerçek DERSLER satırıyla kapatıldı. Sahte
 commit çıpası yoktur; `make dogrula` bu depoda **8/8** verir ve T1 PASS'tir.
 Attestation yoksa/bozuksa OLG-1 FAIL olur. Koşu çıktısı T1 satırında çıpayı
-görünür basar — `ATLAS OZ-TEST: 145/145 gecti · KANIT commit=<sha> tree=<sha>` —
+görünür basar — `OZ-TEST: 145/145 gecti · KANIT commit=<sha> tree=<sha>` —
 yani PASS, doğrulanan ağacın kanıtıyla birlikte okunur; kanıt satırı stderr
 uyarısı değildir. T1 herhangi bir nedenle koşmazsa satır
 `KABUL EDİLEN BORÇ: T1 koşmuyor — <sebep>` olur ve hüküm `PASS 7/8` diye

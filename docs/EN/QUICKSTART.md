@@ -23,7 +23,7 @@ make kur                                         # enable commit/push guards in 
   H3  kabuk sozdizimi          PASS    7 dosya
   H4  sir taramasi             PASS    0 bulgu
   H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 8/8 gecti
-  T1  ATLAS oz-testi           PASS    ATLAS OZ-TEST: 145/145 gecti
+  T1  ATLAS oz-testi           PASS    OZ-TEST: 145/145 gecti · KANIT commit=<sha> tree=<sha>
   T2  KOD oz-testi             PASS    KOD OZ-TEST: 174/174 gecti
   T3  Toolkit oz-testi         PASS    ...
 
