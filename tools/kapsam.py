@@ -62,6 +62,63 @@ KAPSAM_DISI = {
 }
 
 
+# Risk sirasi — 19.11.2026'daki 51 mutation-kapsamsiz kuralin tamami.
+# Siralama ilkesi: once sahte yesil/tamper (P0), sonra tedarik/teslim/yuzey,
+# sonra test envanteri/olcum/provenance; bilgi seviyesindeki olu kimlik sonda.
+# Liste sabittir: vakalar eklense de siralama degismez, durum sutunu guncellenir.
+RISK_GRUPLARI = {
+    'KANIT': 'Kanit/yesil butunlugu — P0',
+    'KAPSAM': 'Kapsam/degisiklik butunlugu — P0',
+    'TEDARIK': 'Tedarik, teslim ve disa acik yuzey — P0/P1',
+    'ENVANTER': 'Test envanteri, olcum ve provenance — P0/P1',
+    'BILGI': 'Bilgi seviyesi / olu kimlik — P1',
+}
+RISK_SIRASI = [
+    ('TST-08', 'KANIT'), ('RECK-06', 'KAPSAM'), ('DEP-05', 'TEDARIK'),
+    ('FRZ-08', 'KAPSAM'), ('RECK-01', 'KAPSAM'), ('RECK-02', 'KAPSAM'),
+    ('RECK-08', 'KAPSAM'), ('RECK-09', 'KAPSAM'), ('RECK-04', 'KAPSAM'),
+    ('RECK-05', 'KAPSAM'), ('RECK-07', 'KAPSAM'), ('TST-07', 'KANIT'),
+    ('TST-10', 'KANIT'), ('TST-11', 'KANIT'), ('TST-12', 'KANIT'),
+    ('TST-09', 'KANIT'), ('TST-01', 'KANIT'), ('TST-02', 'KANIT'),
+    ('TST-03', 'KANIT'), ('TST-05', 'KANIT'), ('TST-06', 'KANIT'),
+    ('DEP-01', 'TEDARIK'), ('DEP-02', 'TEDARIK'), ('DEP-06', 'TEDARIK'),
+    ('DEP-03', 'TEDARIK'), ('DEP-04', 'TEDARIK'), ('TSL-03', 'TEDARIK'),
+    ('TSL-04', 'TEDARIK'), ('TSL-06', 'TEDARIK'), ('TSL-01', 'TEDARIK'),
+    ('TSL-02', 'TEDARIK'), ('TSL-05', 'TEDARIK'), ('API-02', 'TEDARIK'),
+    ('API-03', 'TEDARIK'), ('API-01', 'TEDARIK'), ('API-05', 'TEDARIK'),
+    ('API-04', 'TEDARIK'), ('OZT-01', 'ENVANTER'), ('OZT-02', 'ENVANTER'),
+    ('OZT-03', 'ENVANTER'), ('OZT-04', 'ENVANTER'), ('OZT-05', 'ENVANTER'),
+    ('OZT-06', 'ENVANTER'), ('OLGU-04', 'ENVANTER'), ('OLGU-05', 'ENVANTER'),
+    ('OLGU-06', 'ENVANTER'), ('CHK-01', 'ENVANTER'), ('CHK-02', 'ENVANTER'),
+    ('CHK-05', 'ENVANTER'), ('DEC-027', 'ENVANTER'), ('SEC-04', 'BILGI'),
+]
+RISK_EKLENEN = {'TST-08', 'RECK-06', 'DEP-05'}
+RISK_NOT = {
+    'TST-08': 'Ham test raporu yok/okunamiyor — kanitsiz PASS P0; kapinin kanit temeli.',
+    'RECK-06': 'Dondurulmus bolge diff\'te — dogrudan tamper sinyali, P0.',
+    'DEP-05': 'Izinli lisans listesi disinda bagimlilik — tedarik/uyum P0.',
+}
+
+
+def risk_tablosu(satirlar):
+    durum = {k: d for _b, k, _v, d, _g in satirlar}
+    betik = {k: b.split('/')[-1] for b, k, _v, _d, _g in satirlar}
+    if len(RISK_SIRASI) != 51 or len({r for r, _g in RISK_SIRASI}) != 51:
+        raise SystemExit('RISK_SIRASI 51 tekil kural icermeli')
+    eksik = [r for r, _g in RISK_SIRASI if r not in durum]
+    if eksik:
+        raise SystemExit('RISK_SIRASI envanterde yok: %s' % ', '.join(eksik))
+    out = ['| # | Kural | Betik | Grup | Durum | Gerekce |', '|---|---|---|---|---|---|']
+    for i, (kural, grup) in enumerate(RISK_SIRASI, 1):
+        _durum = durum[kural]
+        if kural in RISK_EKLENEN and _durum == 'TEST EDILDI':
+            _durum = 'TEST EDILDI (bu tur)'
+        gerekce = RISK_NOT.get(kural, RISK_GRUPLARI[grup])
+        out.append('| %d | %s | `%s` | %s | %s | %s |' % (
+            i, kural, betik[kural], RISK_GRUPLARI[grup], _durum, gerekce))
+    return out
+
+
 def kapi_betikleri():
     for d in DIZINLER:
         for p in sorted((KOK / d).glob('*.py')):
@@ -214,6 +271,12 @@ def markdown():
            '| — bunlardan yalniz oz-testte anilan | %d |' % oz_anilan,
            '| — hicbir testte gecmeyen | %d |' % (bosluk - oz_anilan),
            '',
+           '## Risk sirasi (51 kural)', '',
+           '19.11.2026 itibariyla mutation kapsami olmayan 51 kural; siralama',
+           'saglamlik/etki sirasina gore sabittir. Ilk ucu bu turda vaka aldi;',
+           'durum sutunu guncel envanterden okunur.', '']
+    out += risk_tablosu(satirlar)
+    out += ['',
            '## Kapsam disi siniflari', '',
            'Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir',
            '(asagida betik adiyla birlikte yazili).', '']

@@ -58,7 +58,7 @@
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **55/55 cases red + 17/17 expected findings** over 71 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "**174/174**; mutation battery **58/58 cases red + 17/17 expected findings** over 74 rules. Mutation-tested vs untested gate rules are measured"
         },
         {
           "dosya": "docs/README.md",
@@ -98,15 +98,15 @@
     },
     {
       "id": "IDD-04",
-      "iddia": "mutasyon bataryasi 55/55 vaka atesledi",
+      "iddia": "mutasyon bataryasi 58/58 vaka atesledi",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **55/55 cases red + 17/17 expected findings** over 71 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "**174/174**; mutation battery **58/58 cases red + 17/17 expected findings** over 74 rules. Mutation-tested vs untested gate rules are measured"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "SONUC: 55/55 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+          "alinti": "SONUC: 58/58 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0"
         }
       ],
       "durum": "OLCULDU",
@@ -115,7 +115,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "ayikla": "SONUC:\\s*(\\d+/\\d+) kural atesledi",
-      "beklenen": "55/55"
+      "beklenen": "58/58"
     },
     {
       "id": "IDD-05",
@@ -123,11 +123,11 @@
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **55/55 cases red + 17/17 expected findings** over 71 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "**174/174**; mutation battery **58/58 cases red + 17/17 expected findings** over 74 rules. Mutation-tested vs untested gate rules are measured"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "SONUC: 55/55 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+          "alinti": "SONUC: 58/58 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0"
         }
       ],
       "durum": "OLCULDU",
@@ -140,19 +140,19 @@
     },
     {
       "id": "IDD-06",
-      "iddia": "mutasyon vakasi olan kural sayisi 71",
+      "iddia": "mutasyon vakasi olan kural sayisi 74",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **55/55 cases red + 17/17 expected findings** over 71 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "**174/174**; mutation battery **58/58 cases red + 17/17 expected findings** over 74 rules. Mutation-tested vs untested gate rules are measured"
         },
         {
           "dosya": "README.md",
-          "alinti": "- **TEST EDİLDİ** — 71 kural (mutasyon vakası adıyla)"
+          "alinti": "- **TEST EDİLDİ** — 74 kural (mutasyon vakası adıyla)"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "of 122 rules, **71** are"
+          "alinti": "of 122 rules, **74** are"
         }
       ],
       "durum": "OLCULDU",
@@ -161,7 +161,7 @@
         "tools/kapsam.py"
       ],
       "ayikla": "\\|\\s*Mutasyon vakasi olan \\(TEST EDILDI\\)\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "71"
+      "beklenen": "74"
     },
     {
       "id": "IDD-07",
@@ -169,7 +169,7 @@
       "kaynaklar": [
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "of 122 rules, **71** are"
+          "alinti": "of 122 rules, **74** are"
         }
       ],
       "durum": "OLCULDU",
@@ -182,15 +182,15 @@
     },
     {
       "id": "IDD-08",
-      "iddia": "gerekceli kapsam disi kural sayisi 28",
+      "iddia": "gerekceli kapsam disi kural sayisi 27",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "- **KAPSAM DIŞI** — 28 kural, her biri ölçülmüş bir gerekçeyle: ağ"
+          "alinti": "- **KAPSAM DIŞI** — 27 kural, her biri ölçülmüş bir gerekçeyle: ağ"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "mutation-tested, **28** are out of scope with a measured reason"
+          "alinti": "mutation-tested, **27** are out of scope with a measured reason"
         }
       ],
       "durum": "OLCULDU",
@@ -199,19 +199,19 @@
         "tools/kapsam.py"
       ],
       "ayikla": "\\|\\s*Gerekceli kapsam disi\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "28"
+      "beklenen": "27"
     },
     {
       "id": "IDD-09",
-      "iddia": "gerekcesiz bosluk kural sayisi 23",
+      "iddia": "gerekcesiz bosluk kural sayisi 21",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "- **BOŞLUK** — 23 kural: 11'i yalnız öz-testte anılıyor, 12'si hiçbir testte geçmiyor"
+          "alinti": "- **BOŞLUK** — 21 kural: 10'u yalnız öz-testte anılıyor, 11'i hiçbir testte geçmiyor"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "code branch emits), and **23** are explicit gaps — 11 mentioned only in"
+          "alinti": "code branch emits), and **21** are explicit gaps — 10 mentioned only in"
         }
       ],
       "durum": "OLCULDU",
@@ -220,19 +220,19 @@
         "tools/kapsam.py"
       ],
       "ayikla": "\\|\\s*Bosluk \\(gerekce yok\\)\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "23"
+      "beklenen": "21"
     },
     {
       "id": "IDD-10",
-      "iddia": "yalniz oz-testte anilan bosluk sayisi 11",
+      "iddia": "yalniz oz-testte anilan bosluk sayisi 10",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "- **BOŞLUK** — 23 kural: 11'i yalnız öz-testte anılıyor, 12'si hiçbir testte geçmiyor"
+          "alinti": "- **BOŞLUK** — 21 kural: 10'u yalnız öz-testte anılıyor, 11'i hiçbir testte geçmiyor"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "code branch emits), and **23** are explicit gaps — 11 mentioned only in"
+          "alinti": "code branch emits), and **21** are explicit gaps — 10 mentioned only in"
         }
       ],
       "durum": "OLCULDU",
@@ -241,19 +241,19 @@
         "tools/kapsam.py"
       ],
       "ayikla": "bunlardan yalniz oz-testte anilan\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "11"
+      "beklenen": "10"
     },
     {
       "id": "IDD-11",
-      "iddia": "hicbir testte gecmeyen bosluk sayisi 12",
+      "iddia": "hicbir testte gecmeyen bosluk sayisi 11",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "- **BOŞLUK** — 23 kural: 11'i yalnız öz-testte anılıyor, 12'si hiçbir testte geçmiyor"
+          "alinti": "- **BOŞLUK** — 21 kural: 10'u yalnız öz-testte anılıyor, 11'i hiçbir testte geçmiyor"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "self-tests, 12 in no test at all. Gaps are"
+          "alinti": "self-tests, 11 in no test at all. Gaps are"
         }
       ],
       "durum": "OLCULDU",
@@ -262,7 +262,7 @@
         "tools/kapsam.py"
       ],
       "ayikla": "hicbir testte gecmeyen\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "12"
+      "beklenen": "11"
     },
     {
       "id": "IDD-12",
