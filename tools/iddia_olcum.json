@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-20T10:59:49Z",
+  "zaman": "2026-11-20T11:15:51Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -36,8 +36,8 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 58/58 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
-      "deger": "58/58"
+      "ham": "SONUC: 61/61 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "deger": "61/61"
     },
     "IDD-05": {
       "komut": [
@@ -45,7 +45,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 58/58 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "ham": "SONUC: 61/61 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
       "deger": "17/17"
     },
     "IDD-06": {
@@ -54,8 +54,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Mutasyon vakasi olan (TEST EDILDI) | 74 |",
-      "deger": "74"
+      "ham": "| Mutasyon vakasi olan (TEST EDILDI) | 77 |",
+      "deger": "77"
     },
     "IDD-07": {
       "komut": [
@@ -81,8 +81,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Bosluk (gerekce yok) | 21 |",
-      "deger": "21"
+      "ham": "| Bosluk (gerekce yok) | 18 |",
+      "deger": "18"
     },
     "IDD-10": {
       "komut": [
@@ -99,8 +99,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| — hicbir testte gecmeyen | 11 |",
-      "deger": "11"
+      "ham": "| — hicbir testte gecmeyen | 8 |",
+      "deger": "8"
     },
     "IDD-12": {
       "komut": [
