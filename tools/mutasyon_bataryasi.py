@@ -43,6 +43,10 @@ SAHTE_ANAHTAR = 'AKIA' + 'Z7Q2M4XK9PLR3TWV'
 
 DEC_BASLIKLAR = ['Etik Kurul', 'Cikar Catismasi', 'Finansman', 'credit',
                  'Veri Erisilebilirligi', 'Yapay Zeka']
+# Yalniz REC ailesi: "tek ihlal -> yalniz hedef FAIL etiketi" ve "ihlali geri al
+# -> yeniden yesil" sozlesmesini her kosuda zorunlu kilar.
+FAIL_ETIKET = re.compile(r'\bFAIL\s+([A-Z]{2,8}(?:-[A-Z0-9]{1,8}){0,2}-\d{2,3})\b')
+REC_KONTROL = {'kontrol': True, 'yalniz': True}
 
 
 def kos(komut, cwd=None, env=None):
@@ -172,13 +176,18 @@ def qr_govde(uzun_mu):
 
 
 def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None,
-                      terminal=False, env=None):
+                      terminal=False, env=None, kontrol=False, yalniz=False):
     """(durum, ayrinti) dondurur. taban_rc: temiz kopyada beklenen cikis kodu.
 
     `iz` bir dize veya dize dizisi olabilir; hepsi mutasyon ciktisinda aranir.
     terminal=True ise temiz tabanda GATE_TAMPERED/TERMINAL izi BULUNMAZ, mutasyon
     sonrasi rc=2, `GATE_TAMPERED` ve `TERMINAL FAIL` birlikte aranir; yalniz
     kirmizi yanmak terminal sozlesmesini kanitlamaz.
+    kontrol=True ise ihlal uygulandiktan sonra fikstur yedekten geri yuklenir ve
+    ayni kapi tekrar kosulur: rc=taban_rc ve FAIL etiketi yok. Boylece vaka
+    "her mutasyonda kirmizi" olan vacuous bir test degildir.
+    yalniz=True ise mutasyon ciktisindaki FAIL etiketleri tam olarak `iz` olmali;
+    baska bir kuralin FAIL etiketi sizarsa vaka yanlis etiketlenmistir.
     """
     betik = kok / kapi
     if not betik.is_file():
@@ -187,11 +196,20 @@ def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None,
     izler = [iz] if isinstance(iz, str) else list(iz)
     komut = [sys.executable, betik] + argumanlar(kok)
     calisma = cwd or kok
+    yedek = None
+    if kontrol:
+        yedek = kok.parent / (kok.name + '_kontrol_yedek')
+        if yedek.exists():
+            shutil.rmtree(yedek)
+        shutil.copytree(kok, yedek, symlinks=True)
 
     rc0, o0 = kos(komut, cwd=calisma, env=env)
     if rc0 != taban_rc:
         return 'TABAN_KIRIK', 'taban rc=%d (beklenen %d) · %s' % (
             rc0, taban_rc, o0.strip().splitlines()[-1] if o0.strip() else '')
+    if yalniz and FAIL_ETIKET.findall(o0):
+        return 'TABAN_KIRLI', 'temiz tabanda FAIL etiketi var: %s' % (
+            ', '.join(sorted(set(FAIL_ETIKET.findall(o0)))))
     if terminal and any(x in o0 for x in ('GATE_TAMPERED', 'TERMINAL FAIL') + tuple(izler)):
         return 'TABAN_KIRLI', 'temiz tabanda terminal/iz bulgusu var: %s' % (
             o0.strip().splitlines()[-1] if o0.strip() else 'bos cikti')
@@ -213,8 +231,37 @@ def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None,
     if eksik_iz:
         return 'ATESLEMEDI', 'rc=%d ama beklenen iz(ler) (%s) ciktida yok' % (
             rc1, ', '.join(eksik_iz))
+    if yalniz:
+        etiketler = FAIL_ETIKET.findall(o1)
+        if iz not in etiketler:
+            return 'ATESLEMEDI', 'beklenen FAIL %s yok; FAIL etiketleri=%s' % (
+                iz, ', '.join(sorted(set(etiketler))) or 'yok')
+        diger = sorted(set(etiketler) - {iz})
+        if diger:
+            return 'ATESLEMEDI', 'baska kural etiketi sizdi: %s' % ', '.join(diger)
+
+    if kontrol:
+        shutil.rmtree(kok)
+        shutil.copytree(yedek, kok, symlinks=True)
+        shutil.rmtree(yedek)
+        rc2, o2 = kos(komut, cwd=calisma, env=env)
+        if rc2 != taban_rc:
+            return 'KONTROL_KIRMIZI', 'kontrol rc=%d (beklenen %d) · %s' % (
+                rc2, taban_rc, o2.strip().splitlines()[-1] if o2.strip() else '')
+        if yalniz and FAIL_ETIKET.findall(o2):
+            return 'KONTROL_KIRMIZI', 'kontrol ciktisinda FAIL etiketi var: %s' % (
+                ', '.join(sorted(set(FAIL_ETIKET.findall(o2)))))
+        if terminal and any(x in o2 for x in ('GATE_TAMPERED', 'TERMINAL FAIL')):
+            return 'KONTROL_KIRMIZI', 'kontrol ciktisinda terminal izi var'
+
     if terminal:
-        return 'GECTI', 'taban rc=0 · mutasyon rc=2 · GATE_TAMPERED+TERMINAL · iz=%s' % '+'.join(izler)
+        return 'GECTI', ('taban rc=0 · FAIL iz yok · mutasyon rc=2 · '
+                         'GATE_TAMPERED+TERMINAL · FAIL iz=%s (yalniz) · '
+                         'kontrol rc=0 · FAIL iz yok' % '+'.join(izler))
+    if kontrol:
+        return 'GECTI', ('taban rc=0 · FAIL iz yok · mutasyon rc=%d · '
+                         'FAIL iz=%s (yalniz) · kontrol rc=0 · FAIL iz yok' % (
+                             rc1, '+'.join(izler)))
     return 'GECTI', 'taban rc=0 · mutasyon rc=%d · iz=%s' % (rc1, '+'.join(izler))
 
 
@@ -607,6 +654,39 @@ def _pl04(k):
     return None
 
 
+def _rec04(k):
+    """Tek ihlal: UYGULANMIS FIX-002 MASTER'da yok; Gate 2B de onu iddia etmez."""
+    hata = yaz(k / '03-FAZ-3-MASTER-v5.5.md',
+               '# MASTER\n\nFIX-001 uyguland\u0131.\n')
+    if hata:
+        return hata
+    return yaz(k / 'gate' / 'STRONG-gate-2b-v5.5.json',
+               '{"manifest_reconciliation": ['
+               '{"fix_id": "FIX-001", "status": "UYGULANMIS_KANITLI"}]}\n')
+
+
+def _rec02_cift_oncelik(k):
+    """Tek ihlal: FIX-001 ayni manifestoda P2 ile tekrar eder."""
+    return ekle(k, '02-FAZ-2-FIX-MANIFEST.md',
+                '| FIX-001 | P2 | A | F-001 | UYGULANMI\u015e | SC-001 |\n')
+
+
+def _rec05_bozuk_json(k):
+    """Tek ihlal: Gate 2B gecersiz JSON; REC-05 fail-closed."""
+    return yaz(k / 'gate' / 'STRONG-gate-2b-v5.5.json', '{bozuk json\n')
+
+
+def _rec05_rekonsiliasyon_bozuk(k):
+    """Tek ihlal: manifest_reconciliation liste degil."""
+    return yaz(k / 'gate' / 'STRONG-gate-2b-v5.5.json',
+               '{"manifest_reconciliation": "bozuk"}\n')
+
+
+def _rec06_coklu_hayalet(k):
+    """Tek ihlal: MASTER'da iki tanimsiz FIX-ID."""
+    return ekle(k, '03-FAZ-3-MASTER-v5.5.md', 'FIX-003\nFIX-004\n')
+
+
 def taban_ve_bulgu(kok, kapi, argumanlar, mutasyon, iz, cwd=None, env=None):
     """Kirmizi uretmeyen kural icin: temiz tabanda iz YOK, ihlalde iz VAR."""
     betik = kok / kapi
@@ -661,21 +741,26 @@ def vakalar():
         ('REC-01', 'ATLAS', 'FAZ1 bulgu == FAZ2 FIX', 'ATLAS_SABLONLAR/scripts/fix_reconcile.py',
          lambda k: [],
          lambda k: ekle(k, '02-FAZ-2-FIX-MANIFEST.md',
-                        '| FIX-003 | P2 | C | F-003 | UYGULANMI\u015e | SC-003 |\n'),
-         'REC-01'),
+                        '| FIX-003 | P2 | C | F-003 | PLANLANDI | SC-003 |\n'),
+         'REC-01', REC_KONTROL),
         ('REC-02', 'ATLAS', 'oncelik dagilimi ayni', 'ATLAS_SABLONLAR/scripts/fix_reconcile.py',
          lambda k: [],
          lambda k: degistir(k, '02-FAZ-2-FIX-MANIFEST.md',
                             '| FIX-002 | P1 |', '| FIX-002 | P2 |'),
-         'REC-02'),
+         'REC-02', REC_KONTROL),
+        ('REC-02-CIFT-ONCELIK', 'ATLAS', 'ayni FIX-ID iki farkli oncelikle',
+         'ATLAS_SABLONLAR/scripts/fix_reconcile.py',
+         lambda k: [],
+         _rec02_cift_oncelik,
+         'REC-02', REC_KONTROL),
         ('REC-03', 'ATLAS', 'FAZ1 bulgusu FAZ2 de atifli', 'ATLAS_SABLONLAR/scripts/fix_reconcile.py',
          lambda k: [],
          lambda k: degistir(k, '02-FAZ-2-FIX-MANIFEST.md', 'F-002', 'F-999'),
-         'REC-03'),
+         'REC-03', REC_KONTROL),
         ('REC-04', 'ATLAS', 'UYGULANMIS FIX MASTER da gorunur', 'ATLAS_SABLONLAR/scripts/fix_reconcile.py',
          lambda k: [],
-         lambda k: yaz(k / '03-FAZ-3-MASTER-v5.5.md', '# MASTER\n\nFIX-001 uyguland\u0131.\n'),
-         'REC-04'),
+         _rec04,
+         'REC-04', REC_KONTROL),
         ('REC-05', 'ATLAS', 'gate 2B KANITLI iddiasi dogrulanir', 'ATLAS_SABLONLAR/scripts/fix_reconcile.py',
          lambda k: [],
          lambda k: yaz(k / 'gate' / 'STRONG-gate-2b-v5.5.json',
@@ -683,11 +768,26 @@ def vakalar():
                        '{"fix_id": "FIX-001", "status": "UYGULANMIS_KANITLI"}, '
                        '{"fix_id": "FIX-002", "status": "UYGULANMIS_KANITLI"}, '
                        '{"fix_id": "FIX-009", "status": "UYGULANMIS_KANITLI"}]}\n'),
-         'REC-05'),
+         'REC-05', REC_KONTROL),
+        ('REC-05-BOZUK-JSON', 'ATLAS', 'gate 2B JSON bozuk',
+         'ATLAS_SABLONLAR/scripts/fix_reconcile.py',
+         lambda k: [],
+         _rec05_bozuk_json,
+         'REC-05', REC_KONTROL),
+        ('REC-05-REKONSILIASYON-BOZUK', 'ATLAS', 'manifest_reconciliation liste degil',
+         'ATLAS_SABLONLAR/scripts/fix_reconcile.py',
+         lambda k: [],
+         _rec05_rekonsiliasyon_bozuk,
+         'REC-05', REC_KONTROL),
         ('REC-06', 'ATLAS', 'hayalet kanit yok', 'ATLAS_SABLONLAR/scripts/fix_reconcile.py',
          lambda k: [],
          lambda k: ekle(k, '03-FAZ-3-MASTER-v5.5.md', 'FIX-003\n'),
-         'REC-06'),
+         'REC-06', REC_KONTROL),
+        ('REC-06-COKLU-HAYALET', 'ATLAS', 'birden fazla hayalet FIX-ID',
+         'ATLAS_SABLONLAR/scripts/fix_reconcile.py',
+         lambda k: [],
+         _rec06_coklu_hayalet,
+         'REC-06', REC_KONTROL),
         # --- source_class_check ----------------------------------------------
         ('SRC-02', 'ATLAS', 'Kaynak Sinifi gecerli', 'ATLAS_SABLONLAR/scripts/source_class_check.py',
          lambda k: ['--dosya', str(k / 'sandbox' / 'sinif.md')],
@@ -1284,7 +1384,9 @@ def main():
                 durum, ayrinti = taban_ve_mutasyon(
                     hedef, kapi, argumanlar, mutasyon, iz, cwd=calisma,
                     terminal=bool(opsiyon.get('terminal')),
-                    env=opsiyon.get('env'))
+                    env=opsiyon.get('env'),
+                    kontrol=bool(opsiyon.get('kontrol')),
+                    yalniz=bool(opsiyon.get('yalniz')))
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
 

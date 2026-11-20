@@ -18,14 +18,14 @@ visible; evidence levels (`BIRINCIL`/`DIJITAL`/`BEYAN`/`OLCULMEDI`); fail-closed
 (unmeasured is never a pass); and tamper detection (`GATE_TAMPERED` → P0).
 - **How claims are verified.** `make dogrula` (hygiene, syntax, secret scan, secret-gate
 self-test, three self-test suites), `make mutasyon` (ninety-five gate rules, exercised by
-99 battery cases: clean baseline + one violation + a red verdict or expected finding), and `tools/yayinla.py`
+103 battery cases: clean baseline + one violation + a red verdict or expected finding), and `tools/yayinla.py`
 (publish parity: 0 new / 0 changed / 0 deleted). The same commands run in CI on GitHub Actions.
 `make iddia` closes the remaining gap: it re-measures the numbers printed in this README.
 - **Reproduce it.** `./demo` prints the frozen 8-vs-2 failure with a **red verdict and
 exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin
 wrapper and cannot carry 1 vs 2, because GNU make always exits 2 on a failing recipe. `make dogrula` → **8 pass / 0 fail / 0 not run** (T1, `OLG-1`, now
 runs against this tree's `attestation.json`); KOD self-test
-**174/174**; mutation battery **80/80 cases red + 19/19 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured
+**174/174**; mutation battery **84/84 cases red + 19/19 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured
 in [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md); dependent-package findings in
 [`docs/GUVENLIK.md`](docs/GUVENLIK.md); CI green. Non-Turkish readers:
 [`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md).
@@ -335,7 +335,7 @@ yazılır; 8/8 denmez. Ayrıntı ve negatif kontrol:
 
 ## Mutasyon kapsamı
 
-`make mutasyon` doksan dokuz vakanın gerçekten ateşlediğini kanıtlar; **her kuralın** durumu ise
+`make mutasyon` yüz üç vakanın gerçekten ateşlediğini kanıtlar; **her kuralın** durumu ise
 [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md) içinde tek tek yazılıdır. Tablo
 `tools/kapsam.py` tarafından üretilir (elle yazılmaz) ve üç durum ayırır:
 

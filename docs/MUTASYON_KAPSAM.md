@@ -17,8 +17,8 @@ TAMAMINI gezer; baska kurala/karara yapilan atiflar kural sayilmaz.
 | Taranan betik | 31 |
 | Kural bildiren betik | 20 |
 | Bildirilen kural | 121 |
-| Batarya vakasi (toplam) | 99 |
-| — kural ateslettiren | 80 |
+| Batarya vakasi (toplam) | 103 |
+| — kural ateslettiren | 84 |
 | — beklenen bulgu | 19 |
 | Mutasyon vakasi olan (TEST EDILDI) | 95 |
 | Gerekceli kapsam disi | 26 |
@@ -171,6 +171,26 @@ kurala/karara yapilan atiftir; envantere sayilmaz.
 |---|---|---|
 | `verify_doi.py` | DEC-027 | DEC karar kimligi; verify_doi bu kurali uygulamaz, DEC-027 bolum-farkindaligi politikasina atif yapar |
 
+## REC ailesi vakalari
+
+Her satir `make mutasyon` ile kosulur: temiz taban rc=0 ve FAIL izi
+yok; tek ihlal yalniz hedef kuralin FAIL etiketiyle rc=1; ihlal geri
+alininca kontrol kosusu rc=0. Alternatif satirlar ayni kuralin ikinci
+tip ihlalidir; kopya degil, farkli hata dalidir.
+
+| Vaka | Hedef kural | Aciklama |
+|---|---|---|
+| REC-01 | REC-01 | FAZ1 bulgu == FAZ2 FIX |
+| REC-02 | REC-02 | oncelik dagilimi ayni |
+| REC-02-CIFT-ONCELIK | REC-02 | ayni FIX-ID iki farkli oncelikle |
+| REC-03 | REC-03 | FAZ1 bulgusu FAZ2 de atifli |
+| REC-04 | REC-04 | UYGULANMIS FIX MASTER da gorunur |
+| REC-05 | REC-05 | gate 2B KANITLI iddiasi dogrulanir |
+| REC-05-BOZUK-JSON | REC-05 | gate 2B JSON bozuk |
+| REC-05-REKONSILIASYON-BOZUK | REC-05 | manifest_reconciliation liste degil |
+| REC-06 | REC-06 | hayalet kanit yok |
+| REC-06-COKLU-HAYALET | REC-06 | birden fazla hayalet FIX-ID |
+
 ## Tam envanter
 
 | Betik | Kural | Mutasyon vakasi | Durum | Gerekce |
@@ -194,11 +214,11 @@ kurala/karara yapilan atiftir; envantere sayilmaz.
 | `declaration_check.py` | DEC-06 | DEC-06 | TEST EDILDI | mutasyon vakasi: DEC-06 |
 | `declaration_check.py` | DEC-07 | DEC-07 | TEST EDILDI | mutasyon vakasi: DEC-07 |
 | `fix_reconcile.py` | REC-01 | REC-01 | TEST EDILDI | mutasyon vakasi: REC-01 |
-| `fix_reconcile.py` | REC-02 | REC-02 | TEST EDILDI | mutasyon vakasi: REC-02 |
+| `fix_reconcile.py` | REC-02 | REC-02, REC-02-CIFT-ONCELIK | TEST EDILDI | mutasyon vakasi: REC-02, REC-02-CIFT-ONCELIK |
 | `fix_reconcile.py` | REC-03 | REC-03 | TEST EDILDI | mutasyon vakasi: REC-03 |
 | `fix_reconcile.py` | REC-04 | REC-04 | TEST EDILDI | mutasyon vakasi: REC-04 |
-| `fix_reconcile.py` | REC-05 | REC-05 | TEST EDILDI | mutasyon vakasi: REC-05 |
-| `fix_reconcile.py` | REC-06 | REC-06 | TEST EDILDI | mutasyon vakasi: REC-06 |
+| `fix_reconcile.py` | REC-05 | REC-05, REC-05-BOZUK-JSON, REC-05-REKONSILIASYON-BOZUK | TEST EDILDI | mutasyon vakasi: REC-05, REC-05-BOZUK-JSON, REC-05-REKONSILIASYON-BOZUK |
+| `fix_reconcile.py` | REC-06 | REC-06, REC-06-COKLU-HAYALET | TEST EDILDI | mutasyon vakasi: REC-06, REC-06-COKLU-HAYALET |
 | `olgu_lint.py` | OLGU-04 | — | KAPSAM DISI | tarihce: SURUM.md makine blogunu HEAD/commit hashleriyle karsilastirir |
 | `olgu_lint.py` | OLGU-05 | — | KAPSAM DISI | tarihce: SURUM.md makine blogunu HEAD/commit hashleriyle karsilastirir |
 | `olgu_lint.py` | OLGU-06 | — | KAPSAM DISI | tarihce: SURUM.md makine blogunu HEAD/commit hashleriyle karsilastirir |
@@ -263,8 +283,8 @@ kurala/karara yapilan atiftir; envantere sayilmaz.
 | `dep_audit.py` | DEP-04 | — | KAPSAM DISI | depo-durumu: `git diff --name-only HEAD` ile degisen dosyalari okur |
 | `dep_audit.py` | DEP-05 | DEP-05 | TEST EDILDI | mutasyon vakasi: DEP-05 |
 | `dep_audit.py` | DEP-06 | — | KAPSAM DISI | depo-durumu: `git diff --name-only HEAD` ile degisen dosyalari okur |
-| `freeze_check.py` | FRZ-01 | FRZ-01 | TEST EDILDI | mutasyon vakasi: FRZ-01 |
-| `freeze_check.py` | FRZ-02 | FRZ-02 | TEST EDILDI | mutasyon vakasi: FRZ-02 |
+| `freeze_check.py` | FRZ-01 | FRZ-01, FRZ-01-KAYIP, FRZ-01T, FRZ-01-02 | TEST EDILDI | mutasyon vakasi: FRZ-01, FRZ-01-KAYIP, FRZ-01T, FRZ-01-02 |
+| `freeze_check.py` | FRZ-02 | FRZ-01-02, FRZ-02, FRZ-02-KAYIP | TEST EDILDI | mutasyon vakasi: FRZ-01-02, FRZ-02, FRZ-02-KAYIP |
 | `freeze_check.py` | FRZ-03 | FRZ-03 | TEST EDILDI | mutasyon vakasi: FRZ-03 |
 | `freeze_check.py` | FRZ-04 | FRZ-04 | TEST EDILDI | mutasyon vakasi: FRZ-04 |
 | `freeze_check.py` | FRZ-05 | FRZ-05 | TEST EDILDI | mutasyon vakasi: FRZ-05 |
