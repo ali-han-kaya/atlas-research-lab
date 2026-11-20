@@ -321,11 +321,11 @@
     },
     {
       "id": "IDD-15",
-      "iddia": "H2 python sozdizimi dosya sayisi 59",
+      "iddia": "H2 python sozdizimi dosya sayisi 60",
       "kaynaklar": [
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "  H2  python sozdizimi         PASS    59 dosya"
+          "alinti": "  H2  python sozdizimi         PASS    60 dosya"
         }
       ],
       "durum": "OLCULDU",
@@ -334,7 +334,7 @@
         "tools/dogrula.py"
       ],
       "ayikla": "H2\\s+python sozdizimi\\s+PASS\\s+(\\d+) dosya",
-      "beklenen": "59"
+      "beklenen": "60"
     },
     {
       "id": "IDD-16",
