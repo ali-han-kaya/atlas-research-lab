@@ -58,6 +58,16 @@ ATLA_AD = {'.DS_Store', '__pycache__', 'node_modules', '.pytest_cache',
            '.ruff_cache', '.git', '.venv', '.venv-token'}
 ATLA_UZANTI = {'.pyc', '.pyo'}
 
+# `.opencode` dizinlerindeki calisma-zamani dosyalari bilerek izlenmez
+# (bkz. .opencode/.gitignore). Plana girerlerse temiz bir klonda parite,
+# yalniz yerel onbellekte var olan dosyalar icin DRIFT verir.
+OPENCODE_ATLA = {'.gitignore', 'package.json', 'package-lock.json', 'bun.lock'}
+
+
+def opencode_artefakti(rel):
+    parcalar = rel.replace(os.sep, '/').split('/')
+    return '.opencode' in parcalar[:-1] and parcalar[-1] in OPENCODE_ATLA
+
 # --- BU DEPONUN KENDI KATMANI (aktarimla silinmez/uzerine yazilmaz) ----------
 KORUNAN = {'README.md', 'LICENSE', 'Makefile', '.gitignore', 'docs/README.md'}
 KORUNAN_KOKLER = ('.github', 'tools')
@@ -119,7 +129,10 @@ def topla(lab):
                 if atilabilir(ad):
                     continue
                 tam = os.path.join(dirpath, ad)
-                istenen[os.path.relpath(tam, lab)] = tam
+                rel = os.path.relpath(tam, lab)
+                if opencode_artefakti(rel):
+                    continue
+                istenen[rel] = tam
 
     for kok in KOKLER + TOOLKIT_KOKLER:
         ekle_dir(kok)
@@ -177,7 +190,7 @@ def fazlalik(istenen):
             for ad in dosyalar:
                 tam = os.path.join(dirpath, ad)
                 rel = os.path.relpath(tam, KOK)
-                if rel in istenen or rel in KORUNAN:
+                if rel in istenen or rel in KORUNAN or opencode_artefakti(rel):
                     continue
                 if any(rel == k or rel.startswith(k + '/') for k in KORUNAN_KOKLER):
                     continue
