@@ -58,7 +58,7 @@
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **58/58 cases red + 17/17 expected findings** over 74 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "**174/174**; mutation battery **61/61 cases red + 17/17 expected findings** over 77 rules. Mutation-tested vs untested gate rules are measured"
         },
         {
           "dosya": "docs/README.md",
@@ -98,15 +98,15 @@
     },
     {
       "id": "IDD-04",
-      "iddia": "mutasyon bataryasi 58/58 vaka atesledi",
+      "iddia": "mutasyon bataryasi 61/61 vaka atesledi",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **58/58 cases red + 17/17 expected findings** over 74 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "**174/174**; mutation battery **61/61 cases red + 17/17 expected findings** over 77 rules. Mutation-tested vs untested gate rules are measured"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "SONUC: 58/58 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+          "alinti": "SONUC: 61/61 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0"
         }
       ],
       "durum": "OLCULDU",
@@ -115,7 +115,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "ayikla": "SONUC:\\s*(\\d+/\\d+) kural atesledi",
-      "beklenen": "58/58"
+      "beklenen": "61/61"
     },
     {
       "id": "IDD-05",
@@ -123,11 +123,11 @@
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **58/58 cases red + 17/17 expected findings** over 74 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "**174/174**; mutation battery **61/61 cases red + 17/17 expected findings** over 77 rules. Mutation-tested vs untested gate rules are measured"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "SONUC: 58/58 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+          "alinti": "SONUC: 61/61 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0"
         }
       ],
       "durum": "OLCULDU",
@@ -140,19 +140,19 @@
     },
     {
       "id": "IDD-06",
-      "iddia": "mutasyon vakasi olan kural sayisi 74",
+      "iddia": "mutasyon vakasi olan kural sayisi 77",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **58/58 cases red + 17/17 expected findings** over 74 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "**174/174**; mutation battery **61/61 cases red + 17/17 expected findings** over 77 rules. Mutation-tested vs untested gate rules are measured"
         },
         {
           "dosya": "README.md",
-          "alinti": "- **TEST EDİLDİ** — 74 kural (mutasyon vakası adıyla)"
+          "alinti": "- **TEST EDİLDİ** — 77 kural (mutasyon vakası adıyla)"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "of 122 rules, **74** are"
+          "alinti": "of 122 rules, **77** are"
         }
       ],
       "durum": "OLCULDU",
@@ -161,7 +161,7 @@
         "tools/kapsam.py"
       ],
       "ayikla": "\\|\\s*Mutasyon vakasi olan \\(TEST EDILDI\\)\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "74"
+      "beklenen": "77"
     },
     {
       "id": "IDD-07",
@@ -169,7 +169,7 @@
       "kaynaklar": [
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "of 122 rules, **74** are"
+          "alinti": "of 122 rules, **77** are"
         }
       ],
       "durum": "OLCULDU",
@@ -203,15 +203,15 @@
     },
     {
       "id": "IDD-09",
-      "iddia": "gerekcesiz bosluk kural sayisi 21",
+      "iddia": "gerekcesiz bosluk kural sayisi 18",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "- **BOŞLUK** — 21 kural: 10'u yalnız öz-testte anılıyor, 11'i hiçbir testte geçmiyor"
+          "alinti": "- **BOŞLUK** — 18 kural: 10'u yalnız öz-testte anılıyor, 8'i hiçbir testte geçmiyor"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "code branch emits), and **21** are explicit gaps — 10 mentioned only in"
+          "alinti": "code branch emits), and **18** are explicit gaps — 10 mentioned only in"
         }
       ],
       "durum": "OLCULDU",
@@ -220,7 +220,7 @@
         "tools/kapsam.py"
       ],
       "ayikla": "\\|\\s*Bosluk \\(gerekce yok\\)\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "21"
+      "beklenen": "18"
     },
     {
       "id": "IDD-10",
@@ -228,11 +228,11 @@
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "- **BOŞLUK** — 21 kural: 10'u yalnız öz-testte anılıyor, 11'i hiçbir testte geçmiyor"
+          "alinti": "- **BOŞLUK** — 18 kural: 10'u yalnız öz-testte anılıyor, 8'i hiçbir testte geçmiyor"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "code branch emits), and **21** are explicit gaps — 10 mentioned only in"
+          "alinti": "code branch emits), and **18** are explicit gaps — 10 mentioned only in"
         }
       ],
       "durum": "OLCULDU",
@@ -245,15 +245,15 @@
     },
     {
       "id": "IDD-11",
-      "iddia": "hicbir testte gecmeyen bosluk sayisi 11",
+      "iddia": "hicbir testte gecmeyen bosluk sayisi 8",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "- **BOŞLUK** — 21 kural: 10'u yalnız öz-testte anılıyor, 11'i hiçbir testte geçmiyor"
+          "alinti": "- **BOŞLUK** — 18 kural: 10'u yalnız öz-testte anılıyor, 8'i hiçbir testte geçmiyor"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "self-tests, 11 in no test at all. Gaps are"
+          "alinti": "self-tests, 8 in no test at all. Gaps are"
         }
       ],
       "durum": "OLCULDU",
@@ -262,7 +262,7 @@
         "tools/kapsam.py"
       ],
       "ayikla": "hicbir testte gecmeyen\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "11"
+      "beklenen": "8"
     },
     {
       "id": "IDD-12",

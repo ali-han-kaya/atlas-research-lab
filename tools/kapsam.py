@@ -92,11 +92,56 @@ RISK_SIRASI = [
     ('OLGU-06', 'ENVANTER'), ('CHK-01', 'ENVANTER'), ('CHK-02', 'ENVANTER'),
     ('CHK-05', 'ENVANTER'), ('DEC-027', 'ENVANTER'), ('SEC-04', 'BILGI'),
 ]
-RISK_EKLENEN = {'TST-08', 'RECK-06', 'DEP-05'}
+RISK_EKLENEN = {'TST-08', 'RECK-06', 'DEP-05',
+               'RECK-01', 'RECK-02', 'RECK-04'}
 RISK_NOT = {
     'TST-08': 'Ham test raporu yok/okunamiyor — kanitsiz PASS P0; kapinin kanit temeli.',
     'RECK-06': 'Dondurulmus bolge diff\'te — dogrudan tamper sinyali, P0.',
     'DEP-05': 'Izinli lisans listesi disinda bagimlilik — tedarik/uyum P0.',
+    'RECK-01': 'KFAZ0 sozlesmesindeki her REQ plan/eslesmede karsilik bulmali; '
+               'aksi halde kapsamsiz sozlesme sessizce yesil kalir.',
+    'RECK-02': '"UYGULANMIS" denilen her CHG\'nin dosyasi git diff\'te olmali; '
+               'beyan ile gercek degisiklik carpraz denetlenir.',
+    'RECK-04': '2B kapisinin "KANITLI" dedigi her CHG diff\'te olmali; ikinci '
+               'gozun iddiasi manifest ve diff ile dogrulanir.',
+    'FRZ-08': 'Temiz agac iddiasi imzayla baglanmali; imzasiz veya yanlis '
+               'anahtarli taban tamper ya da dusuk guven sayilir.',
+    'RECK-05': 'Hayalet CHG yok: olmayan REQ veya plansiz dosyaya baglanan '
+               'degisiklik P0; manifest-diff bagini korur.',
+    'RECK-07': 'Davranissal her REQ tabanda olmayan YENI bir test adina '
+               'eslenmeli; eski testi gostermek bedava yesildir.',
+    'RECK-08': 'Makine bloklarinin alan bicimi semaya uymali; sessizce dusen '
+               'girdi RECK-01/07\'yi devre disi birakir.',
+    'RECK-09': 'Plan yokken urun kodu degismemeli; KFAZ0 oncesi degisiklik '
+               'kapsamsiz ve denetimsiz kalir.',
+    'TST-01': 'Basarisiz test sayisi sifir olmali; kirmizi testle PASS verilemez.',
+    'TST-02': 'Hatali test sayisi sifir olmali; altyapi hatasi yesil sayilmaz.',
+    'TST-03': 'En az bir test kosmali; sifir test temiz degildir.',
+    'TST-05': 'Atlanan test tabandan fazla olamaz; test atlayarak yesil olunmaz.',
+    'TST-06': 'Kapsam tabanin bir altina kadar korunmali; sessiz kapsam kaybi P1.',
+    'TST-07': 'Kanit beyani ham JUnit ile celisemez; kapi kendi beyanina guvenmez.',
+    'TST-09': 'Test komutunun cikis kodu kayitli olmali; kosup kosmadigi '
+               'bilinmeyen test yesil sayilmaz.',
+    'TST-10': 'Rapor kaynaktan eski olamaz; bayat kanit mevcut kodu olcmemis olabilir.',
+    'TST-11': 'Kanittaki komut kod_profil ile ayni olmali; baska komutun kaniti '
+               'sayilmaz.',
+    'TST-12': 'Kanittaki rapor yolu kod_profil ile ayni olmali; baska rapor '
+               'gosterilemez.',
+    'CHK-01': 'Her zorunlu SCOPE-ID MASTER icinde markdown basligi olarak '
+               'bulunmali; metinde gecmesi yetmez.',
+    'CHK-02': 'Her zorunlu ID PROVENANCE tablosunda kapsiyor durumunda olmali.',
+    'CHK-05': 'Basliklar benzersiz olmali; tekrar eden baslik izlenebilirligi bozar.',
+}
+
+# Bu dilimde kapatilamayan, hala hicbir testte gorunmeyen 8 kuralin risk
+# sirasindaki ilk ucu. Bunlar silinmez; bir sonraki dilimin acik kaydidir.
+SONRAKI_DILIM = ['RECK-05', 'TST-07', 'TST-09']
+SONRAKI_NOT = {
+    'RECK-05': 'Hayalet CHG yok: olmayan REQ\'e veya plansiz dosyaya baglanan '
+               'degisiklik P0; manifest-diff bagini korur.',
+    'TST-07': 'Kanit beyani ham JUnit ile celisemez; kapi kendi beyanina guvenmez.',
+    'TST-09': 'Test komutunun cikis kodu kayitli olmali; kosup kosmadigi '
+              'bilinmeyen test yesil sayilmaz.',
 }
 
 
@@ -111,8 +156,12 @@ def risk_tablosu(satirlar):
     out = ['| # | Kural | Betik | Grup | Durum | Gerekce |', '|---|---|---|---|---|---|']
     for i, (kural, grup) in enumerate(RISK_SIRASI, 1):
         _durum = durum[kural]
-        if kural in RISK_EKLENEN and _durum == 'TEST EDILDI':
+        if _durum == 'TEST EDILDI' and kural in RISK_EKLENEN:
             _durum = 'TEST EDILDI (bu tur)'
+        elif _durum == 'BOSLUK':
+            # Gizli sayi dusumu yok: kalan her bosluk acikca bir sonraki
+            # dilimin kaydidir; kapsam disi gibi etiketlenmez.
+            _durum = 'BOSLUK (sonraki dilim)'
         gerekce = RISK_NOT.get(kural, RISK_GRUPLARI[grup])
         out.append('| %d | %s | `%s` | %s | %s | %s |' % (
             i, kural, betik[kural], RISK_GRUPLARI[grup], _durum, gerekce))
@@ -273,9 +322,22 @@ def markdown():
            '',
            '## Risk sirasi (51 kural)', '',
            '19.11.2026 itibariyla mutation kapsami olmayan 51 kural; siralama',
-           'saglamlik/etki sirasina gore sabittir. Ilk ucu bu turda vaka aldi;',
-           'durum sutunu guncel envanterden okunur.', '']
+           'saglamlik/etki sirasina gore sabittir. Ilk uc ve kalan bosluk',
+           'diliminin ucu bu turda vaka aldi; durum sutunu guncel envanterden',
+           'okunur.', '']
     out += risk_tablosu(satirlar)
+    out += ['', '## Sonraki dilim', '',
+            'Asagidaki uc kural bu turda kapatilmadi; hala hicbir testte',
+            'gorunmeyen 8 kuralin risk sirasindaki ilk ucudur. Bir sonraki',
+            'dilimde gercek vakayla kapatilacak; sessizce sayidan dusulmedi.', '',
+            '| Kural | Betik | Neden test edilemedi / neyi korur |',
+            '|---|---|---|']
+    _risk_durum = {k: d for _b, k, _v, d, _g in satirlar}
+    _risk_betik = {k: b.split('/')[-1] for b, k, _v, _d, _g in satirlar}
+    for _k in SONRAKI_DILIM:
+        if _risk_durum.get(_k) != 'BOSLUK':
+            raise SystemExit('SONRAKI_DILIM artik bosluk degil: %s' % _k)
+        out.append('| %s | `%s` | %s |' % (_k, _risk_betik[_k], SONRAKI_NOT[_k]))
     out += ['',
            '## Kapsam disi siniflari', '',
            'Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir',
