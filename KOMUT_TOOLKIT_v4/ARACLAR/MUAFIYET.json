@@ -1,9 +1,1 @@
-[
-  {
-    "konum": "ARACLAR/betikler/v4_selftest.py",
-    "gerekce": "Bu dosya, sir tarayicisinin GERCEK formatli anahtarlari yakaladigini kanitlayan saldiri fiksturlerini icerir. Fiksturler kaldirilirsa tarayicinin calistigini kanitlayan test de kaybolur. Icerideki dizeler hicbir gercek servise ait degildir ve hicbir yerde kullanilmamistir.",
-    "imza": "Ali Han Kaya - paket sahibi - v4.1",
-    "tarih": "2026-08-17",
-    "kapsam": "yalniz bu dosya; baska hicbir konumu kapsamaz"
-  }
-]
+[]

@@ -19,6 +19,7 @@ Cikis: 0 = tum testler gecti, 1 = en az bir test kaldi, 2 = kullanim hatasi.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import shutil
@@ -531,14 +532,94 @@ def _run_all(tmp, pkg_root):
     # ==================================================================
     # D. ARAC KENDI KAPISINDAN GECIYOR MU (SP-7)
     # ==================================================================
-    # Not: bu cagri paketin KENDI imzali muafiyet dosyasini kullanir. Muafiyetin
-    # tek kapsami, sir tarayicisinin calistigini kanitlayan fikstur dosyasidir;
-    # gerekcesi ve imzasi ARACLAR/MUAFIYET.json icinde yazilidir.
-    waiver = os.path.join(pkg_root, "ARACLAR", "MUAFIYET.json")
-    extra = ["--muafiyet", waiver] if os.path.isfile(waiver) else []
+    # Genis dosya muafiyeti KULLANILMAZ. Paket kendi fikstur satirlarini
+    # yalniz tam satir SHA-256'si ile susturur; baska bir sata/baslikta ayni
+    # deger bulunursa kapi yine atesler. Repo kopyasinda tools/secret_fixtures.json,
+    # tek basina pakette ARACLAR/FIKSTUR.json kullanilir.
+    repo_fikstur = os.path.join(os.path.dirname(pkg_root), "tools", "secret_fixtures.json")
+    yerel_fikstur = os.path.join(pkg_root, "ARACLAR", "FIKSTUR.json")
+    # Paket kendi koku taranirken yollar ARACLAR/... biçimindedir; repo
+    # manifesti ise KOMUT_TOOLKIT_v4/... onekini tasir. Bu yuzden paket icin
+    # HER ZAMAN yerel manifest kullanilir; repo manifesti secret_scan icindir.
+    fikstur = yerel_fikstur if os.path.isfile(yerel_fikstur) else repo_fikstur
+    if os.path.isfile(fikstur):
+        extra = ["--fikstur", fikstur]
+    else:
+        # Paket eski bir kopya ise fail-closed: genis muafiyete geri DUSME.
+        extra = []
     rc, d, _ = run(VERIFY, pkg_root, "--kanit-dizin", "ARACLAR/KANIT", *extra, "--sessiz")
     check("SP-7", "arac kendi arsiv/sir kapisindan geciyor",
           rc == 0, f"rc={rc} bulgular={[f.get('location') for f in d.get('findings', [])][:6]}")
+
+    # ==================================================================
+    # E. FIKSTURUN DORT YONLU ZAYIFLAMAMA TESTI (SP-8..SP-13)
+    # ==================================================================
+    # Her vaka AYRI hedefte kosar; onceki bir mutasyon sonraki testi kirletmez.
+    _satir = 'printf -- "-----BEGIN RSA PRIVATE KEY-----\\nMII...\\n" > src/gizli.pem'
+    _satir_sha = hashlib.sha256(_satir.encode("utf-8")).hexdigest()
+
+    def _fikstur_hedefi(ad, satirlar):
+        kok = j(tmp, ad)
+        for rel, metin in satirlar.items():
+            write(j(kok, rel), metin)
+        return kok
+
+    def _manifest(ad, dosya):
+        yol = j(tmp, ad + ".json")
+        write(yol, json.dumps({                               "sema": "SECRET-SCAN-FIKSTUR/v1",
+                               "fiksturler": [{"dosya": dosya,
+                                               "satir_sha256": _satir_sha,
+                                               "gerekce": "test fiksturu",
+                                               "kanit": "SP-8..SP-13"}]}))
+        return yol
+
+    fx = _fikstur_hedefi("sp8", {"docs/ornek.md": _satir + "\n"})
+    fx_manifest = _manifest("sp8", "docs/ornek.md")
+    rc, d, _ = run(VERIFY, fx, "--fikstur", fx_manifest, "--sessiz")
+    check("SP-8", "exact satir hash'i fiksturu susturur",
+          rc == 0 and d.get("counts", {}).get("P0") == 0
+          and d.get("fikstur_muafiyeti", 0) >= 1,
+          f"rc={rc} counts={d.get('counts')} fikstur={d.get('fikstur_muafiyeti')}")
+
+    fx = _fikstur_hedefi("sp9", {"docs/ornek.md": _satir.replace("MII...", "MII...X") + "\n"})
+    rc, d, _ = run(VERIFY, fx, "--fikstur", fx_manifest, "--sessiz")
+    check("SP-9", "fikstur satiri degisince bulgu geri gelir",
+          rc == 1 and d.get("counts", {}).get("P0", 0) >= 1,
+          f"rc={rc} counts={d.get('counts')}")
+
+    fx = _fikstur_hedefi("sp10", {"docs/ornek.md": "temiz\n",
+                                  "docs/baska.md": _satir + "\n"})
+    rc, d, _ = run(VERIFY, fx, "--fikstur", fx_manifest, "--sessiz")
+    check("SP-10", "ayni sahte deger baska dosyaya tasininca bulgu verir",
+          rc == 1 and d.get("counts", {}).get("P0", 0) >= 1,
+          f"rc={rc} counts={d.get('counts')}")
+
+    fx = _fikstur_hedefi("sp11", {"docs/ornek.md": "temiz\n",
+                                   "src/yeni.py": 'AWS = "AKIAQ7PLXR4TYB8NCZZX"\n'})
+    rc, d, _ = run(VERIFY, fx, "--fikstur", fx_manifest, "--sessiz")
+    check("SP-11", "ayni hedefte yeni gercek formatli anahtar bulgu verir",
+          rc == 1 and d.get("counts", {}).get("P0", 0) >= 1,
+          f"rc={rc} counts={d.get('counts')}")
+
+    bozuk_manifest = j(tmp, "bozuk_fikstur.json")
+    write(bozuk_manifest, json.dumps({"fiksturler": [{"dosya": "../kacis.md",
+                                                       "satir_sha256": _satir_sha,
+                                                       "gerekce": "x", "kanit": "x"}]}))
+    rc, d, _ = run(VERIFY, fx, "--fikstur", bozuk_manifest, "--sessiz")
+    check("SP-12", "bozuk/izinli olmayan fikstur manifesti fail-closed",
+          rc == 1 and any(f.get("code") == "SCHEMA_INVALID"
+                          for f in d.get("findings", [])),
+          f"rc={rc} bulgular={[f.get('code') for f in d.get('findings', [])][:3]}")
+
+    fx = _fikstur_hedefi("sp13", {"docs/ornek.md": _satir + "\n"})
+    # Hedefin kendi manifesti OLSUN; acikca --fikstur verilmezse okunmamali.
+    write(j(fx, "fikstur_manifest.json"), json.dumps(
+        {"fiksturler": [{"dosya": "docs/ornek.md", "satir_sha256": _satir_sha,
+                         "gerekce": "hedef", "kanit": "kendini muaf tutmamali"}]}))
+    rc, d, _ = run(VERIFY, fx, "--sessiz")
+    check("SP-13", "hedef depo kendi manifestiyle kendini muaf tutamaz",
+          rc == 1 and d.get("counts", {}).get("P0", 0) >= 1,
+          f"rc={rc} counts={d.get('counts')}")
 
     rc, d, _ = run(CONSISTENCY, pkg_root, "--sessiz")
     scope = d.get("kapsam", {})
