@@ -94,7 +94,8 @@ RISK_SIRASI = [
 ]
 RISK_EKLENEN = {'TST-08', 'RECK-06', 'DEP-05',
                'RECK-01', 'RECK-02', 'RECK-04',
-               'RECK-05', 'TST-07', 'TST-09'}
+               'RECK-05', 'TST-07', 'TST-09',
+               'TST-01', 'TST-02', 'TST-03'}
 RISK_NOT = {
     'TST-08': 'Ham test raporu yok/okunamiyor — kanitsiz PASS P0; kapinin kanit temeli.',
     'RECK-06': 'Dondurulmus bolge diff\'te — dogrudan tamper sinyali, P0.',
@@ -136,11 +137,11 @@ RISK_NOT = {
 
 # Bu dilimde kapatilamayan, hala hicbir testte gorunmeyen 8 kuralin risk
 # sirasindaki ilk ucu. Bunlar silinmez; bir sonraki dilimin acik kaydidir.
-SONRAKI_DILIM = ['TST-01', 'TST-02', 'TST-03']
+SONRAKI_DILIM = ['TST-05', 'TST-06']
 SONRAKI_NOT = {
-    'TST-01': 'Basarisiz test sayisi sifir olmali; kirmizi testle PASS verilemez.',
-    'TST-02': 'Hatali test sayisi sifir olmali; altyapi hatasi yesil sayilmaz.',
-    'TST-03': 'En az bir test kosmali; sifir test temiz degildir.',
+    'TST-05': 'Atlanan test tabandan fazla olamaz; test atlayarak yesil olunmaz.',
+    'TST-06': 'Kapsam tabanin bir altina kadar korunmali; sessiz kapsam '
+              'kaybi P1.',
 }
 
 
@@ -325,8 +326,9 @@ def markdown():
            'vaka aldi; durum sutunu guncel envanterden okunur.', '']
     out += risk_tablosu(satirlar)
     out += ['', '## Sonraki dilim', '',
-            'Asagidaki uc kural bu turda kapatilmadi; hala hicbir testte',
-            'gorunmeyen %d kuralin risk sirasindaki ilk ucudur. Bir sonraki' % (bosluk - oz_anilan),
+            'Asagidaki kural(lar) bu turda kapatilmadi; hala hicbir testte',
+            'gorunmeyen %d kuralin risk sirasindaki ilk %d tanesidir. Bir sonraki' % (
+                bosluk - oz_anilan, len(SONRAKI_DILIM)),
             'dilimde gercek vakayla kapatilacak; sessizce sayidan dusulmedi.', '',
             '| Kural | Betik | Neden test edilemedi / neyi korur |',
             '|---|---|---|']
