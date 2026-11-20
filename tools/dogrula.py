@@ -170,6 +170,19 @@ def kapi_oztesti():
     return rc == 0, son, ([] if rc == 0 else satirlar[-6:])
 
 
+def demo_oztesti():
+    """demo'nun 0/2 sozlesmesini gecici fiksturlerle on kontrol olarak kosar.
+
+    Sayilan sekiz kaleme dahil degildir; parite gibi bir on kosuldur. Yine de
+    basarisizsa dogrula yesil donmez.
+    """
+    rc, cikti = kos([sys.executable,
+                     os.path.join(KOK, 'tools', 'demo_selftest.py')])
+    satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
+    son = satirlar[-1][:110] if satirlar else '(bos cikti)'
+    return rc == 0, son, ([] if rc == 0 else satirlar[-8:])
+
+
 KOMUTLAR = [
     ('T1', 'ATLAS oz-testi',
      [sys.executable, 'ATLAS_SABLONLAR/scripts/atlas_selftest.py', '--sessiz']),
@@ -312,6 +325,17 @@ def main():
             print('  HUKUM: FAIL — PARITE (yayinla kuru kosusu)')
             return 1
         print()
+
+    demo_gecti, demo_ozet, demo_detay = demo_oztesti()
+    print('  %-24s %-7s %s' % ('demo 0/2 oz-testi',
+                                'PASS' if demo_gecti else 'FAIL', demo_ozet))
+    for satir in demo_detay:
+        print('        | %s' % satir[:400])
+    if not demo_gecti:
+        print()
+        print('  HUKUM: FAIL — DEMO 0/2 OZ-TESTI')
+        return 1
+    print()
 
     kalemler = []
     for kid, ad, fn in (('H1', 'depo hijyeni', hijyen),
