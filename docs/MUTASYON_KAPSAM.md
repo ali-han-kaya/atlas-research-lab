@@ -7,26 +7,29 @@ ve dosyanin herhangi bir yerindeki `# --- KIMLIK` bolum basliklarindan gelir;
 
 Her kural icin tek soru sorulur: **mutasyon bataryasinda onu ateslettiren
 bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus
-**KAPSAM DISI** ya da **BOSLUK**. Bosluk gizlenmez.
+**KAPSAM DISI** ya da **BOSLUK**. Bosluk gizlenmez. Tarama dosyanin
+TAMAMINI gezer; baska kurala/karara yapilan atiflar kural sayilmaz.
 
 ## Ozet
 
 | Olcum | Deger |
 |---|---|
-| Kapi betigi | 21 |
-| Bildirilen kural | 122 |
+| Taranan betik | 31 |
+| Kural bildiren betik | 20 |
+| Bildirilen kural | 121 |
 | Batarya vakasi (toplam) | 88 |
 | — kural ateslettiren | 71 |
 | — beklenen bulgu | 17 |
 | Mutasyon vakasi olan (TEST EDILDI) | 86 |
-| Gerekceli kapsam disi | 27 |
+| Gerekceli kapsam disi | 26 |
 | Bosluk (gerekce yok) | 9 |
 | — bunlardan yalniz oz-testte anilan | 8 |
 | — hicbir testte gecmeyen | 1 |
 
-## Risk sirasi (51 kural)
+## Risk sirasi (50 kural)
 
-19.11.2026 itibariyla mutation kapsami olmayan 51 kural; siralama
+19.11.2026 envanterinde 51 kural vardi; `DEC-027` bir karar
+referansi olarak ayiklandi, kalan 50 kural risk sirasinda. Siralama
 saglamlik/etki sirasina gore sabittir. Kapatilan her kural bu turda
 vaka aldi; durum sutunu guncel envanterden okunur.
 
@@ -81,8 +84,7 @@ vaka aldi; durum sutunu guncel envanterden okunur.
 | 47 | CHK-01 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | BOSLUK (sonraki dilim) | Her zorunlu SCOPE-ID MASTER icinde markdown basligi olarak bulunmali; metinde gecmesi yetmez. |
 | 48 | CHK-02 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | BOSLUK (sonraki dilim) | Her zorunlu ID PROVENANCE tablosunda kapsiyor durumunda olmali. |
 | 49 | CHK-05 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | BOSLUK (sonraki dilim) | Basliklar benzersiz olmali; tekrar eden baslik izlenebilirligi bozar. |
-| 50 | DEC-027 | `verify_doi.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
-| 51 | SEC-04 | `secret_scan.py` | Bilgi seviyesi / olu kimlik — P1 | KAPSAM DISI | Bilgi seviyesi / olu kimlik — P1 |
+| 50 | SEC-04 | `secret_scan.py` | Bilgi seviyesi / olu kimlik — P1 | KAPSAM DISI | Bilgi seviyesi / olu kimlik — P1 |
 
 ## Sonraki dilim
 
@@ -106,12 +108,16 @@ Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir
 
 | Sinif | Gerekce (betikte olculen bagimlilik) | Betik | Kural |
 |---|---|---|---|
-| ag | requests ile api.crossref.org sorgusu; batarya agsiz kosar | verify_doi.py | 1 |
 | depo-durumu | `git diff --name-only HEAD` ile degisen dosyalari okur | dep_audit.py | 5 |
 | gizli-anahtar | HMAC anahtari ister (LAB_IMZA_ANAHTARI / ~/.config/lab_imza.key); anahtar depoya konmaz | teslim_imza.py | 6 |
 | kosu-durumu | butun agacin selftest hash tabanini ve ham kosu ciktisini ister | api_surface.py, oztest_attest.py | 11 |
 | olu-kimlik | SEC-04 yalniz baslikta bildirilir; hicbir kod dali bu kimligi basmiyor (atlanan dosyalar yalniz sayilir) | secret_scan.py | 1 |
 | tarihce | SURUM.md makine blogunu HEAD/commit hashleriyle karsilastirir | olgu_lint.py | 3 |
+
+Not: `verify_doi.py` tarandi; bildirilen kural kimligi yok.
+Dosyadaki `DEC-027` bir karar referansidir, kural degil; bu
+yuzden `ag` sinifi envanterde kural olarak temsil edilmiyor.
+
 
 ## Tarama kaniti
 
@@ -119,6 +125,9 @@ Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir
 dosyanin herhangi bir yerindeki `# --- KIMLIK` basliklaridir; ilk 100
 satir siniri YOKTUR. `Yeni`, yalniz bolum basliginda gorunen ve ust
 listeye yazilmamis kimliklerdir. Envanter, iki kumenin birlesimidir.
+Tarama `read_text().splitlines()` uzerinden tum dosyayi gezer;
+`FRZ-08` 114. satirda bildirildigi halde envanterdedir. Bu, ilk 100
+satir sinirinin olmadiginin canli kanitidir.
 
 `DEC-10/12` ve `GM-17/18` gibi degisiklik etiketleri kural kimligi
 degildir; yalnizca kural bildirimleri ve `# --- KIMLIK` basliklari
@@ -127,29 +136,48 @@ envanterin konusu degildir.
 
 | Betik | Baslikta | Bolum basligi | Yeni | Envanter |
 |---|---|---|---|---|
+| `ai_disclosure.py` | 0 | 0 | 0 | 0 |
+| `apply_routing.py` | 0 | 0 | 0 | 0 |
+| `budget_guard.py` | 0 | 0 | 0 | 0 |
 | `check_models.py` | 8 | 0 | 0 | 8 |
 | `cite_match.py` | 3 | 3 | 0 | 3 |
 | `declaration_check.py` | 7 | 0 | 0 | 7 |
 | `fix_reconcile.py` | 6 | 6 | 0 | 6 |
+| `gate_2c.py` | 0 | 0 | 0 | 0 |
+| `gate_merge.py` | 0 | 0 | 0 | 0 |
 | `olgu_lint.py` | 3 | 0 | 0 | 3 |
 | `oztest_attest.py` | 6 | 0 | 0 | 6 |
 | `prompt_lint.py` | 12 | 0 | 0 | 12 |
 | `provenance_check.py` | 0 | 3 | 3 | 3 |
 | `quote_ratio.py` | 2 | 1 | 0 | 2 |
+| `review_panel.py` | 0 | 0 | 0 | 0 |
 | `scope_profile_check.py` | 7 | 5 | 0 | 7 |
 | `source_class_check.py` | 3 | 0 | 0 | 3 |
 | `teslim_imza.py` | 6 | 0 | 0 | 6 |
 | `translit_check.py` | 2 | 2 | 0 | 2 |
-| `verify_doi.py` | 1 | 1 | 0 | 1 |
+| `verify_doi.py` | 0 | 0 | 0 | 0 |
 | `api_surface.py` | 5 | 0 | 0 | 5 |
+| `apply_routing.py` | 0 | 0 | 0 | 0 |
+| `budget_guard.py` | 0 | 0 | 0 | 0 |
 | `chg_reconcile.py` | 9 | 0 | 0 | 9 |
 | `dep_audit.py` | 6 | 0 | 0 | 6 |
 | `freeze_check.py` | 7 | 3 | 1 | 8 |
+| `imzala.py` | 0 | 0 | 0 | 0 |
+| `kod_gate_merge.py` | 0 | 0 | 0 | 0 |
 | `perm_lint.py` | 8 | 0 | 0 | 8 |
 | `secret_scan.py` | 5 | 0 | 0 | 5 |
 | `test_attest.py` | 12 | 1 | 0 | 12 |
 
-Toplam: 21 betik · 122 tekil kural; her satirda Envanter = Baslikta ∪ Bolum basligi.
+Toplam: 31 betik · 121 tekil kural; her satirda Envanter = Baslikta ∪ Bolum basligi.
+
+## Referans olarak ayiklanan kimlikler
+
+Asagidaki kimlikler bir betigin urettigi kural degil, baska bir
+kurala/karara yapilan atiftir; envantere sayilmaz.
+
+| Betik | Ayiklanan kimlik | Gerekce |
+|---|---|---|
+| `verify_doi.py` | DEC-027 | DEC karar kimligi; verify_doi bu kurali uygulamaz, DEC-027 bolum-farkindaligi politikasina atif yapar |
 
 ## Tam envanter
 
@@ -223,7 +251,6 @@ Toplam: 21 betik · 122 tekil kural; her satirda Envanter = Baslikta ∪ Bolum b
 | `teslim_imza.py` | TSL-06 | — | KAPSAM DISI | gizli-anahtar: HMAC anahtari ister (LAB_IMZA_ANAHTARI / ~/.config/lab_imza.key); anahtar depoya konmaz |
 | `translit_check.py` | TR-01 | TR-01 | TEST EDILDI | mutasyon vakasi: TR-01 |
 | `translit_check.py` | TR-02 | TR-02 | TEST EDILDI | mutasyon vakasi: TR-02 |
-| `verify_doi.py` | DEC-027 | — | KAPSAM DISI | ag: requests ile api.crossref.org sorgusu; batarya agsiz kosar |
 | `api_surface.py` | API-01 | — | KAPSAM DISI | kosu-durumu: KFAZ0 _KOSU/gate/BASELINE.json imza envanterini ister; envanter yoksa CALISTIRILMADI |
 | `api_surface.py` | API-02 | — | KAPSAM DISI | kosu-durumu: KFAZ0 _KOSU/gate/BASELINE.json imza envanterini ister; envanter yoksa CALISTIRILMADI |
 | `api_surface.py` | API-03 | — | KAPSAM DISI | kosu-durumu: KFAZ0 _KOSU/gate/BASELINE.json imza envanterini ister; envanter yoksa CALISTIRILMADI |
