@@ -1,5 +1,5 @@
 {
-  "commit": "e5317e3d0bfbf92317dc9404a2a8d51fbeae31b6",
+  "commit": "c6208d2283c1f51ebc2411d1bccb9f375e3971e5",
   "file_count": 242,
   "files": [
     {
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "6d5376e631e80b438da9c5f9d5feef757d421dffe2874eb535e666230d7cb2d1",
-      "size": 3164
+      "sha256": "4d22cebf88482bb333aee0c3a549737e8c461e81882fc6dfb8ccba75f00725d9",
+      "size": 3245
     },
     {
       "mode": "100644",
@@ -1205,8 +1205,8 @@
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "88c152afa082218d480d0811dcecd6282a464dd446cfc997b9ac243f7beea4d7",
-      "size": 19678
+      "sha256": "c89e23d738808fbf05416e42cdfdeefd332eeb35920e06ccdc78b8465631e70e",
+      "size": 19672
     },
     {
       "mode": "100644",
@@ -1253,8 +1253,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "4e536ceb3b914e5491dddec9923225c9feabbb146d3d2dcaa62a3ce76011031f",
-      "size": 5309
+      "sha256": "39382697a5927fc96675db60084ae6668ab9ab29250943797e7d51688c804a50",
+      "size": 5336
     },
     {
       "mode": "100644",
@@ -1455,7 +1455,7 @@
       "size": 11250
     }
   ],
-  "generated_at": "2026-11-20T07:18:49Z",
+  "generated_at": "2026-11-20T07:34:42Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1470,6 +1470,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "0e04f7c8be447381daf8cbbf66b4687745169f2c",
-  "tree_sha256": "c0fc5158deaa0448250801ff3109fad9e45b4dc50b18cf5e128fdf78fadbec18"
+  "tree": "5482bbcf0a22408d9675876164754e66cbce8aaa",
+  "tree_sha256": "b7870a02222e5d37e9ecf5579bde91fa264ba8550c30cf54a7e4de8d023c7ff4"
 }
