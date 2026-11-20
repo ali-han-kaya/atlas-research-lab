@@ -1,6 +1,6 @@
 {
-  "commit": "498ef9725bd5454015311ec7d356ee44269c6c2d",
-  "file_count": 244,
+  "commit": "1c913b6e60dc4aebd7814ff200f56dbfe2b81e91",
+  "file_count": 245,
   "files": [
     {
       "mode": "100755",
@@ -982,6 +982,12 @@
     },
     {
       "mode": "100644",
+      "path": "KOMUT_TOOLKIT_v4/ARACLAR/FIKSTUR.json",
+      "sha256": "1b9eba190250b516ba6f8ab258f8bca576e46383743d316176953aae11031f83",
+      "size": 1703
+    },
+    {
+      "mode": "100644",
       "path": "KOMUT_TOOLKIT_v4/ARACLAR/KANIT/01_oztest.json",
       "sha256": "1bc0b2eb806ba1212db9987316d1c9aa6c1a0d9d845585054feb0740d27518ed",
       "size": 6670
@@ -1019,8 +1025,8 @@
     {
       "mode": "100644",
       "path": "KOMUT_TOOLKIT_v4/ARACLAR/MUAFIYET.json",
-      "sha256": "26d5723218a1671fd5f4c6306ba5e7b147ad522e2ee5133c1de3731bc8c5e7bc",
-      "size": 491
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "size": 3
     },
     {
       "mode": "100644",
@@ -1031,8 +1037,8 @@
     {
       "mode": "100644",
       "path": "KOMUT_TOOLKIT_v4/ARACLAR/SHA256SUMS.txt",
-      "sha256": "7c9213a1053c0bfa223fd9f17fe074878fb26caa6f1338b566eb021ac35c86fd",
-      "size": 2815
+      "sha256": "d39309eb156f7d2348c2bb91b7404a056dfb72f2a1ed9434e58c8e6aac55c509",
+      "size": 2902
     },
     {
       "mode": "100644",
@@ -1067,14 +1073,14 @@
     {
       "mode": "100644",
       "path": "KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_selftest.py",
-      "sha256": "2442202711ded32c10e85f8b9ecd06d34bf73b6c553c082393f4afd57fe2f7b9",
-      "size": 30776
+      "sha256": "fb4bd36090041ba381504df0f2749e358f967503ac35f9e2b69fb5d9991d7125",
+      "size": 35240
     },
     {
       "mode": "100644",
       "path": "KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_verify.py",
-      "sha256": "35f58b5dfa7a37e7f9b5f79a3e5db64c55a6073e873611fbcf55438bc410cba0",
-      "size": 14052
+      "sha256": "9481727ca40c786e09881d9c9424aadb070c90dec0d93d81404f2f4493cca957",
+      "size": 16217
     },
     {
       "mode": "100644",
@@ -1241,8 +1247,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "dfb0b7f674dcf3f3df66d74b41a2f7e0f62e4cf0bc38061a0d2b4d06f5d0530d",
-      "size": 463942
+      "sha256": "c9c7710a4d9196ef261d553b93d23d4922dc483b99c631475ead9a9a23d30d23",
+      "size": 464926
     },
     {
       "mode": "100644",
@@ -1445,8 +1451,8 @@
     {
       "mode": "100644",
       "path": "tools/secret_fixtures.json",
-      "sha256": "9479f82ac3962b72557c178f9028797708070b8d9428f14481a1c52bd79e77b7",
-      "size": 2032
+      "sha256": "06fba89b77a0df090d8347f5dc564311effcd8e6756069c72097be131fd2c021",
+      "size": 2800
     },
     {
       "mode": "100755",
@@ -1467,7 +1473,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-20T18:36:42Z",
+  "generated_at": "2026-11-20T19:10:53Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1482,6 +1488,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "a47bf042aaa11a96daa35efca6ae3905cab2cdc7",
-  "tree_sha256": "92d839d6f63423fec0273c754f1ee91bdf9eb6032f51af0a9ec93d2d79d8c1fd"
+  "tree": "94dea567b97cf1e2400fe6a88661ca4dfa694c75",
+  "tree_sha256": "3df0c0355f05a77fe2332047a454143ad61639ef00492e7a8967686b1d8764f6"
 }
