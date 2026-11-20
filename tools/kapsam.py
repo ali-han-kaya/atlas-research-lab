@@ -251,6 +251,28 @@ def normalize(kimlik):
     return kimlik
 
 
+KURAL_KIMLIK = re.compile(r'^[A-Z]{2,8}-\d{2,3}$')
+
+
+def vaka_anahtarlari(vaka):
+    """Vakayi bagli oldugu kural(lar)a esle.
+
+    Kimlik sonu ekli olabilir (REC-05-BOZUK-JSON); hedef kural `iz` alanindadir.
+    `iz` bir kural kimligi ise onu, tuple ise her birini kullan; aksi halde
+    kimlikten turet. Boylece alternatif vakalar da envanterde gorunur.
+    """
+    kimlik = vaka[0]
+    iz = vaka[6] if len(vaka) > 6 else ''
+    if isinstance(iz, str) and KURAL_KIMLIK.match(iz):
+        return [normalize(iz)]
+    if isinstance(iz, (list, tuple)):
+        hedefler = [normalize(x) for x in iz
+                    if isinstance(x, str) and KURAL_KIMLIK.match(x)]
+        if hedefler:
+            return hedefler
+    return [normalize(kimlik)]
+
+
 def oz_testler():
     metin = ''
     for d in DIZINLER:
@@ -263,19 +285,22 @@ def olc():
     """[(betik, kural, vaka|None, durum, gerekce)] + ozet sayilari."""
     envan = envanter()
     testler = {}
-    for kimlik, _katman, _kural, betik, *_ in batarya():
-        testler.setdefault(betik, {})[normalize(kimlik)] = kimlik
+    for vaka in batarya():
+        betik = vaka[3]
+        for anahtar in vaka_anahtarlari(vaka):
+            testler.setdefault(betik, {}).setdefault(anahtar, []).append(vaka[0])
     oz = oz_testler()
 
     satirlar = []
     test = disi = bosluk = oz_anilan = 0
     for betik, kurallar in envan.items():
         for k in kurallar:
-            vaka = testler.get(betik, {}).get(k)
-            if vaka:
+            vakalar = testler.get(betik, {}).get(k)
+            if vakalar:
                 test += 1
-                satirlar.append((betik, k, vaka, 'TEST EDILDI',
-                                 'mutasyon vakasi: %s' % vaka))
+                etiket = ', '.join(vakalar)
+                satirlar.append((betik, k, etiket, 'TEST EDILDI',
+                                 'mutasyon vakasi: %s' % etiket))
             elif betik in KAPSAM_DISI:
                 disi += 1
                 sinif, gerekce = KAPSAM_DISI[betik]
@@ -325,6 +350,18 @@ def referans_tablosu():
     out = ['| Betik | Ayiklanan kimlik | Gerekce |', '|---|---|---|']
     for (yol, kimlik), gerekce in sorted(REFERANS.items()):
         out.append('| `%s` | %s | %s |' % (yol.split('/')[-1], kimlik, gerekce))
+    return out
+
+
+def rec_tablosu(vakalar):
+    out = ['| Vaka | Hedef kural | Aciklama |', '|---|---|---|']
+    for v in vakalar:
+        kimlik = v[0]
+        if not kimlik.startswith('REC-'):
+            continue
+        iz = v[6] if len(v) > 6 else ''
+        hedef = iz if isinstance(iz, str) else '+'.join(iz)
+        out.append('| %s | %s | %s |' % (kimlik, hedef, v[2]))
     return out
 
 
@@ -413,6 +450,12 @@ def markdown():
             'Asagidaki kimlikler bir betigin urettigi kural degil, baska bir',
             'kurala/karara yapilan atiftir; envantere sayilmaz.', '']
     out += referans_tablosu()
+    out += ['', '## REC ailesi vakalari', '',
+            'Her satir `make mutasyon` ile kosulur: temiz taban rc=0 ve FAIL izi',
+            'yok; tek ihlal yalniz hedef kuralin FAIL etiketiyle rc=1; ihlal geri',
+            'alininca kontrol kosusu rc=0. Alternatif satirlar ayni kuralin ikinci',
+            'tip ihlalidir; kopya degil, farkli hata dalidir.', '']
+    out += rec_tablosu(vakalar)
     out += ['', '## Tam envanter', '',
             '| Betik | Kural | Mutasyon vakasi | Durum | Gerekce |',
             '|---|---|---|---|---|']

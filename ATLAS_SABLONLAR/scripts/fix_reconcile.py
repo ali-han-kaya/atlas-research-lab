@@ -90,6 +90,7 @@ if not FAZ2.exists():
 
 raw2 = FAZ2.read_text(errors="ignore")
 fix_rows = {}   # FIX-xxx -> {"pri":..., "durum":..., "satir":...}
+fix_tekrar = []  # (FIX-id, onceki oncelik, yeni oncelik) — sessiz ezme yok
 for line in raw2.splitlines():
     if not line.strip().startswith("|"):
         continue
@@ -101,8 +102,11 @@ for line in raw2.splitlines():
         continue
     fid = m.group(0)
     pm = re.search(r"\bP([012])\b", " ".join(cols))
+    pri = f"P{pm.group(1)}" if pm else "?"
+    if fid in fix_rows:
+        fix_tekrar.append((fid, fix_rows[fid]["pri"], pri))
     fix_rows[fid] = {
-        "pri": f"P{pm.group(1)}" if pm else "?",
+        "pri": pri,
         "durum": cols[-2] if len(cols) >= 2 else "",
         "satir": line,
     }
@@ -121,7 +125,8 @@ master_fix_ids = set(FIX_RE.findall(mt))
 master_fix_ids = {f"FIX-{n}" for n in master_fix_ids}
 
 # --- REC-01 sayi mutabakati -------------------------------------------------
-if len(faz1_ids) != len(fix_rows):
+sayim_uyusmaz = len(faz1_ids) != len(fix_rows)
+if sayim_uyusmaz:
     fail("REC-01", f"FAZ1 bulgu={len(faz1_ids)} ama FAZ2 FIX={len(fix_rows)}")
 else:
     say(f"PASS REC-01: FAZ1 {len(faz1_ids)} bulgu == FAZ2 {len(fix_rows)} FIX")
@@ -132,7 +137,11 @@ def dagilim(lst):
 
 d_faz1 = dagilim(faz1_pri)
 d_faz2 = dagilim([v["pri"] for v in fix_rows.values()])
-if d_faz1 != d_faz2:
+if sayim_uyusmaz:
+    notes.append("NOT REC-02: FAZ1/FAZ2 sayimi uyusmadigi icin dagilim olculmedi")
+elif fix_tekrar:
+    fail("REC-02", f"ayni FIX-ID birden fazla satirda: {fix_tekrar}")
+elif d_faz1 != d_faz2:
     fail("REC-02", f"oncelik dagilimi FAZ1={d_faz1} != FAZ2={d_faz2}")
 else:
     say(f"PASS REC-02: oncelik dagilimi ayni {d_faz1}")
@@ -169,14 +178,14 @@ if GATE2B.exists():
             if not isinstance(rec, list):
                 fail("REC-05", "gate 2B manifest_reconciliation liste degil "
                      f"({type(rec).__name__}) — kanit iddiasi OLCULEMEDI")
-                rec = []
-            kanitli = [str(r.get("fix_id", "")) for r in rec
-                       if isinstance(r, dict) and KANITLI_RE.search(str(r.get("status", "")))]
-            sahte = sorted(f for f in kanitli if f not in master_fix_ids)
-            if sahte:
-                fail("REC-05", f"gate 2B '{len(sahte)}' FIX'i KANITLI ilan etti ama MASTER'da yok: {sahte}")
             else:
-                say(f"PASS REC-05: gate 2B'nin {len(kanitli)} KANITLI iddiasi MASTER'da dogrulandi")
+                kanitli = [str(r.get("fix_id", "")) for r in rec
+                           if isinstance(r, dict) and KANITLI_RE.search(str(r.get("status", "")))]
+                sahte = sorted(f for f in kanitli if f not in master_fix_ids)
+                if sahte:
+                    fail("REC-05", f"gate 2B '{len(sahte)}' FIX'i KANITLI ilan etti ama MASTER'da yok: {sahte}")
+                else:
+                    say(f"PASS REC-05: gate 2B'nin {len(kanitli)} KANITLI iddiasi MASTER'da dogrulandi")
 else:
     notes.append(f"NOT REC-05: gate 2B dosyasi yok ({GATE2B}) — FAZ4 oncesi normaldir")
 

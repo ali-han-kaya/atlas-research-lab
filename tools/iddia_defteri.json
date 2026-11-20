@@ -58,7 +58,7 @@
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **80/80 cases red + 19/19 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "**174/174**; mutation battery **84/84 cases red + 19/19 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured"
         },
         {
           "dosya": "docs/README.md",
@@ -98,15 +98,15 @@
     },
     {
       "id": "IDD-04",
-      "iddia": "mutasyon bataryasi 80/80 vaka atesledi",
+      "iddia": "mutasyon bataryasi 84/84 vaka atesledi",
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **80/80 cases red + 19/19 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "**174/174**; mutation battery **84/84 cases red + 19/19 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "SONUC: 80/80 kural atesledi · 19/19 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+          "alinti": "SONUC: 84/84 kural atesledi · 19/19 beklenen bulgu dogrulandi · taban temiz olmayan=0"
         }
       ],
       "durum": "OLCULDU",
@@ -115,7 +115,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "ayikla": "SONUC:\\s*(\\d+/\\d+) kural atesledi",
-      "beklenen": "80/80"
+      "beklenen": "84/84"
     },
     {
       "id": "IDD-05",
@@ -123,11 +123,11 @@
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **80/80 cases red + 19/19 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "**174/174**; mutation battery **84/84 cases red + 19/19 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "SONUC: 80/80 kural atesledi · 19/19 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+          "alinti": "SONUC: 84/84 kural atesledi · 19/19 beklenen bulgu dogrulandi · taban temiz olmayan=0"
         }
       ],
       "durum": "OLCULDU",
@@ -144,7 +144,7 @@
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **80/80 cases red + 19/19 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "**174/174**; mutation battery **84/84 cases red + 19/19 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured"
         },
         {
           "dosya": "README.md",
