@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-20T10:42:04Z",
+  "zaman": "2026-11-20T10:59:49Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -36,8 +36,8 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 55/55 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
-      "deger": "55/55"
+      "ham": "SONUC: 58/58 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "deger": "58/58"
     },
     "IDD-05": {
       "komut": [
@@ -45,7 +45,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 55/55 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "ham": "SONUC: 58/58 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
       "deger": "17/17"
     },
     "IDD-06": {
@@ -54,8 +54,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Mutasyon vakasi olan (TEST EDILDI) | 71 |",
-      "deger": "71"
+      "ham": "| Mutasyon vakasi olan (TEST EDILDI) | 74 |",
+      "deger": "74"
     },
     "IDD-07": {
       "komut": [
@@ -72,8 +72,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Gerekceli kapsam disi | 28 |",
-      "deger": "28"
+      "ham": "| Gerekceli kapsam disi | 27 |",
+      "deger": "27"
     },
     "IDD-09": {
       "komut": [
@@ -81,8 +81,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Bosluk (gerekce yok) | 23 |",
-      "deger": "23"
+      "ham": "| Bosluk (gerekce yok) | 21 |",
+      "deger": "21"
     },
     "IDD-10": {
       "komut": [
@@ -90,8 +90,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| — bunlardan yalniz oz-testte anilan | 11 |",
-      "deger": "11"
+      "ham": "| — bunlardan yalniz oz-testte anilan | 10 |",
+      "deger": "10"
     },
     "IDD-11": {
       "komut": [
@@ -99,8 +99,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| — hicbir testte gecmeyen | 12 |",
-      "deger": "12"
+      "ham": "| — hicbir testte gecmeyen | 11 |",
+      "deger": "11"
     },
     "IDD-12": {
       "komut": [
