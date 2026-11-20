@@ -18,7 +18,7 @@ visible; evidence levels (`BIRINCIL`/`DIJITAL`/`BEYAN`/`OLCULMEDI`); fail-closed
 (unmeasured is never a pass); and tamper detection (`GATE_TAMPERED` → P0).
 - **How claims are verified.** `make dogrula` (hygiene, syntax, secret scan, secret-gate
 self-test, three self-test suites), `make mutasyon` (ninety-five gate rules, exercised by
-108 battery cases: clean baseline + one violation + a red verdict or expected finding), and `tools/yayinla.py`
+108 battery cases: silent clean baseline + one violation + a red verdict or expected finding), and `tools/yayinla.py`
 (publish parity: 0 new / 0 changed / 0 deleted). The same commands run in CI on GitHub Actions.
 `make iddia` closes the remaining gap: it re-measures the numbers printed in this README.
 - **Reproduce it.** `./demo` prints the frozen 8-vs-2 failure with a **red verdict and
@@ -78,7 +78,7 @@ olarak saklandı.
 | **Hakem** | `HAKEM_HEYETI/` | Çok modelli hakem paneli sözleşmesi (F0–F6) ve iki turlu acımasız denetim komutu. |
 | **Ortak** | `ORTAK/` | İki hattın paylaştığı kapı (`ortak_gate.py`), yönlendirme ve bütçe koruması. |
 | **Kayıt** | `docs/` | Ölçüm koşuları, denetim raporları, ders defteri, kanonik olgu tablosu. |
-| **Mutasyon** | `tools/mutasyon_bataryasi.py` | Kapı kuralları gerçekten ateşliyor mu: temiz taban + tek ihlal + kırmızı hüküm. Tek dosya, kişisel yol yok, `SKILL.md` bağımlılığı yok. |
+| **Mutasyon** | `tools/mutasyon_bataryasi.py` | Kapı kuralları gerçekten ateşliyor mu: sessiz temiz taban + tek ihlal + hata vakasında kırmızı hüküm, beklenen-bulgu vakasında işaretli bulgu. Tek dosya, kişisel yol yok, `SKILL.md` bağımlılığı yok. |
 
 Ajan tanımları `.opencode/agent/` ve `.opencode/command/` altındadır; her girdi
 `ATLAS_SABLONLAR/.opencode/` içindeki tek kaynağa **göreli symlink**'tir — ikinci
@@ -188,10 +188,15 @@ python3 KOD_SABLONLAR/scripts/kod_selftest.py
 (cd KOMUT_TOOLKIT_v4/ARACLAR/betikler && python3 v4_selftest.py)
 ```
 
-`make mutasyon` ayrı bir kanıttır: her kural için önce **temiz taban** (`rc=0`)
-alır, aynı kopyada tek bir ihlal üretir ve kapının **kırmızıya döndüğünü** ölçer.
-İkisi birlikte olmadan vaka geçmez — yani yeşil, kapının değil girdinin özelliği
-olamaz. Model, ağ ve yerel katalog gerekmez.
+`make mutasyon` ayrı bir kanıttır ve iki sözleşmeyi birlikte ölçer. Her vakada
+önce **temiz taban** (`rc=0`) alınır. Hata vakasında tabanda FAIL etiketi yoktur;
+beklenen-bulgu vakasında hedef iz tabanda **yoktur**. Hata vakasında aynı kopyada
+tek bir ihlal üretilir ve kapının **kırmızıya döndüğü**
+(`rc=1`, yalnız hedef FAIL) doğrulanır. Beklenen-bulgu vakasında kapı `rc=0`
+kalabilir, ama ihlal sonrası beklenen uyarı/işaret çıktıda **bulunmalıdır**. Her
+iki modda da temiz tabanda bulgunun yokluğu ortak ön koşuldur; taban kirliyse
+veya ihlal sonrası beklenen iz yoksa vaka geçmez. Model, ağ ve yerel katalog
+gerekmez.
 
 Model kataloğu depoda **sabittir** (`tools/model_katalog.json`): MOD-1/MOD-2
 yaşayan kataloğa değil bu allowlist anlık görüntüsüne bakar, böylece KOD sayısı
@@ -335,7 +340,9 @@ yazılır; 8/8 denmez. Ayrıntı ve negatif kontrol:
 
 ## Mutasyon kapsamı
 
-`make mutasyon` yüz sekiz vakanın gerçekten ateşlediğini kanıtlar; **her kuralın** durumu ise
+`make mutasyon` yüz sekiz vakanın gerçekten ateşlediğini kanıtlar: hata vakalarında
+sessiz temiz taban → tek ihlal → kırmızı hüküm; beklenen-bulgu vakalarında sessiz
+temiz taban → tek ihlal → işaretli bulgu (`rc=0` olabilir). **Her kuralın** durumu ise
 [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md) içinde tek tek yazılıdır. Tablo
 `tools/kapsam.py` tarafından üretilir (elle yazılmaz) ve üç durum ayırır:
 
