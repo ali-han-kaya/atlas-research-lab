@@ -15,6 +15,9 @@ bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus
 |---|---|
 | Kapi betigi | 21 |
 | Bildirilen kural | 122 |
+| Batarya vakasi (toplam) | 88 |
+| — kural ateslettiren | 71 |
+| — beklenen bulgu | 17 |
 | Mutasyon vakasi olan (TEST EDILDI) | 86 |
 | Gerekceli kapsam disi | 27 |
 | Bosluk (gerekce yok) | 9 |

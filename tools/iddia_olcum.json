@@ -36,8 +36,8 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 70/70 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
-      "deger": "70/70"
+      "ham": "SONUC: 71/71 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "deger": "71/71"
     },
     "IDD-05": {
       "komut": [
@@ -45,7 +45,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 70/70 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "ham": "SONUC: 71/71 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
       "deger": "17/17"
     },
     "IDD-06": {

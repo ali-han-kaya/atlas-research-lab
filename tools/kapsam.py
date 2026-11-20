@@ -305,6 +305,9 @@ def tarama_tablosu():
 
 def markdown():
     satirlar, envan, (test, disi, bosluk, oz_anilan) = olc()
+    vakalar = batarya()
+    toplam_vaka = len(vakalar)
+    beklenen_bulgu = sum(1 for v in vakalar if len(v) == 8 and v[7] == 'BULGU')
     out = ['# Mutasyon kapsami — tam kural envanteri', '',
            'Kaynak: `tools/kapsam.py` (uretilmis dosya; elle duzenlenmez).',
            'Envanter, ATLAS ve KOD kapi betiklerinin satir basi kural bildirimlerinden',
@@ -318,6 +321,9 @@ def markdown():
            '| Olcum | Deger |', '|---|---|',
            '| Kapi betigi | %d |' % len(envan),
            '| Bildirilen kural | %d |' % len(satirlar),
+           '| Batarya vakasi (toplam) | %d |' % toplam_vaka,
+           '| — kural ateslettiren | %d |' % (toplam_vaka - beklenen_bulgu),
+           '| — beklenen bulgu | %d |' % beklenen_bulgu,
            '| Mutasyon vakasi olan (TEST EDILDI) | %d |' % test,
            '| Gerekceli kapsam disi | %d |' % disi,
            '| Bosluk (gerekce yok) | %d |' % bosluk,
