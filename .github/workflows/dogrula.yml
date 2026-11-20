@@ -34,10 +34,11 @@ jobs:
       - name: Bagimliliklar
         run: python3 -m pip install --quiet -r requirements-dev.txt
 
-      # Runner kipi: hijyen, sözdizimi, sır taraması, sır kapısı öz-testi ve
-      # Toolkit hükme girer. ATLAS/KOD paketleri koşar ama RAPOR olarak basılır —
-      # ikisi de yerel modele/tarihçeye bağlıdır. Kabul edilen borç (T1) iş
-      # özetine yazılır; 7/8 ile yeşil CI arasındaki fark gizlenmez.
+      # Runner kipi: aynı kurallar, ayrı muafiyet yok. Sekiz kalemin tamamı
+      # koşar; T1 (OLG-1) bu ağacın attestation.json kanıtıyla çalışır ve
+      # çıktısında kendi commit/tree çıpasını basar. Bir kalem koşmazsa satır
+      # `KABUL EDİLEN BORÇ: <id> koşmuyor — <sebep>` olarak görünür ve PASS
+      # sayılmaz; koşan 8/8 ile eksik koşu arasındaki fark gizlenmez.
       - name: make dogrula-ci
         run: make dogrula-ci
 

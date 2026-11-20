@@ -36,6 +36,7 @@ CIKIS: 0 = hukme giren kalemlerin hepsi gecti (CALISTIRILMADI varsa bile) ·
 OLG-1'in kaniti `attestation.json`'dir; yoksa/bozuksa FAIL'dir, CALISTIRILMADI
 degil. Sahte canak (commit, tarihce) uretilmez.
 """
+import json
 import os
 import re
 import subprocess
@@ -224,6 +225,24 @@ def ortam_bagli_mi(kid, cikti):
     return gerekce
 
 
+def _ozet_satiri(satirlar):
+    """Aracin kendi huküm satirini secer; stderr uyarisini PASS kaniti diye basmaz."""
+    for satir in reversed(satirlar):
+        if re.search(r'\d+/\d+ gecti', satir):
+            return satir[:110]
+    return satirlar[-1][:110] if satirlar else '(bos cikti)'
+
+
+def _kanit_capasi():
+    """T1'in dayandigi attestation commit/tree capasi; okunamazsa 'yok' der."""
+    try:
+        with open(os.path.join(KOK, 'attestation.json'), encoding='utf-8') as f:
+            d = json.load(f)
+        return 'KANIT commit=%s tree=%s' % (str(d['commit'])[:7], str(d['tree'])[:7])
+    except (OSError, ValueError, KeyError):
+        return 'KANIT yok'
+
+
 def _github_ozeti(kalemler, kalan, atlanan):
     """Actions is ozeti: 6/7 ile yesil CI arasindaki farki gorunur kilar."""
     yol = os.environ.get('GITHUB_STEP_SUMMARY')
@@ -313,7 +332,10 @@ def main():
         cwd = kalem[3] if len(kalem) > 3 else None
         rc, cikti = kos(kalem[2], cwd)
         satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
-        son = satirlar[-1][:110] if satirlar else '(bos cikti)'
+        son = _ozet_satiri(satirlar)
+        if kid == 'T1' and rc == 0:
+            # T1 PASS'i kendi agac kanitiyla birlikte gorunur olsun.
+            son = ('%s · %s' % (son, _kanit_capasi()))[:150]
 
         if CI and kid in CI_RAPOR:
             # Kural tabanli siniflandirma: gecen PASS, ortam gerekceli kalan
