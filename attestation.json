@@ -1,5 +1,5 @@
 {
-  "commit": "8b0747f11200ff63b0e661677d5657b9e76cbe0c",
+  "commit": "6e051cfdbfc2e9abcb5d7b66c8a702c4b56b5333",
   "file_count": 242,
   "files": [
     {
@@ -1205,7 +1205,7 @@
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "c89e23d738808fbf05416e42cdfdeefd332eeb35920e06ccdc78b8465631e70e",
+      "sha256": "feeb7ffc29403e2c27a0770e9a44061b4617a098e5ae34efa9aceb23887a27dd",
       "size": 19672
     },
     {
@@ -1253,8 +1253,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "c952f2ca20b78a644abd0c67c1c7712660064a3a36c6c9e19601490090115a30",
-      "size": 7185
+      "sha256": "0f9f71e7a79834433e2dabd1396b441f3920bdb1998336391220ace106940e95",
+      "size": 7244
     },
     {
       "mode": "100644",
@@ -1379,7 +1379,7 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "d5cb53bf0d6fad9e32d42d81819b273eff22ce1e2143818aa9f490d4ada47970",
+      "sha256": "6064ba948e2632e4fa0e92341d04d88370af414a3eadede9fd12c444d00c6906",
       "size": 20589
     },
     {
@@ -1427,8 +1427,8 @@
     {
       "mode": "100644",
       "path": "tools/mutasyon_bataryasi.py",
-      "sha256": "a8380096c798c4e335277ddefe6f04f9a6ff59791e37d5e38215682ecfc2e5c5",
-      "size": 41482
+      "sha256": "730d577da49fa3e4d51b1004bfa103af6d4c646640e4feed59d9fe1cf0829ddf",
+      "size": 42463
     },
     {
       "mode": "100644",
@@ -1455,7 +1455,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-20T09:21:30Z",
+  "generated_at": "2026-11-20T10:37:46Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1470,6 +1470,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "9b5afdf8b4beb91edfd42b405f6ebad9f63edb23",
-  "tree_sha256": "c90c5421b7b7c6b378fedadcae4335928162d3f5d3c912b2d804427a893b3bf3"
+  "tree": "674d4035232779b917dd11bb22bc2777cbaa3a61",
+  "tree_sha256": "e98858aad0ecff9cf565cf7dd39dea7f1e63c718a5cd6bb07912dfc5322b1d70"
 }
