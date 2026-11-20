@@ -166,6 +166,9 @@ QR_BASE = ('# Baslik\n\n' + ('Bu govde metni oran olcumunu dengelemek icin '
            'yeterince uzun tutulmustur ve alinti icermez. ' * 8) + '\n')
 QR_MUT = ('# Baslik\n\n' + ('"Bu uzun bir alinti metnidir ve oran esigini asar."\n\n'
           'Kisa govde.\n'))
+QR_DENGE = ('# Baslik\n\n' + ('Bu govde metni oran olcumunu dengelemek icin '
+            'yeterince uzun tutulmustur ve alinti icermez. ' * 8) +
+            'Bu metinde tek bir " isaret var.\n')
 SEC_ORNEK = ('api_key = "sk-' + 'test-AbCdEfGhIjKlMnOpQrStUvWxYz012345"\n')
 
 DEC_MD = ('# Makale\n\n'
@@ -1233,6 +1236,11 @@ def vakalar():
          lambda k: ['--dosya', str(k / 'sandbox_qr' / 'makale.md'), '--esik', '50'],
          lambda k: yaz(k / 'sandbox_qr' / 'makale.md', QR_MUT),
          'UYARI QR-01', 'BULGU'),
+        ('QR-02-DENGE', 'ATLAS', 'dengesiz tirnak uyarisi',
+         'ATLAS_SABLONLAR/scripts/quote_ratio.py',
+         lambda k: ['--dosya', str(k / 'sandbox_qr' / 'makale.md')],
+         lambda k: yaz(k / 'sandbox_qr' / 'makale.md', QR_DENGE),
+         'UYARI QR-02-denge', 'BULGU'),
         ('PERM-03', 'KOD', 'uzanti kalibi kok seviye', 'KOD_SABLONLAR/scripts/perm_lint.py',
          lambda k: ['--dizin', str(k / 'sandbox_perm')],
          lambda k: degistir(k, 'sandbox_perm/.opencode/agent/ajan.md',
@@ -1431,6 +1439,11 @@ def main():
     gecen_bulgu = 0
     satirlar = []
     tum = vakalar()
+    kimlikler = [v[0] for v in tum]
+    yinelenen = sorted({k for k in kimlikler if kimlikler.count(k) > 1})
+    if yinelenen:
+        print('HUKUM: FAIL — yinelenen vaka ID: %s' % ', '.join(yinelenen))
+        return 1
     for vaka in tum:
         opsiyon = {}
         if len(vaka) >= 8 and vaka[7] == 'BULGU':

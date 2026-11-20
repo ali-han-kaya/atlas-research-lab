@@ -26,7 +26,7 @@ make dogrula
 | Command | What it proves |
 |---|---|
 | `make dogrula` | One entry point for repository hygiene, syntax, secret scan and the self-test suites. It prints its own raw output; a check that does not run is printed as `CALISTIRILMADI` and is never counted as a pass. |
-| `make mutasyon` | For each gate rule, a clean baseline must pass, one violation must be injected, and the gate must turn red with the expected finding. A green baseline alone is not a passing case. |
+| `make mutasyon` | Every case starts with a silent clean baseline and injects one violation. Error cases must turn red (`rc=1`) with the expected marker; expected-finding cases must emit the expected warning/finding (`rc=0` is allowed). A finding present in the baseline fails the case. |
 | `./demo` | Reproduces the frozen `DENEME/` contradiction: the manifest claims more fixes than the master text contains, while the frozen gate says `PASS`. The expected result is a red verdict. |
 | `make iddia` | Re-measures the numeric claims printed in the public docs and requires each stored raw output line to match the current output. A mismatch is named by `IDD-*`. It does not change the `make dogrula` verdict. |
 | `tools/yayinla.py` | Publication parity: copies only an explicit allowlist from the private lab tree, refuses out-of-scope artefacts, scans for secrets and reports new/changed/deleted files. |

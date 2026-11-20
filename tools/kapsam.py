@@ -419,8 +419,8 @@ def markdown():
     else:
         out += ['', '## Sonraki dilim', '',
                 'Bu turda kapatilmayan bosluk yok (0). Dokuz eski boslugun her biri',
-                'gercek bir mutasyon vakasiyla kapatildi; TST-06 ve CHK-05',
-                'P1/beklenen bulgu modunda, digerleri kirmizi hukumle dogrulandi.', '']
+                'gercek bir mutasyon vakasiyla kapatildi; %d beklenen-bulgu vakasi' % beklenen_bulgu,
+                'uyari modunda, digerleri kirmizi hukumle dogrulandi.', '']
     out += ['', '## Kapsam disi siniflari', '',
             'Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir',
             '(asagida betik adiyla birlikte yazili).', '']
