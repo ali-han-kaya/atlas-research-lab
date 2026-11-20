@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-19T17:47:57Z",
+  "zaman": "2026-11-20T10:42:04Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -36,8 +36,8 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 54/54 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
-      "deger": "54/54"
+      "ham": "SONUC: 55/55 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "deger": "55/55"
     },
     "IDD-05": {
       "komut": [
@@ -45,7 +45,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 54/54 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "ham": "SONUC: 55/55 kural atesledi · 17/17 beklenen bulgu dogrulandi · taban temiz olmayan=0",
       "deger": "17/17"
     },
     "IDD-06": {
