@@ -95,7 +95,8 @@ RISK_SIRASI = [
 RISK_EKLENEN = {'TST-08', 'RECK-06', 'DEP-05',
                'RECK-01', 'RECK-02', 'RECK-04',
                'RECK-05', 'TST-07', 'TST-09',
-               'TST-01', 'TST-02', 'TST-03'}
+               'TST-01', 'TST-02', 'TST-03',
+               'TST-05', 'RECK-08', 'RECK-07'}
 RISK_NOT = {
     'TST-08': 'Ham test raporu yok/okunamiyor — kanitsiz PASS P0; kapinin kanit temeli.',
     'RECK-06': 'Dondurulmus bolge diff\'te — dogrudan tamper sinyali, P0.',
@@ -137,11 +138,14 @@ RISK_NOT = {
 
 # Bu dilimde kapatilamayan, hala hicbir testte gorunmeyen 8 kuralin risk
 # sirasindaki ilk ucu. Bunlar silinmez; bir sonraki dilimin acik kaydidir.
-SONRAKI_DILIM = ['TST-05', 'TST-06']
+SONRAKI_DILIM = ['FRZ-08', 'RECK-09', 'TST-10']
 SONRAKI_NOT = {
-    'TST-05': 'Atlanan test tabandan fazla olamaz; test atlayarak yesil olunmaz.',
-    'TST-06': 'Kapsam tabanin bir altina kadar korunmali; sessiz kapsam '
-              'kaybi P1.',
+    'FRZ-08': 'Temiz agac imzasi: imza ihlali terminal rc=2 uretir; rc=1 '
+              'diliminde degil, terminal sozlesmesiyle ayri ele alinacak.',
+    'RECK-09': 'Plan yokken urun kodu degisimi; KFAZ1 yoklugu P1 urettigi '
+               'icin ayri fikstur gerektirir.',
+    'TST-10': 'Rapor kaynaktan eski olamaz; bayat kanit mevcut kodu '
+              'olcmemis olabilir.',
 }
 
 
@@ -326,10 +330,9 @@ def markdown():
            'vaka aldi; durum sutunu guncel envanterden okunur.', '']
     out += risk_tablosu(satirlar)
     out += ['', '## Sonraki dilim', '',
-            'Asagidaki kural(lar) bu turda kapatilmadi; hala hicbir testte',
-            'gorunmeyen %d kuralin risk sirasindaki ilk %d tanesidir. Bir sonraki' % (
-                bosluk - oz_anilan, len(SONRAKI_DILIM)),
-            'dilimde gercek vakayla kapatilacak; sessizce sayidan dusulmedi.', '',
+            'Asagidaki kural(lar) bu turda kapatilmadi; kalan %d boslugun risk' % bosluk,
+            'sirasindaki ilk %d tanesidir. Bir sonraki dilimde gercek vakayla' % len(SONRAKI_DILIM),
+            'kapatilacak; sessizce sayidan dusulmedi.', '',
             '| Kural | Betik | Neden test edilemedi / neyi korur |',
             '|---|---|---|']
     _risk_durum = {k: d for _b, k, _v, d, _g in satirlar}
@@ -338,6 +341,9 @@ def markdown():
         if _risk_durum.get(_k) != 'BOSLUK':
             raise SystemExit('SONRAKI_DILIM artik bosluk degil: %s' % _k)
         out.append('| %s | `%s` | %s |' % (_k, _risk_betik[_k], SONRAKI_NOT[_k]))
+    if _risk_durum.get('TST-06') == 'BOSLUK':
+        out += ['', 'Not: TST-06 yalniz P1 uretir; rc=1 sartini karsilamadigi',
+                'icin bu dilimde sayiya eklenmedi, P1 kaydi olarak ayri tutulur.']
     out += ['',
            '## Kapsam disi siniflari', '',
            'Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir',

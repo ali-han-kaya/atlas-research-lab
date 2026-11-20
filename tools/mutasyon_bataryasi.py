@@ -123,6 +123,8 @@ JUNIT_TST5_ERROR = ('<?xml version="1.0"?><testsuite tests="5" failures="0" erro
                     'skipped="0"></testsuite>')
 JUNIT_TST0 = ('<?xml version="1.0"?><testsuite tests="0" failures="0" errors="0" '
               'skipped="0"></testsuite>')
+JUNIT_TST5_SKIP = ('<?xml version="1.0"?><testsuite tests="6" failures="0" errors="0" '
+                   'skipped="1"></testsuite>')
 
 SCOPE_TR = '# SCOPE\n\nTransliterasyon sistemi: DMG (DIN 31635).\n'
 METIN_TR = '# Makale\n\nMetinde sek\u00eene terimi bir kez ge\u00e7er.\n'
@@ -376,6 +378,36 @@ def _tst03(k):
     yaz(k / 'sandbox_tst' / 'gate' / 'junit.xml', JUNIT_TST0)
     return _json_duzenle(k, 'sandbox_tst/03-KFAZ-3-TEST-EVIDENCE.json',
                          lambda v: v['sonuc'].__setitem__('kosan', 0))
+
+
+def _tst05(k):
+    """Tek ihlal: ham JUnit 1 atlanan test der; beyan da ayni gercegi soyler."""
+    yaz(k / 'sandbox_tst' / 'gate' / 'junit.xml', JUNIT_TST5_SKIP)
+    return _json_duzenle(k, 'sandbox_tst/03-KFAZ-3-TEST-EVIDENCE.json',
+                         lambda v: v['sonuc'].__setitem__('atlanan', 1))
+
+
+def _reck08(k):
+    """Tek ihlal: KFAZ2.chg liste degil; sema RECK-08 P0 verir."""
+    return _md_json_duzenle(k, 'sandbox_reck/_KOSU/02-KFAZ-2-MANIFEST.md',
+                            lambda v: v.__setitem__('chg', 'bozuk'))
+
+
+def _reck07_hazirla(k):
+    """RECK-07: tabanda zaten var olan test adi tek basina yetmez."""
+    _reck_plan_hazirla(k)
+    return _json_duzenle(k, 'sandbox_reck/_KOSU/gate/BASELINE.json',
+                         lambda v: v.__setitem__('test_adlari', ['eski_test']))
+
+
+def _reck07(k):
+    """Tek ihlal: REQ davranissal olur ve yalniz TABANDAKI test adina eslenir."""
+    hata = _md_json_duzenle(k, 'sandbox_reck/_KOSU/00-KFAZ-0-SPEC.md',
+                            lambda v: v['req'][0].__setitem__('tur', 'davranissal'))
+    if hata:
+        return hata
+    return _md_json_duzenle(k, 'sandbox_reck/_KOSU/01-KFAZ-1-PLAN.md',
+                            lambda v: v.__setitem__('req_test', {'REQ-001': ['eski_test']}))
 
 
 def _tst_hazirla(k):
@@ -748,6 +780,20 @@ def vakalar():
                     '--faz', 'KFAZ2'],
          _reck05,
          'RECK-05', {'cwd': 'sandbox_reck/gitdepo', 'kur': _reck_plan_hazirla}),
+        ('RECK-08', 'KOD', 'makine blogu semaya uymali',
+         'KOD_SABLONLAR/scripts/chg_reconcile.py',
+         lambda k: ['--kosu', str(k / 'sandbox_reck' / '_KOSU'),
+                    '--taban', str(k / 'sandbox_reck' / '_KOSU' / 'gate' / 'BASELINE.json'),
+                    '--faz', 'KFAZ2'],
+         _reck08,
+         'RECK-08', {'cwd': 'sandbox_reck/gitdepo', 'kur': _reck_plan_hazirla}),
+        ('RECK-07', 'KOD', 'davranissal REQ yeni test adi ister',
+         'KOD_SABLONLAR/scripts/chg_reconcile.py',
+         lambda k: ['--kosu', str(k / 'sandbox_reck' / '_KOSU'),
+                    '--taban', str(k / 'sandbox_reck' / '_KOSU' / 'gate' / 'BASELINE.json'),
+                    '--faz', 'KFAZ2'],
+         _reck07,
+         'RECK-07', {'cwd': 'sandbox_reck/gitdepo', 'kur': _reck07_hazirla}),
         ('RECK-03', 'KOD', 'plansiz urun dosyasi kapsam ihlali',
          'KOD_SABLONLAR/scripts/chg_reconcile.py',
          lambda k: ['--kosu', str(k / 'sandbox_reck' / '_KOSU'),
@@ -819,6 +865,14 @@ def vakalar():
                     '--kosu', str(k / 'sandbox_tst')],
          _tst03,
          'TST-03', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_zero_hazirla}),
+        ('TST-05', 'KOD', 'atlanan test tabandan fazla olamaz',
+         'KOD_SABLONLAR/scripts/test_attest.py',
+         lambda k: ['--kanit', str(k / 'sandbox_tst' / '03-KFAZ-3-TEST-EVIDENCE.json'),
+                    '--taban', str(k / 'sandbox_tst' / 'gate' / 'BASELINE.json'),
+                    '--profil', str(k / 'kod_profil.json'),
+                    '--kosu', str(k / 'sandbox_tst')],
+         _tst05,
+         'TST-05', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_hazirla}),
         # --- uyari/bilgi kurallari: beklenen bulgu (rc=0 olabilir) ------------
         ('PL-12', 'ATLAS', 'belirsizlik cikisi var', 'ATLAS_SABLONLAR/scripts/prompt_lint.py',
          lambda k: ['--dizin', str(k / 'sandbox_pl')],
