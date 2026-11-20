@@ -239,12 +239,12 @@ tip ihlalidir; kopya degil, farkli hata dalidir.
 | `prompt_lint.py` | PL-14 | PL-14 | TEST EDILDI | mutasyon vakasi: PL-14 |
 | `prompt_lint.py` | PL-16 | PL-16 | TEST EDILDI | mutasyon vakasi: PL-16 |
 | `prompt_lint.py` | PL-18 | PL-18 | TEST EDILDI | mutasyon vakasi: PL-18 |
-| `prompt_lint.py` | PL-19 | PL-19, PL-19-JSON-YOK | TEST EDILDI | mutasyon vakasi: PL-19, PL-19-JSON-YOK |
+| `prompt_lint.py` | PL-19 | PL-19, PL-19-UYARI, PL-19-JSON-YOK | TEST EDILDI | mutasyon vakasi: PL-19, PL-19-UYARI, PL-19-JSON-YOK |
 | `provenance_check.py` | CHK-01 | CHK-01 | TEST EDILDI | mutasyon vakasi: CHK-01 |
 | `provenance_check.py` | CHK-02 | CHK-02 | TEST EDILDI | mutasyon vakasi: CHK-02 |
 | `provenance_check.py` | CHK-05 | CHK-05 | TEST EDILDI | mutasyon vakasi: CHK-05 |
 | `quote_ratio.py` | QR-01 | QR-01 | TEST EDILDI | mutasyon vakasi: QR-01 |
-| `quote_ratio.py` | QR-02 | ATLAS-QR-02 | TEST EDILDI | mutasyon vakasi: ATLAS-QR-02 |
+| `quote_ratio.py` | QR-02 | ATLAS-QR-02, QR-02-DENGE | TEST EDILDI | mutasyon vakasi: ATLAS-QR-02, QR-02-DENGE |
 | `scope_profile_check.py` | SP-01 | SP-01 | TEST EDILDI | mutasyon vakasi: SP-01 |
 | `scope_profile_check.py` | SP-02 | SP-02 | TEST EDILDI | mutasyon vakasi: SP-02 |
 | `scope_profile_check.py` | SP-03 | SP-03 | TEST EDILDI | mutasyon vakasi: SP-03 |

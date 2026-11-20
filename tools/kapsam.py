@@ -252,6 +252,7 @@ def normalize(kimlik):
 
 
 KURAL_KIMLIK = re.compile(r'^[A-Z]{2,8}-\d{2,3}$')
+KURAL_ARAMA = re.compile(r'[A-Z]{2,8}-\d{2,3}')
 
 
 def vaka_anahtarlari(vaka):
@@ -265,6 +266,13 @@ def vaka_anahtarlari(vaka):
     iz = vaka[6] if len(vaka) > 6 else ''
     if isinstance(iz, str) and KURAL_KIMLIK.match(iz):
         return [normalize(iz)]
+    if isinstance(iz, str):
+        # UYARI QR-02-denge / WARN CHK-05 gibi isaretli bulgularda kural
+        # kimligi metnin icindedir; yoksa yeni uyari vakasi kendi kimligine
+        # baglanip kapsam tablosunda yanlis bir "kural" gibi gorunur.
+        m = KURAL_ARAMA.search(iz)
+        if m:
+            return [normalize(m.group(0))]
     if isinstance(iz, (list, tuple)):
         hedefler = [normalize(x) for x in iz
                     if isinstance(x, str) and KURAL_KIMLIK.match(x)]
