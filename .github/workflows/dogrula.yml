@@ -49,7 +49,8 @@ jobs:
       - name: Agac kaniti guncel mi
         run: make kanit-dogrula
 
-      # Kapı kanıtı: her kural için temiz taban + tek ihlal + kırmızı hüküm.
+      # Kapı kanıtı: her kural için temiz taban + tek ihlal; hata vakasında kırmızı,
+      # beklenen-bulgu vakasında işaretli bulgu.
       # Model, ağ ve yerel katalog gerektirmez; bu yüzden runner'da hükme girer.
       - name: make mutasyon
         run: make mutasyon

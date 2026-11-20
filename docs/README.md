@@ -60,16 +60,19 @@ kayıt yerinde durur, kanıtı özel ağaçta kalır.
 ## Mutasyon bataryası
 
 Öz-test "kapı kodu doğru mu" sorusunu sorar; mutasyon bataryası başka bir soruyu
-sorar: **kapı gerçekten kırmızıya dönüyor mu.** Her vaka kendi geçici kopyasında
-çalışır ve üç adımı birlikte ister:
+sorar: **kapı, tanımlı sözleşmesini gerçekten uyguluyor mu.** Her vaka kendi geçici
+kopyasında çalışır ve iki sözleşmeden birini ölçer:
 
-1. **Temiz taban** — ihlalsiz kopyada kapı `rc=0` vermeli.
+1. **Temiz taban (ortak ön koşul)** — ihlalsiz kopyada kapı `rc=0` vermeli ve hedef
+   bulgu tabanda **bulunmamalıdır**.
 2. **Tek ihlal** — aynı kopyada yalnız o kuralı kıran değişiklik yapılır.
-3. **Kırmızı hüküm** — kapı `rc!=0` vermeli ve beklenen kural kimliğini basmalı.
+3. **Hata vakası** — kapı `rc!=0` vermeli ve yalnız hedef kural kimliğini basmalıdır.
+   **Beklenen-bulgu vakası** — kapı `rc=0` dönebilir; ancak hedef uyarı/bulgu işareti
+   mutasyon sonrası çıktıda görünmelidir.
 
-Üçünden biri eksikse vaka `ATESLEMEDI` / `TABAN_KIRIK` olarak raporlanır ve betik
-`rc=1` ile çıkar. Ölçülen kurallar ve hangi katmana ait oldukları çıktıda ada
-basmadır; sayı README'ye elle yazılmaz.
+Temiz taban veya sözleşme eksikse vaka `ATESLEMEDI` / `TABAN_KIRIK` olarak raporlanır
+ve betik `rc=1` ile çıkar. Güncel katalog **109 vaka = 91 hata + 18 beklenen-bulgu**;
+ölçülen kurallar ve katmanları çıktıda ada basmadır, sayı README'ye elle yazılmaz.
 
 **Neyi ölçmez:** kuralın *doğru tasarlandığını* ölçmez — yalnız kodun o ihlali
 yakaladığını ölçer. Mutasyon uygulanamazsa (desen bulunamazsa) bu da sessiz

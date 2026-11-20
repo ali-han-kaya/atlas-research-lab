@@ -9,7 +9,7 @@ yardim:
 	@echo "make dogrula-ci  runner kipi: olculebilen kalemler hukme girer, oz-testler rapor"
 	@echo "make kanit     bu agacin commit + sha256 kanitini yaz (attestation.json)"
 	@echo "make kanit-dogrula  attestation.json'i gercek commit/agac ile dogrula"
-	@echo "make mutasyon  kapi kurallari gercekten atesliyor mu (temiz taban + ihlal)"
+	@echo "make mutasyon  kapi sozlesmeleri: temiz taban + ihlal; hata rc!=0, beklenen-bulgu isaretli"
 	@echo "make demo      ince sarmalayici: ./demo (kod ayrimi icin ./demo; make her hatada 2 doner)"
 	@echo "make demo-selftest  demo 0/2 sozlesmesini gecici fiksturlerle sinar"
 	@echo "make kapsam    mutasyon kapsam tablosu guncel mi (docs/MUTASYON_KAPSAM.md)"
