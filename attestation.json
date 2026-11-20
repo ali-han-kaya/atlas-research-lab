@@ -1,5 +1,5 @@
 {
-  "commit": "cdc246dc252c537ae679494452ad7acf0a594b21",
+  "commit": "f7d2cea5de05017c17a17bdb55f1904e45508501",
   "file_count": 245,
   "files": [
     {
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "0ecfebec459fcca58065fdebee8c44a9d556350c8a3cf8061dce0e75cd33ef5c",
-      "size": 4039
+      "sha256": "05cb05ee5fbbbd431c041efb89f8c715cff9a6d79f8189316773c7e5ccfedff2",
+      "size": 4097
     },
     {
       "mode": "100644",
@@ -1157,8 +1157,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "07b5c95c0f9dcafba0c8cd9a7d56f136e64663e0edc8aed82330fc52b49dd921",
-      "size": 2724
+      "sha256": "4756e6c8d49ba8230b82ecc2adc3ab5a874acc4723fbb01eb8ebfea4543e0157",
+      "size": 2740
     },
     {
       "mode": "100644",
@@ -1247,8 +1247,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "64115393bbd315344e2b792f6a27defe4bb8e1e81630aab9abc91edd05a82cef",
-      "size": 467730
+      "sha256": "2b1bef3ab62e08ccbbd4726bb53f6a5a4fb2ad667b0bedb9e5106948f571da85",
+      "size": 467778
     },
     {
       "mode": "100644",
@@ -1337,8 +1337,8 @@
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "0af14d599f2388ad6fa2c6dbc12c15d34ab3356e48abe1e7a3e341f0209a920d",
-      "size": 20083
+      "sha256": "5300f6ede7daee72723b0514e80a71e9bec8350e07b1846968bac17aad07b4eb",
+      "size": 20366
     },
     {
       "mode": "100644",
@@ -1439,8 +1439,8 @@
     {
       "mode": "100644",
       "path": "tools/mutasyon_bataryasi.py",
-      "sha256": "42eb2a932de148bf3d2a63016d3dcc19bceb1223ed6e158b1bc17646b88376be",
-      "size": 73840
+      "sha256": "c438c31b3c2a7b5cefb10000bcf9cc9f9b498c18be58f51b35d5222d097e72e2",
+      "size": 74094
     },
     {
       "mode": "100644",
@@ -1473,7 +1473,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-20T20:58:12Z",
+  "generated_at": "2026-11-20T21:06:36Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1488,6 +1488,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "c72011cd32de02fddb44b4e4cc862789462580e6",
-  "tree_sha256": "898dfea7205a0b71cf3f53dbffd2e0bbd9134cecb64dcf8b45c2de28e5c9cf9b"
+  "tree": "42ba8e19b61c8a35cf59afe0ec2bce4bd5ba2098",
+  "tree_sha256": "2313d58271b421d7fee6489404d9c50f75c914f35acf02b1be2ef910c64fba3e"
 }
