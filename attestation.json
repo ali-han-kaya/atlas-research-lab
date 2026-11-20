@@ -1,5 +1,5 @@
 {
-  "commit": "fea68ced1b1f1a418407558431dd1f33df2c4903",
+  "commit": "db57326c2055d04eaa4e93615962ed09b281bd3e",
   "file_count": 242,
   "files": [
     {
@@ -1253,8 +1253,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "39382697a5927fc96675db60084ae6668ab9ab29250943797e7d51688c804a50",
-      "size": 5336
+      "sha256": "b432ade37b3fd8ee4c1912c4ae0845aa09347efd6ed7b0def6c8d603aa910692",
+      "size": 6628
     },
     {
       "mode": "100644",
@@ -1455,7 +1455,7 @@
       "size": 11250
     }
   ],
-  "generated_at": "2026-11-20T08:00:39Z",
+  "generated_at": "2026-11-20T09:12:11Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1470,6 +1470,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "6b41e2f3a3ec5da1ad4a4305f339ab968f088989",
-  "tree_sha256": "30646d8a636ff64ac08efc083730c1d9a59f8b07809f88be8cd1ae94eafb95f7"
+  "tree": "8a8e18ad6f850105f071b2dd3ba4e72656668e8b",
+  "tree_sha256": "a48127d064829bd73eb562c85ea8396106e25bd03b4f5358a8286d01bedf24c5"
 }
