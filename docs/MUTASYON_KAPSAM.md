@@ -17,9 +17,9 @@ TAMAMINI gezer; baska kurala/karara yapilan atiflar kural sayilmaz.
 | Taranan betik | 31 |
 | Kural bildiren betik | 20 |
 | Bildirilen kural | 121 |
-| Batarya vakasi (toplam) | 103 |
-| — kural ateslettiren | 84 |
-| — beklenen bulgu | 19 |
+| Batarya vakasi (toplam) | 108 |
+| — kural ateslettiren | 91 |
+| — beklenen bulgu | 17 |
 | Mutasyon vakasi olan (TEST EDILDI) | 95 |
 | Gerekceli kapsam disi | 26 |
 | Bosluk (gerekce yok) | 0 |
@@ -199,10 +199,10 @@ tip ihlalidir; kopya degil, farkli hata dalidir.
 | `check_models.py` | MOD-02 | MOD-02 | TEST EDILDI | mutasyon vakasi: MOD-02 |
 | `check_models.py` | MOD-03 | MOD-03 | TEST EDILDI | mutasyon vakasi: MOD-03 |
 | `check_models.py` | MOD-04 | MOD-04 | TEST EDILDI | mutasyon vakasi: MOD-04 |
-| `check_models.py` | MOD-05 | MOD-05 | TEST EDILDI | mutasyon vakasi: MOD-05 |
+| `check_models.py` | MOD-05 | MOD-05, MOD-05-TOOLCALL | TEST EDILDI | mutasyon vakasi: MOD-05, MOD-05-TOOLCALL |
 | `check_models.py` | MOD-06 | MOD-06 | TEST EDILDI | mutasyon vakasi: MOD-06 |
 | `check_models.py` | MOD-07 | MOD-07 | TEST EDILDI | mutasyon vakasi: MOD-07 |
-| `check_models.py` | MOD-08 | MOD-08 | TEST EDILDI | mutasyon vakasi: MOD-08 |
+| `check_models.py` | MOD-08 | MOD-08, MOD-08-KOK-DISI, MOD-08-DOSYA-DEGIL | TEST EDILDI | mutasyon vakasi: MOD-08, MOD-08-KOK-DISI, MOD-08-DOSYA-DEGIL |
 | `cite_match.py` | CITE-01 | CITE-01 | TEST EDILDI | mutasyon vakasi: CITE-01 |
 | `cite_match.py` | CITE-02 | CITE-02 | TEST EDILDI | mutasyon vakasi: CITE-02 |
 | `cite_match.py` | CITE-03 | CITE-03 | TEST EDILDI | mutasyon vakasi: CITE-03 |
@@ -239,7 +239,7 @@ tip ihlalidir; kopya degil, farkli hata dalidir.
 | `prompt_lint.py` | PL-14 | PL-14 | TEST EDILDI | mutasyon vakasi: PL-14 |
 | `prompt_lint.py` | PL-16 | PL-16 | TEST EDILDI | mutasyon vakasi: PL-16 |
 | `prompt_lint.py` | PL-18 | PL-18 | TEST EDILDI | mutasyon vakasi: PL-18 |
-| `prompt_lint.py` | PL-19 | PL-19 | TEST EDILDI | mutasyon vakasi: PL-19 |
+| `prompt_lint.py` | PL-19 | PL-19, PL-19-JSON-YOK | TEST EDILDI | mutasyon vakasi: PL-19, PL-19-JSON-YOK |
 | `provenance_check.py` | CHK-01 | CHK-01 | TEST EDILDI | mutasyon vakasi: CHK-01 |
 | `provenance_check.py` | CHK-02 | CHK-02 | TEST EDILDI | mutasyon vakasi: CHK-02 |
 | `provenance_check.py` | CHK-05 | CHK-05 | TEST EDILDI | mutasyon vakasi: CHK-05 |

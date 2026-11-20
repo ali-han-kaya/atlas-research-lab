@@ -6,14 +6,18 @@
         "reasoning": true,
         "tool_call": true
       },
-      "deprecated/old-model": {
+      "deepseek/deepseek-v4-flash": {
         "reasoning": true,
         "tool_call": true,
         "status": "deprecated"
       },
-      "weak/model": {
+      "z-ai/glm-5.2": {
         "reasoning": false,
         "tool_call": true
+      },
+      "moonshotai/kimi-k3": {
+        "reasoning": true,
+        "tool_call": false
       }
     }
   }
