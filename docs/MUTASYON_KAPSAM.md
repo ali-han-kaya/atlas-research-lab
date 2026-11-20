@@ -17,9 +17,9 @@ TAMAMINI gezer; baska kurala/karara yapilan atiflar kural sayilmaz.
 | Taranan betik | 31 |
 | Kural bildiren betik | 20 |
 | Bildirilen kural | 121 |
-| Batarya vakasi (toplam) | 108 |
+| Batarya vakasi (toplam) | 109 |
 | — kural ateslettiren | 91 |
-| — beklenen bulgu | 17 |
+| — beklenen bulgu | 18 |
 | Mutasyon vakasi olan (TEST EDILDI) | 95 |
 | Gerekceli kapsam disi | 26 |
 | Bosluk (gerekce yok) | 0 |
@@ -89,8 +89,8 @@ vaka aldi; durum sutunu guncel envanterden okunur.
 ## Sonraki dilim
 
 Bu turda kapatilmayan bosluk yok (0). Dokuz eski boslugun her biri
-gercek bir mutasyon vakasiyla kapatildi; TST-06 ve CHK-05
-P1/beklenen bulgu modunda, digerleri kirmizi hukumle dogrulandi.
+gercek bir mutasyon vakasiyla kapatildi; 18 beklenen-bulgu vakasi
+uyari modunda, digerleri kirmizi hukumle dogrulandi.
 
 
 ## Kapsam disi siniflari
