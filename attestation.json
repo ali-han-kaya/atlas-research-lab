@@ -1,5 +1,5 @@
 {
-  "commit": "7c0632c0f0b5a139de30b688b3efbed9ed74a44a",
+  "commit": "1d6b4741d394006eac7d20a48d91968924835db2",
   "file_count": 243,
   "files": [
     {
@@ -1205,8 +1205,8 @@
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "168763f925b36d0ae5709b6621c9ca7830734c32c83ee6daddfd0ed8fd892b1e",
-      "size": 20431
+      "sha256": "0e330cd22d20763252ac8e323cb4bee0e433bdb107f03bb25b3c995365003e95",
+      "size": 20432
     },
     {
       "mode": "100644",
@@ -1253,8 +1253,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "71b12b4aaa529ec0d67ecec41b83bd4d13cac1cf7be28620c70ccce768661bbe",
-      "size": 7393
+      "sha256": "19d606420966c498b03331af67bb2054b45f5f5d7985ebf25cca577ad9dd68d1",
+      "size": 7403
     },
     {
       "mode": "100644",
@@ -1265,7 +1265,7 @@
     {
       "mode": "100644",
       "path": "docs/MUTASYON_KAPSAM.md",
-      "sha256": "daabb88e2dafc998a3290be9b9c4d68741ffc2fe4f71faeef278eaa1c9f81eef",
+      "sha256": "c7d68c17b5a3f9dd5badb82d86ad94257b8d73e263995933dcc63afc78b1b3dd",
       "size": 24328
     },
     {
@@ -1385,7 +1385,7 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "92f9d539b6ee96f616a773682eb7c8d9978097b52e4d66f3f61281bc9a0db218",
+      "sha256": "746bb1c5ac1c45932c8066e06c3e6b43153ead4ee1b7b2cc565cdb2ee0f5b18a",
       "size": 20743
     },
     {
@@ -1433,8 +1433,8 @@
     {
       "mode": "100644",
       "path": "tools/mutasyon_bataryasi.py",
-      "sha256": "6dd9c0275c3bfd2795e91d91840e32e5a25109792926a0c1deaf41ec92569416",
-      "size": 63905
+      "sha256": "3ab3b82c0ed0c56e178e2e678a2a025fa86e736d078a0696dd00e00ee6f35841",
+      "size": 64788
     },
     {
       "mode": "100644",
@@ -1461,7 +1461,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-20T15:10:21Z",
+  "generated_at": "2026-11-20T16:08:20Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1476,6 +1476,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "aaf34396f423112086fd071a4fcb6f2ab40f3172",
-  "tree_sha256": "1e7267695850dbc2a76829f5c33ab3dba897c9e114402f6872f40ecc53be6d74"
+  "tree": "84f28c1e54c0f72d576bc42dcb4afb2ae72a4131",
+  "tree_sha256": "972ba5cace0105a241aafeb0e2c90239a7f45bb515d728a12fdf0546edca17cb"
 }
