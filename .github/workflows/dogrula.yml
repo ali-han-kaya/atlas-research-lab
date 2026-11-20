@@ -96,3 +96,24 @@ jobs:
           set -e
           echo "make demo rc=$rc2"
           test "$rc2" -eq 2
+
+  iddia:
+    name: iddia defteri
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bagimliliklar
+        run: python3 -m pip install --quiet -r requirements-dev.txt
+
+      # README/docs sayilari iddia defterinden olculur; bayat sayi yesil CI ile
+      # yayilanamaz. FAIL satiri hangi beyanin hangi kaynakla uyusmadigini basar.
+      - name: make iddia
+        run: make iddia
