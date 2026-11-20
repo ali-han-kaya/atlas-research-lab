@@ -15,11 +15,11 @@ bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus
 |---|---|
 | Kapi betigi | 21 |
 | Bildirilen kural | 122 |
-| Mutasyon vakasi olan (TEST EDILDI) | 83 |
+| Mutasyon vakasi olan (TEST EDILDI) | 86 |
 | Gerekceli kapsam disi | 27 |
-| Bosluk (gerekce yok) | 12 |
-| — bunlardan yalniz oz-testte anilan | 10 |
-| — hicbir testte gecmeyen | 2 |
+| Bosluk (gerekce yok) | 9 |
+| — bunlardan yalniz oz-testte anilan | 8 |
+| — hicbir testte gecmeyen | 1 |
 
 ## Risk sirasi (51 kural)
 
@@ -35,11 +35,11 @@ vaka aldi; durum sutunu guncel envanterden okunur.
 | 4 | FRZ-08 | `freeze_check.py` | Kapsam/degisiklik butunlugu — P0 | BOSLUK (sonraki dilim) | Temiz agac iddiasi imzayla baglanmali; imzasiz veya yanlis anahtarli taban tamper ya da dusuk guven sayilir. |
 | 5 | RECK-01 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | KFAZ0 sozlesmesindeki her REQ plan/eslesmede karsilik bulmali; aksi halde kapsamsiz sozlesme sessizce yesil kalir. |
 | 6 | RECK-02 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | "UYGULANMIS" denilen her CHG'nin dosyasi git diff'te olmali; beyan ile gercek degisiklik carpraz denetlenir. |
-| 7 | RECK-08 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | BOSLUK (sonraki dilim) | Makine bloklarinin alan bicimi semaya uymali; sessizce dusen girdi RECK-01/07'yi devre disi birakir. |
+| 7 | RECK-08 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | Makine bloklarinin alan bicimi semaya uymali; sessizce dusen girdi RECK-01/07'yi devre disi birakir. |
 | 8 | RECK-09 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | BOSLUK (sonraki dilim) | Plan yokken urun kodu degismemeli; KFAZ0 oncesi degisiklik kapsamsiz ve denetimsiz kalir. |
 | 9 | RECK-04 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | 2B kapisinin "KANITLI" dedigi her CHG diff'te olmali; ikinci gozun iddiasi manifest ve diff ile dogrulanir. |
 | 10 | RECK-05 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | Hayalet CHG yok: olmayan REQ veya plansiz dosyaya baglanan degisiklik P0; manifest-diff bagini korur. |
-| 11 | RECK-07 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | BOSLUK (sonraki dilim) | Davranissal her REQ tabanda olmayan YENI bir test adina eslenmeli; eski testi gostermek bedava yesildir. |
+| 11 | RECK-07 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | Davranissal her REQ tabanda olmayan YENI bir test adina eslenmeli; eski testi gostermek bedava yesildir. |
 | 12 | TST-07 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Kanit beyani ham JUnit ile celisemez; kapi kendi beyanina guvenmez. |
 | 13 | TST-10 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | Rapor kaynaktan eski olamaz; bayat kanit mevcut kodu olcmemis olabilir. |
 | 14 | TST-11 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | Kanittaki komut kod_profil ile ayni olmali; baska komutun kaniti sayilmaz. |
@@ -48,7 +48,7 @@ vaka aldi; durum sutunu guncel envanterden okunur.
 | 17 | TST-01 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Basarisiz test sayisi sifir olmali; kirmizi testle PASS verilemez. |
 | 18 | TST-02 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Hatali test sayisi sifir olmali; altyapi hatasi yesil sayilmaz. |
 | 19 | TST-03 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | En az bir test kosmali; sifir test temiz degildir. |
-| 20 | TST-05 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | Atlanan test tabandan fazla olamaz; test atlayarak yesil olunmaz. |
+| 20 | TST-05 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Atlanan test tabandan fazla olamaz; test atlayarak yesil olunmaz. |
 | 21 | TST-06 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BOSLUK (sonraki dilim) | Kapsam tabanin bir altina kadar korunmali; sessiz kapsam kaybi P1. |
 | 22 | DEP-01 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
 | 23 | DEP-02 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
@@ -83,14 +83,18 @@ vaka aldi; durum sutunu guncel envanterden okunur.
 
 ## Sonraki dilim
 
-Asagidaki kural(lar) bu turda kapatilmadi; hala hicbir testte
-gorunmeyen 2 kuralin risk sirasindaki ilk 2 tanesidir. Bir sonraki
-dilimde gercek vakayla kapatilacak; sessizce sayidan dusulmedi.
+Asagidaki kural(lar) bu turda kapatilmadi; kalan 9 boslugun risk
+sirasindaki ilk 3 tanesidir. Bir sonraki dilimde gercek vakayla
+kapatilacak; sessizce sayidan dusulmedi.
 
 | Kural | Betik | Neden test edilemedi / neyi korur |
 |---|---|---|
-| TST-05 | `test_attest.py` | Atlanan test tabandan fazla olamaz; test atlayarak yesil olunmaz. |
-| TST-06 | `test_attest.py` | Kapsam tabanin bir altina kadar korunmali; sessiz kapsam kaybi P1. |
+| FRZ-08 | `freeze_check.py` | Temiz agac imzasi: imza ihlali terminal rc=2 uretir; rc=1 diliminde degil, terminal sozlesmesiyle ayri ele alinacak. |
+| RECK-09 | `chg_reconcile.py` | Plan yokken urun kodu degisimi; KFAZ1 yoklugu P1 urettigi icin ayri fikstur gerektirir. |
+| TST-10 | `test_attest.py` | Rapor kaynaktan eski olamaz; bayat kanit mevcut kodu olcmemis olabilir. |
+
+Not: TST-06 yalniz P1 uretir; rc=1 sartini karsilamadigi
+icin bu dilimde sayiya eklenmedi, P1 kaydi olarak ayri tutulur.
 
 ## Kapsam disi siniflari
 
@@ -228,8 +232,8 @@ Toplam: 21 betik · 122 tekil kural; her satirda Envanter = Baslikta ∪ Bolum b
 | `chg_reconcile.py` | RECK-04 | RECK-04 | TEST EDILDI | mutasyon vakasi: RECK-04 |
 | `chg_reconcile.py` | RECK-05 | RECK-05 | TEST EDILDI | mutasyon vakasi: RECK-05 |
 | `chg_reconcile.py` | RECK-06 | RECK-06 | TEST EDILDI | mutasyon vakasi: RECK-06 |
-| `chg_reconcile.py` | RECK-07 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
-| `chg_reconcile.py` | RECK-08 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
+| `chg_reconcile.py` | RECK-07 | RECK-07 | TEST EDILDI | mutasyon vakasi: RECK-07 |
+| `chg_reconcile.py` | RECK-08 | RECK-08 | TEST EDILDI | mutasyon vakasi: RECK-08 |
 | `chg_reconcile.py` | RECK-09 | — | BOSLUK | BOSLUK — yalniz oz-testte aniliyor, mutasyon vakasi yok |
 | `dep_audit.py` | DEP-01 | — | KAPSAM DISI | depo-durumu: `git diff --name-only HEAD` ile degisen dosyalari okur |
 | `dep_audit.py` | DEP-02 | — | KAPSAM DISI | depo-durumu: `git diff --name-only HEAD` ile degisen dosyalari okur |
@@ -262,7 +266,7 @@ Toplam: 21 betik · 122 tekil kural; her satirda Envanter = Baslikta ∪ Bolum b
 | `test_attest.py` | TST-02 | TST-02 | TEST EDILDI | mutasyon vakasi: TST-02 |
 | `test_attest.py` | TST-03 | TST-03 | TEST EDILDI | mutasyon vakasi: TST-03 |
 | `test_attest.py` | TST-04 | TST-04 | TEST EDILDI | mutasyon vakasi: TST-04 |
-| `test_attest.py` | TST-05 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
+| `test_attest.py` | TST-05 | TST-05 | TEST EDILDI | mutasyon vakasi: TST-05 |
 | `test_attest.py` | TST-06 | — | BOSLUK | BOSLUK — hicbir testte gecmiyor |
 | `test_attest.py` | TST-07 | TST-07 | TEST EDILDI | mutasyon vakasi: TST-07 |
 | `test_attest.py` | TST-08 | TST-08 | TEST EDILDI | mutasyon vakasi: TST-08 |
