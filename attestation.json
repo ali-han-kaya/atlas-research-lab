@@ -1,6 +1,6 @@
 {
-  "commit": "acab119a1bf9e98d8a3a146f53610eb391342d98",
-  "file_count": 243,
+  "commit": "498ef9725bd5454015311ec7d356ee44269c6c2d",
+  "file_count": 244,
   "files": [
     {
       "mode": "100755",
@@ -911,8 +911,8 @@
     {
       "mode": "100755",
       "path": "KOD_SABLONLAR/scripts/secret_scan.py",
-      "sha256": "559308090dd59045939c8dba82c064297cd27baa3bdf6ee77c1f7810f82abebe",
-      "size": 14925
+      "sha256": "1c3433aef759c5d74372229293b726bd747f4e0e74535558ecd80d08e290f81d",
+      "size": 18288
     },
     {
       "mode": "100755",
@@ -1067,8 +1067,8 @@
     {
       "mode": "100644",
       "path": "KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_selftest.py",
-      "sha256": "c349c327e844a9c1ae857c4c8848a206ba9500b49636874aee055c1b8f3f5518",
-      "size": 30825
+      "sha256": "2442202711ded32c10e85f8b9ecd06d34bf73b6c553c082393f4afd57fe2f7b9",
+      "size": 30776
     },
     {
       "mode": "100644",
@@ -1241,8 +1241,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "b2b253bb1f04e93a30b366afb58948b66c4acd2e882a48e9862710b7a7cbaaa1",
-      "size": 462588
+      "sha256": "dfb0b7f674dcf3f3df66d74b41a2f7e0f62e4cf0bc38061a0d2b4d06f5d0530d",
+      "size": 463942
     },
     {
       "mode": "100644",
@@ -1283,8 +1283,8 @@
     {
       "mode": "100644",
       "path": "docs/OLCUM-02-CANLI-KOSU.md",
-      "sha256": "673fc0a9ae8524d890af8b4b62271dedfee9d7aa1733e24605ab08b38f5ae2d4",
-      "size": 52726
+      "sha256": "0db69119db3d4fd3984b8882c78601864fa49ccc5984a30a198b9515bc0f3dcd",
+      "size": 52703
     },
     {
       "mode": "100644",
@@ -1443,6 +1443,12 @@
       "size": 451
     },
     {
+      "mode": "100644",
+      "path": "tools/secret_fixtures.json",
+      "sha256": "9479f82ac3962b72557c178f9028797708070b8d9428f14481a1c52bd79e77b7",
+      "size": 2032
+    },
+    {
       "mode": "100755",
       "path": "tools/sir_kapisi.py",
       "sha256": "677ba383cb1931681af116ae976e446ac72dc2f8b7df91f26091f672c138e63f",
@@ -1461,7 +1467,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-20T18:01:07Z",
+  "generated_at": "2026-11-20T18:36:42Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1476,6 +1482,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "81cd55a1cfaf3498959776c7a7feea3dff9fa4a3",
-  "tree_sha256": "72ca694eb98c082db664d3f77e1893a5183b39edb4aaf79cf9c57f9242932cbb"
+  "tree": "a47bf042aaa11a96daa35efca6ae3905cab2cdc7",
+  "tree_sha256": "92d839d6f63423fec0273c754f1ee91bdf9eb6032f51af0a9ec93d2d79d8c1fd"
 }
