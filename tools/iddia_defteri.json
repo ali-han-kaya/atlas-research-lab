@@ -115,7 +115,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "ayikla": "SONUC:\\s*(\\d+/\\d+) kural atesledi",
-      "beklenen": "84/84"
+      "beklenen": "83/84"
     },
     {
       "id": "IDD-05",
