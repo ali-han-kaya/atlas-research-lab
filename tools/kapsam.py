@@ -104,7 +104,10 @@ RISK_EKLENEN = {'TST-08', 'RECK-06', 'DEP-05',
                'RECK-01', 'RECK-02', 'RECK-04',
                'RECK-05', 'TST-07', 'TST-09',
                'TST-01', 'TST-02', 'TST-03',
-               'TST-05', 'RECK-08', 'RECK-07'}
+               'TST-05', 'RECK-08', 'RECK-07',
+               'FRZ-08', 'RECK-09', 'TST-06',
+               'TST-10', 'TST-11', 'TST-12',
+               'CHK-01', 'CHK-02', 'CHK-05'}
 RISK_NOT = {
     'TST-08': 'Ham test raporu yok/okunamiyor — kanitsiz PASS P0; kapinin kanit temeli.',
     'RECK-06': 'Dondurulmus bolge diff\'te — dogrudan tamper sinyali, P0.',
@@ -144,9 +147,9 @@ RISK_NOT = {
     'CHK-05': 'Basliklar benzersiz olmali; tekrar eden baslik izlenebilirligi bozar.',
 }
 
-# Bu dilimde kapatilamayan, hala hicbir testte gorunmeyen 8 kuralin risk
-# sirasindaki ilk ucu. Bunlar silinmez; bir sonraki dilimin acik kaydidir.
-SONRAKI_DILIM = ['FRZ-08', 'RECK-09', 'TST-10']
+# Bu turda kapatilamayan bosluk kalmadi; liste bos. Yeni bir bosluk
+# olusursa buraya risk sirasiyla yazilir ve markdown bolumu yeniden acilir.
+SONRAKI_DILIM = []
 SONRAKI_NOT = {
     'FRZ-08': 'Temiz agac imzasi: imza ihlali terminal rc=2 uretir; rc=1 '
               'diliminde degil, terminal sozlesmesiyle ayri ele alinacak.',
@@ -329,7 +332,7 @@ def markdown():
     satirlar, envan, (test, disi, bosluk, oz_anilan) = olc()
     vakalar = batarya()
     toplam_vaka = len(vakalar)
-    beklenen_bulgu = sum(1 for v in vakalar if len(v) == 8 and v[7] == 'BULGU')
+    beklenen_bulgu = sum(1 for v in vakalar if len(v) >= 8 and v[7] == 'BULGU')
     out = ['# Mutasyon kapsami — tam kural envanteri', '',
            'Kaynak: `tools/kapsam.py` (uretilmis dosya; elle duzenlenmez).',
            'Envanter, ATLAS ve KOD kapi betiklerinin satir basi kural bildirimlerinden',
@@ -360,21 +363,27 @@ def markdown():
            'saglamlik/etki sirasina gore sabittir. Kapatilan her kural bu turda',
            'vaka aldi; durum sutunu guncel envanterden okunur.', '']
     out += risk_tablosu(satirlar)
-    out += ['', '## Sonraki dilim', '',
-            'Asagidaki kural(lar) bu turda kapatilmadi; kalan %d boslugun risk' % bosluk,
-            'sirasindaki ilk %d tanesidir. Bir sonraki dilimde gercek vakayla' % len(SONRAKI_DILIM),
-            'kapatilacak; sessizce sayidan dusulmedi.', '',
-            '| Kural | Betik | Neden test edilemedi / neyi korur |',
-            '|---|---|---|']
-    _risk_durum = {k: d for _b, k, _v, d, _g in satirlar}
-    _risk_betik = {k: b.split('/')[-1] for b, k, _v, _d, _g in satirlar}
-    for _k in SONRAKI_DILIM:
-        if _risk_durum.get(_k) != 'BOSLUK':
-            raise SystemExit('SONRAKI_DILIM artik bosluk degil: %s' % _k)
-        out.append('| %s | `%s` | %s |' % (_k, _risk_betik[_k], SONRAKI_NOT[_k]))
-    if _risk_durum.get('TST-06') == 'BOSLUK':
-        out += ['', 'Not: TST-06 yalniz P1 uretir; rc=1 sartini karsilamadigi',
-                'icin bu dilimde sayiya eklenmedi, P1 kaydi olarak ayri tutulur.']
+    if bosluk:
+        out += ['', '## Sonraki dilim', '',
+                'Asagidaki kural(lar) bu turda kapatilmadi; kalan %d boslugun risk' % bosluk,
+                'sirasindaki ilk %d tanesidir. Bir sonraki dilimde gercek vakayla' % len(SONRAKI_DILIM),
+                'kapatilacak; sessizce sayidan dusulmedi.', '',
+                '| Kural | Betik | Neden test edilemedi / neyi korur |',
+                '|---|---|---|']
+        _risk_durum = {k: d for _b, k, _v, d, _g in satirlar}
+        _risk_betik = {k: b.split('/')[-1] for b, k, _v, _d, _g in satirlar}
+        for _k in SONRAKI_DILIM:
+            if _risk_durum.get(_k) != 'BOSLUK':
+                raise SystemExit('SONRAKI_DILIM artik bosluk degil: %s' % _k)
+            out.append('| %s | `%s` | %s |' % (_k, _risk_betik[_k], SONRAKI_NOT[_k]))
+        if _risk_durum.get('TST-06') == 'BOSLUK':
+            out += ['', 'Not: TST-06 yalniz P1 uretir; rc=1 sartini karsilamadigi',
+                    'icin bu dilimde sayiya eklenmedi, P1 kaydi olarak ayri tutulur.']
+    else:
+        out += ['', '## Sonraki dilim', '',
+                'Bu turda kapatilmayan bosluk yok (0). Dokuz eski boslugun her biri',
+                'gercek bir mutasyon vakasiyla kapatildi; TST-06 ve CHK-05',
+                'P1/beklenen bulgu modunda, digerleri kirmizi hukumle dogrulandi.', '']
     out += ['', '## Kapsam disi siniflari', '',
             'Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir',
             '(asagida betik adiyla birlikte yazili).', '']
