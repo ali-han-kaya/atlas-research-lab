@@ -92,7 +92,7 @@
         "tools/dogrula.py"
       ],
       "ham_grup": true,
-      "ayikla": "OZ-TEST:\\s*(\\d+/\\d+) gecti",
+      "ayikla": "ATLAS oz-testi\\s+PASS\\s+OZ-TEST:\\s*(\\d+/\\d+) gecti",
       "beklenen": "145/145",
       "rc_beklenen": 0
     },
