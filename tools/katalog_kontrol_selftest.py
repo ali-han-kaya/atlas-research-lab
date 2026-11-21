@@ -13,7 +13,7 @@ NEDEN VAR
 KULLANIM
   python3 tools/katalog_kontrol_selftest.py
 
-CIKIS: 0 = 11/11 gecti · 1 = en az bir vaka kirmizi
+CIKIS: 0 = butun vakalar gecti · 1 = en az bir vaka kirmizi
 """
 import json
 import subprocess
@@ -40,7 +40,7 @@ ASGARI = {'context': 10000, 'output': 1000}
 
 def profil(farkli=None):
     """On rollu, tek kimlikli bedava profili fiksturu."""
-    bedava = {rol: 'openrouter/m1' for rol in ROLLER}
+    bedava = dict.fromkeys(ROLLER, 'openrouter/m1')
     if farkli:
         bedava.update(farkli)
     return {
@@ -49,34 +49,24 @@ def profil(farkli=None):
     }
 
 
-def yerel(*kimlikler):
+def yerel(*kimlikler, **degisiklik):
     return {'openrouter': {'models': {
-        k: {'reasoning': True, 'tool_call': True} for k in kimlikler}}}
+        k: {'reasoning': True, 'tool_call': True, **degisiklik.get(k, {})}
+        for k in kimlikler}}}
 
 
 def canli(*kimlikler, **degisiklik):
-    modeller = {}
-    for k in kimlikler:
-        model = {
-            'id': k,
-            'name': 'Test Model',
-            'family': 'test-family',
-            'status': None,
+    return {'openrouter': {'models': {
+        k: {
             'reasoning': True,
             'tool_call': True,
             'cost': {'input': 0, 'output': 0},
             'limit': {'context': 100000, 'output': 10000},
-        }
-        for alan, deger in degisiklik.get(k, {}).items():
-            if isinstance(deger, dict) and isinstance(model.get(alan), dict):
-                model[alan].update(deger)
-            else:
-                model[alan] = deger
-        modeller[k] = model
-    return {'openrouter': {'models': modeller}}
+            **degisiklik.get(k, {}),
+        } for k in kimlikler}}}
 
 
-def vaka(ad, yerel_veri, canli_veri, beklenen_rc, iz, profil_veri=None):
+def vaka(yerel_veri, canli_veri, beklenen_rc, iz, profil_veri=None):
     with tempfile.TemporaryDirectory(prefix='katalog_kontrol_') as tmp:
         yol = Path(tmp)
         katalog = yol / 'katalog.json'
@@ -98,18 +88,18 @@ def vaka(ad, yerel_veri, canli_veri, beklenen_rc, iz, profil_veri=None):
         if r.returncode != beklenen_rc:
             return False, 'rc=%d (beklenen %d) · %s' % (
                 r.returncode, beklenen_rc, cikti.strip()[:160])
-        if iz not in cikti:
-            return False, 'iz yok (%s) · %s' % (iz, cikti.strip()[:160])
+        izler = (iz,) if isinstance(iz, str) else iz
+        eksik = [x for x in izler if x not in cikti]
+        if eksik:
+            return False, 'iz yok (%s) · %s' % (
+                ', '.join(eksik), cikti.strip()[:160])
         if 'OLCULEMEDI' in cikti:
             return False, 'eski yazim OLCULEMEDI · %s' % cikti.strip()[:160]
-        if beklenen_rc == 2 and 'OLCULMEDI' not in cikti:
-            return False, 'rc=2 ama OLCULMEDI yok · %s' % cikti.strip()[:160]
-        if beklenen_rc != 2 and 'OLCULMEDI' in cikti:
-            return False, 'FAIL/PASS ciktisinda OLCULMEDI · %s' % cikti.strip()[:160]
+        if ('OLCULMEDI' in cikti) != (beklenen_rc == 2):
+            return False, 'OLCULMEDI beklentisi tutmadi · %s' % cikti.strip()[:160]
         if beklenen_rc == 0 and 'BEDAVA: 10/10' not in cikti:
             return False, 'PASS ama BEDAVA: 10/10 yok · %s' % cikti.strip()[:160]
-        return True, 'rc=%d · %s' % (r.returncode, iz)
-    return False, 'gecici dizin kurulamadi'
+        return True, 'rc=%d · %s' % (r.returncode, ', '.join(izler))
 
 
 def main():
@@ -117,34 +107,50 @@ def main():
     dokuz = profil()
     del dokuz['profiller']['bedava']['kod-tester']
     vakalar = [
-        ('guncel katalog', yerel('m1'), canli('m1'), 0, 'BEDAVA: 10/10'),
+        ('guncel katalog', yerel('m1'), canli('m1'), 0,
+         'BEDAVA: 10/10', None),
         ('maliyet drifti', yerel('m1'),
-         canli('m1', m1={'cost': {'input': 0.5}}), 1, 'MALIYET'),
+         canli('m1', m1={'cost': {'input': 0.5, 'output': 0}}), 1,
+         'MALIYET', None),
         ('limit drifti', yerel('m1'),
-         canli('m1', m1={'limit': {'context': 1000}}), 1, 'LIMIT_YETERSIZ'),
+         canli('m1', m1={'limit': {'context': 1000, 'output': 10000}}), 1,
+         'LIMIT_YETERSIZ', None),
+        ('maliyet yok', yerel('m1'), canli('m1', m1={'cost': None}), 1,
+         'MALIYET_YOK', None),
+        ('limit yok', yerel('m1'), canli('m1', m1={'limit': None}), 1,
+         'LIMIT_YOK', None),
         ('yetenek drifti', yerel('m1'),
-         canli('m1', m1={'reasoning': False}), 1, 'YETENEK_FARKLI'),
+         canli('m1', m1={'reasoning': False}), 1, 'YETENEK_FARKLI', None),
+        ('eksik alan', yerel('m1'), canli('m1', m1={'reasoning': None}), 1,
+         'ALAN_YOK', None),
         ('deprecated model', yerel('m1'),
-         canli('m1', m1={'status': 'deprecated'}), 1, 'DURUM'),
+         canli('m1', m1={'status': 'deprecated'}), 1, 'DURUM', None),
         ('kimlik drifti', yerel('m1', 'm2'), canli('m1', 'm2'), 1,
          'TEK_KIMLIK_DEGIL',
          profil({'kod-tester': 'openrouter/m2'})),
         ('eksik model adiyla', yerel('m1', 'm2'), canli('m1'), 1,
-         'openrouter/m2'),
-        ('eksik saglayici', yerel('m1'),
-         {'baska': {'models': {}}}, 1, 'SAGLAYICI_YOK'),
-        ('bozuk api json', yerel('m1'), [], 2, 'OLCULMEDI'),
+         'openrouter/m2', None),
+        ('allowlist disi', yerel('m2'), canli('m1'), 1, 'KATALOGDA_YOK',
+         None),
+        ('yerel yetenek', yerel('m1', m1={'tool_call': False}), canli('m1'),
+         1, 'KATALOG_YETENEK', None),
+        ('bozuk yerel alan', yerel('m1', m1={'reasoning': 'yes'}),
+         canli('m1'), 1, 'KATALOG_BOZUK', None),
+        ('eksik saglayici', yerel('m1'), {'baska': {'models': {}}}, 1,
+         ('SAGLAYICI_YOK', 'ROL kod-orchestrator'), None),
+        ('bozuk saglayici', yerel('m1'), {'openrouter': {}}, 1,
+         'SAGLAYICI_BOZUK', None),
+        ('bozuk rol', yerel('m1'), canli('m1'), 1,
+         ('ROL_BOZUK', 'ROL_SAYISI'), profil({'kod-tester': 'm2'})),
+        ('bozuk api json', yerel('m1'), [], 2, 'OLCULMEDI', None),
         ('bozuk yerel katalog', {'openrouter': {}}, canli('m1'), 2,
-         'OLCULMEDI'),
-        ('profil rol sayisi', yerel('m1'), canli('m1'), 1,
-         'rol sayisi 9', dokuz),
+         'OLCULMEDI', None),
+        ('profil 9 rol', yerel('m1'), canli('m1'), 1, 'rol sayisi 9', dokuz),
     ]
     gecen = 0
-    for v in vakalar:
-        ad, y, c, rc, iz = v[:5]
-        profil_veri = v[5] if len(v) > 5 else None
+    for ad, y, c, rc, iz, profil_veri in vakalar:
         try:
-            ok, ayrinti = vaka(ad, y, c, rc, iz, profil_veri)
+            ok, ayrinti = vaka(y, c, rc, iz, profil_veri)
         except Exception as e:  # noqa: BLE001 - test kosucusu hatayi raporlar
             ok, ayrinti = False, 'ISTISNA: %s' % e
         gecen += 1 if ok else 0

@@ -344,7 +344,8 @@ def _bedava_denetle(roller, asgari, canli, yerel):
 def _rol_satiri(rol, deger, canli_model, asgari):
     tam = deger if isinstance(deger, str) else '(bozuk)'
     if not isinstance(canli_model, dict):
-        return '  ROL %-24s %s · canli=yok · cost=?/? · reasoning/tool_call=?/? · limit=?/?'
+        return ('  ROL %-24s %s · canli=yok · cost=?/? · '
+                'reasoning/tool_call=?/? · limit=?/?' % (rol, tam))
     cost = canli_model.get('cost') if isinstance(canli_model.get('cost'), dict) else {}
     limit = canli_model.get('limit') if isinstance(canli_model.get('limit'), dict) else {}
     return ('  ROL %-24s %s · canli=var · cost=%s/%s · reasoning/tool_call=%s/%s'
