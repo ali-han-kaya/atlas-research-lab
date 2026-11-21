@@ -1,5 +1,5 @@
 {
-  "commit": "8398f6989c1578e3416891de0235011f4a61724c",
+  "commit": "5bbec11866b26e659aae9c2c01a8784a56410f95",
   "file_count": 259,
   "files": [
     {
@@ -1211,8 +1211,8 @@
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "f60fbc581ef9d8d1f6d189c63b680c62e2678193de8490a87e31efe11c725753",
-      "size": 26642
+      "sha256": "54d458f08b6841494152b1f2498041b5f793eab2a5144e912e3c5391aa359cbe",
+      "size": 27281
     },
     {
       "mode": "100644",
@@ -1265,8 +1265,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "161e0107d425d3cf2289af718ee859567329251aefbc3535b9aaceaaeeb4a1c1",
-      "size": 10179
+      "sha256": "7b92e80a92d66f92763f2d8c8a05d58844c5e050bd93c4ba2681022a1b1a89ae",
+      "size": 10382
     },
     {
       "mode": "100644",
@@ -1355,8 +1355,8 @@
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "4c987784e33c3c8f7cb739dd4f67a66a2b1931841e3b2128f3b72cbffdfbdbd8",
-      "size": 28567
+      "sha256": "4ce59d64fe4fa12ac8c3978538eca5951077ce36b431e2a86a5f8689ded89b53",
+      "size": 29137
     },
     {
       "mode": "100644",
@@ -1421,26 +1421,26 @@
     {
       "mode": "100644",
       "path": "tools/iddia.py",
-      "sha256": "2ecafee1cc6a00896f1a3e895342ecb83c56a9742365998da8d578412bc3755c",
-      "size": 21590
+      "sha256": "c3ce635ede627b329c36d1b10ca501a21cbabb4e21f5021e19e0642c35c8c5bb",
+      "size": 32852
     },
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "bc35c8c1b66c72a8287a624caee0ed78ad17cabbc34369e0dcfdeb4100d5f8fc",
-      "size": 20153
+      "sha256": "52aa7dfb09cfaf2f453d1fd3935ada5dcd9d69860cbc5479e918db7101d6eb3d",
+      "size": 32808
     },
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "af0aa6970dd487928dcce567f182ae20de143bbea2d1e4a373b66bf9e1570763",
-      "size": 5881
+      "sha256": "b715d45d59d7d70d4352bd20f914141817729d0fe36378f372e9000c632dc02c",
+      "size": 7903
     },
     {
       "mode": "100644",
       "path": "tools/iddia_selftest.py",
-      "sha256": "c2e3103d63404cb3ddc780f0cff24e46bef43cda50620d2f92cf4deeeb87fba9",
-      "size": 7259
+      "sha256": "f66b186759074dc7c296759ac652366edce3c685c5ba4bd5983ab8680d060295",
+      "size": 10473
     },
     {
       "mode": "100644",
@@ -1557,7 +1557,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-21T20:02:25Z",
+  "generated_at": "2026-11-21T21:47:42Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1572,6 +1572,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "2ddb2bf44f19b87e29ae5fbadb7ed3c9954c69d5",
-  "tree_sha256": "4da9f1b6fb70dad889dc43787c8aa4f80ca359ac7c0fb249a1c260a3539744f4"
+  "tree": "7cd2486195d47e9b7c3119237f27fa6a0b541b8a",
+  "tree_sha256": "652b05d739d917c70b8ade35741fe7d38a37adda43bd09571c386b962efc1af3"
 }
