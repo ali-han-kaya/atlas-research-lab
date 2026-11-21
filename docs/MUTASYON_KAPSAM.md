@@ -10,6 +10,11 @@ bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus
 **KAPSAM DISI** ya da **BOSLUK**. Bosluk gizlenmez. Tarama dosyanin
 TAMAMINI gezer; baska kurala/karara yapilan atiflar kural sayilmaz.
 
+Yeni bir kural icin gecerli iki yol vardir: mutasyon bataryasinda gercek
+bir vaka eklemek ya da `KAPSAM_ISTISNA`ya betik+kural anahtariyla
+olculmus gerekce yazmak. Betik adina dayanan eski gerekce yeni kurala
+otomatik uygulanmaz.
+
 ## Ozet
 
 | Olcum | Deger |
@@ -25,6 +30,19 @@ TAMAMINI gezer; baska kurala/karara yapilan atiflar kural sayilmaz.
 | Bosluk (gerekce yok) | 0 |
 | — bunlardan yalniz oz-testte anilan | 0 |
 | — hicbir testte gecmeyen | 0 |
+| Kapsam ratchet tarihsel tabani | 23 |
+| Kapsam ratchet guncel tabani | 0 |
+| Yeni bosluk (test/istisna yok) | 0 |
+| Taban boslugu geri dondu | 0 |
+| Kapsam ratchet | PASS |
+
+## Kapsam ratchet
+
+Tarihsel taban `3a6d09a` (19.11.2026) idi: 23 bosluk. `4ebb2e9`
+ile bu 23 boslugun tamami gercek mutasyon vakasiyla kapatildi;
+guncel izinli bosluk **0**. Yeni bir kural icin test veya
+`KAPSAM_ISTISNA` gerekcesi yoksa `make kapsam` ve CI kirmizi olur.
+Kapanmis bir taban kuralinin yeniden bosluga dusmesi de kirmizi olur.
 
 ## Risk sirasi (50 kural)
 

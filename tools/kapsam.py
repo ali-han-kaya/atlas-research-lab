@@ -30,6 +30,21 @@ BOLUM = re.compile(r'^\s*#+\s*-{2,}\s*([A-Z]{2,8}(?:-[A-Z0-9]{1,8}){0,2}-\d{2,3}
 # OLCUM-* bir kapi kurali degil, olcum kaydinin referansidir.
 YOKSAY_PREFIX = {'OLCUM'}
 
+# 23 bosluk 19.11.2026 tarihli 3a6d09a tablosunda tabandi; 20.11.2026'da
+# 4ebb2e9 ile 23'unun tamami gercek mutasyon vakasiyla kapatildi. Bu liste
+# tarihsel tabandir: kapanmis bir kural yeniden bosluga duserse ratchet kirmizi
+# olur; yeni kural ise ancak test veya KAPSAM_ISTISNA ile gecebilir.
+TABAN_BOSLUK_TARIHI = '3a6d09a'
+TABAN_BOSLUKLAR = frozenset({
+    'CHK-01', 'CHK-02', 'CHK-05',
+    'RECK-01', 'RECK-02', 'RECK-04', 'RECK-05', 'RECK-06',
+    'RECK-07', 'RECK-08', 'RECK-09',
+    'FRZ-08',
+    'TST-01', 'TST-02', 'TST-03', 'TST-05', 'TST-06',
+    'TST-07', 'TST-08', 'TST-09', 'TST-10', 'TST-11', 'TST-12',
+})
+GUNCEL_IZINLI_BOSLUKLAR = frozenset()
+
 # Kapsam disi gerekceleri BETIKLERIN GERCEK BAGIMLILIKLARINA dayanir:
 #   api_surface  : _KOSU/gate/BASELINE.json (KFAZ0 imza envanteri) yoksa CALISTIRILMADI
 #   dep_audit    : `git diff --name-only HEAD` ile degisen dosyalari okur
@@ -58,6 +73,43 @@ KAPSAM_DISI = {
         ('olu-kimlik', 'SEC-04 yalniz baslikta bildirilir; hicbir kod dali bu '
                        'kimligi basmiyor (atlanan dosyalar yalniz sayilir)'),
 }
+
+# Bu betiklerdeki mevcut kapsam-disi kurallar tabandir. Ayni betige YENI bir
+# kural eklenirse script gerekcesi otomatik olarak ona da uygulanmaz; yeni
+# kural ya mutasyon vakasi ya asagidaki KAPSAM_ISTISNA kaydi ister.
+TABAN_KAPSAM_DISI = frozenset({
+    ('ATLAS_SABLONLAR/scripts/olgu_lint.py', 'OLGU-04'),
+    ('ATLAS_SABLONLAR/scripts/olgu_lint.py', 'OLGU-05'),
+    ('ATLAS_SABLONLAR/scripts/olgu_lint.py', 'OLGU-06'),
+    ('ATLAS_SABLONLAR/scripts/oztest_attest.py', 'OZT-01'),
+    ('ATLAS_SABLONLAR/scripts/oztest_attest.py', 'OZT-02'),
+    ('ATLAS_SABLONLAR/scripts/oztest_attest.py', 'OZT-03'),
+    ('ATLAS_SABLONLAR/scripts/oztest_attest.py', 'OZT-04'),
+    ('ATLAS_SABLONLAR/scripts/oztest_attest.py', 'OZT-05'),
+    ('ATLAS_SABLONLAR/scripts/oztest_attest.py', 'OZT-06'),
+    ('ATLAS_SABLONLAR/scripts/teslim_imza.py', 'TSL-01'),
+    ('ATLAS_SABLONLAR/scripts/teslim_imza.py', 'TSL-02'),
+    ('ATLAS_SABLONLAR/scripts/teslim_imza.py', 'TSL-03'),
+    ('ATLAS_SABLONLAR/scripts/teslim_imza.py', 'TSL-04'),
+    ('ATLAS_SABLONLAR/scripts/teslim_imza.py', 'TSL-05'),
+    ('ATLAS_SABLONLAR/scripts/teslim_imza.py', 'TSL-06'),
+    ('KOD_SABLONLAR/scripts/api_surface.py', 'API-01'),
+    ('KOD_SABLONLAR/scripts/api_surface.py', 'API-02'),
+    ('KOD_SABLONLAR/scripts/api_surface.py', 'API-03'),
+    ('KOD_SABLONLAR/scripts/api_surface.py', 'API-04'),
+    ('KOD_SABLONLAR/scripts/api_surface.py', 'API-05'),
+    ('KOD_SABLONLAR/scripts/dep_audit.py', 'DEP-01'),
+    ('KOD_SABLONLAR/scripts/dep_audit.py', 'DEP-02'),
+    ('KOD_SABLONLAR/scripts/dep_audit.py', 'DEP-03'),
+    ('KOD_SABLONLAR/scripts/dep_audit.py', 'DEP-04'),
+    ('KOD_SABLONLAR/scripts/dep_audit.py', 'DEP-06'),
+    ('KOD_SABLONLAR/scripts/secret_scan.py', 'SEC-04'),
+})
+
+# Yeni bir kural gercekten test edilemiyorsa gerekcesi buraya ACIKCA yazilir:
+#   ('KOD_SABLONLAR/scripts/ornek.py', 'ORN-07'): 'olculmus gerekce',
+# Anahtar betik+yeni kuraldir; betik adi tek basina yeni kurala gerekce vermez.
+KAPSAM_ISTISNA = {}
 
 
 # Baska kurala/karara yapilan atiflar envantere girmez. Her satir
@@ -309,7 +361,11 @@ def olc():
                 etiket = ', '.join(vakalar)
                 satirlar.append((betik, k, etiket, 'TEST EDILDI',
                                  'mutasyon vakasi: %s' % etiket))
-            elif betik in KAPSAM_DISI:
+            elif (betik, k) in KAPSAM_ISTISNA:
+                disi += 1
+                satirlar.append((betik, k, None, 'KAPSAM DISI',
+                                 'istisna: %s' % KAPSAM_ISTISNA[(betik, k)]))
+            elif (betik, k) in TABAN_KAPSAM_DISI:
                 disi += 1
                 sinif, gerekce = KAPSAM_DISI[betik]
                 satirlar.append((betik, k, None, 'KAPSAM DISI',
@@ -323,6 +379,21 @@ def olc():
                     gerekce = 'BOSLUK — hicbir testte gecmiyor'
                 satirlar.append((betik, k, None, 'BOSLUK', gerekce))
     return satirlar, envan, (test, disi, bosluk, oz_anilan)
+
+
+def ratchet(satirlar):
+    """(yeni bosluklar, taban boslugu geri donenler).
+
+    23 tarihsel bosluk `3a6d09a` tabanidir; `4ebb2e9` ile hepsi kapatildi.
+    Guncel izinli bosluk 0'dir: ne yeni kural ne de kapanmis bir taban kurali
+    test/istisna olmadan bosluga donebilir.
+    """
+    if len(TABAN_BOSLUKLAR) != 23:
+        raise SystemExit('TABAN_BOSLUKLAR 23 tekil kural icermeli')
+    bosluklar = [(b, k, g) for b, k, _v, d, g in satirlar if d == 'BOSLUK']
+    yeni = [x for x in bosluklar if x[1] not in TABAN_BOSLUKLAR]
+    geri = [x for x in bosluklar if x[1] in TABAN_BOSLUKLAR]
+    return yeni, geri
 
 
 def sinif_tablosu(satirlar):
@@ -375,6 +446,7 @@ def rec_tablosu(vakalar):
 
 def markdown():
     satirlar, envan, (test, disi, bosluk, oz_anilan) = olc()
+    yeni, geri = ratchet(satirlar)
     vakalar = batarya()
     toplam_vaka = len(vakalar)
     beklenen_bulgu = sum(1 for v in vakalar if len(v) >= 8 and v[7] == 'BULGU')
@@ -388,6 +460,10 @@ def markdown():
            'bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus',
            '**KAPSAM DISI** ya da **BOSLUK**. Bosluk gizlenmez. Tarama dosyanin',
            'TAMAMINI gezer; baska kurala/karara yapilan atiflar kural sayilmaz.', '',
+           'Yeni bir kural icin gecerli iki yol vardir: mutasyon bataryasinda gercek',
+           'bir vaka eklemek ya da `KAPSAM_ISTISNA`ya betik+kural anahtariyla',
+           'olculmus gerekce yazmak. Betik adina dayanan eski gerekce yeni kurala',
+           'otomatik uygulanmaz.', '',
            '## Ozet', '',
            '| Olcum | Deger |', '|---|---|',
            '| Taranan betik | %d |' % len(envan),
@@ -401,7 +477,20 @@ def markdown():
            '| Bosluk (gerekce yok) | %d |' % bosluk,
            '| — bunlardan yalniz oz-testte anilan | %d |' % oz_anilan,
            '| — hicbir testte gecmeyen | %d |' % (bosluk - oz_anilan),
+           '| Kapsam ratchet tarihsel tabani | 23 |',
+           '| Kapsam ratchet guncel tabani | %d |' % len(GUNCEL_IZINLI_BOSLUKLAR),
+           '| Yeni bosluk (test/istisna yok) | %d |' % len(yeni),
+           '| Taban boslugu geri dondu | %d |' % len(geri),
+           '| Kapsam ratchet | %s |' % ('PASS' if not yeni and not geri else 'FAIL'),
            '',
+           '## Kapsam ratchet', '',
+           'Tarihsel taban `%s` (19.11.2026) idi: 23 bosluk. `4ebb2e9`'
+           % TABAN_BOSLUK_TARIHI,
+           'ile bu 23 boslugun tamami gercek mutasyon vakasiyla kapatildi;',
+           'guncel izinli bosluk **%d**. Yeni bir kural icin test veya'
+           % len(GUNCEL_IZINLI_BOSLUKLAR),
+           '`KAPSAM_ISTISNA` gerekcesi yoksa `make kapsam` ve CI kirmizi olur.',
+           'Kapanmis bir taban kuralinin yeniden bosluga dusmesi de kirmizi olur.', '',
            '## Risk sirasi (50 kural)', '',
            '19.11.2026 envanterinde 51 kural vardi; `DEC-027` bir karar',
            'referansi olarak ayiklandi, kalan 50 kural risk sirasinda. Siralama',
@@ -475,6 +564,21 @@ def markdown():
 
 
 def main(argv):
+    satirlar, _envan, _ozet = olc()
+    yeni, geri = ratchet(satirlar)
+    if '--kontrol' in argv or '--yaz' in argv:
+        if yeni or geri:
+            print('KAPSAM: FAIL — kapsam ratchet ihlali '
+                  '(yeni=%d, taban gerilemesi=%d)' % (len(yeni), len(geri)))
+            for betik, kural, gerekce in yeni:
+                print('  YENI %s · %s — %s' % (kural, betik, gerekce))
+            for betik, kural, gerekce in geri:
+                print('  TABAN GERI DONDU %s · %s — %s'
+                      % (kural, betik, gerekce))
+            print('  Cozum: mutasyon vakasi ekle veya KAPSAM_ISTISNAya '
+                  'betik+kural gerekcesi yaz.')
+            return 1
+
     metin = markdown()
     if '--kontrol' in argv:
         if not HEDEF.is_file():
@@ -483,12 +587,15 @@ def main(argv):
         if HEDEF.read_text(encoding='utf-8') != metin:
             print('KAPSAM: docs/MUTASYON_KAPSAM.md guncel degil — `make kapsam-yaz`')
             return 1
-        print('KAPSAM: guncel (%d satir)' % len(metin.splitlines()))
+        print('KAPSAM: guncel (%d satir) · ratchet PASS '
+              '(tarihsel taban=%d, guncel izinli=%d)'
+              % (len(metin.splitlines()), len(TABAN_BOSLUKLAR),
+                 len(GUNCEL_IZINLI_BOSLUKLAR)))
         return 0
     if '--yaz' in argv:
         HEDEF.parent.mkdir(parents=True, exist_ok=True)
         HEDEF.write_text(metin, encoding='utf-8')
-        print('KAPSAM: yazildi · %s' % HEDEF.relative_to(KOK))
+        print('KAPSAM: yazildi · %s · ratchet PASS' % HEDEF.relative_to(KOK))
         return 0
     print(metin)
     return 0
