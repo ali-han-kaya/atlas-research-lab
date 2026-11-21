@@ -165,6 +165,10 @@ unless `make iddia-ag`), `BEYAN` (dated/machine-bound) and `OLCULMEDI` (not
 reproducible here) are counted separately with their reason and marked
 `ham kanit yok` (no local raw evidence).
 
+`make iddia` skips the network claim. `make iddia-ag` requires the live catalog;
+if it cannot be read, the claim is reported as `AG` and the command exits **2**
+instead of emitting a false PASS or FAIL.
+
 CI runs `make dogrula-ci`, `make mutasyon`, `make kapsam`, `make guvenlik`, and
 asserts `./demo` exits **1** while `make demo` exits **2** (the wrapper cannot
 carry 1). Workflow: `.github/workflows/dogrula.yml`.

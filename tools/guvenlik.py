@@ -13,7 +13,8 @@ KULLANIM
   python3 tools/guvenlik.py            # tara + raporla + docs/GUVENLIK.md yaz
   python3 tools/guvenlik.py --kontrol  # dosya guncel mi (yazmaz)
 
-CIKIS: 0 = yalniz kabul edilmis bulgular · 1 = kabul edilmemis bulgu · 2 = arac yok
+CIKIS: 0 = yalniz kabul edilmis bulgular · 1 = kabul edilmemis bulgu ·
+       2 = arac/ag yok veya pip-audit JSON uretmedi (olculemedi)
 """
 import json
 import subprocess
@@ -60,13 +61,16 @@ def tara():
                         '-f', 'json', '--progress-spinner', 'off'],
                        cwd=str(KOK), capture_output=True, text=True)
     if r.returncode not in (0, 1):
-        print('GUVENLIK: pip-audit kosulamadi (rc=%d) — %s'
+        print('GUVENLIK: OLCULEMEDI — pip-audit kosulamadi (rc=%d) — %s'
               % (r.returncode, (r.stderr or '').strip()[:200]))
         return None
     try:
         return json.loads(r.stdout)
     except ValueError:
-        print('GUVENLIK: pip-audit ciktisi JSON degil')
+        print('GUVENLIK: OLCULEMEDI — pip-audit JSON uretmedi (rc=%d) — %s'
+              % (r.returncode,
+                 (r.stderr or r.stdout or '').strip().splitlines()[-1][:200]
+                 if (r.stderr or r.stdout or '').strip() else 'bos cikti'))
         return None
 
 
