@@ -333,7 +333,7 @@ aşağıdaki `git grep` yol listesine de eklenir.
 - `rc=0` ise: canlı katalogda yeni modeller görünse bile dosya yenilenmez;
   allowlist bilinçli olarak dardır.
 - `rc=2` ise: ağ/JSON ölçülemedi; sonuç `OLCULMEDI`dır, bu bir bayatlama
-  bulgusu değildir ve katalog suçlanmaz; CI işi yine kırmızı olur.
+  bulgusu değildir ve katalog suçlanmaz; canlı ölçüm kırmızı kalır.
 - Yalnız `docs/`, `SURUM.md`, tarihsel `OLCUM-*` veya test fikstürleri değiştiyse:
   bunlar aktif model kaynağı değildir.
 - Sadece `_kaynak` tarihi değişsin diye: tarih, gerçek yenileme günüdür.
@@ -430,15 +430,34 @@ kaynak referansını düzeltin.
 ### 4. Üretileni aynı anlık görüntüyle doğrula, sonra yerleştir
 
 ```bash
+set -euo pipefail
+
 python3 tools/katalog_kontrol.py \
   --katalog /tmp/model_katalog.json \
   --api-dosya /tmp/models.dev-api.json
 
-diff -u tools/model_katalog.json /tmp/model_katalog.json
+# diff 0 = fark yok, 1 = beklenen fark, 2+ = okunamadi/beklenmedik.
+# Yalnız 1 devam eder; 0 veya 2+ cp'ye geçemez.
+diff_rc=0
+diff -u tools/model_katalog.json /tmp/model_katalog.json \
+  > /tmp/model_katalog.diff || diff_rc=$?
+case "$diff_rc" in
+  1) : ;;
+  0) echo 'HATA: beklenen katalog farki yok'; exit 1 ;;
+  *) echo "HATA: diff okunamadi (rc=$diff_rc)"; exit 1 ;;
+esac
+test -s /tmp/model_katalog.diff
+grep -q '^[+-][^+-]' /tmp/model_katalog.diff
+
+# İNCELEME KAPISI: diff'i açın. Yalnız beklenen model değişikliği varsa `e`
+# yazın; boş veya başka cevap cp'yi çalıştırmaz.
+read -r -p 'Diff beklenen model degisikligi mi? [e/H] ' onay
+test "$onay" = 'e'
 cp /tmp/model_katalog.json tools/model_katalog.json
 ```
 
-Kontrol `rc=0` vermeden `cp` yapmayın. `diff` yalnız beklenen model değişikliğini
+Kontrol `rc=0` vermeden, diff 1 dışında bir kod döndürmeden veya inceleme
+onayı olmadan `cp` yapmayın. `diff` yalnız beklenen model değişikliğini
 göstermiyorsa durun; dosyayı elle düzenleyerek farkı susturmayın.
 
 ### 5. Canlı ve depo kontrolleri
