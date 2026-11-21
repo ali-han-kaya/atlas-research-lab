@@ -223,7 +223,10 @@ Emekli bir model kimliği yalnız tarihsel `SURUM`/`OLCUM` satırlarında
 yaşayabilir; aktif kod, config, test ve dokümanlarda sıfır atıf
 `make model-kimlik` ile denetlenir. İstisna dosya adıyla değil, tam satır
 SHA-256'sıyla kayıtlıdır (`tools/model_kimlik_istisna.json`); tarihsel satır
-değişirse kontrol kırmızı olur.
+değişirse kontrol kırmızı olur. Denetim hiçbir dosyayı sessizce atlamaz:
+4 MB üstü ve UTF-8 çözülemeyen dosyalar ikili güvenli bayt aramasıyla taranır,
+okunamayan dosya onay listesinde gerekçesiyle yoksa FAIL verir; PASS satırı
+`taranan`, `incelenmedi=0` ve `onay` sayaçlarını gösterir.
 
 ### Bir projede ATLAS hattını kullanmak
 

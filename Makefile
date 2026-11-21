@@ -19,7 +19,7 @@ yardim:
 	@echo "make temiz-teslim  sentetik temiz teslimi ve 5 kenar fiksturunu uctan uca sinar"
 	@echo "make kapsam    mutasyon kapsam tablosu guncel mi (docs/MUTASYON_KAPSAM.md)"
 	@echo "make kapsam-yaz  kapsam tablosunu yeniden uret"
-	@echo "make model-kimlik  emekli model kimligine yalniz tarihsel satirlarda izin ver"
+	@echo "make model-kimlik  emekli model kimligi: kor noktasiz tarama + acik onay listesi"
 	@echo "make katalog-kontrol  istege bagli ag kontrolu: sabit katalog models.dev'de guncel mi (CI'da yok)"
 	@echo "make iddia    README/docs sayisal iddialarini ureten komutla yeniden olc (ag haric)"
 	@echo "make iddia-ag  ag gerektiren iddialari da olc"

@@ -465,9 +465,23 @@ make model-kimlik   # python3 tools/model_kimlik.py --kontrol
 Kontrol `make dogrula`nın ön koşuludur (sayılan sekiz kaleme eklenmez): aktif
 tek bir atıf veya bayat bir istisna hükmü FAIL eder. Tarama
 `git ls-files --cached --others --exclude-standard` ile izlenen ve henüz
-izlenmeyen (yok sayılmayan) metin dosyalarını gezer; yalnız istisna defterinin
-kendisi taranmaz, çünkü kimliği tanımlamak için onu taşımak zorundadır. Yeni bir
-emekli kimlik
+izlenmeyen (yok sayılmayan) dosyaları gezer. **Gördüğü küme ile incelediği küme
+arasında sessiz fark yoktur:** her aday dosyanın ham baytları okunur; UTF-8
+çözülen dosyalar satır satır, çözülemeyen veya NUL içeren dosyalar ikili
+güvenli bayt aramasıyla (UTF-8 + UTF-16LE/BE) ve **boyut sınırı olmadan**
+taranır. Okunamayan bir dosya varsa ve `tools/model_kimlik_istisna.json`
+içindeki `onay` listesinde gerekçesiyle kayıtlı değilse hüküm FAIL olur; PASS
+satırı `aday=… · taranan=… · incelenmedi=0 · onay=1 kayit · aktif=0`
+sayaçlarını taşır.
+
+`onay` listesine yalnız istisna defterinin kendisi `tanim` olarak yazılabilir
+(kimliği tanımlamak için onu taşımak zorundadır); defter taranır, eşleşmeleri
+"tanım" sayılır. `okunamaz` kaydı yalnız gerçekten okunamayan dosya içindir ve
+dosya okunabilir hâle gelirse "onay gereksiz" diye FAIL eder; yani hiçbir dosya
+kendi kendini muaf ilan edemez. `--oztest` dokuz vakayı kanıtlar: temiz ağaç
+(`incelenmedi=0`), tarihsel satırın muafiyeti, aktif metin, 4 MB üstü metin,
+ikili dosya (UTF-8 + UTF-16LE), onaysız incelenemeyen dosya, gereksiz onay,
+bozulan tarihsel satır ve aktif dosyaya tanım onayı. Yeni bir emekli kimlik
 eklenirse önce tarihsel satırlar değiştirilmeden deftere satır hash'leriyle
 kaydedilir, sonra aktif atıflar temizlenir.
 
