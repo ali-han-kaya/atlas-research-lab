@@ -374,6 +374,9 @@ Araç eksik, `deprecated` veya bozuk tek bir kimlikte **hiçbir şey yazmadan**
 uydurmayın; önce aktif kaynak referansını düzeltin. Sözleşme
 `make katalog-selftest` içinde sınanır.
 
+21 Kasım 2026 canlı kontrolü: **9/9 kimlik geçerli**; aday depodaki katalogla
+aynıydı (tek fark `_kaynak` tarihi), bu yüzden `cp` yapılmadı.
+
 ### 4. Üretileni aynı anlık görüntüyle doğrula, sonra yerleştir
 
 ```bash
