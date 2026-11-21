@@ -54,7 +54,7 @@ def oku(yol):
     try:
         return yol.read_text(encoding="utf-8")
     except OSError as exc:
-        raise DurumHatasi("%s okunamadi: %s" % (yol.relative_to(KOK), exc))
+        raise DurumHatasi("%s okunamadi: %s" % (yol, exc))
 
 
 def json_blok(metin, bas, bit, ad):
@@ -89,12 +89,12 @@ def c15f_bloku(metin):
     return veri
 
 
-def python_dosya_sayisi():
+def python_dosya_sayisi(kok=KOK):
     """H2'nin saydigi python dosyalari; dogrula.py ile ayni atlama kumesi."""
     atla = {".git", "__pycache__", "node_modules", ".pytest_cache",
             ".ruff_cache", ".venv", ".venv-token"}
     sayi = 0
-    for kok, dizinler, dosyalar in os.walk(KOK):
+    for dizin_kok, dizinler, dosyalar in os.walk(kok):
         dizinler[:] = [d for d in dizinler if d not in atla]
         sayi += sum(1 for ad in dosyalar if ad.endswith(".py"))
     return sayi
@@ -105,15 +105,16 @@ def _kuyruk(cikti, n=8):
     return "\n".join(satirlar[-n:])[:1200] or "(bos cikti)"
 
 
-def oztest(betik, argumanlar, desen, ad):
+def oztest(betik, argumanlar, desen, ad, kok=KOK):
     """Bir oz-testi canli kosar ve (gecen, toplam) dondurur."""
     ortam = dict(os.environ)
     ortam.pop("ATLAS_LAB", None)
-    if KATALOG.is_file():
-        ortam["ATLAS_MODEL_KATALOG"] = str(KATALOG)
-    komut = [sys.executable, str(KOK / betik)] + list(argumanlar)
+    katalog = kok / "tools" / "model_katalog.json"
+    if katalog.is_file():
+        ortam["ATLAS_MODEL_KATALOG"] = str(katalog)
+    komut = [sys.executable, str(kok / betik)] + list(argumanlar)
     try:
-        r = subprocess.run(komut, cwd=str(KOK), env=ortam, capture_output=True,
+        r = subprocess.run(komut, cwd=str(kok), env=ortam, capture_output=True,
                            text=True, timeout=900)
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise DurumHatasi("%s kosulamadi: %s" % (ad, exc))
@@ -126,9 +127,9 @@ def oztest(betik, argumanlar, desen, ad):
     return int(eslesme.group(1)), int(eslesme.group(2))
 
 
-def olculeri_topla(canli=False):
+def olculeri_topla(canli=False, kok=KOK):
     try:
-        taban = json.loads(oku(TABAN))
+        taban = json.loads(oku(kok / "ATLAS_SABLONLAR" / "scripts" / "OZTEST-TABAN.json"))
     except ValueError as exc:
         raise DurumHatasi("OZTEST-TABAN.json: JSON bozuk: %s" % exc)
     if not isinstance(taban, dict):
@@ -144,13 +145,13 @@ def olculeri_topla(canli=False):
             r"sha256:[0-9a-f]{64}", kimlik_hash):
         raise DurumHatasi("OZTEST-TABAN.json: kimlik_hash gecersiz")
 
-    olgular = json_blok(oku(OLGULAR), "<!-- OLGULAR_JSON_BASLA -->",
+    olgular = json_blok(oku(kok / "docs" / "OLGULAR.md"), "<!-- OLGULAR_JSON_BASLA -->",
                         "<!-- OLGULAR_JSON_BITIR -->", "OLGULAR.md")
     for alan in ("atlas_envanter_sayisi", "atlas_son_gecen", "kod_son_gecen"):
         if type(olgular.get(alan)) is not int:
             raise DurumHatasi("OLGULAR.md: %s tamsayi degil" % alan)
 
-    surum = c15f_bloku(oku(SURUM))
+    surum = c15f_bloku(oku(kok / "SURUM.md"))
     for alan in ("skill_lint_kontrol", "skill_kapi_sayisi",
                  "SKILL_md_satir", "kapi_taban_kimlik", "atlas_envanter"):
         if alan not in surum:
@@ -159,10 +160,10 @@ def olculeri_topla(canli=False):
     if canli:
         atlas_gecen, atlas_toplam = oztest(
             "ATLAS_SABLONLAR/scripts/atlas_selftest.py", ["--sessiz"],
-            r"^OZ-TEST:\s*(\d+)/(\d+)\s+gecti", "ATLAS oz-testi")
+            r"^OZ-TEST:\s*(\d+)/(\d+)\s+gecti", "ATLAS oz-testi", kok=kok)
         kod_gecen, kod_toplam = oztest(
             "KOD_SABLONLAR/scripts/kod_selftest.py", [],
-            r"^KOD OZ-TEST:\s*(\d+)/(\d+)\s+gecti", "KOD oz-testi")
+            r"^KOD OZ-TEST:\s*(\d+)/(\d+)\s+gecti", "KOD oz-testi", kok=kok)
     else:
         # Hizli uretim: son kayitli canli olcum. CI `--kontrol` ile bunu
         # yeniden kosar; kayit ile canli ayrisirsa kirmizi olur.
@@ -208,12 +209,12 @@ def olculeri_topla(canli=False):
         "sayi": sayi,
         "kimlik_hash": kimlik_hash,
         "surum": surum,
-        "python_dosya": python_dosya_sayisi(),
+        "python_dosya": python_dosya_sayisi(kok),
     }
 
 
-def uret(canli=False):
-    o = olculeri_topla(canli)
+def uret(canli=False, kok=KOK):
+    o = olculeri_topla(canli, kok)
     s = o["surum"]
     satirlar = [
         "# DURUM — ÜRETİLMİŞ GÜNCEL SAYILAR",
@@ -266,47 +267,62 @@ def uret(canli=False):
     return "\n".join(satirlar)
 
 
+def _bayat(mevcut, icerik, sayfa):
+    print("DURUM: BAYAT — %s" % sayfa)
+    fark = difflib.unified_diff(
+        mevcut.splitlines(), icerik.splitlines(),
+        fromfile="committed", tofile="uretilen", lineterm="")
+    for i, satir in enumerate(fark):
+        if i >= 80:
+            print("... (fark kirpildi; `make durum-yaz` ile yenile)")
+            break
+        print(satir)
+    return 1
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description="DURUM sayfasini uret/denetle")
     grup = ap.add_mutually_exclusive_group()
     grup.add_argument("--yaz", action="store_true", help="docs/DURUM.md'yi yenile")
     grup.add_argument("--kontrol", action="store_true", help="bayat mi denetle (varsayilan)")
     grup.add_argument("--stdout", action="store_true", help="yazmadan bas")
+    ap.add_argument("--kok", default=str(KOK),
+                    help="kontrol/uretim kok dizini (test ve izolasyon icin)")
     args = ap.parse_args(argv)
+    kok = Path(args.kok).resolve()
+    sayfa = kok / "docs" / "DURUM.md"
 
     try:
-        # Argumansiz cagri da CI gibi canli kontrol yapar; --yaz/--stdout hizli yoldur.
-        canli = args.kontrol or not (args.yaz or args.stdout)
-        icerik = uret(canli=canli)
         if args.stdout:
-            sys.stdout.write(icerik)
+            sys.stdout.write(uret(kok=kok))
             return 0
         if args.yaz:
-            SAYFA.parent.mkdir(parents=True, exist_ok=True)
-            onceki = SAYFA.read_text(encoding="utf-8") if SAYFA.is_file() else None
-            SAYFA.write_text(icerik, encoding="utf-8")
+            icerik = uret(kok=kok)
+            sayfa.parent.mkdir(parents=True, exist_ok=True)
+            onceki = sayfa.read_text(encoding="utf-8") if sayfa.is_file() else None
+            sayfa.write_text(icerik, encoding="utf-8")
             if onceki == icerik:
-                print("DURUM: YAZILDI (degisiklik yok) %s" % SAYFA)
+                print("DURUM: YAZILDI (degisiklik yok) %s" % sayfa)
             else:
-                print("DURUM: YAZILDI %s" % SAYFA)
+                print("DURUM: YAZILDI %s" % sayfa)
             return 0
-        if not SAYFA.is_file():
-            print("DURUM: FAIL — %s yok; once `make durum-yaz`" % SAYFA)
+        if not sayfa.is_file():
+            print("DURUM: FAIL — %s yok; once `make durum-yaz`" % sayfa)
             return 1
-        mevcut = SAYFA.read_text(encoding="utf-8")
-        if mevcut == icerik:
-            print("DURUM: GUNCEL — %s" % SAYFA)
-            return 0
-        print("DURUM: BAYAT — %s" % SAYFA)
-        fark = difflib.unified_diff(
-            mevcut.splitlines(), icerik.splitlines(),
-            fromfile="committed", tofile="uretilen", lineterm="")
-        for i, satir in enumerate(fark):
-            if i >= 80:
-                print("... (fark kirpildi; `make durum-yaz` ile yenile)")
-                break
-            print(satir)
-        return 1
+        mevcut = sayfa.read_text(encoding="utf-8")
+
+        # Once ucuz ve kesin sayfa karsilastirmasi: sayfa kanonik kayitlardan
+        # saptirsa canli testleri bosuna kosmadan BAYAT don. Sayfa guncelse
+        # canli testleri kos ve sonucu yeniden karsilastir; canli sapma asla
+        # yalnizca dosya karsilastirmasiyla gizlenemez.
+        beklenen = uret(kok=kok)
+        if mevcut != beklenen:
+            return _bayat(mevcut, beklenen, sayfa)
+        canli = uret(canli=True, kok=kok)
+        if mevcut != canli:
+            return _bayat(mevcut, canli, sayfa)
+        print("DURUM: GUNCEL — %s" % sayfa)
+        return 0
     except DurumHatasi as exc:
         print("DURUM: FAIL — %s" % exc)
         return 1
