@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-21T20:01:56Z",
+  "zaman": "2026-11-21T21:47:12Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -257,6 +257,82 @@
       "rc": 0,
       "ham": "HUKUM: PASS — temiz teslim rc=0; bes kenar beklenen rc'yi verdi.",
       "deger": "0"
+    },
+    "IDD-39": {
+      "komut": [
+        "{py}",
+        "-c",
+        "import sys; sys.path.insert(0, 'tools'); import mutasyon_bataryasi as m; print('VAKA: %d' % len(m.vakalar()))"
+      ],
+      "rc": 0,
+      "ham": "VAKA: 116",
+      "deger": "116"
+    },
+    "IDD-40": {
+      "komut": [
+        "{py}",
+        "tools/temiz_teslim_selftest.py"
+      ],
+      "rc": 0,
+      "ham": "SONUC: 6/6 fikstur gecti (1 temiz + 5 kenar)",
+      "deger": "6/6/5"
+    },
+    "IDD-41": {
+      "komut": [
+        "{py}",
+        "tools/demo.py"
+      ],
+      "rc": 1,
+      "ham": "  PASS REC-03: 8 bulgunun tamami FAZ2'de atifli",
+      "deger": "8"
+    },
+    "IDD-42": {
+      "komut": [
+        "{py}",
+        "tools/demo.py"
+      ],
+      "rc": 1,
+      "ham": "  FAIL REC-05: gate 2B '6' FIX'i KANITLI ilan etti ama MASTER'da yok: ['FIX-003', 'FIX-004', 'FIX-005', 'FIX-006', 'FIX-007', 'FIX-008']",
+      "deger": "6"
+    },
+    "IDD-43": {
+      "komut": [
+        "{py}",
+        "tools/demo.py"
+      ],
+      "rc": 1,
+      "ham": "  PASS REC-06: MASTER'daki 2 FIX-ID manifestoda tanimli",
+      "deger": "2"
+    },
+    "IDD-44": {
+      "komut": [
+        "{py}",
+        "tools/model_kimlik.py",
+        "--kontrol"
+      ],
+      "rc": 0,
+      "ham": "MODEL KIMLIK: PASS — 1 emekli kimlik · aday=260 dosya · taranan=260 dosya · incelenmedi=0 dosya · onay=1 kayit · aktif=0",
+      "deger": "0/1"
+    },
+    "IDD-48": {
+      "komut": [
+        "{py}",
+        "-c",
+        "import json; d=json.load(open('KOD_SABLONLAR/routing.profiles.json')); a=d['bedava_politika']['asgari_limit']; print('LIMIT: %d/%d' % (a['context'], a['output']))"
+      ],
+      "rc": 0,
+      "ham": "LIMIT: 200000/32768",
+      "deger": "200000/32768"
+    },
+    "IDD-49": {
+      "komut": [
+        "{py}",
+        "-c",
+        "import sys; sys.path.insert(0, 'tools'); import temiz_teslim_selftest as t; print('SCOPE: %d' % len(t.SCOPE_IDLERI))"
+      ],
+      "rc": 0,
+      "ham": "SCOPE: 22",
+      "deger": "22"
     }
   }
 }
