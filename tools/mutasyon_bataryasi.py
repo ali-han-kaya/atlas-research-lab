@@ -111,15 +111,13 @@ SINIF_MD = (
     '| SC-001 | Giris | K | 1 | BIRINCIL | kapsandi |\n'
     '| SC-002 | Yontem | K | 2 | IKINCIL | kapsandi |\n')
 
-SINIF_SRC01_MD = (
-    '# Makale\n\n## KAYNAK SINIFLANDIRMA\n\n'
-    '| Sinyal | Sinif |\n|---|---|\n'
-    '| KURAN | BIRINCIL |\n| MAKALE | IKINCIL |\n\n'
-    '## PROVENANCE\n\n'
-    '| SCOPE-ID | Bolum | Kaynak | Satir Referansi | Kaynak Sinifi | Durum |\n'
-    '|---|---|---|---|---|---|\n'
-    '| SC-001 | Giris | KURAN | 1 | BIRINCIL | kapsandi |\n'
-    '| SC-002 | Yontem | MAKALE | 2 | IKINCIL | kapsandi |\n')
+# SRC-01 tablo fiksturu bataryadan ayrildi: temiz taban ve bozuk varyant
+# ayni izlenen dosyadan uretilir. Tek ihlal, MAKALE'nin sinifini degistirir;
+# KAYNAK SINIFLANDIRMA tablosu degismeden kalir.
+SRC01_FIKSTUR = 'tools/src01_kaynak_siniflandirma_fiksturu.md'
+SRC01_SANDBOX = 'sandbox/sinif_src01.md'
+SRC01_BOZUK_ESKI = '| SC-002 | Yontem | MAKALE | 2 | IKINCIL | kapsandi |'
+SRC01_BOZUK_YENI = '| SC-002 | Yontem | MAKALE | 2 | BIRINCIL | kapsandi |'
 
 JUNIT_TST5 = ('<?xml version="1.0"?><testsuite tests="5" failures="0" errors="0" '
               'skipped="0"></testsuite>')
@@ -358,10 +356,28 @@ def _frz01_02(k):
                     '# degistirilmis kapi\n')
 
 
+def _src01_fikstur(kok, bozuk=False):
+    """Izlenen SRC-01 fiksturunden temiz veya tek-ihlalli metni uretir."""
+    yol = kok / SRC01_FIKSTUR
+    if not yol.is_file():
+        raise FileNotFoundError('SRC-01 fiksturu yok: %s' % SRC01_FIKSTUR)
+    metin = yol.read_text(encoding='utf-8')
+    if not bozuk:
+        return metin
+    adet = metin.count(SRC01_BOZUK_ESKI)
+    if adet != 1:
+        raise ValueError('SRC-01 fiksturunde mutasyon satiri %d kez gecti '
+                         '(1 bekleniyordu)' % adet)
+    return metin.replace(SRC01_BOZUK_ESKI, SRC01_BOZUK_YENI, 1)
+
+
 def _src01(k):
-    return degistir(k, 'sandbox/sinif_src01.md',
-                    '| SC-002 | Yontem | MAKALE | 2 | IKINCIL | kapsandi |',
-                    '| SC-002 | Yontem | MAKALE | 2 | BIRINCIL | kapsandi |')
+    """Tek ihlal: fiksturden turetilen bozuk surumu yaz."""
+    try:
+        yaz(k / SRC01_SANDBOX, _src01_fikstur(k, bozuk=True))
+    except (OSError, ValueError) as e:
+        return 'HATA: %s' % e
+    return None
 
 
 def _git_kur(d):
@@ -1428,7 +1444,7 @@ def hazirla(kok, opsiyon=None):
     yaz(kok / 'sandbox_qr' / 'makale.md', QR_BASE)
     yaz(kok / 'sandbox_sec' / 'notlar.md', '# Notlar\n\nBu dosyada sir yok.\n')
     yaz(kok / 'sandbox' / 'cite_yil.md', CITE_MD)
-    yaz(kok / 'sandbox' / 'sinif_src01.md', SINIF_SRC01_MD)
+    yaz(kok / SRC01_SANDBOX, _src01_fikstur(kok))
     if opsiyon and callable(opsiyon.get('kur')):
         opsiyon['kur'](kok)
 
@@ -1438,6 +1454,12 @@ def main():
     print('kaynak: %s' % KOK.name)
     print('kural: once TEMIZ TABAN, sonra tek ihlal; kirmizi veya beklenen bulgu.')
     print()
+
+    try:
+        _src01_fikstur(KOK, bozuk=True)
+    except (OSError, ValueError) as e:
+        print('HUKUM: FAIL — %s' % e)
+        return 1
 
     gecen = 0
     gecen_bulgu = 0
