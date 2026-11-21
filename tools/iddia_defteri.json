@@ -313,11 +313,11 @@
     },
     {
       "id": "IDD-15",
-      "iddia": "H2 python sozdizimi dosya sayisi 64",
+      "iddia": "H2 python sozdizimi dosya sayisi 65",
       "kaynaklar": [
         {
           "dosya": "docs/DURUM.md",
-          "alinti": "| Python dosya sayısı (H2) | 64 |"
+          "alinti": "| Python dosya sayısı (H2) | 65 |"
         }
       ],
       "durum": "OLCULDU",
@@ -326,7 +326,7 @@
         "tools/dogrula.py"
       ],
       "ayikla": "H2\\s+python sozdizimi\\s+PASS\\s+(\\d+) dosya",
-      "beklenen": "64"
+      "beklenen": "65"
     },
     {
       "id": "IDD-16",

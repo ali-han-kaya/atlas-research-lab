@@ -300,9 +300,11 @@ kümenin kesişimidir: **aktif hat kaynakları ∩ models.dev**.
 **Aktif kaynaklar:** `ATLAS_SABLONLAR/.opencode/agent/`,
 `KOD_SABLONLAR/.opencode/agent/`, iki `routing.profiles.json`, üç
 `opencode.json` (kök, ATLAS ve KOD). `docs/`, `SURUM.md`, tarihsel `OLCUM-*`
-ve test fikstürleri bilinçli olarak taranmaz: oradaki emekli kimlikler tarihsel
-kanıttır, güncel allowlist'e geri girmemelidir. Yeni bir aktif ajan ağacı
-eklenirse aşağıdaki `git grep` yol listesine de eklenir.
+ve test fikstürleri **katalog yenilemesinde** taranmaz: oradaki emekli
+kimlikler tarihsel kanıttır, güncel allowlist'e geri girmemelidir. Bu
+satırların aktif atıf taşımadığı ayrı `make model-kimlik` kontrolüyle ölçülür;
+istisna satır bazlıdır (aşağıdaki bölüm). Yeni bir aktif ajan ağacı eklenirse
+aşağıdaki `git grep` yol listesine de eklenir.
 
 ### Ne zaman yenilenir
 
@@ -441,6 +443,33 @@ MOD-1/MOD-2 katalogdan geçiyorsa ve canlı kontrol `rc=0` ise değişiklik comm
 edilebilir. Katalogla birlikte yalnız gerçekten
 değişen aktif referansları commit edin; tarihsel `OLCUM`/`SURUM` satırlarını
 katalog yenilemesi bahanesiyle yeniden yazmayın.
+
+## Emekli model kimliği — resmi istisna
+
+19 Kasım 2026'da models.dev canlı kataloğundan kalkan eski Nemotron Super free
+kimliği **silinmedi**: tarihsel ham satırlar kanıttır ve yeniden yazılmaz.
+Eski kimliğin tam değeri, yerine geçen kimlik ve gerekçesi
+`tools/model_kimlik_istisna.json` içindeki `emekli_kimlikler` kaydındadır.
+Kimlik yalnız `SURUM.md`deki tarihsel sürüm satırında ve
+`docs/OLCUM-01/02/03/06` ham komut/çıktı satırlarında yaşar.
+
+İstisna **dosya adıyla değil, dosya + tam satır SHA-256'sıyla** verilir. Bir
+tarihsel satır değişirse hash tutmaz, kayıt bayatlar ve kontrol kırmızı olur;
+yeni bir tarihsel satır kendiliğinden muaf olmaz. Aktif kod, config, test ve
+dokümanlarda eski kimliğe **sıfır atıf** zorunludur:
+
+```bash
+make model-kimlik   # python3 tools/model_kimlik.py --kontrol
+```
+
+Kontrol `make dogrula`nın ön koşuludur (sayılan sekiz kaleme eklenmez): aktif
+tek bir atıf veya bayat bir istisna hükmü FAIL eder. Tarama
+`git ls-files --cached --others --exclude-standard` ile izlenen ve henüz
+izlenmeyen (yok sayılmayan) metin dosyalarını gezer; yalnız istisna defterinin
+kendisi taranmaz, çünkü kimliği tanımlamak için onu taşımak zorundadır. Yeni bir
+emekli kimlik
+eklenirse önce tarihsel satırlar değiştirilmeden deftere satır hash'leriyle
+kaydedilir, sonra aktif atıflar temizlenir.
 
 ## Ağacı yenileme
 

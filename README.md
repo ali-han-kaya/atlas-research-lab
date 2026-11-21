@@ -219,6 +219,12 @@ adıyla `rc=1`, ağ/JSON okunamazsa `rc=2` döner. Kanonik kod ayrımı için
 `python3 tools/katalog_kontrol.py` kullanılır; GNU make, tarif hatasını 2'ye
 çevirir.
 
+Emekli bir model kimliği yalnız tarihsel `SURUM`/`OLCUM` satırlarında
+yaşayabilir; aktif kod, config, test ve dokümanlarda sıfır atıf
+`make model-kimlik` ile denetlenir. İstisna dosya adıyla değil, tam satır
+SHA-256'sıyla kayıtlıdır (`tools/model_kimlik_istisna.json`); tarihsel satır
+değişirse kontrol kırmızı olur.
+
 ### Bir projede ATLAS hattını kullanmak
 
 ```bash
