@@ -213,9 +213,17 @@ yaşayan kataloğa değil bu allowlist anlık görüntüsüne bakar, böylece KO
 her klonda ve runner'da aynı çıkar. Canlı katalogla denetim isteğe bağlıdır:
 `ATLAS_MODEL_KATALOG=~/.cache/opencode/models.json make dogrula`.
 
-Sabit allowlist'in models.dev'de hâlâ geçerli olup olmadığını ölçmek için
-`make katalog-kontrol` vardır. Ağ gerektirir ve **CI'da koşmaz**; eksik model
-adıyla `rc=1`, ağ/JSON okunamazsa `rc=2` döner. Kanonik kod ayrımı için
+Sabit allowlist'in models.dev'de hâlâ geçerli olup olmadığını ölçen canlı kapı
+`make katalog-kontrol`tür. Ağ gerektirir; normal CI yolunda **`bedava canli
+katalog`** işi olarak her push/PR'da, haftalık cron'da ve elle tetiklemede koşar.
+Yalnız allowlist'i değil, `profiller.bedava` altındaki **on rolü** de canlı
+kayıtla karşılaştırır: tek kimlik, sıfır `cost.input`/`cost.output`, canlı ve
+yerel `reasoning`/`tool_call`, `deprecated` olmayan `status` ve
+`bedava_politika.asgari_limit` (200.000/32.768) alt sınırı. İhlal `rc=1`;
+ağ/JSON okunamazsa `rc=2` ve **`OLCULMEDI`** — PASS sayılmaz. Her koşu
+commit/tree/tree_sha256 ve tanım SHA-256'larıyla append-only
+`docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydına eklenir; CI koşusu aynı şemayı
+`$RUNNER_TEMP` altına yazıp artifact olarak yükler. Kanonik kod ayrımı için
 `python3 tools/katalog_kontrol.py` kullanılır; GNU make, tarif hatasını 2'ye
 çevirir.
 
@@ -286,7 +294,7 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 | Kırmızı hüküm demosu | `./demo` → `tools/demo.py` (kanonik; beklenen `rc=1`, fikstür bozuksa `rc=2`, yeşilde `rc=0`) |
 | Sentetik temiz teslim | `make temiz-teslim` → makale metni taşımayan temiz kök `rc=0`; 5 kenar kökü beklenen kodlarla sınanır |
 | Mutasyon kapsamı | `make kapsam` → `docs/MUTASYON_KAPSAM.md` güncel mi (üretilmiş tablo) |
-| Katalog tazeliği (isteğe bağlı) | `make katalog-kontrol` → models.dev canlı kataloğu; ağ gerekir, CI'da koşmaz |
+| Bedava canlı katalog (CI) | `make katalog-kontrol` → allowlist + `profiller.bedava` on rolü models.dev'de; her push/PR + haftalık cron + elle; `OLCULMEDI` ayrı hüküm |
 | İddia defteri | `make iddia` → README/docs sayısal iddialarını üreten komutla ve ham kanıt satırıyla yeniden ölçer; tutmayan satır `IDD-*` ile kırmızı |
 | Ham kanıt yenileme | `make iddia-yaz` → bilinçli değişiklikten sonra `tools/iddia_olcum.json` anlık görüntüsünü yeniler |
 | Kanıt paketi | `make kanit` → `attestation.json` + `kanit-paketi/` (commit, komut çıkışları, bulgu kimlikleri, SHA-256 manifesti) |
@@ -294,7 +302,7 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 | Bağımlılık denetimi | `make guvenlik` → `pip-audit`; her bulgu `docs/GUVENLIK.md` içinde adıyla |
 | Commit/push koruması | `make kur` → `core.hooksPath=.githooks`; canlı DSN commit edilemez |
 | Runner doğrulaması | `make dogrula-ci` — yalnız o ortamda ölçülebilen kalemler hükme girer, öz-testler rapor |
-| Sürekli doğrulama | `.github/workflows/dogrula.yml` — `dogrula` ve `iddia` job'ları; her push/PR ve haftalık |
+| Sürekli doğrulama | `.github/workflows/dogrula.yml` — `dogrula`, `bedava canli katalog` ve `iddia` job'ları; her push/PR ve haftalık |
 | Özel ağaçtan aktarım | `tools/yayinla.py --lab <yol>` (kuru koşu) · `--uygula` (yazar) |
 
 `tools/yayinla.py` yalnız **açık listedeki** mekanizma yollarını taşır; liste dışına

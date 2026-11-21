@@ -2,8 +2,9 @@
 
 > **Yürürlük:** 21 Kasım 2026 · **Kapsam:** `KOD_SABLONLAR/routing.profiles.json`
 > → `profiller.bedava` · **Bağlayıcı:** bu politikadaki koşullar sağlanmadan
-> profil değiştirilmez. İhlal, `make katalog-kontrol`, `make dogrula` veya
-> `make model-kimlik` hükümlerinden birini kırmızıya çevirir.
+> profil değiştirilmez. İhlal, `make katalog-kontrol` (CI'da `bedava canli
+> katalog` işi), `make dogrula` veya `make model-kimlik` hükümlerinden birini
+> kırmızıya çevirir.
 
 ## 1. Profil ne için var, ne için yok
 
@@ -36,7 +37,7 @@ yoktur, `OLCULMEDI` yazılır ve karar bekler.
 | 3 | **reasoning** | models.dev `reasoning` + `tools/model_katalog.json` aynı alan | canlı ve yerel değer ikisi de `true` |
 | 4 | **tool_call** | models.dev `tool_call` + `tools/model_katalog.json` aynı alan | canlı ve yerel değer ikisi de `true` |
 | 5 | **Canlı kayıt** | models.dev `status` | alan yok/`null` ya da `deprecated` değil |
-| 6 | **Bağlam** | models.dev `limit.context`, `limit.output` | fazın `max_tokens` ve bağlam ihtiyacını karşılar |
+| 6 | **Bağlam** | models.dev `limit.context`, `limit.output`; `bedava_politika.asgari_limit` | 200.000 bağlam / 32.768 çıktı tabanının altına düşmez |
 
 **Aynı aile ölçütü.** Aile, model adındaki `Nemotron 3` kuşağı ve `nvidia`
 sağlayıcısıdır; canlı `family` alanı (ölçümde `nemotron-ultra-free`) ayrıca
@@ -46,37 +47,66 @@ alanıyla karşılaştırılması **OLCULMEDI**dir. Farklı bir aileye geçiş e
 değil, **yeni model ailesi kararıdır**: prosedür durur ve lab sahibinin yazılı
 kararını ister.
 
-**Bağlam alt sınırı.** Ölçülen kimlik 1.000.000 bağlam ve 65.536 çıktı tokenı
-verir. Aday, koşulacak fazın `max_tokens` değerinin altındaysa reddedilir; bu
-kontrol `limit.output` alanından okunur, tahmin edilmez.
+**Bağlam alt sınırı.** Eşik `KOD_SABLONLAR/routing.profiles.json` →
+`bedava_politika.asgari_limit` içinde **200.000 bağlam / 32.768 çıktı** olarak
+yapılandırılmıştır; bu ölçülmüş bir maksimum değil, KOD fazlarının çok dosyalı
+bağlam ve tek yanıt ihtiyacı için kabul edilen **politika tabanıdır**. Ölçülen
+kimlik 1.000.000/65.536 verir; aday `limit.context` veya `limit.output` ile bu
+tabanın altına düşerse `LIMIT_YETERSIZ` ile reddedilir, tahmin edilmez.
 
 ## 3. Canlı models.dev kanıtı — koşullar ve kayıt
 
-### 3.1 Kanonik ölçüm
+### 3.1 Kanonik ölçüm ve otomasyon
 
 ```bash
 python3 tools/katalog_kontrol.py     # kanonik rc
-make katalog-kontrol                 # isteğe bağlı sarmalayıcı; GNU make hatayı 2'ye çevirir
+make katalog-kontrol                 # sarmalayıcı + append-only kayıt; GNU make hatayı 2'ye çevirir
 ```
 
-- Kaynak: `https://models.dev/api.json` (ağ gerekir; **CI'da koşmaz**).
-- `rc=0` ve `SONUC: 9/9 gecerli · 0 bulgu` zorunludur.
-- `rc=1` → en az bir kimlik yok, `deprecated` veya yetenek alanı çelişkili:
-  kimlik **emekli** sayılır, prosedür başlar.
-- `rc=2` → ağ/JSON okunamadı: sonuç `OLCULMEDI`dir; PASS'a çevrilmez, profil
-  değiştirilmez.
+- Kaynak: `https://models.dev/api.json`.
+- **Normal CI yolu:** `.github/workflows/dogrula.yml` → `bedava canli katalog`
+  işi. Tetikler: her `push` (main), her `pull_request`, haftalık cron
+  (`0 3 * * 1`) ve `workflow_dispatch`. İş `make katalog-kontrol` çalıştırır;
+  aynı commit'te `dogrula` ve `iddia` işleriyle paraleldir.
+- Ölçüm **on rolün tamamını** kapsar: `profiller.bedava` altındaki her `kod-*`
+  anahtarı canlı kayda çözülür ve rol rol basılır. Rol sayısı 10 değilse kapı
+  `ROL_SAYISI` hatasıyla kırmızıdır.
+- `rc=0`, `SONUC: 9/9 gecerli · 0 bulgu` **ve** `BEDAVA: 10/10 rol ... cost 0/0
+  ... reasoning/tool_call true` zorunludur.
+- `rc=1` → allowlist sapması veya bedava koşulu ihlali. Adlandırılmış bulgular:
+  `MODEL_YOK`, `SAGLAYICI_YOK`, `DURUM` (`deprecated`), `MALIYET`
+  (`cost.input`/`cost.output` veya diğer sayısal alan ≠ 0), `YETENEK_FARKLI`
+  (canlı `reasoning`/`tool_call` true değil veya yerel allowlist ile çelişiyor),
+  `LIMIT_YETERSIZ` (`limit.context`/`limit.output` < `asgari_limit`),
+  `KATALOGDA_YOK`, `TEK_KIMLIK_DEGIL`, `ROL_BOZUK`, `ROL_SAYISI`. Kimlik
+  emekli sayılır ve §4 başlar.
+- `rc=2` → ağ/JSON okunamadı: sonuç **`OLCULMEDI`**dir. CI işi kırmızıdır;
+  PASS'a çevrilmez, profil değiştirilmez. `OLCULMEDI` satırı ham gerekçeyi
+  (`models.dev okunamadi: ...`) taşır.
 
 ### 3.2 Kayıt alanları
 
 Her ölçüm kaydı şunları taşır; kayıt **append-only**dir, eski satır silinmez:
 
-- tarih (UTC) ve ölçen komut,
+- tarih (UTC), `kaynak` (`ci`/`yerel`), varsa `github_run_id`,
+- `commit`, `tree`, `tree_sha256` — `make kanit` ile aynı ağaç özeti,
 - `id`, `name`, `family`, `status`, `reasoning`, `tool_call`,
 - `cost` nesnesinin tamamı, `limit.context`, `limit.output`,
-- komutun ham son satırı ve `rc`,
-- ölçüm anındaki dosya kimlikleri:
+- `asgari_limit` ve `roller` sayısı,
+- sonuç (`PASS`/`FAIL`/`OLCULMEDI`), sebep ve komutun ham satırları,
+- ölçüm anındaki tanım dosyalarının SHA-256'sı:
   `tools/model_katalog.json`, `KOD_SABLONLAR/routing.profiles.json`,
-  `KOD_SABLONLAR/opencode.json` SHA-256.
+  `KOD_SABLONLAR/opencode.json`.
+
+Makine kaydı `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` (satır başına bir JSON) ve
+insan özeti §6'dır. `make katalog-kontrol` temiz ağaçta bu dosyaya ekler; ağaç
+kirliyse kayıt `OLCULMEDI` olur ve PASS sayılmaz, çünkü `commit`/`tree` ölçülen
+dosyalarla eşleşmez. CI aynı şemayı `$RUNNER_TEMP/bedava-katalog.jsonl` altına
+yazar, `$GITHUB_STEP_SUMMARY`'ye basar ve `bedava-katalog-kaniti` artifact'ı
+olarak yükler. Depodaki append-only kayda bu artifact'ın JSON satırı eklenir;
+böylece depo kaydı CI koşusunun kendi commit/tree/hash'lerini taşır. CI
+belirteci salt-okunur olduğu için satırı bot commit etmez; depoya girişi ayrı
+bir `[skip ci]` commit'idir ve kanıt zinciri o commit için yeniden üretilir.
 
 Yerel allowlist (`tools/model_katalog.json`) canlı kataloğun kopyası değildir;
 yalnız aktif hatlarda geçen kimlikleri taşır. MOD-1/MOD-2 kapıları bu sabit
@@ -89,9 +119,11 @@ Sıra bağlayıcıdır. Bir adım yeşil olmadan sonrakine geçilmez.
 
 ### P0 — Tespit
 
-`python3 tools/katalog_kontrol.py` `rc=1` verdiğinde veya canlı kayıt
-`MODEL_YOK` / `DURUM deprecated` / `YETENEK_FARKLI` ürettiğinde emeklilik
-başlar. Ham çıktı dosyaya alınır; özetle yetinilmez.
+`make katalog-kontrol` (veya CI'daki `bedava canli katalog` işi) `rc=1`
+verdiğinde ya da canlı kayıt `MODEL_YOK` / `DURUM deprecated` / `YETENEK_FARKLI`
+/ `MALIYET` / `LIMIT_YETERSIZ` ürettiğinde emeklilik başlar. `rc=2` ise
+emeklilik değil **ölçüm tekrarı** gerekir: `OLCULMEDI` bir sapma kanıtı değildir.
+Ham çıktı dosyaya alınır; özetle yetinilmez.
 
 ### P1 — Kanıtı dondur
 
@@ -180,6 +212,7 @@ python3 tools/model_kimlik.py --oztest    # 11/11
 make mutasyon            # 98/98 kural + 18/18 beklenen bulgu
 make dogrula             # 8/8 · H2 65
 make kapsam              # ratchet PASS
+make katalog-kontrol     # canli: allowlist + on rol; OLCULMEDI PASS degil
 ```
 
 `make model-kimlik` FAIL verirse aktif atıf kaldırılır; tarihsel satır
@@ -193,9 +226,12 @@ gizlenmez.
 - `docs/OLGULAR.md` → `lab_surum`,
 - `docs/DERSLER_v1_2026-08-30.md` ders satırı,
 - sayısal iddia değiştiyse `tools/iddia_defteri.json` + `make iddia-yaz`,
+- `make katalog-kontrol` çıktısı ve `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl`
+  satırı (commit/tree/tree_sha256 + tanım SHA-256'ları); CI'da artifact
+  `bedava-katalog-kaniti`,
 - `make kanit` zinciri (`kanit`, `kanit-dogrula`, `kanit-paket-dogrula`,
   `durum-kontrol`), commit, `origin/main`e push, o commit'in CI koşusu
-  `success`.
+  `success` — `bedava canli katalog` işi dahil.
 
 ### P8 — Geri alma
 
@@ -216,6 +252,8 @@ yalnız aktif yönlendirmeyi düzeltir.
 - Aktif bir dosyayı `onay` listesine `okunamaz`/`tanim` diye yazmak; defter
   dışında kendi kendini muaf ilan etmek.
 - Canlı ölçüm `rc=2` iken "muhtemelen güncel" demek; ağ yokluğunu PASS saymak.
+- `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` satırını silmek, yeniden yazmak veya
+  `FAIL`/`OLCULMEDI` satırını sonraki `PASS` ile gizlemek.
 - `bedava` profilinde kapı bağımsızlığı iddia etmek veya KFAZ4 sonucunu karar
   kanıtı saymak.
 - Kapsam dışı profilleri (`denge`, `kalite`, `ekonomi`) aynı commit'te
@@ -243,9 +281,21 @@ Aynı ölçümde canlı kayıt (`https://models.dev/api.json`,
 | `modalities.input` | `["text"]` |
 | Emekli kimlik canlıda | **yok** (`False`) |
 
-Bu tablo bir **anlık görüntüdür**; sonraki ölçüm yeni satır olarak eklenir,
-eskisi değiştirilmez. Sayılar bu dosyada elle güncellenmez; güncel allowlist
-denetimi `make iddia` ve `make katalog-kontrol` ile yeniden ölçülür.
+Bu tablo 21.11.2026'da **elle** alınmış tarihsel kayıttır; sonraki ölçüm yeni
+satır olarak eklenir, eskisi değiştirilmez. Bu tarihten sonra ölçüm
+**süreklidir**: `bedava canli katalog` işi her push/PR'da, haftalık cron'da ve
+elle tetiklemede on rolü canlı models.dev'den yeniden ölçer; sonuç
+`docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydına commit/tree/tree_sha256 ve tanım
+SHA-256'larıyla eklenir. Tek günlük anlık görüntüye bağımlılık yoktur; ağ
+okunamazsa kayıt `OLCULMEDI` olur ve CI kırmızı kalır.
+
+### 6.1 Otomatik kayıt sözleşmesi
+
+`docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` satır başına bir JSON nesnesi taşır;
+alanlar §3.2'dedir. Kayıt yalnız eklenir: eski satır silinmez, yeniden
+yazılmaz. Bir satırın `sonuc` alanı `FAIL` veya `OLCULMEDI` ise bu, sonraki
+`PASS` tarafından gizlenmez; P0–P8 izi olarak kalır. CI artifact'ı
+`bedava-katalog-kaniti` aynı satırı taşır ve 90 gün saklanır.
 
 ## 7. İlgili komutlar ve dosyalar
 
@@ -254,10 +304,11 @@ denetimi `make iddia` ve `make katalog-kontrol` ile yeniden ölçülür.
 | `KOD_SABLONLAR/routing.profiles.json` | `profiller.bedava` — on rolün model eşlemesi |
 | `KOD_SABLONLAR/opencode.json` | birincil sürücü ve `_model_notu` |
 | `tools/model_katalog.json` | hermetik allowlist (MOD-1/MOD-2) |
-| `tools/katalog_kontrol.py` | canlı models.dev karşılaştırması (ağ; CI dışı) |
+| `tools/katalog_kontrol.py` | canlı models.dev kapısı: allowlist + on rol + append-only kayıt (ağ) |
 | `tools/model_kimlik.py` | emekli kimlik taraması, `--oztest`, `--envanter` |
 | `tools/model_kimlik_istisna.json` | emekli kimlik + satır hash'leri + `onay` |
-| `make katalog-kontrol` | canlı ölçüm sarmalayıcısı |
+| `make katalog-kontrol` | canlı ölçüm + `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydı |
+| `.github/workflows/dogrula.yml` | `bedava canli katalog` işi: push/PR + haftalık cron + elle |
 | `make model-kimlik` | aktif atıf denetimi (fail-closed ön koşul) |
 | `make mutasyon` | korumaların geri alınamazlığı (116 vaka) |
 | `make dogrula` | sekiz kalemlik ana kapı (MOD-1/MOD-2 dahil) |

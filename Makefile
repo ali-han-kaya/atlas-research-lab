@@ -20,7 +20,7 @@ yardim:
 	@echo "make kapsam    mutasyon kapsam tablosu guncel mi (docs/MUTASYON_KAPSAM.md)"
 	@echo "make kapsam-yaz  kapsam tablosunu yeniden uret"
 	@echo "make model-kimlik  emekli model kimligi: kor noktasiz tarama + acik onay listesi"
-	@echo "make katalog-kontrol  istege bagli ag kontrolu: sabit katalog models.dev'de guncel mi (CI'da yok)"
+	@echo "make katalog-kontrol  canli models.dev kapisi: allowlist + bedava profili + append-only kanit (KAYIT_ARGS ile yol)"
 	@echo "make iddia    README/docs sayisal iddialarini ureten komutla yeniden olc (ag haric)"
 	@echo "make iddia-ag  ag gerektiren iddialari da olc"
 	@echo "make iddia-yaz  ham kanit anlik goruntusunu yenile (tools/iddia_olcum.json)"
@@ -75,8 +75,10 @@ kapsam-yaz:
 model-kimlik:
 	@$(PY) tools/model_kimlik.py --kontrol
 
+KAYIT_ARGS ?= --kayit docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl
+
 katalog-kontrol:
-	@$(PY) tools/katalog_kontrol.py
+	@$(PY) tools/katalog_kontrol.py $(KAYIT_ARGS)
 
 iddia:
 	@$(PY) tools/iddia.py

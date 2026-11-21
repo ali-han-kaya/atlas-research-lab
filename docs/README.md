@@ -130,11 +130,17 @@ yaşayan kataloğa değil bu **allowlist anlık görüntüsüne** bakar; böylec
 sayısı runner'da da aynı çıkar. Canlı katalogla denetim isteğe bağlıdır:
 `ATLAS_MODEL_KATALOG=~/.cache/opencode/models.json make dogrula`.
 
-Sabit allowlist'in models.dev'de hâlâ geçerli olup olmadığını ölçen ayrı bir
-isteğe bağlı kontrol vardır: `make katalog-kontrol`. **Ağ gerektirir ve CI'da
-koşmaz**; eksik model adıyla `rc=1`, ölçülemeyen ağ/JSON için `rc=2` döner.
-Kanonik kod ayrımı `python3 tools/katalog_kontrol.py` ile alınır (GNU make
-tarif hatasını 2'ye çevirir).
+Sabit allowlist'in models.dev'de hâlâ geçerli olup olmadığını ölçen canlı kapı
+`make katalog-kontrol`tür. Normal CI yolunda **`bedava canli katalog`** işi
+olarak her push/PR'da, haftalık cron'da ve elle tetiklemede koşar; yalnız
+allowlist'i değil, `profiller.bedava` altındaki on rolü de canlı kayıtla
+karşılaştırır. Eksik/çelişkili kayıt veya bedava koşulu ihlali `rc=1`,
+ölçülemeyen ağ/JSON `rc=2` ve **`OLCULMEDI`**dır; PASS sayılmaz. Her koşu
+commit/tree/tree_sha256 ve tanım SHA-256'larıyla append-only
+`docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydına eklenir; CI koşusu aynı şemayı
+`$RUNNER_TEMP` altına yazıp artifact olarak yükler. Kanonik kod ayrımı
+`python3 tools/katalog_kontrol.py` ile alınır (GNU make tarif hatasını 2'ye
+çevirir).
 
 Farkın nereden geldiği ölçüldü (19 Kasım 2026): aynı 9 modellik içerik başka bir
 yolda **174/174**, yerel tam katalog (390 model) **174/174**, katalog yok **170/174**
@@ -313,9 +319,10 @@ aşağıdaki `git grep` yol listesine de eklenir.
 ### Ne zaman yenilenir
 
 - `python3 tools/katalog_kontrol.py` **rc=1** verdiğinde: allowlist'teki bir kimlik
-  canlıda yok, `deprecated` veya `reasoning`/`tool_call` değeri değişmiş.
-  (`make katalog-kontrol` bulguyu GNU make nedeniyle `rc=2`ye çevirir; kanonik
-  ölçüm Python çıkışıdır.)
+  canlıda yok, `deprecated`, `reasoning`/`tool_call` değeri değişmiş veya
+  `profiller.bedava` koşullarından biri (tek kimlik, sıfır maliyet, alt limit)
+  düşmüş. (`make katalog-kontrol` bulguyu GNU make nedeniyle `rc=2`ye çevirir;
+  kanonik ölçüm Python çıkışıdır.)
 - Aktif kaynaklarda bir `model: openrouter/...` satırı eklendiğinde, silindiğinde
   veya değiştiğinde. Yeni kimlik katalogda yoksa `make dogrula` MOD-1/MOD-2'de
   kırmızıya döner; silinen kimlik ise "yalnız depoda geçen" kuralını bozar.
@@ -326,8 +333,8 @@ aşağıdaki `git grep` yol listesine de eklenir.
 
 - `rc=0` ise: canlı katalogda yeni modeller görünse bile dosya yenilenmez;
   allowlist bilinçli olarak dardır.
-- `rc=2` ise: ağ/JSON ölçülemedi; bu bir bayatlama bulgusu değildir, katalog
-  suçlanmaz.
+- `rc=2` ise: ağ/JSON ölçülemedi; sonuç `OLCULMEDI`dır, bu bir bayatlama
+  bulgusu değildir ve katalog suçlanmaz; CI işi yine kırmızı olur.
 - Yalnız `docs/`, `SURUM.md`, tarihsel `OLCUM-*` veya test fikstürleri değiştiyse:
   bunlar aktif model kaynağı değildir.
 - Sadece `_kaynak` tarihi değişsin diye: tarih, gerçek yenileme günüdür.
@@ -377,7 +384,8 @@ aciklama = (
     'Sabit model katalogu (allowlist anlik goruntusu). MOD-1/MOD-2 kapilari '
     'ajanlarin BU listedeki modelleri kullandigini denetler; boylece sayi her '
     'klonda ayni cikar. Canli katalogla denetim icin ATLAS_MODEL_KATALOG=<yol> '
-    'verin. Tazelik icin: make katalog-kontrol (ag gerekir; CI\'da kosmaz).')
+    'verin. Tazelik icin: make katalog-kontrol (ag gerekir; CI\'da her '
+    'push/PR ve haftalik cron ile kosar).')
 kaynak = ('models.dev semasi; yalniz depoda gecen model kimlikleri, %s'
           % datetime.date.today().isoformat())
 

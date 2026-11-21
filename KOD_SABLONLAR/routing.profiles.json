@@ -14,6 +14,14 @@
     "Opus 5 hicbir profile GOMULU DEGILDIR (kullanici karari): yalniz derin revizyon / son teslim adiminda elle secilir.",
     "kod-gate KARAR VERMEZ, kod_gate_merge.py ciktisini sunar — bu yuzden en ucuz modeldedir."
   ],
+  "bedava_politika": {
+    "aciklama": "KOD bedava profili icin baglayici alt sinir. tools/katalog_kontrol.py bu degerlerin altina dusen canli limiti FAIL sayar. Degerler olculmus bir maksimum degil, politika tabanidir.",
+    "asgari_limit": {
+      "context": 200000,
+      "output": 32768
+    },
+    "gerekce": "KOD fazlari cok dosyali baglam tasir ve tek yanitta 32k cikti uretir; modelin kendi limiti (1M/65k) degil, kabul edilen alt sinirdir."
+  },
   "faz_maliyet": {
     "kod-scoper": [
       "KFAZ0 kapsam & kabul",
