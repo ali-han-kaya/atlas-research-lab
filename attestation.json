@@ -1,6 +1,6 @@
 {
-  "commit": "de5e25075835b8c16aff0668df028c0d55f8c7f4",
-  "file_count": 248,
+  "commit": "da325620040051a5fe0791363c9229eff67532eb",
+  "file_count": 249,
   "files": [
     {
       "mode": "100755",
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "aba540e0874bfab13fcac4078db15406520b5da9ce5880db4615a9fefcb6efb7",
-      "size": 4762
+      "sha256": "16ad4662755ba147a6bc1614cb8f2b876757505a0ae421d644ee3e8afa8c8bd8",
+      "size": 5039
     },
     {
       "mode": "100644",
@@ -1157,8 +1157,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "e3e9002c6a0f3cc6d4f9973e7eb61599c87679b343dce66c09c7be6823e83569",
-      "size": 3005
+      "sha256": "d7d2b08048633476c610aa5880d02e3d92653c4a3639ba015d368bb8f2278f99",
+      "size": 3154
     },
     {
       "mode": "100644",
@@ -1259,7 +1259,7 @@
     {
       "mode": "100644",
       "path": "docs/DURUM.md",
-      "sha256": "f58317b24d045aa61e9101606ed05801f80444de2565656365b7b04f5a91c042",
+      "sha256": "d71b018bfc84e3c00f4fa8e4db68ad0bcc70b01542fd4246f13c7eefd3cec88e",
       "size": 1489
     },
     {
@@ -1385,8 +1385,14 @@
     {
       "mode": "100644",
       "path": "tools/durum.py",
-      "sha256": "87c43af78c9ea9a8116314291cbd1ceed8f18b232166a7be1edf269d56c4f04e",
-      "size": 12725
+      "sha256": "dede8bff8f677d5c334f6eb9e2269a97b7f405f97b017fcacb535ad7738f5d55",
+      "size": 13445
+    },
+    {
+      "mode": "100644",
+      "path": "tools/durum_selftest.py",
+      "sha256": "a15786f238a54b0ca924f87512ed910ef1434bbb018492932cb722e4d14b9b25",
+      "size": 6706
     },
     {
       "mode": "100644",
@@ -1403,7 +1409,7 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "07875bcc256fc6128bf2b8bef50d4005ece4313e9b6973f03d3c5d971bb82688",
+      "sha256": "9a739983e2765a91d2e71e07292e15990cc60a55d927515636a12e1307fc7160",
       "size": 20080
     },
     {
@@ -1491,7 +1497,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-21T04:45:43Z",
+  "generated_at": "2026-11-21T04:58:48Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1506,6 +1512,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "045eff476a8aebe449a2fb80c123188a76bd56fe",
-  "tree_sha256": "1c00672c35684b31215ab1a5c099260c9dcf801971fc33d6f8848ba17e12803a"
+  "tree": "f79f8edc6df0e740219aecfa4f10a2bd482fa838",
+  "tree_sha256": "e180344f3fc0c7d188692f7e6e2d54eb45905d3621fda8d2826b406bbc8da432"
 }
