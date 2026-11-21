@@ -21,7 +21,7 @@ yardim:
 	@echo "make kapsam-yaz  kapsam tablosunu yeniden uret"
 	@echo "make model-kimlik  emekli model kimligi: kor noktasiz tarama + acik onay listesi"
 	@echo "make katalog-kontrol  canli models.dev kapisi: allowlist + bedava profili + append-only kanit (KAYIT_ARGS ile yol)"
-	@echo "make katalog-selftest  katalog kapisinin negatif dallari (ag yok; dogrula on kosulu)"
+	@echo "make katalog-selftest  katalog kapisi ve uretici oz-testleri (ag yok; dogrula on kosulu)"
 	@echo "make iddia    README/docs sayisal iddialarini ureten komutla yeniden olc (ag haric)"
 	@echo "make iddia-ag  ag gerektiren iddialari da olc"
 	@echo "make iddia-yaz  ham kanit anlik goruntusunu yenile (tools/iddia_olcum.json)"
@@ -83,6 +83,7 @@ katalog-kontrol:
 
 katalog-selftest:
 	@$(PY) tools/katalog_kontrol_selftest.py
+	@$(PY) tools/model_katalog_uret_selftest.py
 
 iddia:
 	@$(PY) tools/iddia.py
