@@ -127,30 +127,69 @@ REFERANS = {
 }
 
 # Baslikta bildirilmeyen ama betik kodunda string literal olarak uretilen
-# kimlikler. Anahtar (betik, onek); yeni bir betik/onek belgelenmeden
-# `make kapsam` fail-closed durur. Bunlar kural degil, tani/veri kimligidir;
-# bu yuzden kural envanterine ve mutasyon ratchet'ine sayilmazlar.
+# kimlikler. Anahtar (betik, TAM kimlik); yeni bir kimlik ayni ailede bile
+# otomatik kabul edilmez. Bunlar bagimsiz kapi kurali degil, tani/veri
+# kimligidir; bu yuzden 121'lik kural envanterine ve mutasyon ratchet'ine
+# sayilmazlar. Her kaydin gerekcesi burada, tek makine-okunur kaynaktadir.
 KOD_ICI_GEREKCE = {
-    ('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI'):
-        ('tani-kodu', 'AI-00..AI-04 ai_disclosure hata tanilaridir; AI-1 '
-                      'oz-testi AI-00/01/02/04 dallarini kilitler, AI-03 '
-                      'cikti yazma I/O hatasidir ve mutasyonla deterministik '
-                      'tetiklenmez. Kapi kurali degil, hata sinifidir.'),
-    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ'):
-        ('tani-kodu', 'HJ-00..HJ-08 review_panel hata tanilaridir; HJ-1 '
-                      'oz-testi HJ-00..HJ-07 dallarini kilitler, HJ-08 cikti '
-                      'yazma I/O hatasidir. Kapi kurali degil, hata sinifidir.'),
-    ('ATLAS_SABLONLAR/scripts/olgu_lint.py', 'OLGU'):
-        ('tani-kodu', 'OLGU-01..OLGU-03 girdi/sema hata tanilaridir; '
-                      'OLGU-04..OLGU-06 kuraldir ve envanterde ayrica izlenir.'),
-    ('ATLAS_SABLONLAR/scripts/scope_profile_check.py', 'SC'):
-        ('veri-kimligi', 'SC-* kapsam sozlesmesindeki zorunlu bolum '
-                         'kimlikleridir; SP-01..SP-07 kuraldir. Bolum '
-                         'kimligi kapi kurali degildir.'),
-    ('KOD_SABLONLAR/scripts/chg_reconcile.py', 'RECK'):
-        ('tani-kodu', 'RECK-00 ortak girdi/JSON/sema hata kodudur; '
-                      'RECK-01..RECK-09 kuraldir ve envanterde ayrica izlenir.'),
+    ('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI-00'):
+        ('tani-kodu', 'Manifest veya sema yok/bozuk; AI-1 onkosul tanisi, '
+                      'bagimsiz KURALLAR kurali degil.'),
+    ('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI-01'):
+        ('tani-kodu', 'Manifest kok/schema/scope/entries sozlesmesi; '
+                      'AI-1 selftestinin alt tanisi.'),
+    ('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI-02'):
+        ('tani-kodu', 'Entry alan/usage/evidence dogrulamasi; AI-1 '
+                      'selftestinin alt tanisi.'),
+    ('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI-03'):
+        ('tani-kodu', 'Beyan yazma I/O hatasi; hukum uretmeyen operasyonel '
+                      'tani.'),
+    ('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI-04'):
+        ('tani-kodu', '--check cikti uyusmazligi; AI-1 selftestinde kilitli '
+                      'cikti butunlugu alt tanisi.'),
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-00'):
+        ('tani-kodu', 'Panel semasi okunamadi/kimlik uyusmadi; HJ-1 '
+                      'onkosul tanisi.'),
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-01'):
+        ('tani-kodu', 'JSON/kapali sema/alan sozlesmesi; HJ-1 selftestinin '
+                      'alt tanisi.'),
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-02'):
+        ('tani-kodu', 'Run/input uyusmazligi; HJ-1 selftestinin alt tanisi.'),
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-03'):
+        ('tani-kodu', 'Hukum kapsami/yinelenen kimlik/severity; HJ-1 '
+                      'selftestinin alt tanisi.'),
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-04'):
+        ('tani-kodu', 'Verdict/evidence butunlugu; HJ-1 selftestinin alt '
+                      'tanisi.'),
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-05'):
+        ('tani-kodu', 'Rol/session kimligi; HJ-1 selftestinin alt tanisi.'),
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-06'):
+        ('tani-kodu', 'Model ailesi/session cesitliligi; HJ-1 selftestinin '
+                      'alt tanisi.'),
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-07'):
+        ('tani-kodu', 'Attempt/maliyet siniri; HJ-1 selftestinin alt tanisi.'),
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-08'):
+        ('tani-kodu', 'Panel ciktisi yazma I/O hatasi; operasyonel tani.'),
+    ('ATLAS_SABLONLAR/scripts/olgu_lint.py', 'OLGU-01'):
+        ('tani-kodu', 'OLGULAR kanonu yok; olgu_lint onkosulu, OLGU-04..06 '
+                      'kurallarindan ayri.'),
+    ('ATLAS_SABLONLAR/scripts/olgu_lint.py', 'OLGU-02'):
+        ('tani-kodu', 'OLGULAR JSON/sema girdisi gecersiz; onkosul tanisi.'),
+    ('ATLAS_SABLONLAR/scripts/olgu_lint.py', 'OLGU-03'):
+        ('tani-kodu', 'Ic deger uyusmazligi; OLGU-04..06 kapsamindaki tarihce '
+                      'denetiminin alt tanisi.'),
+    ('KOD_SABLONLAR/scripts/chg_reconcile.py', 'RECK-00'):
+        ('tani-kodu', 'Ortak girdi/JSON/sema hatasi; RECK-08 sema kurali, '
+                      'RECK-01..09 ayri kurallardir.'),
 }
+# SC kimlikleri kapsam sozlesmesinin zorunlu BOLUM numaralaridir; kapi
+# kurali degildir. Tam liste: yeni bir SC kimligi kendiliginden gecmesin.
+for _sc in ('SC-%03d' % i for i in list(range(1, 23)) + [30]):
+    KOD_ICI_GEREKCE[('ATLAS_SABLONLAR/scripts/scope_profile_check.py', _sc)] = (
+        'veri-kimligi',
+        'Kapsam sozlesmesindeki zorunlu bolum kimligi; SP-01..07 kuraldir.',
+    )
+del _sc
 
 # Risk sirasi — 19.11.2026'daki 51 mutation-kapsamsiz kuralin tamami.
 # Siralama ilkesi: once sahte yesil/tamper (P0), sonra tedarik/teslim/yuzey,
@@ -295,12 +334,41 @@ def _kimlikler(p):
     return baslik, bolum
 
 
+def kod_ici_sinifla(yol, kimlik):
+    """Tek kod-ici kimligi (sinif, gerekce) olarak cozer; yoksa fail-closed.
+
+    Anahtar TAM (betik, kimlik) ciftidir. Boylece ayni oneke sahip yeni bir
+    kimlik (or. AI-99) aile gerekcesiyle sessizce gecemez.
+    """
+    anahtar = (yol, kimlik)
+    if anahtar not in KOD_ICI_GEREKCE:
+        raise SystemExit(
+            'KOD-ICI KAPSAM: belgelenmemis kimlik %s · %s; '
+            'KOD_ICI_GEREKCEye (betik, tam kimlik) gerekcesi yaz'
+            % (kimlik, yol))
+    return KOD_ICI_GEREKCE[anahtar]
+
+
+def kod_ici_oztest():
+    """Sahte bir kod-ici kimligin tarama + siniflamada reddedildigini sinar."""
+    sahte = 'x = "AI-99"\n'
+    try:
+        for kimlik in KOD_ICI.findall(sahte):
+            kod_ici_sinifla('ATLAS_SABLONLAR/scripts/ai_disclosure.py', kimlik)
+    except SystemExit as exc:
+        if 'belgelenmemis kimlik' not in str(exc):
+            raise
+    else:
+        raise SystemExit('KOD-ICI OZTEST: FAIL — sahte AI-99 kabul edildi')
+    kod_ici_sinifla('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI-00')
+
+
 def kod_ici_kimlikler():
     """Baslikta bildirilmeyen, kodda string literal olarak uretilen kimlikler.
 
     Bunlar kural degildir; envantere eklenmez. Yine de sessizce kaybolmaz:
     her kimlik KOD_ICI_GEREKCE ile bir sinira ve gerekceye baglanir. Yeni bir
-    betik/onek belgelenmeden `make kapsam` fail-closed durur.
+    kimlik (ayni ailede olsa bile) belgelenmeden `make kapsam` fail-closed durur.
     """
     sonuc = []
     for p in kapi_betikleri():
@@ -310,12 +378,7 @@ def kod_ici_kimlikler():
         for kimlik in sorted(set(KOD_ICI.findall(metin)) - baslik - bolum):
             if kimlik.split('-')[0] in YOKSAY_PREFIX:
                 continue
-            anahtar = (yol, kimlik.split('-')[0])
-            if anahtar not in KOD_ICI_GEREKCE:
-                raise SystemExit(
-                    'KOD-ICI KAPSAM: belgelenmemis kimlik %s · %s; '
-                    'KOD_ICI_GEREKCEye betik+onek gerekcesi yaz' % (kimlik, yol))
-            sinif, gerekce = KOD_ICI_GEREKCE[anahtar]
+            sinif, gerekce = kod_ici_sinifla(yol, kimlik)
             sonuc.append((yol, kimlik, sinif, gerekce))
     return sonuc
 
@@ -524,7 +587,8 @@ def markdown():
            '`*_selftest.py` ve `OLCUM-*` referanslari sayilmaz.', '',
            'Kod icinde string literal olarak uretilen tani/veri kimlikleri kural',
            'envanterine sayilmaz; ama `Kod icinde uretilen kimlikler` bolumunde',
-           'gerekcesiyle gorunur. Yeni bir aile `make kapsam`i fail-closed durdurur.', '',
+           'gerekcesiyle gorunur. Listede olmayan yeni bir kimlik `make kapsam`i',
+           'fail-closed durdurur.', '',
            'Her kural icin tek soru sorulur: **mutasyon bataryasinda onu ateslettiren',
            'bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus',
            '**KAPSAM DISI** ya da **BOSLUK**. Bosluk gizlenmez. Tarama dosyanin',
@@ -595,8 +659,11 @@ def markdown():
     out += ['', '## Kod icinde uretilen kimlikler', '',
             'Asagidaki kimlikler `KURALLAR` basliginda veya `# --- KIMLIK`',
             'bolum basliginda bildirilmez; betik kodu tarafindan string literal',
-            'olarak uretilir. Kapi kurali degil, tani/veri kimligidir; bu yuzden',
-            'envantere kural olarak eklenmez. Gerekce sessizce dusulmez:', '']
+            'olarak uretilir. Her biri tek tek denetlendi: bagimsiz bir',
+            '`KURALLAR` sozlesmesi degil, ilgili kapinin alt tanisi veya',
+            'sozlesme bolum verisidir. Bu yuzden envantere kural olarak eklenmez;',
+            'gerekce sessizce dusulmez. Ayni ailede yeni bir kimlik belirse bile',
+            '`make kapsam` fail-closed durur:', '']
     out += kod_ici_tablosu(kod_ici)
     if not envan.get('ATLAS_SABLONLAR/scripts/verify_doi.py'):
         out += ['', 'Not: `verify_doi.py` tarandi; bildirilen kural kimligi yok.',
@@ -642,6 +709,9 @@ def markdown():
 
 
 def main(argv):
+    if '--kontrol' in argv or '--yaz' in argv:
+        kod_ici_oztest()
+        print('KOD-ICI OZTEST: PASS — bilinmeyen kimlik fail-closed')
     satirlar, _envan, _ozet = olc()
     yeni, geri = ratchet(satirlar)
     if '--kontrol' in argv or '--yaz' in argv:
