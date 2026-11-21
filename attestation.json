@@ -1,6 +1,6 @@
 {
-  "commit": "6fc131e298a9f525def4317c5c56a091c1d52ab7",
-  "file_count": 250,
+  "commit": "4acdc74cc7905c397a9092957690a279e6f2e52d",
+  "file_count": 251,
   "files": [
     {
       "mode": "100755",
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "16ad4662755ba147a6bc1614cb8f2b876757505a0ae421d644ee3e8afa8c8bd8",
-      "size": 5039
+      "sha256": "472458283bece684dbc8f8d26eca354edbb5be6d372f5d8db2f1ce035892046e",
+      "size": 6086
     },
     {
       "mode": "100644",
@@ -1157,8 +1157,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "65a314ed02fd655136956a30f2dcd648679a3e742a2b197188d91c1f7dc64f51",
-      "size": 3182
+      "sha256": "1ecfc8f8d886b86864f47af2b12c4b7b1fb4a944c63721c4fb97cf4fada168b4",
+      "size": 3387
     },
     {
       "mode": "100644",
@@ -1205,14 +1205,14 @@
     {
       "mode": "100644",
       "path": "README.en.md",
-      "sha256": "6d8985d0a6f5c30bf5b7be6d1c6475c8303cee2b01b2ac3a95aacfa2ad38ac06",
-      "size": 4713
+      "sha256": "7b9eac7eafc680252dbb0574b6d7d885903897000b60d9b775638679c7ebc1fc",
+      "size": 4981
     },
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "df00cdf3d3060d2afbac81e6c25a932dd8f386ac8ef928ed0921d5e99e9f6148",
-      "size": 21646
+      "sha256": "36155a944abf365c1b1d468a07d8ed35d97dd242c42df50b2286480082669114",
+      "size": 23996
     },
     {
       "mode": "100644",
@@ -1259,14 +1259,14 @@
     {
       "mode": "100644",
       "path": "docs/DURUM.md",
-      "sha256": "d71b018bfc84e3c00f4fa8e4db68ad0bcc70b01542fd4246f13c7eefd3cec88e",
+      "sha256": "6df7518277b11157a3fb5510b56288186b5103622471819b50480ab4d82229bc",
       "size": 1489
     },
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "82c92547203b7f40890cd9354b8306b7bd5de1dc80743ef5822399b1a3069c10",
-      "size": 8447
+      "sha256": "67595c466ea6ded171be68d50b66e48443081df7f2d781df259a639ad7842fdc",
+      "size": 8459
     },
     {
       "mode": "100644",
@@ -1343,8 +1343,8 @@
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "39407d07d77f3826bd678a477dc965ca7f4a29854f566e421786959cdd371ebd",
-      "size": 21927
+      "sha256": "e027548924ebb12cbe68ebcca75253629b248ba5b738609c2562c4801c4b53a3",
+      "size": 24161
     },
     {
       "mode": "100644",
@@ -1355,8 +1355,8 @@
     {
       "mode": "100644",
       "path": "requirements-dev.txt",
-      "sha256": "fe2ca062d9a4d6da53a7951c6dc64e971ded13529883aa7b3954b9624e2c179d",
-      "size": 510
+      "sha256": "416a152db6b05442b571987ddcd01ceb743a95e548642deef14c659e67a2ab25",
+      "size": 749
     },
     {
       "mode": "100644",
@@ -1415,13 +1415,13 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "9a739983e2765a91d2e71e07292e15990cc60a55d927515636a12e1307fc7160",
+      "sha256": "247e000961d99aab72d1498257f1bdd97e1cf167575ad103337e28ad78798526",
       "size": 20080
     },
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "8820d9361abeee13afe3e967c96b136850825e54f1578ba9c54db316206b3f6e",
+      "sha256": "3c66cca8e59211fb8b9068e45eb916850d1079325c06e4f857992fd0a0da66ff",
       "size": 5658
     },
     {
@@ -1435,6 +1435,12 @@
       "path": "tools/kanit_dogrula.py",
       "sha256": "9a45b0860181dc53e1caf87684bfe8c2793fce38cc680b165b58e8d88b0082e9",
       "size": 11123
+    },
+    {
+      "mode": "100644",
+      "path": "tools/kanit_paketi_dogrula.py",
+      "sha256": "08545ab3564c5317d44563e71eef04cb1ae54486955091b8e3f0143fb56b9452",
+      "size": 11636
     },
     {
       "mode": "100644",
@@ -1503,7 +1509,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-21T05:37:57Z",
+  "generated_at": "2026-11-21T05:59:13Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1518,6 +1524,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "65909ea1ab8970cb178d03366531eabe34d4b05a",
-  "tree_sha256": "6da069813d65bae11449336c164ce0d16c2b3f8273e263a75957d74e8188300b"
+  "tree": "526000eca380e62cf3651081d74e48231e7dbc25",
+  "tree_sha256": "6b92a8b4f2b7b86506e6df3e591f4b2408d2187e541a3479123199286dd627f0"
 }
