@@ -1,5 +1,5 @@
 {
-  "commit": "88cce338b1256d66b8131692e8ed0c2076bd5a09",
+  "commit": "ae05de859dd71f36c42923c9769a46d096650ddb",
   "file_count": 256,
   "files": [
     {
@@ -1277,8 +1277,8 @@
     {
       "mode": "100644",
       "path": "docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl",
-      "sha256": "5ca8762f229e8e3fcc975613a1a961bdd34026130f3ca0f1c8e0c55d748ec75f",
-      "size": 3622
+      "sha256": "cf57998add4c24fa77b811787fc8dba8e1e466381bd1ffd1a9e28d72f13ecde0",
+      "size": 7244
     },
     {
       "mode": "100644",
@@ -1539,7 +1539,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-21T13:56:07Z",
+  "generated_at": "2026-11-21T14:06:48Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1554,6 +1554,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "3369c79d668296924aad0d2caf2651cedf84064f",
-  "tree_sha256": "2a48f4152b308b8bbf0bc2d252a2a4777c83fbf8cea0bfb9c7e57dce8dccf4de"
+  "tree": "4fdbcb1f17f4719ba85130e7ea8e209916d73481",
+  "tree_sha256": "959b198ec8dd538e5b7e9182926e5ae858e2ad411f13677df7ad6b76a2e5c122"
 }
