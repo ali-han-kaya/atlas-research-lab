@@ -1,5 +1,5 @@
 {
-  "commit": "a2f0165701b9a96d3f2007e096a86e3f089be42e",
+  "commit": "2d7fbe61c02b929c73f70731461f61b64b476a66",
   "file_count": 246,
   "files": [
     {
@@ -1211,8 +1211,8 @@
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "7b456b2660db2be9ff61ba4468fdfdf3f935fcc735bfd5d7c9b1f71ad6e24168",
-      "size": 21415
+      "sha256": "84d4a55b12da4c836355df2b8ad16be5a5ab91461fed96ced0e4ff5466c5d6dc",
+      "size": 21567
     },
     {
       "mode": "100644",
@@ -1247,8 +1247,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "5d766824bebe92b98b8c1d4e7b99b2dd5f3698296876dd4e30e503f97fe3cb26",
-      "size": 469210
+      "sha256": "57e30e37b3ed8a41f9b1f36628eb2e321cedbf6cb2a9fd7a023a2fb2ffc42ddd",
+      "size": 470108
     },
     {
       "mode": "100644",
@@ -1259,8 +1259,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "baabc4dcfdb246275c87ce007ff6a8a7fd8953060c7482f18d5821ff9f4cdca7",
-      "size": 8170
+      "sha256": "38f49b60cdf370c9270fbb3af79dbdea793adcb58fdf8731438d89395313f64f",
+      "size": 8374
     },
     {
       "mode": "100644",
@@ -1379,14 +1379,14 @@
     {
       "mode": "100644",
       "path": "tools/guvenlik.py",
-      "sha256": "5432a6a7cbca02be1eb3f203906379af89ea59415346615ff4a97a2afacf3831",
-      "size": 5780
+      "sha256": "7c4a849ca48d32e7ab4380d8e5955259179c51b070d22c970dbfae4ff1ccdfe6",
+      "size": 6055
     },
     {
       "mode": "100644",
       "path": "tools/iddia.py",
-      "sha256": "16fc9d5b5e159403f2b456e4bcfce22d66e5c6670c4b32c8bbca8a817503fcdf",
-      "size": 18485
+      "sha256": "91c61a8f6c7eac848ea2db9d8c118059f0dbf6f446f111f93ac1ce093d1b321a",
+      "size": 19295
     },
     {
       "mode": "100644",
@@ -1479,7 +1479,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-21T02:42:14Z",
+  "generated_at": "2026-11-21T03:43:04Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1494,6 +1494,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "147c4a1fbc3f36ad6330491c0e1f50fb3841148e",
-  "tree_sha256": "11470e3306010c628f9671733941cbeac338d3fbfe7b5999577078ae9a4b37ac"
+  "tree": "876b048ef9058fe38ed949c632bc234afd970d93",
+  "tree_sha256": "6e298b995ce66f11af586f00735bdb6a815271b036c95fc7589acd5bd0b084eb"
 }
