@@ -117,6 +117,30 @@ jobs:
           echo "make demo rc=$rc2"
           test "$rc2" -eq 2
 
+      # Tasinabilir kanit paketi. CI'da attestation'i RUNNER_TEMP'e yaz: izlenen
+      # attestation.json degismez, boylece artifact adimi commit'i kirletmez.
+      - name: Kanit paketi uret
+        run: make kanit KANIT_ARGS="--cikti $RUNNER_TEMP/atlas-attestation.json"
+
+      # Paket yalniz dosya var mi diye degil; sema, attestation, manifest ve
+      # ham komut kayitlari capraz dogrulanmadan gecmez.
+      - name: Kanit paketi dogrula
+        run: make kanit-paket-dogrula
+
+      # Paket uretimi izlenen agacta degisiklik birakmamali.
+      - name: Kanit paketi commit'i kirletmedi
+        run: test -z "$(git status --porcelain --untracked-files=no)"
+
+      # Upload basarisiz olursa veya paket yoksa adim kirmizi olur; ayni
+      # artifact, Actions arayuzunden ve `gh run download` ile indirilebilir.
+      - name: Kanit paketini artifact olarak yukle
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-kanit-paketi
+          path: kanit-paketi/
+          if-no-files-found: error
+          retention-days: 14
+
   iddia:
     name: iddia defteri
     runs-on: ubuntu-latest

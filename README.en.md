@@ -13,7 +13,7 @@ Requirements: `python3` (3.9+), `make`, `git`. Verification needs no model calls
 ```bash
 git clone https://github.com/ali-han-kaya/atlas-research-lab.git
 cd atlas-research-lab
-python3 -m pip install -r requirements-dev.txt   # pinned: requests, pip-audit
+python3 -m pip install -r requirements-dev.txt   # pinned: requests, pip-audit, jsonschema
 make kur                                         # enable commit/push guards in this clone
 make dogrula
 ./demo                                           # expected: exit code 1 (red)
@@ -29,6 +29,7 @@ make dogrula
 | `make mutasyon` | Every case starts with a silent clean baseline and injects one violation. Error cases must turn red (`rc=1`) with the expected marker; expected-finding cases must emit the expected warning/finding (`rc=0` is allowed). A finding present in the baseline fails the case. |
 | `./demo` | Reproduces the frozen `DENEME/` contradiction: the manifest claims more fixes than the master text contains, while the frozen gate says `PASS`. The expected result is a red verdict. |
 | `make iddia` | Re-measures the numeric claims printed in the public docs and requires each stored raw output line to match the current output. A mismatch is named by `IDD-*`. It does not change the `make dogrula` verdict. |
+| `make kanit` / `make kanit-paket-dogrula` | Produces and validates a portable package containing the commit/tree attestation, command exit codes, finding IDs, raw command logs and a SHA-256 manifest. CI uploads it as the `atlas-kanit-paketi` artifact. |
 | `tools/yayinla.py` | Publication parity: copies only an explicit allowlist from the private lab tree, refuses out-of-scope artefacts, scans for secrets and reports new/changed/deleted files. |
 
 CI runs the runner form of the checks, the mutation battery, scope freshness, dependency audit and the demo assertion in `.github/workflows/dogrula.yml`.

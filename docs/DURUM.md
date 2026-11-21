@@ -18,7 +18,7 @@
 |---|---|---|
 | ATLAS pinli test envanteri | 145 | `ATLAS_SABLONLAR/scripts/OZTEST-TABAN.json` (`sayi`) |
 | ATLAS envanter kimlik hash'i | `sha256:bc2286bf172241b6cde56bf23742e1c70b1a7d396094188bdd39e5c77046bb10` | `ATLAS_SABLONLAR/scripts/OZTEST-TABAN.json` (`kimlik_hash`) |
-| Python dosya sayısı (H2) | 62 | `make dogrula` H2 taraması |
+| Python dosya sayısı (H2) | 63 | `make dogrula` H2 taraması |
 | Kapı lint kontrolü | 95 | `SURUM.md` C15f (`skill_lint_kontrol`) |
 | Kapı envanteri | 95 | `SURUM.md` C15f (`skill_kapi_sayisi`) |
 | Kapı taban kimlik | 90 | `SURUM.md` C15f (`kapi_taban_kimlik`) |

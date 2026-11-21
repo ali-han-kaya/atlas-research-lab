@@ -11,7 +11,7 @@ verification time, no API keys.
 ```bash
 git clone https://github.com/ali-han-kaya/atlas-research-lab.git
 cd atlas-research-lab
-python3 -m pip install -r requirements-dev.txt   # pinned: requests, pip-audit
+python3 -m pip install -r requirements-dev.txt   # pinned: requests, pip-audit, jsonschema
 make kur                                         # enable commit/push guards in this clone
 ```
 

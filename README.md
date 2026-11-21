@@ -109,7 +109,7 @@ nüsha yoktur.
 ```bash
 git clone https://github.com/ali-han-kaya/atlas-research-lab.git
 cd atlas-research-lab
-python3 -m pip install -r requirements-dev.txt   # sürümler sabit: requests + pip-audit
+python3 -m pip install -r requirements-dev.txt   # sürümler sabit: requests + pip-audit + jsonschema
 make kur       # commit/push korumasını bu klonda etkinleştirir
 make dogrula
 ./demo         # beklenen: rc=1 (kırmızı)
@@ -267,6 +267,8 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 | Katalog tazeliği (isteğe bağlı) | `make katalog-kontrol` → models.dev canlı kataloğu; ağ gerekir, CI'da koşmaz |
 | İddia defteri | `make iddia` → README/docs sayısal iddialarını üreten komutla ve ham kanıt satırıyla yeniden ölçer; tutmayan satır `IDD-*` ile kırmızı |
 | Ham kanıt yenileme | `make iddia-yaz` → bilinçli değişiklikten sonra `tools/iddia_olcum.json` anlık görüntüsünü yeniler |
+| Kanıt paketi | `make kanit` → `attestation.json` + `kanit-paketi/` (commit, komut çıkışları, bulgu kimlikleri, SHA-256 manifesti) |
+| Paket doğrulama | `make kanit-paket-dogrula` → `sonuc.json` şeması, paket attestation'ı, `manifest.sha256` ve ham komut kayıtları |
 | Bağımlılık denetimi | `make guvenlik` → `pip-audit`; her bulgu `docs/GUVENLIK.md` içinde adıyla |
 | Commit/push koruması | `make kur` → `core.hooksPath=.githooks`; canlı DSN commit edilemez |
 | Runner doğrulaması | `make dogrula-ci` — yalnız o ortamda ölçülebilen kalemler hükme girer, öz-testler rapor |
@@ -340,6 +342,51 @@ yani PASS, doğrulanan ağacın kanıtıyla birlikte okunur; kanıt satırı std
 uyarısı değildir. T1 herhangi bir nedenle koşmazsa satır
 `KABUL EDİLEN BORÇ: T1 koşmuyor — <sebep>` olur ve hüküm `PASS 7/8` diye
 yazılır; 8/8 denmez. Ayrıntı ve negatif kontrol:
+[docs/README.md](docs/README.md).
+
+### Kanıt paketi ve CI artifact'ı
+
+`make kanit` yalnız ağaç kanıtı yazmaz; aynı üretimde **taşınabilir bir doğrulama
+paketi** de oluşturur. Paket `kanit-paketi/` altındadır ve git'e eklenmez:
+
+| Yol | Taşıdığı |
+|---|---|
+| `sonuc.json` | `ATLAS-DOGRULAMA/v1`; commit, ağaç, komut çıkış kodları, bulgu kimlikleri, dosya manifesti |
+| `attestation.json` | Aynı üretimde yazılan ağaç kanıtının kopyası |
+| `manifest.sha256` | Paketteki dosyaların SHA-256 listesi |
+| `komutlar/` | Her doğrulama komutunun ham stdout/stderr kaydı |
+
+Şema: [`schemas/atlas-dogrulama-sonuc.schema.json`](schemas/atlas-dogrulama-sonuc.schema.json).
+Üretim ve doğrulama, temiz bir klonda aynı commit üzerinde:
+
+```bash
+python3 -m pip install -r requirements-dev.txt
+make kanit
+make kanit-paket-dogrula
+make kanit-dogrula
+```
+
+`make kanit` üç doğrulama komutunu (`dogrula`, `kapsam`, `iddia`) çalıştırır;
+`kanit-paketi/` dizinini ve `attestation.json` dosyasını üretir. Yalnız attestation
+üretmek için `python3 tools/kanit.py --paketsiz` kullanılır. `make kanit` attestation'ı
+izlenen ağaçta yenilediği için, onu commit etmeyecekseniz incelemeden sonra
+geri alabilirsiniz.
+
+CI, aynı paketi `--cikti "$RUNNER_TEMP/atlas-attestation.json"` ile üretir; böylece
+izlenen `attestation.json` kirlenmez. Paket, `make kanit-paket-dogrula` geçmeden ve
+`manifest.sha256` doğrulanmadan yüklenmez. GitHub Actions çalışma sayfasında
+**Artifacts → `atlas-kanit-paketi`** olarak indirilir. Komut satırından indirme ve
+doğrulama (aynı commit'te):
+
+```bash
+RUN_ID=$(gh run list --workflow=dogrula.yml --branch=main --limit=1 --json databaseId --jq '.[0].databaseId')
+INDIR=$(mktemp -d)
+gh run download "$RUN_ID" -n atlas-kanit-paketi -D "$INDIR"
+python3 tools/kanit_paketi_dogrula.py --paket "$INDIR"
+```
+
+Artifact `sonuc.json` içindeki commit'e bağlıdır; farklı bir HEAD'de attestation
+kapısı `KANIT-05` ile kırmızı olur. Ayrıntılı sınırlar ve negatif kontroller:
 [docs/README.md](docs/README.md).
 
 ## Mutasyon kapsamı
