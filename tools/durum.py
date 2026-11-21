@@ -275,7 +275,9 @@ def main(argv=None):
     args = ap.parse_args(argv)
 
     try:
-        icerik = uret(canli=args.kontrol)
+        # Argumansiz cagri da CI gibi canli kontrol yapar; --yaz/--stdout hizli yoldur.
+        canli = args.kontrol or not (args.yaz or args.stdout)
+        icerik = uret(canli=canli)
         if args.stdout:
             sys.stdout.write(icerik)
             return 0
