@@ -78,6 +78,30 @@ ve betik `rc=1` ile çıkar. Güncel katalog **109 vaka = 91 hata + 18 beklenen-
 yakaladığını ölçer. Mutasyon uygulanamazsa (desen bulunamazsa) bu da sessiz
 geçmez, `MUTASYON_UYGULANMADI` olarak kırmızı sayılır.
 
+## Sentetik temiz teslim ve kenar fikstürleri
+
+`make temiz-teslim`, `DENEME/`'ye dokunmadan makale metni taşımayan sentetik bir
+teslim kökü kurar. Kök 22 zorunlu SCOPE-ID başlığını, PROVENANCE satırlarını ve
+sentetik FIX kayıtlarını taşır; gövdesinde makale paragrafı, kaynakça, DOI veya
+alıntı yoktur. Ardından temiz kökten beş kenar kökü türetir. Her kök iki gerçek
+komutla ölçülür: `tools/demo.py --kok <kök>` ve
+`scripts/check_integrity.sh --full`. Fikstürler `tempfile` altında üretilir;
+`DENEME/` yalnız betik kopyalamak için okunur.
+
+| Fikstür | `demo` | `check_integrity --full` | Ne ölçülür |
+|---|---:|---:|---|
+| `temiz` | 0 | 0 | Meşru teslim: iddia == kanıt, mutabakat PASS, tüm fazlar PASS |
+| `eksik-kanit` | 1 | 0 | Manifestin "UYGULANMIŞ" dediği FIX MASTER'da yok |
+| `hayalet-kanit` | 2 | 0 | MASTER'da manifestoda tanımsız FIX-ID var |
+| `sahte-2b` | 2 | 0 | Gate 2B, MASTER'da kanıtı olmayan FIX'i KANITLI ilan ediyor |
+| `bozuk-final` | 2 | 1 | FINAL-GATE JSON'u okunamıyor |
+| `eksik-kapsam` | 0 | 1 | Zorunlu SCOPE-ID MASTER'da başlık olarak yok |
+
+Son iki satır, `demo`'nun kapsamadığı yapısal kapıyı; ilk üç kenar ise
+`check_integrity`'nin kapsamadığı kanıt mutabakatını ayrı katmanda gösterir.
+Temiz kökün `rc=0` sonucu, `DENEME/`'nin kırmızı regresyonundan bağımsız bir
+meşru teslim kanıtıdır; `DENEME/` fikstürü değişmez.
+
 ## CALISTIRILMADI kalemler
 
 `make dogrula` üç öz-test paketini koşar. Standart koşuda bu depoda

@@ -113,6 +113,7 @@ python3 -m pip install -r requirements-dev.txt   # sürümler sabit: requests + 
 make kur       # commit/push korumasını bu klonda etkinleştirir
 make dogrula
 ./demo         # beklenen: rc=1 (kırmızı)
+make temiz-teslim  # sentetik temiz kök rc=0 + 5 kenar fikstürü
 ```
 
 `make dogrula` tek giriştir; **sekiz kalemi** sırayla koşar ve **ham çıktılarını** yazar:
@@ -169,6 +170,12 @@ okumak için `./demo --kok <dizin>` (veya `python3 tools/demo.py --kok <dizin>`)
 `--kok` yalnız fikstür kökünü değiştirir, çıkış sözleşmesi aynı kalır. `make demo`
 argüman taşımadığı için `--kok` doğrudan `./demo` ile verilmelidir. `make dogrula`
 demo 0/2 öz-testini geçici kopyalarla koşar; kaynak `DENEME/` bu sırada değişmez.
+
+`DENEME/` yalnız kırmızı yolu gösterdiği için `make temiz-teslim` ayrı bir kanıt
+üretir: makale metni taşımayan sentetik bir temiz kök ile beş kenar kökü geçici
+olarak kurar. Temiz kök `tools/demo.py` ve `scripts/check_integrity.sh --full`
+üzerinde **rc=0** verir; kenar kökleri beklenen kırmızı/bozuk kodlarını verir.
+`DENEME/` okunur ama değiştirilmez.
 
 ### Ölçülen süreler
 
@@ -263,6 +270,7 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 |---|---|
 | Tek giriş doğrulama | `make dogrula` → `tools/dogrula.py` (sekiz kalem, fail-closed) |
 | Kırmızı hüküm demosu | `./demo` → `tools/demo.py` (kanonik; beklenen `rc=1`, fikstür bozuksa `rc=2`, yeşilde `rc=0`) |
+| Sentetik temiz teslim | `make temiz-teslim` → makale metni taşımayan temiz kök `rc=0`; 5 kenar kökü beklenen kodlarla sınanır |
 | Mutasyon kapsamı | `make kapsam` → `docs/MUTASYON_KAPSAM.md` güncel mi (üretilmiş tablo) |
 | Katalog tazeliği (isteğe bağlı) | `make katalog-kontrol` → models.dev canlı kataloğu; ağ gerekir, CI'da koşmaz |
 | İddia defteri | `make iddia` → README/docs sayısal iddialarını üreten komutla ve ham kanıt satırıyla yeniden ölçer; tutmayan satır `IDD-*` ile kırmızı |

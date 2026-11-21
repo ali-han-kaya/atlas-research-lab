@@ -313,11 +313,11 @@
     },
     {
       "id": "IDD-15",
-      "iddia": "H2 python sozdizimi dosya sayisi 63",
+      "iddia": "H2 python sozdizimi dosya sayisi 64",
       "kaynaklar": [
         {
           "dosya": "docs/DURUM.md",
-          "alinti": "| Python dosya sayısı (H2) | 63 |"
+          "alinti": "| Python dosya sayısı (H2) | 64 |"
         }
       ],
       "durum": "OLCULDU",
@@ -326,7 +326,7 @@
         "tools/dogrula.py"
       ],
       "ayikla": "H2\\s+python sozdizimi\\s+PASS\\s+(\\d+) dosya",
-      "beklenen": "63"
+      "beklenen": "64"
     },
     {
       "id": "IDD-16",
@@ -676,8 +676,13 @@
           "alinti": "exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin"
         }
       ],
-      "durum": "BEYAN",
-      "gerekce": "yesil fikstur depoda yok; 0 cikis sozlesmesi beyandir, bagimsiz olculmedi"
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/temiz_teslim_selftest.py"
+      ],
+      "ayikla": "HUKUM: PASS — temiz teslim rc=(\\d+);",
+      "beklenen": "0"
     },
     {
       "id": "IDD-38",

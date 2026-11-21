@@ -93,6 +93,12 @@ jobs:
       - name: Demo 0/2 öz-testi
         run: make demo-selftest
 
+      # DENEME/ yalnız kırmızı yolu gösterir. Makale metni taşımayan sentetik
+      # temiz kök iki gerçek kapıdan rc=0 geçmeli; beş kenar kökü beklenen rc'yi
+      # vermeli. Fikstürler tempfile altında üretilir, DENEME/ değişmez.
+      - name: Sentetik temiz teslim + 5 kenar
+        run: make temiz-teslim
+
       # Demo bilerek rc=1 doner; bu adim "kirmizi gercekten geldi mi" sorusunu
       # sorar. rc=0 (kirmizi yanmadi) veya rc=2 (fikstur bozuk) basarisizdir.
       - name: Demo beklenen kirmiziyi veriyor
