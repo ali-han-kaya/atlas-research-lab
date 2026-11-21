@@ -1,5 +1,5 @@
 {
-  "commit": "6c249b7655e6423fde8071794e1785cf27c7940b",
+  "commit": "eca9dda95210265f570c0b2803483274caf7dde9",
   "file_count": 254,
   "files": [
     {
@@ -1211,14 +1211,14 @@
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "743d908d1ae0ed8923634b2b76ddaf66c145e2742437e002aa4413a3fdad45bf",
-      "size": 25198
+      "sha256": "e4294e1e47319af68899ed1f3aba3c9a074c0571f8a8a7c442d8aead480ba1b4",
+      "size": 25201
     },
     {
       "mode": "100644",
       "path": "SURUM.md",
-      "sha256": "4e0f3fa3e1903666c5ca794b16b0c4188675824ecdc3f8a292bcff832d22199f",
-      "size": 578161
+      "sha256": "4dc3fe47d19e67da87aaf064dc58626311a2a77c9de80f0cea626eac02e228d2",
+      "size": 579387
     },
     {
       "mode": "100755",
@@ -1247,8 +1247,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "208d31b1f76020c96532c24d7efd162c9b26b00ebcd2f54415b11ca906a18472",
-      "size": 474117
+      "sha256": "7f6f200b60416161eefa1cc21a3249b9f43def894c51e8cabeae2b863fc197d2",
+      "size": 475766
     },
     {
       "mode": "100644",
@@ -1265,8 +1265,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "e5fce23321eaa465c08266a5df4f595bfb8b5b1919b6d2ee71b9b1bf4b2b182d",
-      "size": 8726
+      "sha256": "f8f8dc6a3ffda6b0be9f48a0bc382e832b825f1e929392eb3eea0008ca697c9f",
+      "size": 8789
     },
     {
       "mode": "100644",
@@ -1277,7 +1277,7 @@
     {
       "mode": "100644",
       "path": "docs/MUTASYON_KAPSAM.md",
-      "sha256": "df71d0c3922e4e45d47c1fe3bc278106814a95f13052edbd4c82a40cae58a72d",
+      "sha256": "5ed30e4351ed804be782eff5dfa81c32ff983f418e586933636a8ba4c146e231",
       "size": 29651
     },
     {
@@ -1337,14 +1337,14 @@
     {
       "mode": "100644",
       "path": "docs/OLGULAR.md",
-      "sha256": "0773d6ef42c7a453486d2394ac127f9ce5404b26486c72b74bc6ad5a5bdce1b4",
+      "sha256": "29a1d93168a678b56a295e7b2391d9b6345df19dca659483865d3183bf51db73",
       "size": 3170
     },
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "a93cdf9c2e9ebc92adcc6922c9bf2dddcd23485101671a00b30749ba5efe5009",
-      "size": 28207
+      "sha256": "2e459c8ee60d709cac3b5406b7f027b2910f143eab316a5ca64be294350bc4c2",
+      "size": 29138
     },
     {
       "mode": "100644",
@@ -1415,13 +1415,13 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "8a27d25ce5d581c57b8d74b1453c3a541e329ab9d176490329265dafad45faf0",
+      "sha256": "a7caa0a31f14b6844cd9421835b12a861d766e12d5d0055baf260f48020e67b6",
       "size": 20153
     },
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "5ea28975d0c0c3af37d145e595671756bc2780228882cf96ecd1129e0c75ebcd",
+      "sha256": "139758d58b056d91d5f15690c78ca11ac171522066515db38069e9566e5a8caa",
       "size": 5881
     },
     {
@@ -1469,8 +1469,8 @@
     {
       "mode": "100644",
       "path": "tools/model_kimlik.py",
-      "sha256": "39fb599469483bcf9c8fc4047004c8fbce67501c713fda829a8096a0f9ec9fee",
-      "size": 20357
+      "sha256": "cfacd602d8a12d7e6f718a17aa61a9492467b38779e59ea1b1a5fe4cccdb369c",
+      "size": 21412
     },
     {
       "mode": "100644",
@@ -1481,8 +1481,8 @@
     {
       "mode": "100644",
       "path": "tools/mutasyon_bataryasi.py",
-      "sha256": "3d0451f12bf82db29c173305d70ad1c535903dc65a32aa070f464f0c93f8ae20",
-      "size": 74858
+      "sha256": "ac3f1aeb665ed0104a34004855c4b7cff4fda1703e004067f51e518462870c56",
+      "size": 78600
     },
     {
       "mode": "100644",
@@ -1527,7 +1527,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-21T12:12:43Z",
+  "generated_at": "2026-11-21T12:45:07Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1542,6 +1542,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "a4867f01df1b37f5deed8c76e10ff41a1e99fb3d",
-  "tree_sha256": "cd548f21caf55c06313c7b12f145186d231c5b6fcb5734fd456b0144b5d30d06"
+  "tree": "a53dfd9f836526e96ff00760811dbf968e24b6ff",
+  "tree_sha256": "fcd94bcacc8b668f756b63ee847209eb70d2749e8dcd3e0a5f9b48f0f6d3aa5e"
 }
