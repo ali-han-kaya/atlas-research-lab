@@ -30,6 +30,12 @@ katalog bir ALLOWLIST anlik goruntusudur: kapi, ajanlarin bu listedeki modelleri
 kullandigini denetler. Canli katalogla denetim icin `ATLAS_MODEL_KATALOG=<yol>`
 verin; fark yalnizca katalog ICERIGINDEN gelir, makineden degil.
 
+MODEL KIMLIGI: emekli bir model kimligi yalnizca `tools/model_kimlik_istisna.json`
+icinde dosya + tam satir SHA-256'siyla kayitli tarihsel `SURUM`/`OLCUM`
+satirlarinda kalabilir. Aktif kod/config/test/dokumanda tek bir atif bile
+hukmu FAIL eder. Bu kontrol sayilan sekiz kaleme eklenmez; demo gibi bir on
+kosuldur ve `make dogrula`yi fail-closed durdurur.
+
 CIKIS: 0 = hukme giren kalemlerin hepsi gecti (CALISTIRILMADI varsa bile) ·
        1 = en az bir kalem FAIL · 2 = kosulamadi
 
@@ -216,6 +222,20 @@ def demo_oztesti():
     return rc == 0, son, ([] if rc == 0 else satirlar[-8:])
 
 
+def model_kimlik():
+    """Emekli model kimligi taramasini on kosul olarak kosar.
+
+    Sayilan sekiz kaleme dahil degildir; demo gibi bir on kosuldur. Aktif bir
+    atif veya bayat istisna varsa dogrula yesil donmez.
+    """
+    rc, cikti = kos([sys.executable,
+                     os.path.join(KOK, 'tools', 'model_kimlik.py'),
+                     '--kontrol'])
+    satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
+    son = satirlar[-1][:120] if satirlar else '(bos cikti)'
+    return rc == 0, son, ([] if rc == 0 else satirlar[-8:])
+
+
 KOMUTLAR = [
     ('T1', 'ATLAS oz-testi',
      [sys.executable, 'ATLAS_SABLONLAR/scripts/atlas_selftest.py', '--sessiz']),
@@ -367,6 +387,17 @@ def main():
     if not demo_gecti:
         print()
         print('  HUKUM: FAIL — DEMO 0/2 OZ-TESTI')
+        return 1
+    print()
+
+    model_gecti, model_ozet, model_detay = model_kimlik()
+    print('  %-24s %-7s %s' % ('model kimligi',
+                                'PASS' if model_gecti else 'FAIL', model_ozet))
+    for satir in model_detay:
+        print('        | %s' % satir[:400])
+    if not model_gecti:
+        print()
+        print('  HUKUM: FAIL — MODEL KIMLIK (aktif atif veya bayat istisna)')
         return 1
     print()
 

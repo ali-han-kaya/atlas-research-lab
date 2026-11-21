@@ -2,7 +2,7 @@ PY ?= python3
 # pip-audit yalniz gelistirme aracidir; varsa yerel sanal ortam kullanilir.
 PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(PY))
 
-.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula durum-yaz durum-kontrol durum-selftest mutasyon oztest demo demo-selftest temiz-teslim kapsam kapsam-yaz katalog-kontrol iddia iddia-ag iddia-yaz guvenlik kur yayinla yardim
+.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula durum-yaz durum-kontrol durum-selftest mutasyon oztest demo demo-selftest temiz-teslim kapsam kapsam-yaz model-kimlik katalog-kontrol iddia iddia-ag iddia-yaz guvenlik kur yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giris: hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
@@ -19,6 +19,7 @@ yardim:
 	@echo "make temiz-teslim  sentetik temiz teslimi ve 5 kenar fiksturunu uctan uca sinar"
 	@echo "make kapsam    mutasyon kapsam tablosu guncel mi (docs/MUTASYON_KAPSAM.md)"
 	@echo "make kapsam-yaz  kapsam tablosunu yeniden uret"
+	@echo "make model-kimlik  emekli model kimligine yalniz tarihsel satirlarda izin ver"
 	@echo "make katalog-kontrol  istege bagli ag kontrolu: sabit katalog models.dev'de guncel mi (CI'da yok)"
 	@echo "make iddia    README/docs sayisal iddialarini ureten komutla yeniden olc (ag haric)"
 	@echo "make iddia-ag  ag gerektiren iddialari da olc"
@@ -70,6 +71,9 @@ kapsam:
 
 kapsam-yaz:
 	@$(PY) tools/kapsam.py --yaz
+
+model-kimlik:
+	@$(PY) tools/model_kimlik.py --kontrol
 
 katalog-kontrol:
 	@$(PY) tools/katalog_kontrol.py

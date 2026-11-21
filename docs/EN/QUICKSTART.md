@@ -152,6 +152,7 @@ claim/evidence gap, not from a broken test.
 | Command | What it proves |
 |---|---|
 | `make kapsam` | `docs/MUTASYON_KAPSAM.md` matches the current gate inventory |
+| `make model-kimlik` | active code/config/test/docs contain zero references to retired model IDs; only exact-line historical exceptions are allowed |
 | `make guvenlik` | `pip-audit` findings, each named in `docs/GUVENLIK.md`; unlisted finding → red |
 | `make dogrula-ci` | runner mode used by GitHub Actions (same rules, no CI-only exemption) |
 | `make katalog-kontrol` | optional network check: fixed allowlist IDs still exist at models.dev; not run in CI |

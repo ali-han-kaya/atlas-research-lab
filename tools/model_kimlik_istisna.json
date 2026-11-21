@@ -1,0 +1,66 @@
+{
+ "_aciklama": "Emekli model kimlikleri icin TEK resmi istisna kaynagi. Aktif kod/config/test/dokumanlarda emekli kimlige sifir atif zorunludur.",
+ "_kural": "Muafiyet dosya adina degil, dosya + tam satir SHA-256 ciftine baglidir. Tarihsel satir degisirse hash tutmaz; kayit bayatlar ve tools/model_kimlik.py --kontrol FAIL verir. Bu defterin kendisi taranmaz cunku kimligi tanimlar.",
+ "emekli_kimlikler": [
+  {
+   "kimlik": "nvidia/nemotron-3-super-120b-a12b:free",
+   "yerine": "nvidia/nemotron-3-ultra-550b-a55b:free",
+   "tarih": "2026-11-19",
+   "gerekce": "models.dev canli katalogunda yok; ayni NVIDIA Nemotron 3 ailesinden ucretsiz, reasoning ve tool_call destekli kimlikle degistirildi."
+  }
+ ],
+ "istisnalar": [
+  {
+   "dosya": "SURUM.md",
+   "satirlar": [
+    "3a429d0a47a8c9120acce72204d7fe7d207f0c2ecf746704d876e3bc94d039d8"
+   ],
+   "gerekce": "v1.7.33 tarihsel ham kaydi; 19.11.2026 kimlik gecis notuyla korunuyor."
+  },
+  {
+   "dosya": "docs/OLCUM-01-IZIN-GLOB.md",
+   "satirlar": [
+    "3852bdb50009cdea1bb2c4f20d55e86f7e532a8efa132047249d20080e0ba425",
+    "4068e3f1c9b293760fa00bc36eaefccf9c02de1d885675b4fc3be4954710d73f",
+    "834e9aeb1e6f7319e5d3bf7673e2019bcc04b379e7e296059467440554e7a2f2",
+    "c312144fc846db8d543e650645d81a53d2e33c791b36e8d21354651fd905ae83",
+    "c589fd779f6672311887e96a4b03d78044d02d54177176d0b46a393dedf0f0dd",
+    "f0a48c26903cd5e5818cbbfee55b9da28fc9d035eadd630dcd8548d29730ad96",
+    "ff974c8e8338c18e8030dcb8b31290f17006bfc2e36f8984cade25977ea15f99"
+   ],
+   "gerekce": "24.08.2026 canli izin globu olcumunun ham komut/cikti satirlari."
+  },
+  {
+   "dosya": "docs/OLCUM-02-CANLI-KOSU.md",
+   "satirlar": [
+    "21059eb8d0f8e529f8dbae7272350d19c2c042fc4c9df718c83b25e855186763",
+    "28f9156410fca80e0bea86d7ddc06e3e19296d091b26f324868f9a9c600bac25",
+    "793a91390bbf9fd4b39c365a724f02ea9f40492bf83e8ce662b07e8aee7f0982",
+    "b3a8bc42810fea91b2360bfbd06277edbf0ad2593bc1f29ed31a247fa8ac94bb",
+    "ee0d4771eb65cc141df5d0815ae0a397206b3dfbd9499f7a470b9e49255766eb",
+    "eebd2a6a583966370f9520f37dea5208c66b715a02f2998f64999d4e00b2733e"
+   ],
+   "gerekce": "24.08.2026 canli duman kosusunun ham komut/cikti satirlari."
+  },
+  {
+   "dosya": "docs/OLCUM-03-DUZELTME-SONRASI.md",
+   "satirlar": [
+    "21059eb8d0f8e529f8dbae7272350d19c2c042fc4c9df718c83b25e855186763",
+    "3f8ceba110e0550b2137b26aae2cbef83e1c694b61841edadd892183392e7511",
+    "530e5ff0c1222b16e78d045747330c58a5f3cc1e5c732daa8f81a75f7e0bdfc8",
+    "5733de5f463d50d4ed569d7549956a64c00ee69f8f5f63f06c4924e55c5bd7ae",
+    "9c0d0e9ef0b0a2c66d0b446b4ad648f9b30ecdd5c6bfcef2ee1c61f1be8f994a",
+    "b59b0d7198b24116e46c2e80819cc132df87991b4a92e88def218cf86c962184"
+   ],
+   "gerekce": "24.08.2026 duzeltme sonrasi canli kosunun ham satirlari."
+  },
+  {
+   "dosya": "docs/OLCUM-06-CANLI-TAM-KOSU.md",
+   "satirlar": [
+    "7bdb9d30b472e57be4e709b3eb33747d70e82a90e6820b68472b74d652d0f90c",
+    "e912d24c2ed2260f2f50f8ecc4f215df425349acd164aec85759bf5c12527ce8"
+   ],
+   "gerekce": "26.08.2026 canli tam kosunun ham model secim satirlari."
+  }
+ ]
+}
