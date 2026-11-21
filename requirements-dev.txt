@@ -4,8 +4,15 @@
 # farkli sayi basiyordu (olculdu: yerel 12 bulgu, runner 1 bulgu).
 # requests: DOI/URL dogrulamasi (verify_doi.py, gate_2c.py) aga bununla cikar.
 # pip-audit: `make guvenlik` — bilinen CVE taramasi (yalniz gelistirme araci).
+# jsonschema: `make kanit-paket-dogrula` — sonuc.json'u depodaki gercek semayla
+# dogrular; transitive bagimliliklar da sabitlendi.
 requests==2.32.5
 urllib3==2.6.3
 msgpack==1.1.2
 filelock==3.19.1
 pip-audit==2.9.0
+jsonschema==4.25.1
+attrs==26.1.0
+jsonschema-specifications==2025.9.1
+referencing==0.36.2
+rpds-py==0.27.1

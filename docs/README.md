@@ -196,7 +196,56 @@ Paket git'e eklenmez (`.gitignore`); taşımak için dizini kopyalamak yeterlidi
 Bir komut başarısız olursa paket yine yazılır, `verdict` `FAIL` olur ve
 `make kanit` sıfır olmayan kodla çıkar. Yalnız attestation üretmek için eski
 davranış `make kanit` yerine `python3 tools/kanit.py --paketsiz` ile alınır;
-komut kümesini değiştirmek için `--komut` yinelenebilir.
+komut kümesini de değiştirmek için `--komut` yinelenebilir.
+
+### Paketi bağımsız doğrulama
+
+```bash
+make kanit-paket-dogrula
+```
+
+Bu komut `kanit-paketi/` dizinini tek başına okumaz; dört kanıt katmanını
+birbirine bağlar:
+
+1. `sonuc.json`, `schemas/atlas-dogrulama-sonuc.schema.json` ile JSON Schema
+   doğrulamasından geçer.
+2. Paket içindeki `attestation.json`, `tools/kanit_dogrula.py` ile gerçek
+   commit/ağaç ve güncel HEAD üzerinden doğrulanır.
+3. `manifest.sha256`, paketteki bütün dosyaları (kendisi hariç) kapsar; her
+   satırdaki SHA-256 yeniden hesaplanır.
+4. Her `komutlar/NN-<id>.stdout.txt` ve `.stderr.txt`, `sonuc.json` içindeki
+   komut kaydıyla; çıkış kodu, bayt sayısı, SHA-256 ve `finding_ids` ile
+   karşılaştırılır.
+
+Başarılı doğrulama şu iki satırı basar:
+
+```text
+PASS PAKET commit=<commit> komut=<adet> dosya=<adet>
+PAKET: TEMIZ — sonuc semasi, attestation, manifest ve ham komut kayitlari tutuyor.
+```
+
+`make kanit-paket-dogrula` paket yoksa, `manifest.sha256` eksik/bozuksa veya
+herhangi bir hash tutmuyorsa sıfır olmayan kodla çıkar. `jsonschema` bağımlılığı
+`requirements-dev.txt` içinde sabittir; `make kur` sonrası kurulum yeterlidir.
+
+CI bu paketi `dogrula` işinde üretir ve `atlas-kanit-paketi` adıyla artifact
+olarak yükler. CI üretimi `make kanit KANIT_ARGS="--cikti $RUNNER_TEMP/atlas-attestation.json"`
+ile yapılır; böylece izlenen `attestation.json` değişmez. Paket doğrulanmadan
+ve `git status --porcelain --untracked-files=no` temiz görülmeden artifact
+adımına geçilmez. İndirme ve aynı commit'te doğrulama:
+
+```bash
+RUN_ID=$(gh run list --workflow=dogrula.yml --branch=main --limit=1 --json databaseId --jq '.[0].databaseId')
+INDIR=$(mktemp -d)
+gh run download "$RUN_ID" -n atlas-kanit-paketi -D "$INDIR"
+python3 tools/kanit_paketi_dogrula.py --paket "$INDIR"
+```
+
+Artifact, `sonuc.json` içindeki commit'e bağlıdır; farklı bir HEAD'de paket
+attestation'ı `KANIT-05` ile kırmızı olur. Üçüncü kişi kendi klonunda önce
+`git fetch && git checkout <sonuc.json commit>` yapmalı, sonra yukarıdaki
+doğrulamayı koşmalıdır. `gh` yoksa artifact GitHub Actions çalışma sayfasındaki
+**Artifacts → `atlas-kanit-paketi`** bağlantısından da indirilebilir.
 
 **Seçim — yol 1:** `OLG-1` emekliye ayrılmadı. `olgu_lint`, `attestation.json`
 varsa `tools/kanit_dogrula.py` ile onu doğrular ve `OLGU-04`'ün commit zinciri

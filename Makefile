@@ -2,13 +2,14 @@ PY ?= python3
 # pip-audit yalniz gelistirme aracidir; varsa yerel sanal ortam kullanilir.
 PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(PY))
 
-.PHONY: dogrula dogrula-ci kanit kanit-dogrula durum-yaz durum-kontrol durum-selftest mutasyon oztest demo demo-selftest kapsam kapsam-yaz katalog-kontrol iddia iddia-ag iddia-yaz guvenlik kur yayinla yardim
+.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula durum-yaz durum-kontrol durum-selftest mutasyon oztest demo demo-selftest kapsam kapsam-yaz katalog-kontrol iddia iddia-ag iddia-yaz guvenlik kur yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giris: hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
 	@echo "make dogrula-ci  runner kipi: olculebilen kalemler hukme girer, oz-testler rapor"
 	@echo "make kanit     commit + sha256 kanitini ve dogrulama paketini yaz (attestation.json + kanit-paketi/)"
 	@echo "make kanit-dogrula  attestation.json'i gercek commit/agac ile dogrula"
+	@echo "make kanit-paket-dogrula  kanit-paketi/ icindeki sema, attestation, manifest ve ham kayitlari dogrula"
 	@echo "make durum-yaz  tek uretilmis DURUM sayfasini yenile (docs/DURUM.md)"
 	@echo "make durum-kontrol  DURUM sayfasi kaynaklara gore bayat mi (CI)"
 	@echo "make durum-selftest  DURUM bayatlik kapisinin negatif testleri (gecici kok)"
@@ -34,10 +35,13 @@ dogrula-ci:
 	@$(PY) tools/dogrula.py --ci
 
 kanit:
-	@$(PY) tools/kanit.py
+	@$(PY) tools/kanit.py $(KANIT_ARGS)
 
 kanit-dogrula:
 	@$(PY) tools/kanit_dogrula.py
+
+kanit-paket-dogrula:
+	@$(PY) tools/kanit_paketi_dogrula.py
 
 durum-yaz:
 	@$(PY) tools/durum.py --yaz
