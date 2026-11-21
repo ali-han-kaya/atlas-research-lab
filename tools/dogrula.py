@@ -48,7 +48,7 @@ HIZLI = '--hizli' in sys.argv
 CI = '--ci' in sys.argv
 
 ATLA_DIZIN = {'.git', '__pycache__', 'node_modules', '.pytest_cache',
-              '.ruff_cache', '.venv', '.venv-token'}
+              '.ruff_cache', '.venv', '.venv-token', 'kanit-paketi'}
 ATLA_UZANTI = {'.pyc', '.pyo'}
 
 SIR_KALIPLARI = [

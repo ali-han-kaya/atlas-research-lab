@@ -128,9 +128,10 @@ aşağıdaki bölümdedir.
 ## Ağaç kanıtı — `make kanit`
 
 `make kanit`, bu depodaki **gerçek HEAD commit'ini** ve izlenen dosyaların
-sha256'sını `attestation.json` içine yazar. Özel ağacı okumaz, ağa bağlanmaz;
-`OLG-1`'in canlı kanıt setine bağımlı değildir. Betik yalnız **temiz izlenen
-ağaçta** çalışır: `attestation.json` dışında commit edilmemiş değişiklik varsa
+sha256'sını `attestation.json` içine yazar. Aynı üretimde makine-okur bir
+**doğrulama paketi** de oluşturur. Özel ağacı okumaz, ağa bağlanmaz; `OLG-1`'in
+canlı kanıt setine bağımlı değildir. Betik yalnız **temiz izlenen ağaçta**
+çalışır: `attestation.json` dışında commit edilmemiş değişiklik varsa
 `KIRLI_AGAC` ile durur.
 
 | Alan | Anlam |
@@ -170,6 +171,32 @@ içeriğin doğru olduğunu, üretilen makalelerin varlığını veya `.git` dı
 izlenmeyen dosyaları kapsamaz. `tool_versions` üretim ortamını **tanımlar**;
 doğrulayıcının sürümleriyle eşit olması istenmez. `generated_at` bir beyandır;
 dış saatle doğrulanmaz.
+
+### Taşınabilir doğrulama paketi
+
+`make kanit`, attestation'ı yazdıktan sonra sırasıyla `make dogrula`,
+`make kapsam` ve `make iddia` komutlarını çalıştırır; çıktıları ve çıkış
+kodlarını `kanit-paketi/` dizinine kaydeder:
+
+| Yol | İçerik |
+|---|---|
+| `sonuc.json` | `ATLAS-DOGRULAMA/v1`: commit, ağaç, komut çıkış kodları, bulgu kimlikleri, dosya manifesti |
+| `attestation.json` | Aynı üretimde yazılan ağaç kanıtının kopyası |
+| `manifest.sha256` | Paketteki dosyaların SHA-256 listesi (`sha256  yol`) |
+| `komutlar/` | Her komutun ham stdout/stderr kaydı; adları sıra ve komut kimliğini taşır |
+
+Şema `schemas/atlas-dogrulama-sonuc.schema.json` dosyasındadır. `sonuc.json`
+komut başına `exit_code` ve `status` (`PASS`/`FAIL`/`ERROR`), `finding_ids`,
+stdout/stderr özet hash'leri ve süre taşır; üst düzeyde toplu `exit_code`,
+`verdict`, `findings[]` ve izlenen dosyaların SHA-256 manifesti bulunur.
+Paket git'e eklenmez (`.gitignore`); taşımak için dizini kopyalamak yeterlidir.
+`manifest.sha256` paket dosyalarını doğrular; attestation'ın kendisi ayrıca
+`make kanit-dogrula` ile commit ve ağaca bağlanır.
+
+Bir komut başarısız olursa paket yine yazılır, `verdict` `FAIL` olur ve
+`make kanit` sıfır olmayan kodla çıkar. Yalnız attestation üretmek için eski
+davranış `make kanit` yerine `python3 tools/kanit.py --paketsiz` ile alınır;
+komut kümesini değiştirmek için `--komut` yinelenebilir.
 
 **Seçim — yol 1:** `OLG-1` emekliye ayrılmadı. `olgu_lint`, `attestation.json`
 varsa `tools/kanit_dogrula.py` ile onu doğrular ve `OLGU-04`'ün commit zinciri
