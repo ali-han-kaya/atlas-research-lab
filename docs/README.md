@@ -511,6 +511,14 @@ tablolar (`MUTASYON_KAPSAM.md`, `GUVENLIK.md`) kapsam dışıdır: bunlar yenide
 koşulacak iddia değil, ölçümün o günkü kaydıdır. Kapsam dışı dosyalar yeşil
 sayılmaz; defterin `kapsam.haric` bloğunda gerekçeleriyle listelenir.
 
+Kapsam kapısı bu sınırı makineye bağlar: üç public dokümandaki sayısal ölçüm
+iddiaları — oranlar, ölçüm adı taşıyan sayılar ve üretilmiş sayaçlar — defterdeki
+bir alıntının içinde değilse `kapsam.sayisal_istisna` içindeki dar ve gerekçeli
+bir istisnayla eşleşmek zorundadır. Eşleşmeyen iddia `dosya:satır` ve jetonla,
+gerekçesiz, ölü veya çok geniş istisna da kendi adıyla kırmızı olur. Kimlik,
+sürüm, tarih ve çıkış kodu değerleri bu tanımın dışındadır; kapsamın kendisi
+böylece her koşuda denetlenir.
+
 `make iddia-hizli` yalnız hızlı satırları ölçer; `dogrula` ve `mutasyon`
 komutlarını koşmaz. Atlanan satırlar `ATLANDI` olarak basılır ve PASS sayılmaz;
 varsayılan `make iddia` tam koşu olarak değişmez. `--yaz --hizli` reddedilir,

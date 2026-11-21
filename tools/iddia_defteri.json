@@ -24,7 +24,49 @@
         "neden": "uretilmis pip-audit raporu; makineye bagli"
       }
     ],
-    "sinif_disi": "Mekanizma adlari, protokol sabitleri (2-of-2, KFAZ0-5, P0/P1/P2) ve alintilanan yanlis beyanlar (or. '8/8 duzeltme uygulandi') olcum iddiasi degildir; sayisal olcum bildiren cumleler defterdedir."
+    "sinif_disi": "Mekanizma adlari, protokol sabitleri (2-of-2, KFAZ0-5, P0/P1/P2), kimlikler (KANIT-05, FIX-003), surumler, tarihler ve cikis kodlari olcum iddiasi degildir; kalan sayisal olcum cumleleri defterdedir. Makine denetimi: kapsam.sayisal_istisna.",
+    "sayisal_istisna": [
+      {
+        "desen": "8/8 düzeltme uygulandı",
+        "neden": "alintilanan yanlis beyan; kapi bu beyani olcum olarak kabul etmez"
+      },
+      {
+        "desen": "demo 0/2",
+        "neden": "mekanizma adi (demo 0/2 sozlesmesi); sayisal olcum iddiasi degil"
+      },
+      {
+        "desen": "1/2 ayrımı",
+        "neden": "cikis kodu ayrimi; iki kodu IDD-21 ve IDD-22 ayri olcer"
+      },
+      {
+        "desen": "cannot carry 1 vs 2",
+        "neden": "GNU make sarmalayici cikis kodu; iki kodu IDD-21 ve IDD-22 ayri olcer"
+      },
+      {
+        "desen": "1-vs-2 distinction",
+        "neden": "GNU make sarmalayici cikis kodu; iki kodu IDD-21 ve IDD-22 ayri olcer"
+      },
+      {
+        "desen": "PASS 7/8",
+        "neden": "kosullu hukum ornegi; T1 kosmadiginda basilan borc satiri, bu agacta uretilmez"
+      },
+      {
+        "desen": "komut=3 dosya=8",
+        "neden": "kanit paketi ornek ciktisi; paket butunlugu make kanit-paket-dogrula kapisinda olculur"
+      },
+      {
+        "desen": "4 MB üstü",
+        "neden": "dosya boyutu tasarim siniri; olcum iddiasi degil"
+      },
+      {
+        "desen": "tarif hatasını",
+        "neden": "GNU make tarif hatasi cikis kodu; kanonik kod ayrimi Python cikisiyla olculur"
+      },
+      {
+        "desen": "Yalnız 1 devam eder",
+        "neden": "diff cikis kodu; katalog yenileme akisinin sozlesmesi"
+      }
+    ]
   },
   "iddialar": [
     {
@@ -42,6 +84,30 @@
         {
           "dosya": "docs/EN/QUICKSTART.md",
           "alinti": "  HUKUM: PASS — 8/8 kalem gecti"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "`make dogrula` hükmüne girmez; 8/8 hükmü attestation ile ayrıca doğrulanır."
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "commit çıpası yoktur; `make dogrula` bu depoda **8/8** verir ve T1 PASS'tir."
+        },
+        {
+          "dosya": "docs/README.md",
+          "alinti": "sayılarla geçer; `make dogrula` **8/8** verir ve T1 artık `CALISTIRILMADI` değildir."
+        },
+        {
+          "dosya": "docs/README.md",
+          "alinti": "`make dogrula` bu depoda **8/8** verir; T1 PASS'tir. Kod değişince `make kanit`"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "`make iddia` is separate from `make dogrula`: it does not change the 8/8 verdict."
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "yazılır; 8/8 denmez. Ayrıntı ve negatif kontrol:"
         }
       ],
       "durum": "OLCULDU",
@@ -99,6 +165,14 @@
         {
           "dosya": "docs/EN/QUICKSTART.md",
           "alinti": "SONUC: 98/98 kural atesledi · 18/18 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "98 hata + 18 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,"
+        },
+        {
+          "dosya": "docs/README.md",
+          "alinti": "Güncel katalog **116 vaka = 98 hata + 18 beklenen-bulgu**;"
         }
       ],
       "durum": "OLCULDU",
@@ -120,6 +194,10 @@
         {
           "dosya": "docs/EN/QUICKSTART.md",
           "alinti": "SONUC: 98/98 kural atesledi · 18/18 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "cases; the 18 expected-finding cases (including TST-06, CHK-05 and the"
         }
       ],
       "durum": "OLCULDU",
@@ -390,6 +468,30 @@
         {
           "dosya": "docs/EN/QUICKSTART.md",
           "alinti": "manifest declared 8 fixes as applied, only 2 reached the master text, and the"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "prints the frozen 8-vs-2 failure with a **red verdict and"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "`DENEME/` 23 Ağustos 2026'da dondurulmuş, bilerek kusurlu bir koşudur: manifesto 8 FIX'i"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "manifesto iddiasi : 8 FIX \"UYGULANMIS\""
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "HUKUM: FAIL — iddia 8, kanit 2; dondurulmus kapi PASS dedi."
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "manifesto iddiasi : 8 FIX \"UYGULANMIS\""
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "HUKUM: FAIL — iddia 8, kanit 2; dondurulmus kapi PASS dedi."
         }
       ],
       "durum": "OLCULDU",
@@ -412,6 +514,18 @@
         {
           "dosya": "docs/EN/QUICKSTART.md",
           "alinti": "manifest declared 8 fixes as applied, only 2 reached the master text, and the"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "\"UYGULANMIŞ\" ilan etti, MASTER'a yalnız 2'si yansıdı, o günün FINAL GATE'i yine de PASS"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "MASTER'da gorunen : 2 FIX"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "MASTER'da gorunen : 2 FIX"
         }
       ],
       "durum": "OLCULDU",
@@ -506,6 +620,10 @@
         {
           "dosya": "README.md",
           "alinti": "Allowlist'in canlı katalogda 9/9 geçerli olup olmadığı"
+        },
+        {
+          "dosya": "docs/README.md",
+          "alinti": "21 Kasım 2026 canlı kontrolü: **9/9 kimlik geçerli**; aday depodaki katalogla"
         }
       ],
       "durum": "AG_GEREKLI",
@@ -519,11 +637,31 @@
     },
     {
       "id": "IDD-26",
-      "iddia": "yayin paritesi 0 yeni / 0 degisen / 0 silinen",
+      "iddia": "yayin plani 214 dosya; parite 0 yeni / 0 degisen / 0 silinen",
       "kaynaklar": [
         {
           "dosya": "README.md",
           "alinti": "0 new / 0 changed / 0 deleted). The same commands run in CI on GitHub Actions."
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "planda=214 · yeni=0 · degisen=0 · ayni=214 · silinecek=0"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "SIR TARAMASI: temiz (0 bulgu)"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "PARITE: TEMIZ — 0 yeni / 0 degisen / 0 silinen"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "part of the plan, so the 214-file count is deterministic."
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "**Approximate duration:** under a second (214 files hashed, no subprocesses)."
         }
       ],
       "durum": "OLCULMEDI",
@@ -695,6 +833,241 @@
       ],
       "durum": "BEYAN",
       "gerekce": "maliyet iddiasi; model cagrisi yok — olcum degil tasarim beyani"
+    },
+    {
+      "id": "IDD-39",
+      "iddia": "mutasyon katalogunda 116 vaka (98 hata + 18 beklenen-bulgu)",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "116 battery cases: silent clean baseline + one violation + a red verdict or expected finding), and `tools/yayinla.py`"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "veya ihlal sonrası beklenen iz yoksa vaka geçmez. Katalog 116 vakadır:"
+        },
+        {
+          "dosya": "docs/README.md",
+          "alinti": "Güncel katalog **116 vaka = 98 hata + 18 beklenen-bulgu**;"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "-c",
+        "import sys; sys.path.insert(0, 'tools'); import mutasyon_bataryasi as m; print('VAKA: %d' % len(m.vakalar()))"
+      ],
+      "ayikla": "VAKA: (\\d+)",
+      "beklenen": "116"
+    },
+    {
+      "id": "IDD-40",
+      "iddia": "temiz teslim 6/6 fikstur (1 temiz + 5 kenar)",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "sentetik temiz kök rc=0 + 5 kenar fikstürü"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "| Sentetik temiz teslim | `make temiz-teslim` → makale metni taşımayan temiz kök `rc=0`; 5 kenar kökü beklenen kodlarla sınanır |"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/temiz_teslim_selftest.py"
+      ],
+      "ayikla": "SONUC: (\\d+/\\d+) fikstur gecti \\(1 temiz \\+ (\\d+) kenar\\)",
+      "beklenen": "6/6/5"
+    },
+    {
+      "id": "IDD-41",
+      "iddia": "demo REC-03: 8 bulgunun tamami FAZ2'de atifli",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "PASS REC-03: 8 bulgunun tamami FAZ2'de atifli"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/demo.py"
+      ],
+      "ayikla": "PASS REC-03: (\\d+) bulgunun tamami",
+      "beklenen": "8",
+      "rc_beklenen": 1
+    },
+    {
+      "id": "IDD-42",
+      "iddia": "demo REC-05: gate 2B 6 FIX'i KANITLI ilan etti",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "FAIL REC-05: gate 2B '6' FIX'i KANITLI ilan etti ama MASTER'da yok: ['FIX-003', 'FIX-004', 'FIX-005', 'FIX-006', 'FIX-007', 'FIX-008']"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/demo.py"
+      ],
+      "ayikla": "REC-05: gate 2B '(\\d+)' FIX'i KANITLI",
+      "beklenen": "6",
+      "rc_beklenen": 1
+    },
+    {
+      "id": "IDD-43",
+      "iddia": "demo REC-06: MASTER'daki 2 FIX-ID manifestoda tanimli",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "PASS REC-06: MASTER'daki 2 FIX-ID manifestoda tanimli"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/demo.py"
+      ],
+      "ayikla": "PASS REC-06: MASTER'daki (\\d+) FIX-ID",
+      "beklenen": "2",
+      "rc_beklenen": 1
+    },
+    {
+      "id": "IDD-44",
+      "iddia": "model-kimlik PASS satiri incelenmedi=0 dosya · onay=1 kayit",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "`taranan`, `incelenmedi=0` ve `onay` sayaçlarını gösterir."
+        },
+        {
+          "dosya": "docs/README.md",
+          "alinti": "satırı `aday=… · taranan=… · incelenmedi=0 · onay=1 kayit · aktif=0`"
+        },
+        {
+          "dosya": "docs/README.md",
+          "alinti": "(`incelenmedi=0`), tarihsel satırın muafiyeti, aktif metin, 4 MB üstü metin,"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/model_kimlik.py",
+        "--kontrol"
+      ],
+      "ayikla": "incelenmedi=(\\d+) dosya · onay=(\\d+) kayit",
+      "beklenen": "0/1"
+    },
+    {
+      "id": "IDD-45",
+      "iddia": "chmod 000 negatif kontrolu: FAIL incelenmedi=1 → PASS onay=2 → FAIL ONAY GEREKSIZ → PASS incelenmedi=0 onay=1",
+      "kaynaklar": [
+        {
+          "dosya": "docs/README.md",
+          "alinti": "Okunamayan dosya yolu gerçek ağaçta da ölçüldü: `chmod 000` →"
+        },
+        {
+          "dosya": "docs/README.md",
+          "alinti": "`FAIL incelenmedi=1`; aynı dosya `onay` listesine gerekçesiyle eklendiğinde"
+        },
+        {
+          "dosya": "docs/README.md",
+          "alinti": "`PASS incelenmedi=1 onay=2`; izin geri açıldığında `FAIL ONAY GEREKSIZ`;"
+        },
+        {
+          "dosya": "docs/README.md",
+          "alinti": "onay kaldırıldığında `PASS incelenmedi=0 onay=1`."
+        }
+      ],
+      "durum": "BEYAN",
+      "gerekce": "21 Kasim 2026 yerel izin probu; dosya izinlerine bagli, kapida yeniden kosulmaz"
+    },
+    {
+      "id": "IDD-46",
+      "iddia": "QUICKSTART yaklasik sureleri: dogrula ~90/91/95 s, mutasyon ~15/70/14/68 s",
+      "kaynaklar": [
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "**Approximate duration:** ~90 s on a warm local checkout (macOS, Python 3.11) —"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "91 s in `/tmp`, 95 s on an iCloud-synced checkout. Timings move with filesystem"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "**Approximate duration:** ~15 s on a clean local checkout, up to ~70 s when the"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "tree sits on a synced filesystem (measured 14 s in `/tmp`, 68 s on iCloud"
+        }
+      ],
+      "durum": "BEYAN",
+      "gerekce": "21 Kasim 2026 yerel makine olcumleri; dosya sistemi ve donanima bagli, kapida yeniden kosulmaz"
+    },
+    {
+      "id": "IDD-47",
+      "iddia": "ozel agac 36 tarihsel commit; public agacta aranmaz",
+      "kaynaklar": [
+        {
+          "dosya": "docs/README.md",
+          "alinti": "ağacın 36 tarihsel commit'i public ağaçta aranmaz; sahte commit çıpası yazılmaz."
+        }
+      ],
+      "durum": "BEYAN",
+      "gerekce": "ozel agac tarihcesi; public klonda yok, yeniden olculemez"
+    },
+    {
+      "id": "IDD-48",
+      "iddia": "bedava profili asgari limiti 200.000/32.768",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "`bedava_politika.asgari_limit` (200.000/32.768) alt sınırı. İhlal `rc=1`;"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "-c",
+        "import json; d=json.load(open('KOD_SABLONLAR/routing.profiles.json')); a=d['bedava_politika']['asgari_limit']; print('LIMIT: %d/%d' % (a['context'], a['output']))"
+      ],
+      "ayikla": "LIMIT: (\\d+/\\d+)",
+      "beklenen": "200000/32768"
+    },
+    {
+      "id": "IDD-49",
+      "iddia": "sentetik temiz kok 22 zorunlu SCOPE-ID basligi tasir",
+      "kaynaklar": [
+        {
+          "dosya": "docs/README.md",
+          "alinti": "teslim kökü kurar. Kök 22 zorunlu SCOPE-ID başlığını, PROVENANCE satırlarını ve"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "-c",
+        "import sys; sys.path.insert(0, 'tools'); import temiz_teslim_selftest as t; print('SCOPE: %d' % len(t.SCOPE_IDLERI))"
+      ],
+      "ayikla": "SCOPE: (\\d+)",
+      "beklenen": "22"
+    },
+    {
+      "id": "IDD-50",
+      "iddia": "DENEME fiksturunde makale deseni taramasinda 0 eslesme",
+      "kaynaklar": [
+        {
+          "dosya": "docs/README.md",
+          "alinti": "Makale metni taşımaz (ölçüldü: `silat/makale` desenlerinde 0 eşleşme);"
+        }
+      ],
+      "durum": "BEYAN",
+      "gerekce": "21 Kasim 2026 yerel desen taramasi; fikstur dondurulmus, kapida yeniden kosulmaz"
     }
   ]
 }

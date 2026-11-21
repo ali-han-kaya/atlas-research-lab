@@ -342,6 +342,15 @@ Defterin kapsamı üç public dokümandır: `README.md`, `docs/README.md`,
 olarak atlar ve kapıyı kırmaz; `make iddia-ag` canlı kataloğu okuyamazsa satırı
 `AG` olarak işaretler ve `rc=2` döner — sahte PASS veya sahte FAIL üretmez.
 
+Kapsam kapısı bu listeyi kendiliğinden denetler: üç dokümandaki sayısal ölçüm
+iddiaları — oranlar, ölçüm adı taşıyan sayılar ve üretilmiş sayaçlar — defterdeki
+bir alıntının içinde değilse `kapsam.sayisal_istisna` içindeki dar ve gerekçeli
+bir desenle eşleşmek zorundadır. Eşleşmeyen tek bir iddia `dosya:satır` ve
+jetonla kırmızı olur; hiçbir iddiayı kapsamayan ölü istisna veya üç satırdan
+geniş istisna da kırmızıdır. Kimlik, sürüm, tarih ve çıkış kodu değerleri bu
+tanımın dışındadır. Böylece elle tutulan satır listesi değil, kapsamın kendisi
+kapıya bağlanır.
+
 ---
 
 ## Neyi ölçer, neyi ölçmez

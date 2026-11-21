@@ -40,6 +40,7 @@ def _json_yaz(yol, veri):
 
 def _defter(kok):
     return {
+        "kapsam": {"dahil": ["README.md"], "sayisal_istisna": []},
         "iddialar": [
             {
                 "id": "IDD-01",
@@ -103,6 +104,21 @@ def _sahte_agir(kok, ad):
          "from pathlib import Path\n"
          "Path(__file__).with_name('%s.marker').write_text('x')\n"
          "print('AGIR 3/3')\n" % ad)
+
+
+def _kapsam_kok(gecici, ad, metin, istisna=None, dahil=None):
+    kok = Path(gecici) / ad
+    (kok / "tools").mkdir(parents=True)
+    shutil.copy2(ARAC, kok / "tools" / "iddia.py")
+    _yaz(kok / "README.md", metin)
+    defter = _defter(kok)
+    defter["kapsam"] = {"dahil": dahil or ["README.md"],
+                        "sayisal_istisna": istisna or []}
+    _json_yaz(kok / "tools" / "iddia_defteri.json", defter)
+    _json_yaz(kok / "tools" / "iddia_olcum.json", _hizli_kanit())
+    _sahte_agir(kok, "dogrula")
+    _sahte_agir(kok, "mutasyon_bataryasi")
+    return kok
 
 
 def _hazirla(kok):
@@ -200,6 +216,61 @@ def main():
               "HUKUM: OLCULMEDI" in cikti, cikti)
         bekle("yalniz agir secimde komut kosmadi",
               not (kok / "tools" / "dogrula.marker").exists(), cikti)
+
+        # --- KAPSAM KAPISI: sayisal iddia defterde ya da gerekceli istisnada.
+        temel = "HIZLI 7/7\nAGIR 3/3\n"
+        kirli = _kapsam_kok(gecici, "kapsam-eksik",
+                            temel + "YENI 42 vaka\n")
+        r = _calistir(kirli, "--hizli")
+        cikti = _cikti(r)
+        bekle("kapsamsiz iddia rc=2", r.returncode == 2, cikti)
+        bekle("kapsamsiz iddia dosya:satir ve jeton basar",
+              "README.md:3" in cikti and "'42'" in cikti, cikti)
+        bekle("kapsamsiz iddia HUKUM KAPSAM BOZUK",
+              "HUKUM: KAPSAM BOZUK" in cikti, cikti)
+
+        istisnali = _kapsam_kok(
+            gecici, "kapsam-istisna", temel + "YENI 42 vaka\n",
+            [{"desen": "YENI 42 vaka", "neden": "test istisnasi"}])
+        r = _calistir(istisnali, "--hizli")
+        cikti = _cikti(r)
+        bekle("gerekceli istisna rc=0", r.returncode == 0, cikti)
+        bekle("istisna sayaci basildi", "istisnada=1" in cikti, cikti)
+
+        olu = _kapsam_kok(gecici, "kapsam-olu", temel,
+                          [{"desen": "YOK 99 vaka", "neden": "olu"}])
+        r = _calistir(olu, "--hizli")
+        bekle("olu istisna rc=2", r.returncode == 2, _cikti(r))
+        bekle("olu istisna adlandirilir", "olu istisna" in _cikti(r), _cikti(r))
+
+        gerekcesiz = _kapsam_kok(
+            gecici, "kapsam-gerekcesiz", temel + "YENI 42 vaka\n",
+            [{"desen": "YENI 42 vaka"}])
+        r = _calistir(gerekcesiz, "--hizli")
+        bekle("gerekcesiz istisna rc=2", r.returncode == 2, _cikti(r))
+
+        genis = _kapsam_kok(
+            gecici, "kapsam-genis", temel + "YENI 42 vaka\n",
+            [{"desen": ".*", "neden": "her sey"}])
+        r = _calistir(genis, "--hizli")
+        bekle("genis istisna rc=2", r.returncode == 2, _cikti(r))
+        bekle("genis istisna adlandirilir", "cok genis" in _cikti(r), _cikti(r))
+
+        cok_satir = _kapsam_kok(
+            gecici, "kapsam-cok-satir",
+            temel + "A 1 vaka\nB 2 vaka\nC 3 vaka\nD 4 vaka\n",
+            [{"desen": "vaka", "neden": "dort satir"}])
+        r = _calistir(cok_satir, "--hizli")
+        bekle("dort satiri kapsayan istisna rc=2",
+              r.returncode == 2 and "cok genis" in _cikti(r), _cikti(r))
+
+        eksik_dosya = _kapsam_kok(
+            gecici, "kapsam-dosya", temel,
+            dahil=["README.md", "docs/YOK.md"])
+        r = _calistir(eksik_dosya, "--hizli")
+        bekle("kapsam disi dosya yoksa rc=2", r.returncode == 2, _cikti(r))
+        bekle("eksik kapsam dosyasi adlandirilir",
+              "docs/YOK.md" in _cikti(r), _cikti(r))
 
     if hatalar:
         print("\nIDDIA OZ-TEST: FAIL — %d/%d" % (len(hatalar), toplam))

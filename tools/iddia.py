@@ -32,10 +32,20 @@ HIZLI KIP: --hizli, AGIR_BETIKLER'deki (dogrula, mutasyon) komutlari kosmaz;
 bu satirlari ATLANDI basar ve PASS saymaz. --yaz ile birlesemez (kismi anlik
 goruntu tam kaniti silerdi); varsayilan tam kosu aynen kalir.
 
+KAPSAM KAPISI: defter yalniz kendi satirlarini degil kapsamini da denetler.
+README.md, docs/README.md ve docs/EN/QUICKSTART.md icindeki her sayisal olcum
+iddiasi (oran `8/8`, olcum adi tasiyan sayi `116 vaka`, uretilmis sayac
+`incelenmedi=0`) ya defterdeki bir alintinin icinde olmali ya da
+`kapsam.sayisal_istisna` icindeki dar ve gerekceli bir desenle eslesmelidir.
+Kimlik (KANIT-05), surum (v5.5.4), tarih (2026-11-19) ve cikis kodu (rc=1) bu
+tanimin disindadir. Kapsanmayan tek bir iddia rc=2 ile kirmizi olur; hicbir
+iddiayi kapsamayan olu istisna veya uc satirdan genis istisna da kirmizidir.
+
 CIKIS: 0 = olculen OLCULDU satirlari ham kanitiyla tuttu (--hizli'da agir
        satirlar ATLANDI) · 1 = en az bir iddia tutmadi (veya --yaz sirasinda
        bir satir kirmizi) · 2 = defter/olcum dosyasi bozuk (sema, dosya,
-       alinti, eksik/fazla kanit) veya hizli kipte olculecek satir yok
+       alinti, eksik/fazla kanit), kapsam istisnasi gecersiz, kapsanmayan
+       sayisal iddia var veya hizli kipte olculecek satir yok
 
 KULLANIM
   python3 tools/iddia.py                  # agsiz tam dogrulama
@@ -60,6 +70,52 @@ ZAMAN_ASIMI = 600
 DURUMLAR = ('OLCULDU', 'AG_GEREKLI', 'BEYAN', 'OLCULMEDI')
 # --hizli bu betikleri kosan satirlari atlar; varsayilan kosu hepsini olcer.
 AGIR_BETIKLER = ('tools/dogrula.py', 'tools/mutasyon_bataryasi.py')
+# Kapsam kapisi: bir istisna en fazla bu kadar satiri kapsayabilir. Daha genis
+# bir desen, kapsami kapali degil acik hale getirir; bu yuzden kirmizidir.
+AZAMI_ISTISNA_SATIR = 3
+
+# Sayisal jeton: tarih, binlik ayiracli oran, surum, oran ve sade sayi.
+# Harfe yapisik rakamlar (KANIT-05, KFAZ0, P0, UTF-8) jeton degildir.
+KAPSAM_JETON = re.compile(r"""
+    (?<![\w.])
+    (?:
+        \d{1,2}\s+(?:Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|
+                       Eylül|Ekim|Kasım|Aralık|January|February|March|April|
+                       May|June|July|August|September|October|November|
+                       December)\s+\d{4}
+      | \d{4}-\d{2}-\d{2}
+      | \d{1,3}(?:\.\d{3})+(?:/\d{1,3}(?:\.\d{3})+)?
+      | v?\d+(?:\.\d+)+
+      | \d+/\d+(?:/\d+)?
+      | \d+(?:[.,]\d+)?
+    )
+    (?!\w)
+""", re.X)
+TARIH_JETON = re.compile(
+    r'^(?:\d{1,2}\s+(?:Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|'
+    r'Eylül|Ekim|Kasım|Aralık|January|February|March|April|May|June|July|'
+    r'August|September|October|November|December)\s+\d{4}|'
+    r'\d{4}-\d{2}-\d{2})$', re.I)
+# Olcum adi/birimi: sayinin yaninda (en fazla uc kelime) gorunurse jeton bir
+# olcum iddiasidir. Sonuc sozcukleri (yeni/degisen/silinen/new/changed/deleted)
+# yalniz hemen yanindaysa sayilir; "0 `olmadan` yeni" bir iddia degildir.
+OLCUM_SOZCUK = re.compile(r"""
+    \b(?:
+        vaka|kural|dosya|bulgu|model|commit|kalem|test|sat[ıi]r|kay[ıi]t|rol|
+        kenar|saniye|dakika|bayt|hata|kimlik|ajan|senaryo|ko[sş]um|
+        gecen|kalan|ge[cç]|pass\b|fail\b|case|rule|file|finding|check|second|
+        role|line|record|token|gate|kap[ıi]|lens|iddia|kan[ıi]t|
+        s[ıi]n[ıi]r|limit|scope|gap|fix
+    )\w*
+  | %
+""", re.X | re.I)
+SONUC_SOZCUK = re.compile(r'^(?:yeni|degisen|silinen|new|changed|deleted)\b',
+                          re.I)
+# Uretilmis sayac alanlari: kalem=8, incelenmedi=0, planda=214 ...
+SAYAC_ALAN = re.compile(
+    r'(?<![A-Za-z0-9_])(?:kalem|gecen|kalan|calistirilmadi|olculdu|atlandi|'
+    r'olculmedi|planda|yeni|degisen|ayni|silinecek|taranan|incelenmedi|'
+    r'onay|aktif|aday|komut|dosya)=(\d+)')
 
 
 class DefterHatasi(Exception):
@@ -138,6 +194,184 @@ def denetle(defter):
         elif not kayit.get('gerekce'):
             raise DefterHatasi('%s (%s): %s icin gerekce zorunlu'
                                % (yer, eid, kayit['durum']))
+
+
+def _anlamli_desen(desen):
+    """Istisna deseni en az uc harf tasimali: `.*` ve `\d+` gibi genel
+    desenler kapsami sessizce acamaz."""
+    sade = re.sub(r'\\.', '', desen)
+    sade = re.sub(r'\[[^\]]*\]', '', sade)
+    return len(re.findall(r'[A-Za-zÇĞİÖŞÜçğıöşü]', sade)) >= 3
+
+
+def _olcum_penceresi(satir, bas, son):
+    """Jetonun iki yanindaki en fazla uc kelime; uzak bir olcum adi jetonu
+    iddia yapmaz."""
+    once = satir[:bas].split()[-3:]
+    sonra = satir[son:].split()[:3]
+    return ' '.join(once + sonra)
+
+
+def _kimlik_mi(satir, bas):
+    """KANIT-05, FIX-003, OLG-1, DEVIR-...-1945 gibi kimlik parcasi mi?
+    Tirenden once buyuk harf ya da rakam varsa jeton kimlige aittir."""
+    return (bas >= 2 and satir[bas - 1] == '-'
+            and (satir[bas - 2].isupper() or satir[bas - 2].isdigit()))
+
+
+def _protokol_mu(satir, bas, son):
+    """2-of-2, KFAZ0-5 gibi protokol sabiti mi?"""
+    dilim = satir[max(0, bas - 8):son + 8]
+    return bool(re.search(r'\d+\s*[-–]\s*of\s*[-–]\s*\d+', dilim)
+                or re.search(r'KFAZ0[–-]5', dilim))
+
+
+def _cikis_kodu_mu(satir, bas, son):
+    """rc=1, rc!=0, exit code 2, Exit 1 gibi cikis kodu degeri mi?"""
+    once = satir[max(0, bas - 20):bas]
+    return bool(re.search(r'(?:rc|exit(?:\s+code)?|kod\w*)\s*(?:[=!]=?)?\s*$',
+                          once, re.I))
+
+
+def _tablo_hucre_mi(satir, bas, son):
+    """Tabloda yalin sayi hucresi mi? Cikis kodu tablolarinda deger sabittir;
+    olcum iddiasi degildir. `52 s` gibi birimli hucre iddia olarak kalir."""
+    if '|' not in satir:
+        return False
+    sol = satir.rfind('|', 0, bas)
+    sag = satir.find('|', son)
+    if sol == -1 or sag == -1:
+        return False
+    hucre = satir[sol + 1:sag].strip().strip('*` ')
+    return hucre == satir[bas:son]
+
+
+def _sira_numarasi_mi(satir, bas, son):
+    """Markdown madde/shell case numarasi mi (1., 3., 0))?"""
+    once = satir[:bas]
+    if not once.strip() and satir[son:son + 1] in ('.', ')'):
+        return True
+    return bool(re.match(r'^#{1,6}\s+$', once)
+                and satir[son:son + 1] == '.')
+
+
+def _secenek_mi(satir, bas, son):
+    """--limit=1, --depth 1, fetch-depth: 0 gibi komut secenegi mi?"""
+    once = satir[max(0, bas - 28):bas]
+    return bool(re.search(r'(?:--[\w-]+[= ]|fetch-depth:\s*)$', once))
+
+
+def _iddia_mi(jeton, satir, bas, son):
+    """Jeton bir sayisal olcum iddiasi mi? Kimlik, tarih, protokol sabiti,
+    cikis kodu, tablo kodu, sira numarasi ve komut secenegi degilse; oran/
+    yuzde, olcum adi yaninda, uretilmis sayac, dolar tutari veya N-vs-M ise
+    evet."""
+    if _kimlik_mi(satir, bas) or TARIH_JETON.match(jeton):
+        return False
+    if _protokol_mu(satir, bas, son) or _cikis_kodu_mu(satir, bas, son):
+        return False
+    if _tablo_hucre_mi(satir, bas, son) or _sira_numarasi_mi(satir, bas, son):
+        return False
+    if _secenek_mi(satir, bas, son):
+        return False
+    if '/' in jeton or satir[son:son + 1] == '%':
+        return True
+    if bas > 0 and satir[bas - 1] == '$':
+        return True
+    if re.match(r'-vs-\d', satir[son:son + 8]) or \
+            re.search(r'\d-vs-$', satir[max(0, bas - 8):bas]):
+        return True
+    if re.match(r'\s+vs\.?\s+\d', satir[son:son + 10]) or \
+            re.search(r'\d\s+vs\.?\s+$', satir[max(0, bas - 10):bas]):
+        return True
+    if re.match(r'\s*s\b', satir[son:son + 4]):
+        return True
+    if SONUC_SOZCUK.match(satir[son:].lstrip()):
+        return True
+    for eslesme in SAYAC_ALAN.finditer(satir):
+        if eslesme.start(1) == bas and eslesme.end(1) == son:
+            return True
+    return bool(OLCUM_SOZCUK.search(_olcum_penceresi(satir, bas, son)))
+
+
+def kapsam_denetle(defter):
+    """Public dokumanlardaki her sayisal olcum iddiasini defterin alintilariyla
+    ya da gerekceli, dar bir istisnayla eslestir. Eksik varsa hepsini dondur;
+    istisna semasi bozuksa DefterHatasi yukselt (fail-closed)."""
+    kapsam = defter.get('kapsam') or {}
+    dosyalar = kapsam.get('dahil')
+    if not (isinstance(dosyalar, list) and dosyalar
+            and all(isinstance(d, str) and d for d in dosyalar)):
+        raise DefterHatasi('kapsam.dahil: public dokuman listesi yok')
+    istisnalar = kapsam.get('sayisal_istisna') or []
+    if not isinstance(istisnalar, list):
+        raise DefterHatasi('kapsam.sayisal_istisna: liste degil')
+    kurallar = []
+    for sira, kayit in enumerate(istisnalar, 1):
+        yer = 'kapsam.sayisal_istisna[%d]' % sira
+        if not isinstance(kayit, dict) or not kayit.get('desen') \
+                or not kayit.get('neden'):
+            raise DefterHatasi('%s: desen ve neden zorunlu' % yer)
+        desen = kayit['desen']
+        try:
+            rx = re.compile(desen)
+        except re.error as e:
+            raise DefterHatasi('%s: desen bozuk: %s' % (yer, e))
+        if not _anlamli_desen(desen):
+            raise DefterHatasi('%s: desen cok genis — en az uc harf tasimali: '
+                               '%r' % (yer, desen))
+        kurallar.append({'rx': rx, 'desen': desen, 'satirlar': set(),
+                         'kullanildi': 0})
+
+    sayisal = kapsanan = istisna = 0
+    eksikler = []
+    for dosya in dosyalar:
+        metin = _metin(dosya)
+        kapali = bytearray(len(metin))
+        for kayit in defter['iddialar']:
+            for kaynak in kayit['kaynaklar']:
+                if kaynak['dosya'] != dosya:
+                    continue
+                alinti = kaynak['alinti']
+                bas = metin.find(alinti)
+                while bas != -1:
+                    kapali[bas:bas + len(alinti)] = b'\x01' * len(alinti)
+                    bas = metin.find(alinti, bas + 1)
+        ofset = 0
+        for satir_no, satir in enumerate(metin.split('\n'), 1):
+            for eslesme in KAPSAM_JETON.finditer(satir):
+                jeton = eslesme.group(0)
+                if not _iddia_mi(jeton, satir, eslesme.start(), eslesme.end()):
+                    continue
+                sayisal += 1
+                bas = ofset + eslesme.start()
+                son = ofset + eslesme.end()
+                if all(kapali[bas:son]):
+                    kapsanan += 1
+                    continue
+                for kural in kurallar:
+                    if kural['rx'].search(satir):
+                        kural['satirlar'].add((dosya, satir_no))
+                        kural['kullanildi'] += 1
+                        istisna += 1
+                        break
+                else:
+                    eksikler.append((dosya, satir_no, jeton, satir.strip()))
+            ofset += len(satir) + 1
+
+    for kural in kurallar:
+        if len(kural['satirlar']) > AZAMI_ISTISNA_SATIR:
+            raise DefterHatasi(
+                'kapsam.sayisal_istisna: %r cok genis — %d satiri kapsiyor '
+                '(azami %d); kapsami daraltin'
+                % (kural['desen'], len(kural['satirlar']),
+                   AZAMI_ISTISNA_SATIR))
+        if not kural['kullanildi']:
+            raise DefterHatasi(
+                'kapsam.sayisal_istisna: %r hicbir sayisal iddiayi '
+                'kapsamiyor (olu istisna)' % kural['desen'])
+    return {'dosyalar': dosyalar, 'sayisal': sayisal, 'kapsanan': kapsanan,
+            'istisna': istisna, 'eksikler': eksikler}
 
 
 def olcum_yukle(gerekli=True):
@@ -329,12 +563,38 @@ def main(argv):
         print('HUKUM: DEFTER BOZUK — hicbir iddia olculmedi')
         return 2
 
+    try:
+        kapsam_denetimi = kapsam_denetle(defter)
+    except DefterHatasi as e:
+        print('KAPSAM BOZUK: %s' % e)
+        print('HUKUM: KAPSAM BOZUK — kapsam istisnasi gecersiz')
+        return 2
+
     kapsam = defter.get('kapsam') or {}
     print('ATLAS — iddia defteri · %s' % DEFTER.relative_to(KOK))
     print('ham kanit: %s' % OLCUM.relative_to(KOK))
-    print('kapsam: %s' % ' · '.join(kapsam.get('dahil') or []))
+    print('kapsam: %s' % ' · '.join(kapsam_denetimi['dosyalar']))
     for haric in kapsam.get('haric') or []:
         print('  haric: %s — %s' % (haric.get('desen'), haric.get('neden')))
+    print('sayisal kapsam: %d iddia · alintida=%d · istisnada=%d'
+          % (kapsam_denetimi['sayisal'], kapsam_denetimi['kapsanan'],
+             kapsam_denetimi['istisna']))
+    if kapsam_denetimi['eksikler']:
+        eksikler = kapsam_denetimi['eksikler']
+        print()
+        print('KAPSAM FAIL — %d sayisal iddia defterde ya da gerekceli '
+              'istisnada yok:' % len(eksikler))
+        for dosya, satir_no, jeton, metin in eksikler[:20]:
+            print('  %s:%d · %r · %s'
+                  % (dosya, satir_no, jeton, _kisa(metin, 96)))
+        if len(eksikler) > 20:
+            print('  ... ve %d tane daha' % (len(eksikler) - 20))
+        print('  Cozum: iddiayi deftere satir olarak ekleyin (komut + alinti '
+              '+ beklenen) veya kapsam.sayisal_istisna icinde dar bir desen '
+              've gerekce tanimlayin.')
+        print('HUKUM: KAPSAM BOZUK — public sayisal iddialar defterle '
+              'eslesmiyor')
+        return 2
     if sadece:
         print('filtre: %s' % ', '.join(sorted(sadece)))
     if yaz:

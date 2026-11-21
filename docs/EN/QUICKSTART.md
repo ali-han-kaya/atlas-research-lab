@@ -157,7 +157,7 @@ claim/evidence gap, not from a broken test.
 | `make dogrula-ci` | runner mode used by GitHub Actions (same rules, no CI-only exemption) |
 | `make katalog-kontrol` | live models.dev gate: fixed allowlist IDs and all ten `profiller.bedava` roles; network required, run manually outside CI; `OLCULMEDI` fails, never passes |
 | `make oztest` | the three self-test suites alone |
-| `make iddia` | numeric claims in README/docs, re-measured with their stored raw evidence line; named by `IDD-*` on mismatch |
+| `make iddia` | numeric claims in README/docs, re-measured with their stored raw evidence line; named by `IDD-*` on mismatch. A scope gate also fails for any numeric claim neither quoted in the ledger nor covered by a narrow justified exception (`kapsam.sayisal_istisna`); stale, reasonless or over-broad exceptions are red too |
 | `make iddia-hizli` | fast claims only; skips `dogrula`/`mutation` rows, marks them `ATLANDI` and never counts them as PASS; the full run is unchanged |
 | `make iddia-yaz` | regenerate the raw evidence snapshot after an intentional change |
 
