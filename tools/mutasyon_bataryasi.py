@@ -747,6 +747,68 @@ def _rec06_coklu_hayalet(k):
     return ekle(k, '03-FAZ-3-MASTER-v5.5.md', 'FIX-003\nFIX-004\n')
 
 
+# --- model_kimlik: kor noktasiz taramanin geri alinma mutantlari ---------------
+# Her mutant kapiyi GERCEKTEN zayiflatir; beklenen bulgu, kapinin kendi
+# --oztest vakasinin adidir (veya --kontrol'un defter hatasidir). Kapi kurali
+# silinirse vaka ATESLEMEDI olur ve batarya yesil donemez.
+def _mk_ikili(k):
+    return degistir(
+        k, 'tools/model_kimlik.py',
+        'def _bayt_tara(sonuc, yol, ham, kimlikler, tanim):\n',
+        'def _bayt_tara(sonuc, yol, ham, kimlikler, tanim):\n'
+        '    return  # MUTANT: ikili bayt taramasi devre disi\n')
+
+
+def _mk_buyuk_atla(k):
+    return degistir(
+        k, 'tools/model_kimlik.py',
+        "        if b'\\x00' in ham:\n",
+        '        if len(ham) > 4 * 1024 * 1024:\n'
+        '            continue  # MUTANT: 4 MB ustu sessizce atlandi\n'
+        "        if b'\\x00' in ham:\n")
+
+
+def _mk_onaysiz_sessiz(k):
+    return degistir(
+        k, 'tools/model_kimlik.py',
+        '        else:\n            sonuc.incelenmeyen.append((rel, sebep))\n',
+        '        else:\n            pass  # MUTANT: onaysiz incelenemeyen sessizce atlandi\n')
+
+
+def _mk_genel_onay(k):
+    return degistir(
+        k, 'tools/model_kimlik.py',
+        '        kayit = onay.get(rel)\n',
+        "        kayit = {'tur': 'okunamaz'} if onay else None  # MUTANT: genel onay\n")
+
+
+def _mk_defter_tanim_sil(k):
+    p = k / 'tools' / 'model_kimlik_istisna.json'
+    veri = json.loads(p.read_text(encoding='utf-8'))
+    veri['onay'] = [{
+        'dosya': 'docs/gecici-onay-yok.md', 'tur': 'okunamaz', 'sha256': None,
+        'gerekce': 'MUTANT: defterin kendi tanim onayi kaldirildi.'}]
+    p.write_text(json.dumps(veri, ensure_ascii=False, indent=1) + '\n',
+                 encoding='utf-8')
+    return None
+
+
+def _mk_defter_hash_sil(k):
+    p = k / 'tools' / 'model_kimlik_istisna.json'
+    veri = json.loads(p.read_text(encoding='utf-8'))
+    veri['_kural'] += ' MUTANT: icerik degisti, tanim hash guncellenmedi.'
+    p.write_text(json.dumps(veri, ensure_ascii=False, indent=1) + '\n',
+                 encoding='utf-8')
+    return None
+
+
+def _mk_aktif_sayac_sil(k):
+    return degistir(
+        k, 'tools/model_kimlik.py',
+        "            'aktif=0'\n",
+        "            ''\n")
+
+
 def taban_ve_bulgu(kok, kapi, argumanlar, mutasyon, iz, cwd=None, env=None):
     """Kirmizi uretmeyen kural icin: temiz tabanda iz YOK, ihlalde iz VAR."""
     betik = kok / kapi
@@ -1391,6 +1453,28 @@ def vakalar():
          lambda k: [],
          _chk05,
          'WARN CHK-05', 'BULGU', {'cwd': 'sandbox_chk', 'kur': _chk_hazirla}),
+        # --- model_kimlik: "bakamadigi icin PASS verme" kuralinin geri alinmasi --
+        ('MODELKIM-IKILI-BAYT', 'ATLAS', 'ikili dosyada bayt aramasi zorunlu',
+         'tools/model_kimlik.py', lambda k: ['--oztest'],
+         _mk_ikili, 'FAIL — ikili', {'kontrol': True}),
+        ('MODELKIM-BUYUK-ATLA', 'ATLAS', '4 MB ustu dosya sessizce atlanamaz',
+         'tools/model_kimlik.py', lambda k: ['--oztest'],
+         _mk_buyuk_atla, 'FAIL — buyuk', {'kontrol': True}),
+        ('MODELKIM-ONAYSIZ-SESSIZ', 'ATLAS', 'onaysiz incelenemeyen FAIL eder',
+         'tools/model_kimlik.py', lambda k: ['--oztest'],
+         _mk_onaysiz_sessiz, 'FAIL — onaysiz', {'kontrol': True}),
+        ('MODELKIM-GENEL-ONAY', 'ATLAS', 'tek onay tum incelenemeyenleri kapsamaz',
+         'tools/model_kimlik.py', lambda k: ['--oztest'],
+         _mk_genel_onay, 'FAIL — onaysiz', {'kontrol': True}),
+        ('MODELKIM-DEFTER-TANIM', 'ATLAS', 'defter kendi tanim onayini tasir',
+         'tools/model_kimlik.py', lambda k: ['--kontrol'],
+         _mk_defter_tanim_sil, 'onay listesi', {'kontrol': True}),
+        ('MODELKIM-DEFTER-HASH', 'ATLAS', 'defter tanim SHA-256 dogrulanir',
+         'tools/model_kimlik.py', lambda k: ['--kontrol'],
+         _mk_defter_hash_sil, 'tanim hash tutmuyor', {'kontrol': True}),
+        ('MODELKIM-AKTIF-SAYAC', 'ATLAS', 'PASS raporu aktif sayacini tasir',
+         'tools/model_kimlik.py', lambda k: ['--oztest'],
+         _mk_aktif_sayac_sil, 'FAIL — rapor', {'kontrol': True}),
     ]
 
 

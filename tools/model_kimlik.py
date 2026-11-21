@@ -319,6 +319,19 @@ def hukum(sonuc, onay):
     return not sorunlar, sorunlar
 
 
+def ozet_satiri(kimlikler, sonuc, onay):
+    """PASS rapor satiri — sayaclarin TEK kaynagi; --oztest bunu denetler.
+
+    `incelenmedi` tum incelenemeyen dosyalari sayar (onayli olanlar dahil);
+    boylece onay listesindeki bir dosya raporda kaybolmaz. Temiz agacta 0'dir.
+    """
+    return ('MODEL KIMLIK: PASS — %d emekli kimlik · aday=%d dosya · '
+            'taranan=%d dosya · incelenmedi=%d dosya · onay=%d kayit · '
+            'aktif=0'
+            % (len(kimlikler), sonuc.aday(), sonuc.taranan,
+               len(sonuc.incelenmedi), len(onay)))
+
+
 def _oz_agac(kok, dosyalar):
     for rel, icerik in dosyalar.items():
         p = Path(kok) / rel
@@ -380,6 +393,7 @@ def oztest():
         vaka.append(ad)
 
     gecti, sorunlar, sonuc = _oz_kos(taban, veri)
+    temiz_sonuc = sonuc
     bekle(gecti and sonuc.taranan == 3 and not sonuc.incelenmedi,
           'temiz', '; '.join(sorunlar))
     bekle(not sonuc.bayat and len(sonuc.bulunan) == 1
@@ -444,6 +458,23 @@ def oztest():
         raise SystemExit('MODEL KIMLIK OZTEST: FAIL — tanim (defter hash)')
     vaka.append('tanim')
 
+    veri5 = _oz_defter(eski, tarihsel, h)
+    veri5['onay'] = [{
+        'dosya': 'docs/gecici-onaysiz.md', 'tur': 'okunamaz', 'sha256': None,
+        'gerekce': 'Defterin kendi tanim onayi yok; sentetik ihlal.'}]
+    try:
+        defter_dogrula(veri5)
+    except DefterHatasi:
+        pass
+    else:
+        raise SystemExit('MODEL KIMLIK OZTEST: FAIL — defter-onay')
+    vaka.append('defter-onay')
+
+    _, _, onay_sozluk = defter_dogrula(veri)
+    rapor = ozet_satiri([eski], temiz_sonuc, onay_sozluk)
+    bekle(all(x in rapor for x in ('aday=3', 'taranan=3', 'incelenmedi=0',
+                                   'onay=1', 'aktif=0')), 'rapor', rapor)
+
     print('MODEL KIMLIK OZTEST: PASS — %d/%d (%s)'
           % (len(vaka), len(vaka), ', '.join(vaka)))
 
@@ -492,10 +523,7 @@ def main(argv):
     tekil = len(sonuc.bulunan)
     adet = sum(len(v) for v in sonuc.bulunan.values())
     dosya = len({y for y, _h in sonuc.bulunan})
-    print('MODEL KIMLIK: PASS — %d emekli kimlik · aday=%d dosya · '
-          'taranan=%d dosya · incelenmedi=%d dosya · onay=%d kayit · '
-          'aktif=0'
-          % (len(kimlikler), sonuc.aday(), sonuc.taranan, 0, len(onay)))
+    print(ozet_satiri(kimlikler, sonuc, onay))
     print('ISTISNA: %d kayit · %d dosya · 0 bayat · %d tarihsel satir '
           '(%d tekil hash) · %d dosya · %d tanim eslesmesi'
           % (len(izinli), len({y for y, _h in izinli}), adet, tekil, dosya,

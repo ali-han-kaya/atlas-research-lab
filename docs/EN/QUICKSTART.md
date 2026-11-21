@@ -60,7 +60,7 @@ after-mutation contract holds. A green baseline alone is not enough; a marker
 in the baseline fails the case before the mutation is even evaluated.
 
 ```text
-SONUC: 91/91 kural atesledi · 18/18 beklenen bulgu dogrulandi · taban temiz olmayan=0
+SONUC: 98/98 kural atesledi · 18/18 beklenen bulgu dogrulandi · taban temiz olmayan=0
 HUKUM: PASS — her vaka temiz tabanda sessiz, ihlalde kirmizi/beklenen bulgu.
 ```
 
@@ -152,7 +152,7 @@ claim/evidence gap, not from a broken test.
 | Command | What it proves |
 |---|---|
 | `make kapsam` | `docs/MUTASYON_KAPSAM.md` matches the current gate inventory |
-| `make model-kimlik` | zero retired-ID references in active code/config/tests/docs; every candidate file is inspected (binary-safe, no size cap), the PASS line reports `taranan`/`incelenmedi`/`onay`/`aktif`, and an uninspected file without an approval entry fails |
+| `make model-kimlik` | zero retired-ID references in active code/config/tests/docs; every candidate file is inspected (binary-safe, no size cap), the PASS line reports `taranan`/`incelenmedi`/`onay`/`aktif`, an uninspected file without an approval entry fails, and seven named mutants in `make mutasyon` revert each protection |
 | `make guvenlik` | `pip-audit` findings, each named in `docs/GUVENLIK.md`; unlisted finding → red |
 | `make dogrula-ci` | runner mode used by GitHub Actions (same rules, no CI-only exemption) |
 | `make katalog-kontrol` | optional network check: fixed allowlist IDs still exist at models.dev; not run in CI |
