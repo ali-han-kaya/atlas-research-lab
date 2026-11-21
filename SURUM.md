@@ -4,6 +4,8 @@
 
 Sürüm: v1.7.411 (güncel: Değişiklik Kaydı'nın ilk satırı) · Tarih: 21 Kasım 2026
 
+> **21 Kasım 2026 düzeltmesi:** Canlı `make katalog-kontrol` ağ gerektirdiği için CI'dan çıkarıldı; CI yalnız çevrimdışı `make dogrula-ci`/`katalog-selftest` koşar. v1.7.411 satırındaki CI kaydı tarihseldir.
+
 Kanonik OLGU-06 DEVIR: `docs/DEVIR-2026-09-03-1945-AUD-06-07.md`
 
 Güncel öz-test ve envanter sayıları: [`docs/DURUM.md`](docs/DURUM.md) (üretilmiş; elle düzenlenmez).

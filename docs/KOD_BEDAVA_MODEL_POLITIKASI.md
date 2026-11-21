@@ -2,9 +2,9 @@
 
 > **Yürürlük:** 21 Kasım 2026 · **Kapsam:** `KOD_SABLONLAR/routing.profiles.json`
 > → `profiller.bedava` · **Bağlayıcı:** bu politikadaki koşullar sağlanmadan
-> profil değiştirilmez. İhlal, `make katalog-kontrol` (CI'da `bedava canli
-> katalog` işi), `make dogrula` veya `make model-kimlik` hükümlerinden birini
-> kırmızıya çevirir.
+> profil değiştirilmez. İhlal, `make katalog-kontrol` (CI dışında elle),
+> `make dogrula` veya `make model-kimlik` hükümlerinden birini kırmızıya
+> çevirir.
 
 ## 1. Profil ne için var, ne için yok
 
@@ -64,10 +64,9 @@ make katalog-kontrol                 # sarmalayıcı + append-only kayıt; GNU m
 ```
 
 - Kaynak: `https://models.dev/api.json`.
-- **Normal CI yolu:** `.github/workflows/dogrula.yml` → `bedava canli katalog`
-  işi. Tetikler: her `push` (main), her `pull_request`, haftalık cron
-  (`0 3 * * 1`) ve `workflow_dispatch`. İş `make katalog-kontrol` çalıştırır;
-  aynı commit'te `dogrula` ve `iddia` işleriyle paraleldir.
+- **Canlı ölçüm CI dışındadır.** `make katalog-kontrol` ağ gerektirir; elle
+  veya yerel zamanlanmış bir işle çalıştırılır. CI yalnız çevrimdışı
+  `make katalog-selftest` testini `make dogrula-ci` üzerinden koşar.
 - Ölçüm **on rolün tamamını** kapsar: `profiller.bedava` altındaki her `kod-*`
   anahtarı canlı kayda çözülür ve rol rol basılır. Rol sayısı 10 değilse kapı
   `ROL_SAYISI` hatasıyla kırmızıdır.
@@ -80,7 +79,7 @@ make katalog-kontrol                 # sarmalayıcı + append-only kayıt; GNU m
   `LIMIT_YETERSIZ` (`limit.context`/`limit.output` < `asgari_limit`),
   `KATALOGDA_YOK`, `TEK_KIMLIK_DEGIL`, `ROL_BOZUK`, `ROL_SAYISI`. Kimlik
   emekli sayılır ve §4 başlar.
-- `rc=2` → ağ/JSON okunamadı: sonuç **`OLCULMEDI`**dir. CI işi kırmızıdır;
+- `rc=2` → ağ/JSON okunamadı: sonuç **`OLCULMEDI`**dir. Ölçüm kırmızıdır;
   PASS'a çevrilmez, profil değiştirilmez. `OLCULMEDI` satırı ham gerekçeyi
   (`models.dev okunamadi: ...`) taşır.
 
@@ -119,7 +118,7 @@ Sıra bağlayıcıdır. Bir adım yeşil olmadan sonrakine geçilmez.
 
 ### P0 — Tespit
 
-`make katalog-kontrol` (veya CI'daki `bedava canli katalog` işi) `rc=1`
+`make katalog-kontrol` (CI dışında elle) `rc=1`
 verdiğinde ya da canlı kayıt `MODEL_YOK` / `DURUM deprecated` / `YETENEK_FARKLI`
 / `MALIYET` / `LIMIT_YETERSIZ` ürettiğinde emeklilik başlar. `rc=2` ise
 emeklilik değil **ölçüm tekrarı** gerekir: `OLCULMEDI` bir sapma kanıtı değildir.
@@ -227,11 +226,10 @@ gizlenmez.
 - `docs/DERSLER_v1_2026-08-30.md` ders satırı,
 - sayısal iddia değiştiyse `tools/iddia_defteri.json` + `make iddia-yaz`,
 - `make katalog-kontrol` çıktısı ve `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl`
-  satırı (commit/tree/tree_sha256 + tanım SHA-256'ları); CI'da artifact
-  `bedava-katalog-kaniti`,
+  satırı (commit/tree/tree_sha256 + tanım SHA-256'ları),
 - `make kanit` zinciri (`kanit`, `kanit-dogrula`, `kanit-paket-dogrula`,
   `durum-kontrol`), commit, `origin/main`e push, o commit'in CI koşusu
-  `success` — `bedava canli katalog` işi dahil.
+  `success`.
 
 ### P8 — Geri alma
 
@@ -283,19 +281,19 @@ Aynı ölçümde canlı kayıt (`https://models.dev/api.json`,
 
 Bu tablo 21.11.2026'da **elle** alınmış tarihsel kayıttır; sonraki ölçüm yeni
 satır olarak eklenir, eskisi değiştirilmez. Bu tarihten sonra ölçüm
-**süreklidir**: `bedava canli katalog` işi her push/PR'da, haftalık cron'da ve
-elle tetiklemede on rolü canlı models.dev'den yeniden ölçer; sonuç
+**sürekli değildir**: canlı ölçüm ağ gerektirdiği için CI dışında, elle/yerel
+koşulur; on rolü canlı models.dev'den yeniden ölçer; sonuç
 `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydına commit/tree/tree_sha256 ve tanım
 SHA-256'larıyla eklenir. Tek günlük anlık görüntüye bağımlılık yoktur; ağ
-okunamazsa kayıt `OLCULMEDI` olur ve CI kırmızı kalır.
+okunamazsa kayıt `OLCULMEDI` olur; PASS sayılmaz.
 
 ### 6.1 Otomatik kayıt sözleşmesi
 
 `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` satır başına bir JSON nesnesi taşır;
 alanlar §3.2'dedir. Kayıt yalnız eklenir: eski satır silinmez, yeniden
 yazılmaz. Bir satırın `sonuc` alanı `FAIL` veya `OLCULMEDI` ise bu, sonraki
-`PASS` tarafından gizlenmez; P0–P8 izi olarak kalır. CI artifact'ı
-`bedava-katalog-kaniti` aynı satırı taşır ve 90 gün saklanır.
+`PASS` tarafından gizlenmez; P0–P8 izi olarak kalır. Kayıt yerel dosyada
+tutulur; CI artifact'ı yoktur.
 
 ## 7. İlgili komutlar ve dosyalar
 
@@ -308,7 +306,7 @@ yazılmaz. Bir satırın `sonuc` alanı `FAIL` veya `OLCULMEDI` ise bu, sonraki
 | `tools/model_kimlik.py` | emekli kimlik taraması, `--oztest`, `--envanter` |
 | `tools/model_kimlik_istisna.json` | emekli kimlik + satır hash'leri + `onay` |
 | `make katalog-kontrol` | canlı ölçüm + `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydı |
-| `.github/workflows/dogrula.yml` | `bedava canli katalog` işi: push/PR + haftalık cron + elle |
+| `.github/workflows/dogrula.yml` | `dogrula` ve `iddia` işleri; canlı katalog işi yok |
 | `make model-kimlik` | aktif atıf denetimi (fail-closed ön koşul) |
 | `make mutasyon` | korumaların geri alınamazlığı (116 vaka) |
 | `make dogrula` | sekiz kalemlik ana kapı (MOD-1/MOD-2 dahil) |

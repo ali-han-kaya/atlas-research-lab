@@ -60,6 +60,8 @@ jobs:
       # Bir kalem koşmazsa satır
       # `KABUL EDİLEN BORÇ: <id> koşmuyor — <sebep>` olarak görünür ve PASS
       # sayılmaz; koşan 8/8 ile eksik koşu arasındaki fark gizlenmez.
+      # katalog-selftest is an offline prerequisite of dogrula-ci.
+      # The live models.dev gate (make katalog-kontrol) intentionally runs outside CI.
       - name: make dogrula-ci
         run: make dogrula-ci
 
@@ -146,48 +148,6 @@ jobs:
           path: kanit-paketi/
           if-no-files-found: error
           retention-days: 14
-
-  bedava-katalog:
-    name: bedava canli katalog
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          # Kanit agac ozeti gercek commit'ten hesaplanir.
-          fetch-depth: 0
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      # Tek kimlik, cost 0/0, reasoning/tool_call, deprecated olmayan status ve
-      # bedava_politika.asgari_limit canli models.dev'den olculur. Ag/JSON
-      # okunamazsa cikis 2 ve satir OLCULMEDI olur; PASS'a cevrilmez. Kayit
-      # RUNNER_TEMP'e yazilir (izlenen agac kirlenmez) ve artifact olarak yuklenir.
-      - name: Canli models.dev + on rol
-        run: |
-          set +e
-          make katalog-kontrol KAYIT_ARGS="--kayit $RUNNER_TEMP/bedava-katalog.jsonl" 2>&1 | tee "$RUNNER_TEMP/bedava-katalog.log"
-          rc=${PIPESTATUS[0]}
-          set -e
-          {
-            echo "## KOD bedava canli katalog"
-            echo '```'
-            cat "$RUNNER_TEMP/bedava-katalog.log"
-            echo '```'
-            echo "make rc=$rc (GNU make 1->2; hüküm satırda adıyla: PASS/FAIL/OLCULMEDI)"
-          } >> "$GITHUB_STEP_SUMMARY"
-          exit "$rc"
-
-      - name: Kanit kaydini yukle
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: bedava-katalog-kaniti
-          path: ${{ runner.temp }}/bedava-katalog.jsonl
-          if-no-files-found: warn
-          retention-days: 90
 
   iddia:
     name: iddia defteri

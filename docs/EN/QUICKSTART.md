@@ -155,7 +155,7 @@ claim/evidence gap, not from a broken test.
 | `make model-kimlik` | zero retired-ID references in active code/config/tests/docs; every candidate file is inspected (binary-safe, no size cap), the PASS line reports `taranan`/`incelenmedi`/`onay`/`aktif`, an uninspected file without an approval entry fails, and seven named mutants in `make mutasyon` revert each protection |
 | `make guvenlik` | `pip-audit` findings, each named in `docs/GUVENLIK.md`; unlisted finding → red |
 | `make dogrula-ci` | runner mode used by GitHub Actions (same rules, no CI-only exemption) |
-| `make katalog-kontrol` | live models.dev gate: fixed allowlist IDs and all ten `profiller.bedava` roles; runs in CI on push/PR, weekly cron and manual dispatch; `OLCULMEDI` fails, never passes |
+| `make katalog-kontrol` | live models.dev gate: fixed allowlist IDs and all ten `profiller.bedava` roles; network required, run manually outside CI; `OLCULMEDI` fails, never passes |
 | `make oztest` | the three self-test suites alone |
 | `make iddia` | numeric claims in README/docs, re-measured with their stored raw evidence line; named by `IDD-*` on mismatch |
 | `make iddia-yaz` | regenerate the raw evidence snapshot after an intentional change |
@@ -176,17 +176,17 @@ instead of emitting a false PASS or FAIL.
 
 CI runs `make dogrula-ci`, `make mutasyon`, `make kapsam`, `make guvenlik`, and
 asserts `./demo` exits **1** while `make demo` exits **2** (the wrapper cannot
-carry 1). The `bedava canli katalog` job runs `make katalog-kontrol` on every
-push/PR, weekly cron and manual dispatch. Workflow:
-`.github/workflows/dogrula.yml`.
+carry 1). The live `make katalog-kontrol` gate runs outside CI; the workflow
+does not call it. `make dogrula-ci` includes the offline
+`make katalog-selftest` prerequisite. Workflow: `.github/workflows/dogrula.yml`.
 
 `make katalog-kontrol` measures the live models.dev record for all ten
 `profiller.bedava` roles: one identity, zero `cost.input`/`cost.output`, live
 and local `reasoning`/`tool_call`, non-deprecated `status`, and the configured
 `bedava_politika.asgari_limit`. Exit 1 names stale/missing IDs or a broken
 bedava condition; exit 2 is **`OLCULMEDI`** when the live catalog cannot be
-read. `OLCULMEDI` fails CI and never becomes PASS. Each run appends a
-commit/tree/tree_sha256 and definition-SHA-256 record; CI writes it to
-`$RUNNER_TEMP` and uploads the `bedava-katalog-kaniti` artifact. For the code
-distinction, run `python3 tools/katalog_kontrol.py` directly; GNU make turns a
-failing recipe into exit 2.
+read. `OLCULMEDI` never becomes PASS. Each run appends a
+commit/tree/tree_sha256 and definition-SHA-256 record; pass `--kayit <path>` to
+write it to a separate file. For the code distinction, run
+`python3 tools/katalog_kontrol.py` directly; GNU make turns a failing recipe
+into exit 2.

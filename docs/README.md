@@ -131,16 +131,15 @@ sayısı runner'da da aynı çıkar. Canlı katalogla denetim isteğe bağlıdı
 `ATLAS_MODEL_KATALOG=~/.cache/opencode/models.json make dogrula`.
 
 Sabit allowlist'in models.dev'de hâlâ geçerli olup olmadığını ölçen canlı kapı
-`make katalog-kontrol`tür. Normal CI yolunda **`bedava canli katalog`** işi
-olarak her push/PR'da, haftalık cron'da ve elle tetiklemede koşar; yalnız
-allowlist'i değil, `profiller.bedava` altındaki on rolü de canlı kayıtla
-karşılaştırır. Eksik/çelişkili kayıt veya bedava koşulu ihlali `rc=1`,
-ölçülemeyen ağ/JSON `rc=2` ve **`OLCULMEDI`**dır; PASS sayılmaz. Her koşu
-commit/tree/tree_sha256 ve tanım SHA-256'larıyla append-only
-`docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydına eklenir; CI koşusu aynı şemayı
-`$RUNNER_TEMP` altına yazıp artifact olarak yükler. Kanonik kod ayrımı
-`python3 tools/katalog_kontrol.py` ile alınır (GNU make tarif hatasını 2'ye
-çevirir).
+`make katalog-kontrol`tür. Ağ gerektirir; **CI dışında**, elle/yerel koşulur;
+CI yalnız çevrimdışı `make katalog-selftest` testini `make dogrula-ci` üzerinden
+çalıştırır. Canlı kapı yalnız allowlist'i değil, `profiller.bedava` altındaki on
+rolü de canlı kayıtla karşılaştırır. Eksik/çelişkili kayıt veya bedava koşulu
+ihlali `rc=1`, ölçülemeyen ağ/JSON `rc=2` ve **`OLCULMEDI`**dır; PASS sayılmaz.
+Her koşu commit/tree/tree_sha256 ve tanım SHA-256'larıyla append-only
+`docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydına eklenir; istenirse `--kayit <yol>`
+ile ayrı dosyaya yazılır. Kanonik kod ayrımı `python3 tools/katalog_kontrol.py`
+ile alınır (GNU make tarif hatasını 2'ye çevirir).
 
 Farkın nereden geldiği ölçüldü (19 Kasım 2026): aynı 9 modellik içerik başka bir
 yolda **174/174**, yerel tam katalog (390 model) **174/174**, katalog yok **170/174**
@@ -384,8 +383,8 @@ aciklama = (
     'Sabit model katalogu (allowlist anlik goruntusu). MOD-1/MOD-2 kapilari '
     'ajanlarin BU listedeki modelleri kullandigini denetler; boylece sayi her '
     'klonda ayni cikar. Canli katalogla denetim icin ATLAS_MODEL_KATALOG=<yol> '
-    'verin. Tazelik icin: make katalog-kontrol (ag gerekir; CI\'da her '
-    'push/PR ve haftalik cron ile kosar).')
+    'verin. Tazelik icin: make katalog-kontrol (ag gerekir; CI disinda elle '
+    'kosulur).')
 kaynak = ('models.dev semasi; yalniz depoda gecen model kimlikleri, %s'
           % datetime.date.today().isoformat())
 
