@@ -1,5 +1,5 @@
 {
-  "commit": "618c550d57eb932ec6be64e4fcb01ac673c1b2c6",
+  "commit": "f704fb72d2d0bba870840953ed5c6a13ae00efa0",
   "file_count": 256,
   "files": [
     {
@@ -1463,14 +1463,14 @@
     {
       "mode": "100644",
       "path": "tools/katalog_kontrol.py",
-      "sha256": "506b22635acf9a79f0011a4ddc59abc2d08c43bc0d707a220052b0db0a664163",
-      "size": 22905
+      "sha256": "22161a5fb4a95c038c67a6da01b0eb6aa17d30046956ef8baf4fe3ab5648058a",
+      "size": 22939
     },
     {
       "mode": "100644",
       "path": "tools/katalog_kontrol_selftest.py",
-      "sha256": "5fcc43a4e14b6f1007c0ff5b96e30ad0f08a4cc3c1b171c8577e1bcb887ea806",
-      "size": 5990
+      "sha256": "eb22d49eb78ad948c382ba09c4d27e09c34733e52f3f15cb71703d710f77264a",
+      "size": 6532
     },
     {
       "mode": "100644",
@@ -1539,7 +1539,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-21T14:23:59Z",
+  "generated_at": "2026-11-21T15:15:27Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1554,6 +1554,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "58235bc07cbf47f7d2d2db09935f9d6218166e98",
-  "tree_sha256": "7e06ea075437ff927dc0cded7288e9b4a8a6ac7c2776a87df79be4f0cb533bfa"
+  "tree": "850a5ca6432eb4defa5fca59d8ed2d9243a3d32f",
+  "tree_sha256": "3fbffb4606b7037c44b710cfad95ecbd5917b8e9589652d642fbba923bee73d4"
 }
