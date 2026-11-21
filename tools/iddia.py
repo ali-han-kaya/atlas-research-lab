@@ -19,7 +19,8 @@ uretir. Boylece iddia -> komut -> ham kanit zinciri defterden okunur.
 
 DURUMLAR
   OLCULDU    komut kosar; ham kanit + desen + beklenen deger ucu de tutmali
-  AG_GEREKLI ag ister; varsayilan kosuda ATLANIR, --ag ile olculur
+  AG_GEREKLI ag ister; varsayilan kosuda ATLANIR, --ag ile olculur. --ag'da
+  dis servis yoksa satir AG kalir ve exit 2 doner; sahte FAIL uretilmez.
   BEYAN      tarihli/makineye bagli kayit; yeniden kosulmaz, gerekce zorunlu
   OLCULMEDI  bu agacta yeniden uretilemez; gerekce zorunlu
 
@@ -225,7 +226,11 @@ def taze(kayit, onbellek):
     rc, cikti = komut_kos(kayit['komut'], onbellek)
     eslesme = re.search(kayit['ayikla'], cikti)
     if not eslesme:
-        return False, '-', 'desen bulunamadi (rc=%d)' % rc, '', rc
+        son = cikti.strip().splitlines()[-1] if cikti.strip() else ''
+        ayrinti = 'desen bulunamadi (rc=%d)' % rc
+        if son:
+            ayrinti += ' · ' + son[:160]
+        return False, '-', ayrinti, '', rc
     parcalar = [g for g in eslesme.groups() if g is not None]
     deger = '/'.join(parcalar)
     satir = cikti.splitlines()[cikti[:eslesme.start()].count('\n')]
@@ -343,11 +348,18 @@ def main(argv):
                              ilk_kaynak, durum, kanit_metni))
         elif durum == 'AG_GEREKLI' and ag:
             # Canli olcumun kalici ham kaniti yoktur; --ag anlik olcer.
-            gecti, deger, ayrinti, ham, _rc = taze(kayit, onbellek)
-            etiket = 'PASS' if gecti else 'FAIL'
-            not_metni = ayrinti or ('= %s (canli)' % kayit['beklenen'])
-            satirlar.append((etiket, eid, kayit['iddia'], deger, not_metni,
-                             ilk_kaynak, durum, ham if gecti else ''))
+            # rc=2 dis servisin olculemedigini soyler; bunu sahte FAIL'e
+            # cevirmeyiz, AG olarak ayirir ve exit 2 ile raporlariz.
+            gecti, deger, ayrinti, ham, rc = taze(kayit, onbellek)
+            if not gecti and rc == 2:
+                satirlar.append(('AG', eid, kayit['iddia'], '—',
+                                 'ag/dis servis yok — olculemedi · %s' % ayrinti,
+                                 ilk_kaynak, durum, ''))
+            else:
+                etiket = 'PASS' if gecti else 'FAIL'
+                not_metni = ayrinti or ('= %s (canli)' % kayit['beklenen'])
+                satirlar.append((etiket, eid, kayit['iddia'], deger, not_metni,
+                                 ilk_kaynak, durum, ham if gecti else ''))
         elif durum == 'AG_GEREKLI':
             satirlar.append(('AG', eid, kayit['iddia'], '—',
                              'ham kanit yok (ag gerekli) — kosulmadi',
@@ -417,6 +429,10 @@ def main(argv):
         for s in kalan:
             print('    · %s: %s' % (s[1], s[4]))
         return 1
+    if ag and ag_sayisi:
+        print('  HUKUM: OLCULMEDI — %d ag iddiasi dis servis olmadan kosulamadi'
+              % ag_sayisi)
+        return 2
     if not olculen:
         print('  HUKUM: OLCULMEDI — filtrelenen defterde OLCULDU satiri yok')
         return 2

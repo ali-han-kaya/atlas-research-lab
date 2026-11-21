@@ -300,8 +300,9 @@ Defterin kapsamı üç public dokümandır: `README.md`, `docs/README.md`,
 `docs/EN/QUICKSTART.md`. Tarihli `docs/OLCUM-*`, `SURUM.md` ve üretilmiş
 `MUTASYON_KAPSAM.md` / `GUVENLIK.md` kapsam dışıdır; gerekçeleri defterin
 `kapsam` bloğundadır. Allowlist'in canlı katalogda 9/9 geçerli olup olmadığı
-`make iddia-ag` ile ölçülür; ağsız koşuda bu satır `AG_GEREKLI` sayılır ve kapıyı
-kırmaz.
+`make iddia-ag` ile ölçülür. `make iddia` ağsız koşuda bu satırı `AG_GEREKLI`
+olarak atlar ve kapıyı kırmaz; `make iddia-ag` canlı kataloğu okuyamazsa satırı
+`AG` olarak işaretler ve `rc=2` döner — sahte PASS veya sahte FAIL üretmez.
 
 ---
 
