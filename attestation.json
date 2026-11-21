@@ -1,5 +1,5 @@
 {
-  "commit": "a845b7b0441abe742f1971777250b299e79c719b",
+  "commit": "8d47e17d35f4fa5b7fb11425117114aa9bd4e8c3",
   "file_count": 248,
   "files": [
     {
@@ -1259,14 +1259,14 @@
     {
       "mode": "100644",
       "path": "docs/DURUM.md",
-      "sha256": "0d353acc3e3cb0f62864b6ada0de283f114e43c7d2a1e075ec653de6b5d38b06",
-      "size": 1423
+      "sha256": "f58317b24d045aa61e9101606ed05801f80444de2565656365b7b04f5a91c042",
+      "size": 1489
     },
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "27eda9010892d794fe010b8706261ad4359209bb18139e5732f3273ad6d56055",
-      "size": 8440
+      "sha256": "82c92547203b7f40890cd9354b8306b7bd5de1dc80743ef5822399b1a3069c10",
+      "size": 8447
     },
     {
       "mode": "100644",
@@ -1385,8 +1385,8 @@
     {
       "mode": "100644",
       "path": "tools/durum.py",
-      "sha256": "057928a97558f0292ffa2374a39eb35eb607881668d4b5713bf2c8bcc0b8bbe4",
-      "size": 12001
+      "sha256": "2488f0eaaff95eb06d6186a4d948600bed34842d11ef670a21c99a22c22c17a0",
+      "size": 12582
     },
     {
       "mode": "100644",
@@ -1403,8 +1403,8 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "9bd11a00dee049e559f70c6aec17f08300c205d977d419d70969054a9e4e8243",
-      "size": 20100
+      "sha256": "07875bcc256fc6128bf2b8bef50d4005ece4313e9b6973f03d3c5d971bb82688",
+      "size": 20080
     },
     {
       "mode": "100644",
@@ -1491,7 +1491,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-21T04:20:38Z",
+  "generated_at": "2026-11-21T04:28:31Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1506,6 +1506,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "557ae499bd8de81d21156fdec86c26d76d432be1",
-  "tree_sha256": "f4baf2ede0163657f8a5737ee8f602c1d8971e76b9f03883dcd79565f6fedad5"
+  "tree": "ac50442f7e8a673e25ba71f0fe7edc106a55b6b9",
+  "tree_sha256": "ccb6ee3ddf812167f5f22826afdbfc65be011a5f1bd02c70813fe2c23e3a6f60"
 }
