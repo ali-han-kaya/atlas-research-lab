@@ -104,9 +104,9 @@ kirliyse kayıt `OLCULMEDI` olur ve PASS sayılmaz, çünkü `commit`/`tree` öl
 dosyalarla eşleşmez. CI aynı şemayı `$RUNNER_TEMP/bedava-katalog.jsonl` altına
 yazar, `$GITHUB_STEP_SUMMARY`'ye basar ve `bedava-katalog-kaniti` artifact'ı
 olarak yükler. Depodaki append-only kayda bu artifact'ın JSON satırı eklenir;
-böylece depo kaydı CI koşusunun kendi commit/tree/hash'lerini taşır. CI
-belirteci salt-okunur olduğu için satırı bot commit etmez; depoya girişi ayrı
-bir `[skip ci]` commit'idir ve kanıt zinciri o commit için yeniden üretilir.
+böylece depo kaydı CI koşusunun kendi commit/tree/hash'lerini taşır. CI belirteci salt-okunur olduğu için satırı bot commit etmez; depoya girişi ayrı
+bir kanıt commit'idir ve o commit attestation commit'iyle birlikte push edilir;
+kanıt zinciri bu çift için yeniden üretilir.
 
 Yerel allowlist (`tools/model_katalog.json`) canlı kataloğun kopyası değildir;
 yalnız aktif hatlarda geçen kimlikleri taşır. MOD-1/MOD-2 kapıları bu sabit
