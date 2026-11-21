@@ -57,16 +57,8 @@
       "iddia": "KOD oz-testi 174/174",
       "kaynaklar": [
         {
-          "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **91/91 cases red + 18/18 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured"
-        },
-        {
-          "dosya": "docs/README.md",
-          "alinti": "bu ağaçta ATLAS 145/145 (OLG-1 dahil), KOD 174/174; `make dogrula`"
-        },
-        {
-          "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "  T2  KOD oz-testi             PASS    KOD OZ-TEST: 174/174 gecti"
+          "dosya": "docs/DURUM.md",
+          "alinti": "| KOD öz-testi | 174/174 |"
         }
       ],
       "durum": "OLCULDU",
@@ -82,8 +74,8 @@
       "iddia": "ATLAS oz-testi 145/145",
       "kaynaklar": [
         {
-          "dosya": "docs/README.md",
-          "alinti": "bu ağaçta ATLAS 145/145 (OLG-1 dahil), KOD 174/174; `make dogrula`"
+          "dosya": "docs/DURUM.md",
+          "alinti": "| ATLAS öz-testi | 145/145 |"
         }
       ],
       "durum": "OLCULDU",
@@ -102,7 +94,7 @@
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **91/91 cases red + 18/18 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "Mutation battery **91/91 cases red + 18/18 expected findings** over 95 rules."
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
@@ -123,7 +115,7 @@
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **91/91 cases red + 18/18 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "Mutation battery **91/91 cases red + 18/18 expected findings** over 95 rules."
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
@@ -144,7 +136,7 @@
       "kaynaklar": [
         {
           "dosya": "README.md",
-          "alinti": "**174/174**; mutation battery **91/91 cases red + 18/18 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured"
+          "alinti": "Mutation battery **91/91 cases red + 18/18 expected findings** over 95 rules."
         },
         {
           "dosya": "README.md",

@@ -26,8 +26,8 @@ commit history, and a shallow clone fails that check.
   H3  kabuk sozdizimi          PASS    7 dosya
   H4  sir taramasi             PASS    0 bulgu
   H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 8/8 gecti
-  T1  ATLAS oz-testi           PASS    OZ-TEST: 145/145 gecti · KANIT commit=<sha> tree=<sha>
-  T2  KOD oz-testi             PASS    KOD OZ-TEST: 174/174 gecti
+  T1  ATLAS oz-testi           PASS    OZ-TEST: <güncel>/<güncel> gecti · KANIT commit=<sha> tree=<sha>
+  T2  KOD oz-testi             PASS    KOD OZ-TEST: <güncel>/<güncel> gecti
   T3  Toolkit oz-testi         PASS    ...
 
   kalem=8 · gecen=8 · kalan=0 · calistirilmadi=0
@@ -37,8 +37,8 @@ commit history, and a shallow clone fails that check.
 Exit code 0. `T1` runs against this repository's `attestation.json`; it no
 longer needs the private tree's commit history. If the attestation is missing
 or corrupt, `OLG-1` fails rather than being reported as not run. See *OLG-1 and
-tree evidence* in the Turkish README. Numbers are printed by the tools, not
-maintained by hand.
+tree evidence* in the Turkish README. Current generated values are in
+[`docs/DURUM.md`](../DURUM.md); numbers are not maintained by hand.
 
 **Approximate duration:** ~90 s on a warm local checkout (macOS, Python 3.11) —
 91 s in `/tmp`, 95 s on an iCloud-synced checkout. Timings move with filesystem

@@ -98,8 +98,8 @@ hüküm `FAIL`'dir; gerekçe başka bir hatayı örtmez.
 geçmişine bağlıdır: aynı commit'in iki temiz klonu aynı satırları basar. Yerel
 makinenin `~/.cache` durumu bu satırları değiştirmez.
 
-Ölçülen: bu ağaçta ATLAS 145/145 (OLG-1 dahil), KOD 174/174; `make dogrula`
-**8/8** verir ve T1 artık `CALISTIRILMADI` değildir.
+Ölçülen: bu ağaçta ATLAS ve KOD öz-testleri [`DURUM.md`](DURUM.md)deki güncel
+sayılarla geçer; `make dogrula` **8/8** verir ve T1 artık `CALISTIRILMADI` değildir.
 
 **Model kataloğu depoda sabittir:** `tools/model_katalog.json`. MOD-1/MOD-2
 yaşayan kataloğa değil bu **allowlist anlık görüntüsüne** bakar; böylece KOD

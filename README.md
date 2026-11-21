@@ -24,8 +24,8 @@ self-test, three self-test suites), `make mutasyon` (ninety-five gate rules, exe
 - **Reproduce it.** `./demo` prints the frozen 8-vs-2 failure with a **red verdict and
 exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin
 wrapper and cannot carry 1 vs 2, because GNU make always exits 2 on a failing recipe. `make dogrula` → **8 pass / 0 fail / 0 not run** (T1, `OLG-1`, now
-runs against this tree's `attestation.json`); KOD self-test
-**174/174**; mutation battery **91/91 cases red + 18/18 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured
+runs against this tree's `attestation.json`); current self-test and inventory values are generated in
+[`docs/DURUM.md`](docs/DURUM.md). Mutation battery **91/91 cases red + 18/18 expected findings** over 95 rules. Mutation-tested vs untested gate rules are measured
 in [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md); dependent-package findings in
 [`docs/GUVENLIK.md`](docs/GUVENLIK.md); CI green. Non-Turkish readers:
 [`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md).
@@ -183,7 +183,7 @@ CI süreleri runner'a bağlıdır; burada iddia edilmez, iş akışı kaydı esa
 Paketleri ayrı ayrı koşmak istersen (yollar depo köküne görelidir):
 
 ```bash
-python3 ATLAS_SABLONLAR/scripts/atlas_selftest.py        # OLG-1 → 145/145 (attestation)
+python3 ATLAS_SABLONLAR/scripts/atlas_selftest.py        # OLG-1; güncel sayı: docs/DURUM.md
 python3 KOD_SABLONLAR/scripts/kod_selftest.py
 (cd KOMUT_TOOLKIT_v4/ARACLAR/betikler && python3 v4_selftest.py)
 ```
@@ -335,7 +335,7 @@ kanıtını kullanır. Tarihsel `docs/OLGULAR.md` kayıtları silinmedi; public 
 makine kanıtı sayılmaz. `OLGU-06` iki gerçek DERSLER satırıyla kapatıldı. Sahte
 commit çıpası yoktur; `make dogrula` bu depoda **8/8** verir ve T1 PASS'tir.
 Attestation yoksa/bozuksa OLG-1 FAIL olur. Koşu çıktısı T1 satırında çıpayı
-görünür basar — `OZ-TEST: 145/145 gecti · KANIT commit=<sha> tree=<sha>` —
+görünür basar — `OZ-TEST: <güncel>/<güncel> gecti · KANIT commit=<sha> tree=<sha>` —
 yani PASS, doğrulanan ağacın kanıtıyla birlikte okunur; kanıt satırı stderr
 uyarısı değildir. T1 herhangi bir nedenle koşmazsa satır
 `KABUL EDİLEN BORÇ: T1 koşmuyor — <sebep>` olur ve hüküm `PASS 7/8` diye

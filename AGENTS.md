@@ -10,6 +10,7 @@ Sahibi: Ali Han Kaya. Sürüm bilgisi `SURUM.md`'deki **`Sürüm:` satırındad�
    ⚠ Dosya adlarına göre sıralama YANILTIR: hangisinin son söz olduğunu `SURUM.md` söyler.
 3. `docs/DERSLER_v1_2026-08-30.md` → kabul VE reddedilen düzeltmeler. **Reddedilenleri yeniden açma.**
 4. `AI_CALISMA_SISTEMI_v1.md` → 38 kurallık oturum sözleşmesi
+5. `docs/DURUM.md` → güncel öz-test/envanter sayıları (üretilmiş; elle düzenlenmez)
 
 ## 1. BAĞLAYICI İLKELER — ihlal = iş başarısız
 - **I1. Kanıt ≠ beyan.** Bir dosya "PASS" diyorsa bu bir *iddiadır*; komutu çalıştırıp çıktıyı görmek *ölçümdür*.
@@ -29,14 +30,15 @@ Sahibi: Ali Han Kaya. Sürüm bilgisi `SURUM.md`'deki **`Sürüm:` satırındad�
 
 ## 2. DOĞRULAMA — her iş bittiğinde koş
 ```bash
-python3 ATLAS_SABLONLAR/scripts/atlas_selftest.py     # beklenen: 126/126 (bu Mac'te)
-python3 KOD_SABLONLAR/scripts/kod_selftest.py         # beklenen: 172/172 (bu Mac'te)
+python3 ATLAS_SABLONLAR/scripts/atlas_selftest.py     # beklenen sayi: docs/DURUM.md
+python3 KOD_SABLONLAR/scripts/kod_selftest.py         # beklenen sayi: docs/DURUM.md
 git status --porcelain                                 # beklenen: bos
 git fsck                                               # beklenen: hatasiz
 ```
 ATLAS pinli envanterin tamamını geçmelidir. Etkin sayı ve kimliklerin kaynağı
-`ATLAS_SABLONLAR/scripts/OZTEST-TABAN.json` (`sayi`, `kimlikler`), son kayıtlı ATLAS/KOD
-sonuçlarının kaynağı `docs/OLGULAR.md` makine bloğudur. Her görevde canlı sonuçla karşılaştır;
+`ATLAS_SABLONLAR/scripts/OZTEST-TABAN.json` (`sayi`, `kimlikler`); güncel öz-test ve
+envanter sayıları `docs/DURUM.md`den okunur. DURUM üretilmiştir; elle sayı yazılmaz,
+`make durum-kontrol` bayat sayfayı kırmızıya çevirir. Her görevde canlı sonuçla karşılaştır;
 başarısız/eksik test veya önceki koşuya göre sayı düşüşü kabul edilmez.
 
 ## 3. ÇIKTI SÖZLEŞMESİ — bunlar olmadan iş "bitti" sayılmaz
@@ -85,7 +87,7 @@ terminalden commit'i kendisi atar. Bu bir hata değil, bilinen ortam sınırıd�
   `regent-code`, `provbind`, `scitex`, `fromwhere`, "Oroboros".
 
 ## 6. "BİTTİ" DEMENİN ŞARTLARI — BEŞİ birden, her biri komutla
-1. Öz-test sayıları önceki koşudan **düşük değil** (bu Mac'te ATLAS 126/126, KOD 172/172)
+1. Öz-test sayıları önceki koşudan **düşük değil** (güncel sayılar: `docs/DURUM.md`)
 2. `git status --porcelain` **boş**
 3. `IDDIA vs DOGRULAMA` tablosu dolu — her satırda gerçek komut ve **ham çıktı**
 4. `OLCULMEYEN` bölümü **dolu**
@@ -111,7 +113,7 @@ Yerine: **ölçtüğünü rakamla söyle, ölçmediğini `OLCULMEYEN`'e yaz.**
 "Küçük bir şeydi, ben hallettim" **YOK.** Ali'nin haberi olmadan kapatılan konu, kapatılmamış konudur.
 
 ## 9. ÇALIŞAN ŞEYİ BOZMA
-Bir şey şu an çalışıyorsa (ATLAS 126/126, KOD 172/172, temiz ağaç, geçen kapı), ona dokunmanın **yazılı gerekçesi** olmalı.
+Bir şey şu an çalışıyorsa (güncel öz-test sayıları `docs/DURUM.md`, temiz ağaç, geçen kapı), ona dokunmanın **yazılı gerekçesi** olmalı.
 Düzeltmeden **önce ve sonra AYNI ölçümü** al, ikisini de tabloya yaz.
 **Sayı düşerse geri al** — açıklama arama, önce geri al, sonra konuş.
 Aynı anda iki mekanizma değiştirme (I5): hangisinin işe yaradığını bilemezsin.

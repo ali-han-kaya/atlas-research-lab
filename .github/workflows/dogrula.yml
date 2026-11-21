@@ -34,6 +34,11 @@ jobs:
       - name: Bagimliliklar
         run: python3 -m pip install --quiet -r requirements-dev.txt
 
+      # DURUM.md elle yazilmaz. Bu adim ATLAS/KOD oz-testlerini yeniden kosar,
+      # pinli envanter ve SURUM C15f bloguyla karsilastirir; sayfa bayatsa kirmizi.
+      - name: DURUM sayfasi guncel mi
+        run: make durum-kontrol
+
       # Ham agac: H4'un kendi tarayicisindan bagimsiz, dogrudan secret_scan.
       # Once agacin temiz oldugunu dogrula; boylece "--tum" yalniz izlenen
       # agaci tarar. Gercek sir (P0) veya KISMI mod cikisi bu adimi kirmizi yapar.
