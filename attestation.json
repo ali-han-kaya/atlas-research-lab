@@ -1,5 +1,5 @@
 {
-  "commit": "7406f5a2c1c2eb7cdb020b83207dc4d0a9649b39",
+  "commit": "e6e88b8bc07d4d71a59b58b6492751887c7cced1",
   "file_count": 255,
   "files": [
     {
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "8a1e580f7460661f8dc4d1797815f2778a89e016ef9ec0e110ee437d6de79ee6",
-      "size": 6415
+      "sha256": "cada28feb6f509634da4f0c3b88ccfc9b4b4bb61c42b65e0660ddebd6fe88fb3",
+      "size": 7887
     },
     {
       "mode": "100644",
@@ -821,8 +821,8 @@
     {
       "mode": "100644",
       "path": "KOD_SABLONLAR/routing.profiles.json",
-      "sha256": "5d45f7adb49a1c3a59dad7a16c8c81493f72ad70f00813f0775acf8e37df5a8a",
-      "size": 5314
+      "sha256": "928797baebafe606663a5582fe8c79877e7e469b7d335435ee333db74b08e335",
+      "size": 5768
     },
     {
       "mode": "100644",
@@ -1157,8 +1157,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "2b9aa13c8c3160ef95c9e6e93cf7e9753d1827befe11380af6f62f6b25ab3c7d",
-      "size": 3701
+      "sha256": "d891ebe36ada98ef1883c51183af6db31f60404e1a0cf95954e3a6926542a9e8",
+      "size": 3791
     },
     {
       "mode": "100644",
@@ -1211,14 +1211,14 @@
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "37e0df566e6bc0be64c209408112af0508ae1c4a2ac45fd276fa6d69e0ef6a13",
-      "size": 25495
+      "sha256": "220c7d0f594ce964dc43971c36a8c92051b2a15db311e2963bfa5830c8b13460",
+      "size": 26195
     },
     {
       "mode": "100644",
       "path": "SURUM.md",
-      "sha256": "5a1f09d23644238befe30ff1d15035cecc0814756568b835ebbb854bea24a156",
-      "size": 580236
+      "sha256": "2193601962e2926f933abd500c978c3a2d28f85724e195654e0fc5c1324d80cd",
+      "size": 581642
     },
     {
       "mode": "100755",
@@ -1247,8 +1247,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "5a5c4e3198f066330a550dda51d361bd992ac334481f585fdf24f88e02c6192f",
-      "size": 477229
+      "sha256": "27d55ddcd49a3b307e2f6b20028800c0e2829a691f9e225e301aa6ec2e2048a8",
+      "size": 478402
     },
     {
       "mode": "100644",
@@ -1265,8 +1265,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "551c8cf98416a35fe090a686b620bef8f8569d3b43ec2e4513bce22a2d8ade5c",
-      "size": 9026
+      "sha256": "35b243ce0bab54362d4e36fcb66cd55c1d3de69025868065102f2448391d0329",
+      "size": 9646
     },
     {
       "mode": "100644",
@@ -1277,8 +1277,8 @@
     {
       "mode": "100644",
       "path": "docs/KOD_BEDAVA_MODEL_POLITIKASI.md",
-      "sha256": "278ef6e228034189b8519108d403bbed9c6c39171550b13831844104fab06d07",
-      "size": 12345
+      "sha256": "d74d8605bcf2e7b358833dc9764398daa68f49090300b2f8c49bc1c69c4c0f66",
+      "size": 16130
     },
     {
       "mode": "100644",
@@ -1343,14 +1343,14 @@
     {
       "mode": "100644",
       "path": "docs/OLGULAR.md",
-      "sha256": "5fddb2730eb270e3592e34bae07a9528c527702dd19b97cd991db500b9cdb905",
+      "sha256": "024acf18312c72b5a40335f3153b90825199c2e72e9f3fed69223ca7f344cc7d",
       "size": 3170
     },
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "8617376be979894e4741ca4fd845647dd9191524bbd3dddbc7f96e89c6ed73ef",
-      "size": 29356
+      "sha256": "6d6e477f732ecc3a17a1668f29a4cf5d84ede1a3e303217cf17f50f46cd985ef",
+      "size": 29976
     },
     {
       "mode": "100644",
@@ -1457,8 +1457,8 @@
     {
       "mode": "100644",
       "path": "tools/katalog_kontrol.py",
-      "sha256": "73b3b3391d1bb27fb2c37cc985c044b88f38131a278cc00568a0ba68b3cf2930",
-      "size": 7574
+      "sha256": "506b22635acf9a79f0011a4ddc59abc2d08c43bc0d707a220052b0db0a664163",
+      "size": 22905
     },
     {
       "mode": "100644",
@@ -1533,7 +1533,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-21T13:14:18Z",
+  "generated_at": "2026-11-21T13:43:31Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1548,6 +1548,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "bbfe03d02b8f85435005ca1bf1e5eca609663fcc",
-  "tree_sha256": "6ec2e10dba411d0ac9da2d5395c9e8f5ce1b09dc0d5facfd3c20cbc18bfd5316"
+  "tree": "7aaa9f91784407f284e6e54994007505add4a7c1",
+  "tree_sha256": "3437c75310646be2a85bf232a2fbc9aedcdf036f6ca032f81b4e2189efd944d4"
 }
