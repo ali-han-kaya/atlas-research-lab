@@ -39,6 +39,12 @@ jobs:
       - name: DURUM sayfasi guncel mi
         run: make durum-kontrol
 
+      # Sayfa/pin/canli sapmalarin rc!=0 verdigini gecici kokte kanitla.
+      # Bu adim yalnizca dosya karsilastiran bir kisayolu ve devre disi canli
+      # testleri kirmizi yakalar; gercek agaca yazmaz.
+      - name: DURUM negatif testleri
+        run: make durum-selftest
+
       # Ham agac: H4'un kendi tarayicisindan bagimsiz, dogrudan secret_scan.
       # Once agacin temiz oldugunu dogrula; boylece "--tum" yalniz izlenen
       # agaci tarar. Gercek sir (P0) veya KISMI mod cikisi bu adimi kirmizi yapar.

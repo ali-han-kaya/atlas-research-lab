@@ -2,7 +2,7 @@ PY ?= python3
 # pip-audit yalniz gelistirme aracidir; varsa yerel sanal ortam kullanilir.
 PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(PY))
 
-.PHONY: dogrula dogrula-ci kanit kanit-dogrula durum-yaz durum-kontrol mutasyon oztest demo demo-selftest kapsam kapsam-yaz katalog-kontrol iddia iddia-ag iddia-yaz guvenlik kur yayinla yardim
+.PHONY: dogrula dogrula-ci kanit kanit-dogrula durum-yaz durum-kontrol durum-selftest mutasyon oztest demo demo-selftest kapsam kapsam-yaz katalog-kontrol iddia iddia-ag iddia-yaz guvenlik kur yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giris: hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
@@ -11,6 +11,7 @@ yardim:
 	@echo "make kanit-dogrula  attestation.json'i gercek commit/agac ile dogrula"
 	@echo "make durum-yaz  tek uretilmis DURUM sayfasini yenile (docs/DURUM.md)"
 	@echo "make durum-kontrol  DURUM sayfasi kaynaklara gore bayat mi (CI)"
+	@echo "make durum-selftest  DURUM bayatlik kapisinin negatif testleri (gecici kok)"
 	@echo "make mutasyon  kapi sozlesmeleri: temiz taban + ihlal; hata rc!=0, beklenen-bulgu isaretli"
 	@echo "make demo      ince sarmalayici: ./demo (kod ayrimi icin ./demo; make her hatada 2 doner)"
 	@echo "make demo-selftest  demo 0/2 sozlesmesini gecici fiksturlerle sinar"
@@ -43,6 +44,9 @@ durum-yaz:
 
 durum-kontrol:
 	@$(PY) tools/durum.py --kontrol
+
+durum-selftest:
+	@$(PY) tools/durum_selftest.py
 
 mutasyon:
 	@$(PY) tools/mutasyon_bataryasi.py
