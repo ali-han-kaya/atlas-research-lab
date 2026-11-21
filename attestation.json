@@ -1,5 +1,5 @@
 {
-  "commit": "5f0781f468d8793cebc85f4a16323ee968dcc2a8",
+  "commit": "bd266186ea1eeae0d3fabe18e06801def3ca9a14",
   "file_count": 245,
   "files": [
     {
@@ -371,8 +371,8 @@
     {
       "mode": "100644",
       "path": "ATLAS_SABLONLAR/docs/PIPELINE.md",
-      "sha256": "fcdd199bb3f678a02ba112bd2e5c61c7562a7a541c8e80f02a72b5341d464e87",
-      "size": 5783
+      "sha256": "b6af069f9beb6cc7123439ed8bb105aebfd57a50cd1613d03fc1a417039ab626",
+      "size": 6761
     },
     {
       "mode": "100755",
@@ -407,8 +407,8 @@
     {
       "mode": "100755",
       "path": "ATLAS_SABLONLAR/scripts/atlas_selftest.py",
-      "sha256": "17692cd5ed93ef50601f01d50b448617eccecfa3844714f149aec2ca87258ba9",
-      "size": 194073
+      "sha256": "6dd2dec2dde8228ffc29b302dd8bb1bc9caef334f52ca82f19e8c0f6a180e974",
+      "size": 196976
     },
     {
       "mode": "100755",
@@ -557,8 +557,8 @@
     {
       "mode": "100755",
       "path": "ATLAS_SABLONLAR/templates/PROVENANCE-TEMPLATE.md",
-      "sha256": "532e5f26d37ecc077f4cbd4480103ecc0f5a415d75f85bf734f0cf055415d3a6",
-      "size": 1434
+      "sha256": "bc31b4e6652709a1ece9bf20d090c368967a80d82cea30f8ea5e2d366b6b0ad3",
+      "size": 2449
     },
     {
       "mode": "100644",
@@ -1247,8 +1247,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "2b1bef3ab62e08ccbbd4726bb53f6a5a4fb2ad667b0bedb9e5106948f571da85",
-      "size": 467778
+      "sha256": "89d2ea33d947e9678334a6827fa4c21c36cb24cb1a3589311d9f66ccabacd13c",
+      "size": 468481
     },
     {
       "mode": "100644",
@@ -1473,7 +1473,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-20T22:14:23Z",
+  "generated_at": "2026-11-21T00:40:49Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1488,6 +1488,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "a67c802a9cf37e44ec4a1e1745e3b3eadb3bc87d",
-  "tree_sha256": "525c842ee67e806706fc1fca2904b05a4677b8302950039943c3fcd9feef473f"
+  "tree": "2cc672a6aab952cc4855200d94315c0b7b6ac1a9",
+  "tree_sha256": "1d7abf345a418fa63264819b4d276b411aa0a4086c199ec5208c050af523cdb2"
 }
