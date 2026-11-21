@@ -1,6 +1,6 @@
 {
  "_aciklama": "Emekli model kimlikleri icin TEK resmi istisna kaynagi. Aktif kod/config/test/dokumanlarda emekli kimlige sifir atif zorunludur.",
- "_kural": "Muafiyet dosya adina degil, dosya + tam satir SHA-256 ciftine baglidir. Tarihsel satir degisirse hash tutmaz; kayit bayatlar ve tools/model_kimlik.py --kontrol FAIL verir. Bu defterin kendisi taranmaz cunku kimligi tanimlar.",
+ "_kural": "Muafiyet dosya adina degil, dosya + tam satir SHA-256 ciftine baglidir. Tarihsel satir degisirse hash tutmaz; kayit bayatlar ve tools/model_kimlik.py --kontrol FAIL verir. `onay` listesi taranamayan dosyalarin tek acik kaynagidir: yalniz bu defter `tanim` olarak yazilir (taranir, eslesmeleri tanim sayilir); `okunamaz` kaydi yalniz gercekten okunamayan dosya icindir ve dosya okunabilir hale gelirse kontrol FAIL verir.",
  "emekli_kimlikler": [
   {
    "kimlik": "nvidia/nemotron-3-super-120b-a12b:free",
@@ -61,6 +61,14 @@
     "e912d24c2ed2260f2f50f8ecc4f215df425349acd164aec85759bf5c12527ce8"
    ],
    "gerekce": "26.08.2026 canli tam kosunun ham model secim satirlari."
+  }
+ ],
+ "onay": [
+  {
+   "dosya": "tools/model_kimlik_istisna.json",
+   "tur": "tanim",
+   "sha256": "14e21cf6d7df134e4e18c00eae646436b66eb29bc72853c96866ba2182ff0d5f",
+   "gerekce": "Kimligi tanimlayan tek resmi kaynak; taranir, kendi eslesmeleri tanim sayilir."
   }
  ]
 }

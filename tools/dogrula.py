@@ -33,7 +33,10 @@ verin; fark yalnizca katalog ICERIGINDEN gelir, makineden degil.
 MODEL KIMLIGI: emekli bir model kimligi yalnizca `tools/model_kimlik_istisna.json`
 icinde dosya + tam satir SHA-256'siyla kayitli tarihsel `SURUM`/`OLCUM`
 satirlarinda kalabilir. Aktif kod/config/test/dokumanda tek bir atif bile
-hukmu FAIL eder. Bu kontrol sayilan sekiz kaleme eklenmez; demo gibi bir on
+hukmu FAIL eder. Aday dosyalarin tamami incelenir: UTF-8 cozulenler satir
+satir, cozulemeyen veya NUL icerenler ikili guvenli bayt aramasiyla ve boyut
+siniri olmadan taranir; onay listesinde olmayan tek bir incelenemeyen dosya da
+FAIL uretir. Bu kontrol sayilan sekiz kaleme eklenmez; demo gibi bir on
 kosuldur ve `make dogrula`yi fail-closed durdurur.
 
 CIKIS: 0 = hukme giren kalemlerin hepsi gecti (CALISTIRILMADI varsa bile) ·
@@ -232,8 +235,9 @@ def model_kimlik():
                      os.path.join(KOK, 'tools', 'model_kimlik.py'),
                      '--kontrol'])
     satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
-    son = satirlar[-1][:120] if satirlar else '(bos cikti)'
-    return rc == 0, son, ([] if rc == 0 else satirlar[-8:])
+    baslik = [s for s in satirlar if s.startswith('MODEL KIMLIK')]
+    son = (baslik[0] if baslik else (satirlar[-1] if satirlar else '(bos cikti)'))
+    return rc == 0, son[:150], ([] if rc == 0 else satirlar[-8:])
 
 
 KOMUTLAR = [
