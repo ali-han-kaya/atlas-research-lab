@@ -29,7 +29,7 @@ Bu tek ve katı JSON bloğu `olgu_lint.py` tarafından okunur. Tarihsel tablo li
 ```json
 {
   "schema": "OLGULAR/v1",
-  "lab_surum": "v1.7.405",
+  "lab_surum": "v1.7.406",
   "baseline_commit": "4b2ae32",
   "atlas_envanter_sayisi": 145,
   "atlas_son_gecen": 145,

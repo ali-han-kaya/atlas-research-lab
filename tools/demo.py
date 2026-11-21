@@ -87,7 +87,10 @@ def main(argv):
         print('DEMO — DENEME/ dondurulmus kusurlu kosu (v5.5.2, 23 Agustos 2026)')
     else:
         print('DEMO — harici fikstur: %s' % etiket)
-    print('kaynak: %s — bilerek duzeltilmedi; regresyon fiksturu.' % etiket)
+    if kok == VARSAYILAN:
+        print('kaynak: %s — bilerek duzeltilmedi; regresyon fiksturu.' % etiket)
+    else:
+        print('kaynak: %s — harici fikstur.' % etiket)
     print()
 
     veri, hata = fikstur(kok)
