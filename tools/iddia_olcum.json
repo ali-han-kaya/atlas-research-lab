@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-21T05:00:55Z",
+  "zaman": "2026-11-21T06:39:51Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -134,8 +134,8 @@
         "tools/dogrula.py"
       ],
       "rc": 0,
-      "ham": "  H2  python sozdizimi         PASS    63 dosya",
-      "deger": "63"
+      "ham": "  H2  python sozdizimi         PASS    64 dosya",
+      "deger": "64"
     },
     "IDD-16": {
       "komut": [
@@ -248,6 +248,15 @@
       "rc": 1,
       "ham": "  FAIL REC-04: 6/8 'UYGULANMIS' FIX MASTER'da yok: ['FIX-003', 'FIX-004', 'FIX-005', 'FIX-006', 'FIX-007', 'FIX-008']",
       "deger": "6/8"
+    },
+    "IDD-37": {
+      "komut": [
+        "{py}",
+        "tools/temiz_teslim_selftest.py"
+      ],
+      "rc": 0,
+      "ham": "HUKUM: PASS — temiz teslim rc=0; bes kenar beklenen rc'yi verdi.",
+      "deger": "0"
     }
   }
 }
