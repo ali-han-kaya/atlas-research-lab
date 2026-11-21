@@ -7,7 +7,8 @@ ve dosyanin herhangi bir yerindeki `# --- KIMLIK` bolum basliklarindan gelir;
 
 Kod icinde string literal olarak uretilen tani/veri kimlikleri kural
 envanterine sayilmaz; ama `Kod icinde uretilen kimlikler` bolumunde
-gerekcesiyle gorunur. Yeni bir aile `make kapsam`i fail-closed durdurur.
+gerekcesiyle gorunur. Listede olmayan yeni bir kimlik `make kapsam`i
+fail-closed durdurur.
 
 Her kural icin tek soru sorulur: **mutasyon bataryasinda onu ateslettiren
 bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus
@@ -133,16 +134,33 @@ Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir
 
 Asagidaki kimlikler `KURALLAR` basliginda veya `# --- KIMLIK`
 bolum basliginda bildirilmez; betik kodu tarafindan string literal
-olarak uretilir. Kapi kurali degil, tani/veri kimligidir; bu yuzden
-envantere kural olarak eklenmez. Gerekce sessizce dusulmez:
+olarak uretilir. Her biri tek tek denetlendi: bagimsiz bir
+`KURALLAR` sozlesmesi degil, ilgili kapinin alt tanisi veya
+sozlesme bolum verisidir. Bu yuzden envantere kural olarak eklenmez;
+gerekce sessizce dusulmez. Ayni ailede yeni bir kimlik belirse bile
+`make kapsam` fail-closed durur:
 
 | Betik | Sinif | Kimlikler | Gerekce |
 |---|---|---|---|
-| `ai_disclosure.py` | tani-kodu | AI-00, AI-01, AI-02, AI-03, AI-04 | AI-00..AI-04 ai_disclosure hata tanilaridir; AI-1 oz-testi AI-00/01/02/04 dallarini kilitler, AI-03 cikti yazma I/O hatasidir ve mutasyonla deterministik tetiklenmez. Kapi kurali degil, hata sinifidir. |
-| `olgu_lint.py` | tani-kodu | OLGU-01, OLGU-02, OLGU-03 | OLGU-01..OLGU-03 girdi/sema hata tanilaridir; OLGU-04..OLGU-06 kuraldir ve envanterde ayrica izlenir. |
-| `review_panel.py` | tani-kodu | HJ-00, HJ-01, HJ-02, HJ-03, HJ-04, HJ-05, HJ-06, HJ-07, HJ-08 | HJ-00..HJ-08 review_panel hata tanilaridir; HJ-1 oz-testi HJ-00..HJ-07 dallarini kilitler, HJ-08 cikti yazma I/O hatasidir. Kapi kurali degil, hata sinifidir. |
-| `scope_profile_check.py` | veri-kimligi | SC-001, SC-002, SC-003, SC-004, SC-005, SC-006, SC-007, SC-008, SC-009, SC-010, SC-011, SC-012, SC-013, SC-014, SC-015, SC-016, SC-017, SC-018, SC-019, SC-020, SC-021, SC-022, SC-030 | SC-* kapsam sozlesmesindeki zorunlu bolum kimlikleridir; SP-01..SP-07 kuraldir. Bolum kimligi kapi kurali degildir. |
-| `chg_reconcile.py` | tani-kodu | RECK-00 | RECK-00 ortak girdi/JSON/sema hata kodudur; RECK-01..RECK-09 kuraldir ve envanterde ayrica izlenir. |
+| `ai_disclosure.py` | tani-kodu | AI-04 | --check cikti uyusmazligi; AI-1 selftestinde kilitli cikti butunlugu alt tanisi. |
+| `ai_disclosure.py` | tani-kodu | AI-03 | Beyan yazma I/O hatasi; hukum uretmeyen operasyonel tani. |
+| `ai_disclosure.py` | tani-kodu | AI-02 | Entry alan/usage/evidence dogrulamasi; AI-1 selftestinin alt tanisi. |
+| `ai_disclosure.py` | tani-kodu | AI-01 | Manifest kok/schema/scope/entries sozlesmesi; AI-1 selftestinin alt tanisi. |
+| `ai_disclosure.py` | tani-kodu | AI-00 | Manifest veya sema yok/bozuk; AI-1 onkosul tanisi, bagimsiz KURALLAR kurali degil. |
+| `olgu_lint.py` | tani-kodu | OLGU-03 | Ic deger uyusmazligi; OLGU-04..06 kapsamindaki tarihce denetiminin alt tanisi. |
+| `olgu_lint.py` | tani-kodu | OLGU-02 | OLGULAR JSON/sema girdisi gecersiz; onkosul tanisi. |
+| `olgu_lint.py` | tani-kodu | OLGU-01 | OLGULAR kanonu yok; olgu_lint onkosulu, OLGU-04..06 kurallarindan ayri. |
+| `review_panel.py` | tani-kodu | HJ-07 | Attempt/maliyet siniri; HJ-1 selftestinin alt tanisi. |
+| `review_panel.py` | tani-kodu | HJ-03 | Hukum kapsami/yinelenen kimlik/severity; HJ-1 selftestinin alt tanisi. |
+| `review_panel.py` | tani-kodu | HJ-01 | JSON/kapali sema/alan sozlesmesi; HJ-1 selftestinin alt tanisi. |
+| `review_panel.py` | tani-kodu | HJ-06 | Model ailesi/session cesitliligi; HJ-1 selftestinin alt tanisi. |
+| `review_panel.py` | tani-kodu | HJ-08 | Panel ciktisi yazma I/O hatasi; operasyonel tani. |
+| `review_panel.py` | tani-kodu | HJ-00 | Panel semasi okunamadi/kimlik uyusmadi; HJ-1 onkosul tanisi. |
+| `review_panel.py` | tani-kodu | HJ-05 | Rol/session kimligi; HJ-1 selftestinin alt tanisi. |
+| `review_panel.py` | tani-kodu | HJ-02 | Run/input uyusmazligi; HJ-1 selftestinin alt tanisi. |
+| `review_panel.py` | tani-kodu | HJ-04 | Verdict/evidence butunlugu; HJ-1 selftestinin alt tanisi. |
+| `scope_profile_check.py` | veri-kimligi | SC-001, SC-002, SC-003, SC-004, SC-005, SC-006, SC-007, SC-008, SC-009, SC-010, SC-011, SC-012, SC-013, SC-014, SC-015, SC-016, SC-017, SC-018, SC-019, SC-020, SC-021, SC-022, SC-030 | Kapsam sozlesmesindeki zorunlu bolum kimligi; SP-01..07 kuraldir. |
+| `chg_reconcile.py` | tani-kodu | RECK-00 | Ortak girdi/JSON/sema hatasi; RECK-08 sema kurali, RECK-01..09 ayri kurallardir. |
 
 Not: `verify_doi.py` tarandi; bildirilen kural kimligi yok.
 Dosyadaki `DEC-027` bir karar referansidir, kural degil; bu
