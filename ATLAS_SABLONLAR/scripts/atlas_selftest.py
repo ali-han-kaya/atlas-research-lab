@@ -1386,12 +1386,75 @@ def calis(tmp):
     )
 
     # B-2: Kaynak Sinifi
+    # Tablosuz taban: eski kademeli davranis korunur (sinif sutunu varsa PASS).
     p = kur(T / "sc1")
     sc1_saglam_rc, sc1_saglam_o = kos("source_class_check.py", cwd=p)
     sc1_saglam_ok = (
         sc1_saglam_rc == 0
         and "SOURCE-CLASS-CHECK PASS" in sc1_saglam_o
+        and "FAIL SRC-01" not in sc1_saglam_o
+        and "KAYNAK SINIFLANDIRMA" not in (p / "03-FAZ-3-MASTER-v5.5.md").read_text(encoding="utf-8")
         and "Traceback" not in sc1_saglam_o
+    )
+
+    # Eski 5-sutunlu PROVENANCE: sinif sutunu yok -> kademeli CALISTIRILMADI.
+    sc1_eski = kur(T / "sc1_eski")
+    sc1_eski_f = sc1_eski / "03-FAZ-3-MASTER-v5.5.md"
+    sc1_eski_metin = sc1_eski_f.read_text(encoding="utf-8")
+    sc1_eski_metin = sc1_eski_metin.replace(
+        "| SC-ID | Bolum | Kaynak | Satir | Kaynak Sinifi | Durum |\n"
+        "|---|---|---|---|---|---|",
+        "| SC-ID | Bolum | Kaynak | Satir | Durum |\n"
+        "|---|---|---|---|---|",
+    ).replace("| IKINCIL | kapsiyor |", "| kapsiyor |")
+    sc1_eski_f.write_text(sc1_eski_metin, encoding="utf-8")
+    sc1_eski_rc, sc1_eski_o = kos("source_class_check.py", cwd=sc1_eski)
+    sc1_eski_ok = (
+        sc1_eski_rc == 0
+        and "INFO SRC-01: CALISTIRILMADI" in sc1_eski_o
+        and "eski 5-sutunlu" in sc1_eski_o
+        and "FAIL SRC-01" not in sc1_eski_o
+        and "Traceback" not in sc1_eski_o
+    )
+
+    def sc1_tablo_kur(ad, sinif):
+        proje = kur(T / ad)
+        f = proje / "03-FAZ-3-MASTER-v5.5.md"
+        metin = f.read_text(encoding="utf-8")
+        metin = metin.replace(
+            "## PROVENANCE Tablosu",
+            "## KAYNAK SINIFLANDIRMA\n\n"
+            "| Sinyal | Sinif |\n"
+            "|---|---|\n"
+            "| KURAN | BIRINCIL |\n"
+            "| MAKALE | IKINCIL |\n\n"
+            "## PROVENANCE Tablosu",
+        )
+        metin = metin.replace(
+            "| SC-006 | Bolum 6 | Uretildi | 60 | IKINCIL | kapsiyor |",
+            f"| SC-006 | Bolum 6 | MAKALE | 60 | {sinif} | kapsiyor |",
+        )
+        f.write_text(metin, encoding="utf-8")
+        return proje
+
+    # Tablo var + sinyal/sinif uyumu: yeni dal yesil kalir.
+    sc1_tablo = sc1_tablo_kur("sc1_tablo", "IKINCIL")
+    sc1_tablo_rc, sc1_tablo_o = kos("source_class_check.py", cwd=sc1_tablo)
+    sc1_tablo_ok = (
+        sc1_tablo_rc == 0
+        and "SOURCE-CLASS-CHECK PASS" in sc1_tablo_o
+        and "FAIL SRC-01" not in sc1_tablo_o
+        and "Traceback" not in sc1_tablo_o
+    )
+
+    # Tablo var + yanlis sinif: yeni dal FAIL SRC-01 uretir.
+    sc1_yanlis = sc1_tablo_kur("sc1_yanlis", "BIRINCIL")
+    sc1_yanlis_rc, sc1_yanlis_o = kos("source_class_check.py", cwd=sc1_yanlis)
+    sc1_yanlis_ok = (
+        sc1_yanlis_rc == 1
+        and "FAIL SRC-01: SC-006" in sc1_yanlis_o
+        and "IKINCIL, PROVENANCE'ta BIRINCIL" in sc1_yanlis_o
+        and "Traceback" not in sc1_yanlis_o
     )
 
     sc1_bosluk = kur(T / "sc1_bosluk")
@@ -1430,9 +1493,14 @@ def calis(tmp):
 
     kontrol(
         "SC-1",
-        "saglam/bolum sinirli tablo PASS; bosluk sonrasi gecersiz sinif SRC-02 FAIL",
-        sc1_saglam_ok and sc1_bosluk_ok and sc1_ek_ok,
-        f"saglam=(rc={sc1_saglam_rc}, ok={sc1_saglam_ok}) "
+        "tablosuz eski kademeli PASS; tablo uyumlu PASS; yanlis sinif FAIL SRC-01; "
+        "bosluk sonrasi gecersiz sinif SRC-02 FAIL",
+        sc1_saglam_ok and sc1_eski_ok and sc1_tablo_ok and sc1_yanlis_ok
+        and sc1_bosluk_ok and sc1_ek_ok,
+        f"tablosuz=(rc={sc1_saglam_rc}, ok={sc1_saglam_ok}) "
+        f"eski5=(rc={sc1_eski_rc}, ok={sc1_eski_ok}) "
+        f"tablo=(rc={sc1_tablo_rc}, ok={sc1_tablo_ok}) "
+        f"yanlis=(rc={sc1_yanlis_rc}, ok={sc1_yanlis_ok}) "
         f"bosluk=(rc={sc1_bosluk_rc}, ok={sc1_bosluk_ok}) "
         f"ek=(rc={sc1_ek_rc}, ok={sc1_ek_ok})",
     )

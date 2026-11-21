@@ -74,6 +74,7 @@ Hepsi proje klasöründen çalıştırılır: `bash scripts/<ad>` veya `python3 
 |---|---|---|
 | `check_integrity.sh` | FAZ0–4 varlık/boyut/içerik + gate verdict + FINAL tazelik; `--full`, FAZ3 sonrasında `cite_match.py` → `quote_ratio.py` → `declaration_check.py` denetimlerini zincirler | hayır |
 | `provenance_check.py` | CHK-01 zorunlu SC-ID'ler başlık mı, CHK-02 PROVENANCE "kapsıyor" mu, CHK-05 başlık benzersizliği | hayır |
+| `source_class_check.py` | SRC-01/02/03: `Kaynak Sınıfı` sütunu ve değerleri; varsa `KAYNAK SINIFLANDIRMA` sinyal-sınıf tablosuyla çelişki; tablo yoksa eski kademeli davranış | hayır |
 | `fix_reconcile.py` | REC-01..06 FAZ1 bulgu ↔ FAZ2 FIX ↔ MASTER kanıt sayı/ID mutabakatı | hayır |
 | `cite_match.py` | CITE-01/02/03 atıf ↔ kaynakça %100 eşleşme; `check_integrity.sh --full` zincirindedir, ayrıca tek başına çalıştırılabilir | hayır |
 | `verify_doi.py` | DEC-027 istisnası dışında `[DOĞRULANMADI]` etiketi + DOI geçerliliği | hayır |
@@ -85,6 +86,24 @@ Değişiklikten sonra **her zaman** `python3 scripts/atlas_selftest.py` çalış
 pinli envanterin tamamı geçmeli, önceki koşuya göre sayı düşmemelidir. Son kayıtlı sonuç
 depo kökündeki `docs/OLGULAR.md` makine bloğundan, canlı sonuç komut çıktısından okunur.
 AUD-04 başlangıç ölçümü (03.09.2026): **125/125**, exit **0**; önceki belgede de 125 test yazıyordu.
+
+### KAYNAK SINIFLANDIRMA tablosu (isteğe bağlı)
+
+`PROVENANCE` tablosundaki `Kaynak` hücresinde geçen sinyalleri kaynak sınıfına
+bağlayan isteğe bağlı tablo. Biçim:
+
+| Sinyal | Sınıf |
+|--------|-------|
+| KURAN | BIRINCIL |
+| SCHOLEM | IKINCIL |
+| <kaynak-sinyali> | BIRINCIL\|IKINCIL\|UCUNCUL\|AKTARMA |
+
+`Sinyal`, `Kaynak` hücresinde büyük/küçük harf duyarsız aranır; tabloda ilk
+eşleşen sinyalin sınıfı beklenir. Tablo varsa ve aynı PROVENANCE satırındaki
+`Kaynak Sınıfı` bu sınıftan farklıysa `source_class_check.py` **FAIL SRC-01**
+verir. Tablo yoksa eski kademeli davranış korunur: `Kaynak Sınıfı` sütunu yoksa
+`CALISTIRILMADI`, sütun varsa SRC-02 denetimi geçerlidir. Şablon ve tam örnek:
+`templates/PROVENANCE-TEMPLATE.md`.
 
 **Düzeltme notu (AUD-04, 03.09.2026):** Eski tabloda `cite_match.py` için "hariç" ve
 "ayrı çalıştırılır, `check_integrity.sh --full` zincirinde değildir" yazıyordu.

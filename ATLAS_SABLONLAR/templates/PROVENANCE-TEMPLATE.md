@@ -23,3 +23,24 @@ aktarılan ikincil okuma — her `AKTARMA` satırında tabloda veya hemen yakın
 - "§Y.Z" referansları doğru bölüme işaret etmelidir (yanlış = P1).
 - Doğrulanmamış kaynak (DEC-027 §8 M1) satırlarında durum `[UNVERIFIED]` olarak
   işaretlenir; bu kasıtlıdır.
+
+## KAYNAK SINIFLANDIRMA
+
+> İsteğe bağlı sinyal tablosu. PROVENANCE satırındaki `Kaynak` hücresinde geçen
+> bir sinyal burada bir sınıfla eşleşiyorsa, aynı satırın `Kaynak Sınıfı` değeri
+> bu sınıfla aynı olmalıdır; çelişki `FAIL SRC-01` verir. Tablo yoksa
+> `source_class_check.py` eski kademeli davranışı korur: `Kaynak Sınıfı` sütunu
+> yoksa `CALISTIRILMADI`, sütun varsa SRC-02 denetimi geçerlidir.
+
+| Sinyal | Sınıf |
+|--------|-------|
+| KURAN | BIRINCIL |
+| SCHOLEM | IKINCIL |
+| <kaynak-sinyali> | BIRINCIL\|IKINCIL\|UCUNCUL\|AKTARMA |
+
+- `Sinyal`, `Kaynak` hücresinin içinde büyük/küçük harf duyarsız aranır;
+  tabloda ilk eşleşen sinyalin sınıfı beklenir.
+- Tabloya yalnız `BIRINCIL`, `IKINCIL`, `UCUNCUL`, `AKTARMA` değerleri alınır;
+  satırın kendi `Kaynak Sınıfı` değeri de geçerli olmak zorundadır.
+- Başlık `## KAYNAK SINIFLANDIRMA` (veya `## KAYNAK SINIFLANDIRMA TABLOSU`)
+  olmalı; sütun adları `Sinyal` ve `Sınıf` olmalıdır.
