@@ -1,6 +1,6 @@
 {
-  "commit": "e6e88b8bc07d4d71a59b58b6492751887c7cced1",
-  "file_count": 255,
+  "commit": "88cce338b1256d66b8131692e8ed0c2076bd5a09",
+  "file_count": 256,
   "files": [
     {
       "mode": "100755",
@@ -1247,8 +1247,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "27d55ddcd49a3b307e2f6b20028800c0e2829a691f9e225e301aa6ec2e2048a8",
-      "size": 478402
+      "sha256": "2d9c03676fda74754bcadf8e53153c453a59dc7bd5448094e126d2d8e188fd68",
+      "size": 478418
     },
     {
       "mode": "100644",
@@ -1273,6 +1273,12 @@
       "path": "docs/GUVENLIK.md",
       "sha256": "d42737491b6f478c42f511f08c1d642cf82e74a7cf37ecd62565591ed569066e",
       "size": 1917
+    },
+    {
+      "mode": "100644",
+      "path": "docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl",
+      "sha256": "5ca8762f229e8e3fcc975613a1a961bdd34026130f3ca0f1c8e0c55d748ec75f",
+      "size": 3622
     },
     {
       "mode": "100644",
@@ -1533,7 +1539,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-21T13:43:31Z",
+  "generated_at": "2026-11-21T13:56:07Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1548,6 +1554,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "7aaa9f91784407f284e6e54994007505add4a7c1",
-  "tree_sha256": "3437c75310646be2a85bf232a2fbc9aedcdf036f6ca032f81b4e2189efd944d4"
+  "tree": "3369c79d668296924aad0d2caf2651cedf84064f",
+  "tree_sha256": "2a48f4152b308b8bbf0bc2d252a2a4777c83fbf8cea0bfb9c7e57dce8dccf4de"
 }
