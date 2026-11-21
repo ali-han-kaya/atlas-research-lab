@@ -89,6 +89,17 @@ def c15f_bloku(metin):
     return veri
 
 
+def python_dosya_sayisi():
+    """H2'nin saydigi python dosyalari; dogrula.py ile ayni atlama kumesi."""
+    atla = {".git", "__pycache__", "node_modules", ".pytest_cache",
+            ".ruff_cache", ".venv", ".venv-token"}
+    sayi = 0
+    for kok, dizinler, dosyalar in os.walk(KOK):
+        dizinler[:] = [d for d in dizinler if d not in atla]
+        sayi += sum(1 for ad in dosyalar if ad.endswith(".py"))
+    return sayi
+
+
 def _kuyruk(cikti, n=8):
     satirlar = [s for s in (cikti or "").splitlines() if s.strip()]
     return "\n".join(satirlar[-n:])[:1200] or "(bos cikti)"
@@ -197,6 +208,7 @@ def olculeri_topla(canli=False):
         "sayi": sayi,
         "kimlik_hash": kimlik_hash,
         "surum": surum,
+        "python_dosya": python_dosya_sayisi(),
     }
 
 
@@ -228,6 +240,8 @@ def uret(canli=False):
         % o["sayi"],
         "| ATLAS envanter kimlik hash'i | `%s` | `ATLAS_SABLONLAR/scripts/OZTEST-TABAN.json` (`kimlik_hash`) |"
         % o["kimlik_hash"],
+        "| Python dosya sayısı (H2) | %d | `make dogrula` H2 taraması |"
+        % o["python_dosya"],
         "| Kapı lint kontrolü | %d | `SURUM.md` C15f (`skill_lint_kontrol`) |"
         % s["skill_lint_kontrol"],
         "| Kapı envanteri | %d | `SURUM.md` C15f (`skill_kapi_sayisi`) |"
