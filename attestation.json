@@ -1,6 +1,6 @@
 {
-  "commit": "2d7fbe61c02b929c73f70731461f61b64b476a66",
-  "file_count": 246,
+  "commit": "a845b7b0441abe742f1971777250b299e79c719b",
+  "file_count": 248,
   "files": [
     {
       "mode": "100755",
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "03b691930b87f0273fbf66eb0548661af9c369989adc10c2bdcec39d8cc9f9ec",
-      "size": 4528
+      "sha256": "aba540e0874bfab13fcac4078db15406520b5da9ce5880db4615a9fefcb6efb7",
+      "size": 4762
     },
     {
       "mode": "100644",
@@ -173,8 +173,8 @@
     {
       "mode": "100644",
       "path": "AGENTS.md",
-      "sha256": "655a08addcf7761076ec18f79920cd43b46409dab3dbd16e04847432338f7cd8",
-      "size": 11091
+      "sha256": "33d0bae708a7ca4c9b291ee2d11fc2afc65f660661da1c9df06d3bbe275e0ed8",
+      "size": 11280
     },
     {
       "mode": "100644",
@@ -1157,8 +1157,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "4756e6c8d49ba8230b82ecc2adc3ab5a874acc4723fbb01eb8ebfea4543e0157",
-      "size": 2740
+      "sha256": "e3e9002c6a0f3cc6d4f9973e7eb61599c87679b343dce66c09c7be6823e83569",
+      "size": 3005
     },
     {
       "mode": "100644",
@@ -1211,14 +1211,14 @@
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "84d4a55b12da4c836355df2b8ad16be5a5ab91461fed96ced0e4ff5466c5d6dc",
-      "size": 21567
+      "sha256": "df00cdf3d3060d2afbac81e6c25a932dd8f386ac8ef928ed0921d5e99e9f6148",
+      "size": 21646
     },
     {
       "mode": "100644",
       "path": "SURUM.md",
-      "sha256": "fa3e4a3d2265d45b61845164ca3d439e10f7f024d5fe2a676e7bb231884c3a1d",
-      "size": 574891
+      "sha256": "8512fec04c8354373cec9ad4857811e4ad8197f7275e885a5c4f6645e1a7b90e",
+      "size": 575106
     },
     {
       "mode": "100755",
@@ -1258,9 +1258,15 @@
     },
     {
       "mode": "100644",
+      "path": "docs/DURUM.md",
+      "sha256": "0d353acc3e3cb0f62864b6ada0de283f114e43c7d2a1e075ec653de6b5d38b06",
+      "size": 1423
+    },
+    {
+      "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "38f49b60cdf370c9270fbb3af79dbdea793adcb58fdf8731438d89395313f64f",
-      "size": 8374
+      "sha256": "27eda9010892d794fe010b8706261ad4359209bb18139e5732f3273ad6d56055",
+      "size": 8440
     },
     {
       "mode": "100644",
@@ -1337,8 +1343,8 @@
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "7644c62c7743ca409bab453270cef429543c084303f9e5f3fbcf86e3602c3b4c",
-      "size": 20334
+      "sha256": "9619c14e1e3716caf80b9e2b5cf0f3ae81b5f71fc53d4a00fe107ba0b70d3f6a",
+      "size": 20372
     },
     {
       "mode": "100644",
@@ -1378,6 +1384,12 @@
     },
     {
       "mode": "100644",
+      "path": "tools/durum.py",
+      "sha256": "057928a97558f0292ffa2374a39eb35eb607881668d4b5713bf2c8bcc0b8bbe4",
+      "size": 12001
+    },
+    {
+      "mode": "100644",
       "path": "tools/guvenlik.py",
       "sha256": "7c4a849ca48d32e7ab4380d8e5955259179c51b070d22c970dbfae4ff1ccdfe6",
       "size": 6055
@@ -1391,8 +1403,8 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "4bd66e46b1176aa39905d916aa32f8291a5cdd5825e13e581844eeeb429e0b30",
-      "size": 20748
+      "sha256": "9bd11a00dee049e559f70c6aec17f08300c205d977d419d70969054a9e4e8243",
+      "size": 20100
     },
     {
       "mode": "100644",
@@ -1479,7 +1491,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-21T03:43:04Z",
+  "generated_at": "2026-11-21T04:20:38Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1494,6 +1506,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "876b048ef9058fe38ed949c632bc234afd970d93",
-  "tree_sha256": "6e298b995ce66f11af586f00735bdb6a815271b036c95fc7589acd5bd0b084eb"
+  "tree": "557ae499bd8de81d21156fdec86c26d76d432be1",
+  "tree_sha256": "f4baf2ede0163657f8a5737ee8f602c1d8971e76b9f03883dcd79565f6fedad5"
 }
