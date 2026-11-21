@@ -317,7 +317,7 @@
       "kaynaklar": [
         {
           "dosya": "docs/DURUM.md",
-          "alinti": "| Python dosya sayısı (H2) | 67 |"
+          "alinti": "| Python dosya sayısı (H2) | 68 |"
         }
       ],
       "durum": "OLCULDU",
@@ -326,7 +326,7 @@
         "tools/dogrula.py"
       ],
       "ayikla": "H2\\s+python sozdizimi\\s+PASS\\s+(\\d+) dosya",
-      "beklenen": "67"
+      "beklenen": "68"
     },
     {
       "id": "IDD-16",

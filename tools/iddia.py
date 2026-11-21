@@ -28,12 +28,18 @@ YESILE ZORLAMA YOK: AG_GEREKLI, BEYAN ve OLCULMEDI satirlari PASS sayilmaz;
 ozet satirinda ayri ayri sayilir, gerekceleri ve "ham kanit yok" durumu
 yaninda basilir.
 
-CIKIS: 0 = butun OLCULDU satirlari ham kanitiyla tuttu · 1 = en az bir iddia
-       tutmadi (veya --yaz sirasinda bir satir kirmizi) · 2 = defter/olcum
-       dosyasi bozuk (sema, dosya, alinti, eksik/fazla kanit)
+HIZLI KIP: --hizli, AGIR_BETIKLER'deki (dogrula, mutasyon) komutlari kosmaz;
+bu satirlari ATLANDI basar ve PASS saymaz. --yaz ile birlesemez (kismi anlik
+goruntu tam kaniti silerdi); varsayilan tam kosu aynen kalir.
+
+CIKIS: 0 = olculen OLCULDU satirlari ham kanitiyla tuttu (--hizli'da agir
+       satirlar ATLANDI) · 1 = en az bir iddia tutmadi (veya --yaz sirasinda
+       bir satir kirmizi) · 2 = defter/olcum dosyasi bozuk (sema, dosya,
+       alinti, eksik/fazla kanit) veya hizli kipte olculecek satir yok
 
 KULLANIM
-  python3 tools/iddia.py                  # agsiz dogrulama
+  python3 tools/iddia.py                  # agsiz tam dogrulama
+  python3 tools/iddia.py --hizli          # dogrula/mutasyon satirlarini atla
   python3 tools/iddia.py --kanit          # her PASS satirinin ham kanitini da bas
   python3 tools/iddia.py --ag             # ag gerektiren satirlari da olc
   python3 tools/iddia.py --sadece IDD-01,IDD-24
@@ -52,6 +58,8 @@ DEFTER = KOK / 'tools' / 'iddia_defteri.json'
 OLCUM = KOK / 'tools' / 'iddia_olcum.json'
 ZAMAN_ASIMI = 600
 DURUMLAR = ('OLCULDU', 'AG_GEREKLI', 'BEYAN', 'OLCULMEDI')
+# --hizli bu betikleri kosan satirlari atlar; varsayilan kosu hepsini olcer.
+AGIR_BETIKLER = ('tools/dogrula.py', 'tools/mutasyon_bataryasi.py')
 
 
 class DefterHatasi(Exception):
@@ -147,12 +155,21 @@ def olcum_yukle(gerekli=True):
     return veri
 
 
-def denetle_olcum(defter, olcum):
+def agir_mi(kayit):
+    """--hizli kipte kosulmayacak pahali bir komut mu?"""
+    return any(a.replace('\\', '/') in AGIR_BETIKLER
+               for a in (kayit.get('komut') or []))
+
+
+def denetle_olcum(defter, olcum, hizli=False):
     """OLCULDU kumesi ile ham kanit kumesi birebir ayni olmali: eksik kanit da
-    fazla (bayat) kanit da kabul edilmez."""
+    fazla (bayat) kanit da kabul edilmez. --hizli'da kosulmayan agir satirin
+    kaniti zorunlu degildir; varsa semasi yine denetlenir."""
     kayitlar = olcum['olcumler']
-    beklenen = {k['id'] for k in defter['iddialar'] if k['durum'] == 'OLCULDU'}
-    fazla = set(kayitlar) - beklenen
+    tum = {k['id'] for k in defter['iddialar'] if k['durum'] == 'OLCULDU'}
+    beklenen = {k['id'] for k in defter['iddialar']
+                if k['durum'] == 'OLCULDU' and not (hizli and agir_mi(k))}
+    fazla = set(kayitlar) - tum
     if fazla:
         raise DefterHatasi('olcum dosyasinda defterde olmayan kayit: %s'
                            % ', '.join(sorted(fazla)))
@@ -193,7 +210,7 @@ def komut_kos(argv, onbellek):
     return kayit
 
 
-def _tekil_komutlar(defter, sadece, ag, yaz):
+def _tekil_komutlar(defter, sadece, ag, yaz, hizli=False):
     """Ayni olcum komutunu bir kez kos; defter sirasini koru."""
     komutlar = []
     gorulen = set()
@@ -201,6 +218,8 @@ def _tekil_komutlar(defter, sadece, ag, yaz):
         if sadece and kayit['id'] not in sadece:
             continue
         durum = kayit['durum']
+        if hizli and durum == 'OLCULDU' and agir_mi(kayit):
+            continue
         if durum == 'OLCULDU' or (durum == 'AG_GEREKLI' and ag and not yaz):
             anahtar = tuple(kayit['komut'])
             if anahtar not in gorulen:
@@ -281,6 +300,7 @@ def _kisa(metin, sinir=64):
 def main(argv):
     ag = '--ag' in argv
     yaz = '--yaz' in argv
+    hizli = '--hizli' in argv
     kanit_goster = '--kanit' in argv
     sadece = set()
     for i, arg in enumerate(argv):
@@ -290,6 +310,11 @@ def main(argv):
         print('DEFTER BOZUK: --yaz ile --sadece birlikte kullanilamaz')
         print('HUKUM: DEFTER BOZUK — hicbir iddia olculmedi')
         return 2
+    if yaz and hizli:
+        print('DEFTER BOZUK: --yaz ile --hizli birlikte kullanilamaz — '
+              'kismi anlik goruntu tam kaniti siler')
+        print('HUKUM: DEFTER BOZUK — hicbir iddia olculmedi')
+        return 2
     try:
         defter = yukle()
         denetle(defter)
@@ -297,7 +322,7 @@ def main(argv):
             olcum = {'olcumler': {}}
         else:
             olcum = olcum_yukle(gerekli=True)
-            denetle_olcum(defter, olcum)
+            denetle_olcum(defter, olcum, hizli)
     except DefterHatasi as e:
         print('DEFTER BOZUK: %s' % e)
         print('IDDIA FAIL — defter: %s' % e)
@@ -314,10 +339,12 @@ def main(argv):
         print('filtre: %s' % ', '.join(sorted(sadece)))
     if yaz:
         print('kip: YAZ — ham kanit anlik goruntusu yenilenecek')
+    elif hizli:
+        print('kip: HIZLI — dogrula/mutasyon satirlari atlanir (PASS degil)')
     print()
 
     onbellek = {}
-    komutlar = _tekil_komutlar(defter, sadece, ag, yaz)
+    komutlar = _tekil_komutlar(defter, sadece, ag, yaz, hizli)
     if komutlar:
         print('  olcum: %d tekil komut paralel kosuldu' % len(komutlar))
     _paralel_olc(komutlar, onbellek)
@@ -330,7 +357,11 @@ def main(argv):
         durum = kayit['durum']
         ilk_kaynak = kayit['kaynaklar'][0]['dosya']
         kanit_metni = ''
-        if durum == 'OLCULDU':
+        if durum == 'OLCULDU' and hizli and agir_mi(kayit):
+            satirlar.append(('ATLANDI', eid, kayit['iddia'], '—',
+                             'hizli kip — pahali komut kosulmadi (PASS degil)',
+                             ilk_kaynak, durum, ''))
+        elif durum == 'OLCULDU':
             if yaz:
                 gecti, deger, ayrinti, ham, rc = taze(kayit, onbellek)
                 if gecti:
@@ -399,11 +430,19 @@ def main(argv):
     ag_sayisi = len([s for s in satirlar if s[0] == 'AG'])
     beyan = len([s for s in satirlar if s[0] == 'BEYAN'])
     olculmedi = len([s for s in satirlar if s[0] == 'OLCULMEDI'])
+    atlandi = len([s for s in satirlar if s[0] == 'ATLANDI'])
 
     print()
-    print('  olculdu=%d · gecen=%d · kalan=%d · ag=%d · beyan=%d · olculmedi=%d'
-          % (len(olculen), len(olculen) - len(kalan), len(kalan), ag_sayisi,
-             beyan, olculmedi))
+    if hizli:
+        print('  olculdu=%d · gecen=%d · kalan=%d · atlandi=%d · ag=%d · '
+              'beyan=%d · olculmedi=%d'
+              % (len(olculen), len(olculen) - len(kalan), len(kalan),
+                 atlandi, ag_sayisi, beyan, olculmedi))
+    else:
+        print('  olculdu=%d · gecen=%d · kalan=%d · ag=%d · beyan=%d · '
+              'olculmedi=%d'
+              % (len(olculen), len(olculen) - len(kalan), len(kalan),
+                 ag_sayisi, beyan, olculmedi))
     if yaz:
         if kalan:
             print('  HUKUM: FAIL — ham kanit yazilmadi: %s'
@@ -436,8 +475,14 @@ def main(argv):
     if not olculen:
         print('  HUKUM: OLCULMEDI — filtrelenen defterde OLCULDU satiri yok')
         return 2
-    print('  HUKUM: PASS — %d/%d olculen iddia ham kanitiyla beyanla ayni'
-          % (len(olculen) - len(kalan), len(olculen)))
+    if hizli:
+        print('  HUKUM: HIZLI — %d/%d hizli iddia gecti; %d agir iddia '
+              'ATLANDI (PASS sayilmadi)'
+              % (len(olculen) - len(kalan), len(olculen), atlandi))
+        print('  NOT: tam kosu icin `make iddia`.')
+    else:
+        print('  HUKUM: PASS — %d/%d olculen iddia ham kanitiyla beyanla ayni'
+              % (len(olculen) - len(kalan), len(olculen)))
     if ag_sayisi or beyan or olculmedi:
         print('  NOT: %d ag, %d beyan, %d olculmedi ayri sayildi — PASS degil.'
               % (ag_sayisi, beyan, olculmedi))

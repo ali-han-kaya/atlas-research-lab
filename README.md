@@ -297,6 +297,7 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 | Mutasyon kapsamı | `make kapsam` → `docs/MUTASYON_KAPSAM.md` güncel mi (üretilmiş tablo) |
 | Bedava canlı katalog (elle) | `make katalog-kontrol` → allowlist + `profiller.bedava` on rolü models.dev'de; ağ gerekir, CI dışında elle/yerel; `OLCULMEDI` ayrı hüküm |
 | İddia defteri | `make iddia` → README/docs sayısal iddialarını üreten komutla ve ham kanıt satırıyla yeniden ölçer; tutmayan satır `IDD-*` ile kırmızı |
+| Hızlı iddia | `make iddia-hizli` → `dogrula`/`mutasyon` gibi pahalı satırları atlar; atlananlar `ATLANDI` ve PASS değil, tam koşu değişmez |
 | Ham kanıt yenileme | `make iddia-yaz` → bilinçli değişiklikten sonra `tools/iddia_olcum.json` anlık görüntüsünü yeniler |
 | Kanıt paketi | `make kanit` → `attestation.json` + `kanit-paketi/` (commit, komut çıkışları, bulgu kimlikleri, SHA-256 manifesti) |
 | Paket doğrulama | `make kanit-paket-dogrula` → `sonuc.json` şeması, paket attestation'ı, `manifest.sha256` ve ham komut kayıtları |
@@ -318,6 +319,10 @@ değer. Son ölçümün **ham çıktı satırı** `tools/iddia_olcum.json` için
 `IDD-*` anahtarıyla durur; `make iddia` bu satırın güncel çıktıda birebir aynı
 olmasını, kendi desenine uymasını ve beyanla aynı değeri vermesini ister. Kanıt
 bayatsa veya bozulursa satır kırmızıdır; `make iddia-yaz` anlık görüntüyü yeniler.
+`make iddia-hizli` yalnız hızlı satırları ölçer: `dogrula`/`mutasyon` komutlarını
+koşmaz, bu satırları `ATLANDI` basar ve PASS saymaz; varsayılan `make iddia` tam
+koşu olarak kalır. `--yaz` ile birleştirilemez, çünkü kısmi anlık görüntü tam
+kanıtı silerdi.
 
 `make iddia` her satırı yeniden koşar; beyan ile ölçüm tutmazsa satırı
 kimliğiyle (`IDD-07`) kırmızı basar ve `rc=1` döner. Alıntısı dosyasında birebir

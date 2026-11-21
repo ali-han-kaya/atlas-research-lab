@@ -510,3 +510,8 @@ görüntü yalnızca `make iddia-yaz` ile yenilenir. Defter üç dokümanı tara
 tablolar (`MUTASYON_KAPSAM.md`, `GUVENLIK.md`) kapsam dışıdır: bunlar yeniden
 koşulacak iddia değil, ölçümün o günkü kaydıdır. Kapsam dışı dosyalar yeşil
 sayılmaz; defterin `kapsam.haric` bloğunda gerekçeleriyle listelenir.
+
+`make iddia-hizli` yalnız hızlı satırları ölçer; `dogrula` ve `mutasyon`
+komutlarını koşmaz. Atlanan satırlar `ATLANDI` olarak basılır ve PASS sayılmaz;
+varsayılan `make iddia` tam koşu olarak değişmez. `--yaz --hizli` reddedilir,
+çünkü kısmi anlık görüntü diğer satırların ham kanıtını silerdi.

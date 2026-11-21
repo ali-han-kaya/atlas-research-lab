@@ -2,7 +2,7 @@ PY ?= python3
 # pip-audit yalniz gelistirme aracidir; varsa yerel sanal ortam kullanilir.
 PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(PY))
 
-.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula durum-yaz durum-kontrol durum-selftest mutasyon oztest demo demo-selftest temiz-teslim kapsam kapsam-yaz model-kimlik katalog-kontrol katalog-selftest iddia iddia-ag iddia-yaz guvenlik kur yayinla yardim
+.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula durum-yaz durum-kontrol durum-selftest mutasyon oztest demo demo-selftest temiz-teslim kapsam kapsam-yaz model-kimlik katalog-kontrol katalog-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giris: hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
@@ -23,8 +23,10 @@ yardim:
 	@echo "make katalog-kontrol  canli models.dev kapisi: allowlist + bedava profili + append-only kanit (KAYIT_ARGS ile yol)"
 	@echo "make katalog-selftest  katalog kapisi ve uretici oz-testleri (ag yok; dogrula on kosulu)"
 	@echo "make iddia    README/docs sayisal iddialarini ureten komutla yeniden olc (ag haric)"
+	@echo "make iddia-hizli  dogrula/mutasyon gibi pahali satirlari atla; atlananlar PASS degil"
 	@echo "make iddia-ag  ag gerektiren iddialari da olc"
 	@echo "make iddia-yaz  ham kanit anlik goruntusunu yenile (tools/iddia_olcum.json)"
+	@echo "make iddia-selftest  hizli kip ve atlama sozlesmesinin negatif testleri"
 	@echo "make guvenlik  pip-audit: bilinen CVE taramasi (requirements-dev.txt)"
 	@echo "make kur       commit/push korumasini bu klonda etkinlestir"
 	@echo "make oztest    yalniz oz-test paketleri"
@@ -88,11 +90,17 @@ katalog-selftest:
 iddia:
 	@$(PY) tools/iddia.py
 
+iddia-hizli:
+	@$(PY) tools/iddia.py --hizli
+
 iddia-ag:
 	@$(PY) tools/iddia.py --ag
 
 iddia-yaz:
 	@$(PY) tools/iddia.py --yaz
+
+iddia-selftest:
+	@$(PY) tools/iddia_selftest.py
 
 guvenlik:
 	@$(PY_AUDIT) tools/guvenlik.py

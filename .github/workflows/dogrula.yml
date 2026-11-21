@@ -165,6 +165,11 @@ jobs:
       - name: Bagimliliklar
         run: python3 -m pip install --quiet -r requirements-dev.txt
 
+      # Hizli kip sozlesmesi: agir satirlar kosmadan ATLANDI olmali ve PASS
+      # sayilmamali; tam kosunun fail-closed davranisi da bu testte sınanir.
+      - name: Iddia hizli kip sozlesmesi
+        run: make iddia-selftest
+
       # README/docs sayilari iddia defterinden olculur; bayat sayi yesil CI ile
       # yayilanamaz. FAIL satiri hangi beyanin hangi kaynakla uyusmadigini basar.
       - name: make iddia

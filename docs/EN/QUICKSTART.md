@@ -158,6 +158,7 @@ claim/evidence gap, not from a broken test.
 | `make katalog-kontrol` | live models.dev gate: fixed allowlist IDs and all ten `profiller.bedava` roles; network required, run manually outside CI; `OLCULMEDI` fails, never passes |
 | `make oztest` | the three self-test suites alone |
 | `make iddia` | numeric claims in README/docs, re-measured with their stored raw evidence line; named by `IDD-*` on mismatch |
+| `make iddia-hizli` | fast claims only; skips `dogrula`/`mutation` rows, marks them `ATLANDI` and never counts them as PASS; the full run is unchanged |
 | `make iddia-yaz` | regenerate the raw evidence snapshot after an intentional change |
 
 The KOD `bedava` profile has binding selection and retirement rules — same
@@ -173,6 +174,12 @@ reproducible here) are counted separately with their reason and marked
 `make iddia` skips the network claim. `make iddia-ag` requires the live catalog;
 if it cannot be read, the claim is reported as `AG` and the command exits **2**
 instead of emitting a false PASS or FAIL.
+
+`make iddia-hizli` measures only the fast rows: commands running
+`tools/dogrula.py` or `tools/mutasyon_bataryasi.py` are not started, their rows
+are printed as `ATLANDI`, and the summary counts them separately — they are
+never PASS. The default `make iddia` remains the full run, and `--yaz --hizli`
+is refused because a partial snapshot would delete the other rows' evidence.
 
 CI runs `make dogrula-ci`, `make mutasyon`, `make kapsam`, `make guvenlik`, and
 asserts `./demo` exits **1** while `make demo` exits **2** (the wrapper cannot
