@@ -349,8 +349,21 @@ def kod_ici_sinifla(yol, kimlik):
     return KOD_ICI_GEREKCE[anahtar]
 
 
+def kod_ici_kaynak_dogrula():
+    """Her dislama kaydinin sinif ve bos olmayan gerekce tasidigini sinar."""
+    for (yol, kimlik), (sinif, gerekce) in KOD_ICI_GEREKCE.items():
+        if sinif not in ('tani-kodu', 'veri-kimligi'):
+            raise SystemExit(
+                'KOD-ICI KAPSAM: gecersiz sinif %r · %s · %s' % (sinif, kimlik, yol))
+        if not isinstance(gerekce, str) or len(gerekce.strip()) < 12:
+            raise SystemExit(
+                'KOD-ICI KAPSAM: gerekcesiz kimlik %s · %s; '
+                'KOD_ICI_GEREKCEye gerekce yaz' % (kimlik, yol))
+
+
 def kod_ici_oztest():
     """Sahte bir kod-ici kimligin tarama + siniflamada reddedildigini sinar."""
+    kod_ici_kaynak_dogrula()
     sahte = 'x = "AI-99"\n'
     try:
         for kimlik in KOD_ICI.findall(sahte):
