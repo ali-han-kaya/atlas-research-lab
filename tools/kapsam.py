@@ -27,6 +27,10 @@ KURAL = re.compile(r'^\s{0,8}([A-Z]{2,8}(?:-[A-Z0-9]{1,8}){0,2}-\d{2,3})\b')
 # Dosyanin herhangi bir yerindeki bolum basligi: `# --- FRZ-08 ...`.
 # Bu, ust KURALLAR listesine yazilmamis ama kodda hukum ureten kurali yakalar.
 BOLUM = re.compile(r'^\s*#+\s*-{2,}\s*([A-Z]{2,8}(?:-[A-Z0-9]{1,8}){0,2}-\d{2,3})\b')
+# Kod icinde string literal olarak uretilen kimlikler (or. AI-00, HJ-01).
+# Bunlar KURALLAR basligi veya bolum basligi degildir; envantere kural olarak
+# eklenmezler ama asagidaki KOD_ICI_GEREKCE ile sessizce gizlenmeleri engellenir.
+KOD_ICI = re.compile(r'''["']([A-Z]{2,8}(?:-[A-Z0-9]{1,8}){0,2}-\d{2,3})["']''')
 # OLCUM-* bir kapi kurali degil, olcum kaydinin referansidir.
 YOKSAY_PREFIX = {'OLCUM'}
 
@@ -120,6 +124,32 @@ REFERANS = {
     ('ATLAS_SABLONLAR/scripts/verify_doi.py', 'DEC-027'):
         'DEC karar kimligi; verify_doi bu kurali uygulamaz, DEC-027 '
         'bolum-farkindaligi politikasina atif yapar',
+}
+
+# Baslikta bildirilmeyen ama betik kodunda string literal olarak uretilen
+# kimlikler. Anahtar (betik, onek); yeni bir betik/onek belgelenmeden
+# `make kapsam` fail-closed durur. Bunlar kural degil, tani/veri kimligidir;
+# bu yuzden kural envanterine ve mutasyon ratchet'ine sayilmazlar.
+KOD_ICI_GEREKCE = {
+    ('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI'):
+        ('tani-kodu', 'AI-00..AI-04 ai_disclosure hata tanilaridir; AI-1 '
+                      'oz-testi AI-00/01/02/04 dallarini kilitler, AI-03 '
+                      'cikti yazma I/O hatasidir ve mutasyonla deterministik '
+                      'tetiklenmez. Kapi kurali degil, hata sinifidir.'),
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ'):
+        ('tani-kodu', 'HJ-00..HJ-08 review_panel hata tanilaridir; HJ-1 '
+                      'oz-testi HJ-00..HJ-07 dallarini kilitler, HJ-08 cikti '
+                      'yazma I/O hatasidir. Kapi kurali degil, hata sinifidir.'),
+    ('ATLAS_SABLONLAR/scripts/olgu_lint.py', 'OLGU'):
+        ('tani-kodu', 'OLGU-01..OLGU-03 girdi/sema hata tanilaridir; '
+                      'OLGU-04..OLGU-06 kuraldir ve envanterde ayrica izlenir.'),
+    ('ATLAS_SABLONLAR/scripts/scope_profile_check.py', 'SC'):
+        ('veri-kimligi', 'SC-* kapsam sozlesmesindeki zorunlu bolum '
+                         'kimlikleridir; SP-01..SP-07 kuraldir. Bolum '
+                         'kimligi kapi kurali degildir.'),
+    ('KOD_SABLONLAR/scripts/chg_reconcile.py', 'RECK'):
+        ('tani-kodu', 'RECK-00 ortak girdi/JSON/sema hata kodudur; '
+                      'RECK-01..RECK-09 kuraldir ve envanterde ayrica izlenir.'),
 }
 
 # Risk sirasi — 19.11.2026'daki 51 mutation-kapsamsiz kuralin tamami.
@@ -263,6 +293,42 @@ def _kimlikler(p):
             baslik.discard(ref_kimlik)
             bolum.discard(ref_kimlik)
     return baslik, bolum
+
+
+def kod_ici_kimlikler():
+    """Baslikta bildirilmeyen, kodda string literal olarak uretilen kimlikler.
+
+    Bunlar kural degildir; envantere eklenmez. Yine de sessizce kaybolmaz:
+    her kimlik KOD_ICI_GEREKCE ile bir sinira ve gerekceye baglanir. Yeni bir
+    betik/onek belgelenmeden `make kapsam` fail-closed durur.
+    """
+    sonuc = []
+    for p in kapi_betikleri():
+        baslik, bolum = _kimlikler(p)
+        metin = p.read_text(encoding='utf-8')
+        yol = str(p.relative_to(KOK))
+        for kimlik in sorted(set(KOD_ICI.findall(metin)) - baslik - bolum):
+            if kimlik.split('-')[0] in YOKSAY_PREFIX:
+                continue
+            anahtar = (yol, kimlik.split('-')[0])
+            if anahtar not in KOD_ICI_GEREKCE:
+                raise SystemExit(
+                    'KOD-ICI KAPSAM: belgelenmemis kimlik %s · %s; '
+                    'KOD_ICI_GEREKCEye betik+onek gerekcesi yaz' % (kimlik, yol))
+            sinif, gerekce = KOD_ICI_GEREKCE[anahtar]
+            sonuc.append((yol, kimlik, sinif, gerekce))
+    return sonuc
+
+
+def kod_ici_tablosu(kimlikler):
+    gruplar = {}
+    for betik, kimlik, sinif, gerekce in kimlikler:
+        gruplar.setdefault((betik, sinif, gerekce), []).append(kimlik)
+    out = ['| Betik | Sinif | Kimlikler | Gerekce |', '|---|---|---|---|']
+    for (betik, sinif, gerekce), ids in sorted(gruplar.items()):
+        out.append('| `%s` | %s | %s | %s |' % (
+            betik.split('/')[-1], sinif, ', '.join(ids), gerekce))
+    return out
 
 
 def envanter():
@@ -447,6 +513,7 @@ def rec_tablosu(vakalar):
 def markdown():
     satirlar, envan, (test, disi, bosluk, oz_anilan) = olc()
     yeni, geri = ratchet(satirlar)
+    kod_ici = kod_ici_kimlikler()
     vakalar = batarya()
     toplam_vaka = len(vakalar)
     beklenen_bulgu = sum(1 for v in vakalar if len(v) >= 8 and v[7] == 'BULGU')
@@ -454,8 +521,10 @@ def markdown():
            'Kaynak: `tools/kapsam.py` (uretilmis dosya; elle duzenlenmez).',
            'Envanter, ATLAS ve KOD kapi betiklerinin satir basi kural bildirimlerinden',
            've dosyanin herhangi bir yerindeki `# --- KIMLIK` bolum basliklarindan gelir;',
-           '`*_selftest.py` ve `OLCUM-*` referanslari sayilmaz.',
-           '',
+           '`*_selftest.py` ve `OLCUM-*` referanslari sayilmaz.', '',
+           'Kod icinde string literal olarak uretilen tani/veri kimlikleri kural',
+           'envanterine sayilmaz; ama `Kod icinde uretilen kimlikler` bolumunde',
+           'gerekcesiyle gorunur. Yeni bir aile `make kapsam`i fail-closed durdurur.', '',
            'Her kural icin tek soru sorulur: **mutasyon bataryasinda onu ateslettiren',
            'bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus',
            '**KAPSAM DISI** ya da **BOSLUK**. Bosluk gizlenmez. Tarama dosyanin',
@@ -469,6 +538,7 @@ def markdown():
            '| Taranan betik | %d |' % len(envan),
            '| Kural bildiren betik | %d |' % sum(1 for v in envan.values() if v),
            '| Bildirilen kural | %d |' % len(satirlar),
+           '| Kod icinde uretilen, envantere alinmayan kimlik | %d |' % len(kod_ici),
            '| Batarya vakasi (toplam) | %d |' % toplam_vaka,
            '| — kural ateslettiren | %d |' % (toplam_vaka - beklenen_bulgu),
            '| — beklenen bulgu | %d |' % beklenen_bulgu,
@@ -522,6 +592,12 @@ def markdown():
             'Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir',
             '(asagida betik adiyla birlikte yazili).', '']
     out += sinif_tablosu(satirlar)
+    out += ['', '## Kod icinde uretilen kimlikler', '',
+            'Asagidaki kimlikler `KURALLAR` basliginda veya `# --- KIMLIK`',
+            'bolum basliginda bildirilmez; betik kodu tarafindan string literal',
+            'olarak uretilir. Kapi kurali degil, tani/veri kimligidir; bu yuzden',
+            'envantere kural olarak eklenmez. Gerekce sessizce dusulmez:', '']
+    out += kod_ici_tablosu(kod_ici)
     if not envan.get('ATLAS_SABLONLAR/scripts/verify_doi.py'):
         out += ['', 'Not: `verify_doi.py` tarandi; bildirilen kural kimligi yok.',
                 'Dosyadaki `DEC-027` bir karar referansidir, kural degil; bu',
@@ -536,8 +612,10 @@ def markdown():
             'satir sinirinin olmadiginin canli kanitidir.', '',
             '`DEC-10/12` ve `GM-17/18` gibi degisiklik etiketleri kural kimligi',
             'degildir; yalnizca kural bildirimleri ve `# --- KIMLIK` basliklari',
-            'taranir. `CHK-00` gibi bolum basligi olmayan ara kodlar da bu',
-            'envanterin konusu degildir.', '']
+            'envantere alinir. `CHK-00` gibi ara kodlar ile kod icinde string',
+            'literal olarak uretilen AI/HJ/OLGU/SC/RECK kimlikleri yukaridaki',
+            '`Kod icinde uretilen kimlikler` tablosunda gerekcesiyle ayri tutulur;',
+            'sessizce yok sayilmaz.', '']
     _tarama = tarama()
     out += tarama_tablosu()
     out += ['', 'Toplam: %d betik · %d tekil kural; her satirda Envanter = '
