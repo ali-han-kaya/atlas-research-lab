@@ -56,6 +56,9 @@ törensel hale getirir.
 | Lab kökü `opencode.json` | YOK (kullanıcı varsayılanı) | yerel batarya | $0 |
 | `KOD_SABLONLAR/opencode.json` | `deepseek-v4-flash` sabit | canlı KOD koşusu | `denge` ~$2.3 |
 
+`bedava` profiline kimlik seçimi ve emekli kimlik değişimi bağlayıcı koşullara
+tabidir: [`../docs/KOD_BEDAVA_MODEL_POLITIKASI.md`](../docs/KOD_BEDAVA_MODEL_POLITIKASI.md).
+
 ## Makine bloğu zorunluluğu
 
 KFAZ0/1/2 artefaktları `.md`'dir ama her biri gövdesinde bir ` ```json ` bloğu

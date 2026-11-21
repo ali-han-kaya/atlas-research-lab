@@ -228,6 +228,11 @@ değişirse kontrol kırmızı olur. Denetim hiçbir dosyayı sessizce atlamaz:
 okunamayan dosya onay listesinde gerekçesiyle yoksa FAIL verir; PASS satırı
 `taranan`, `incelenmedi=0` ve `onay` sayaçlarını gösterir.
 
+KOD hattının `bedava` profili için bağlayıcı seçim ve emeklilik koşulları
+[`docs/KOD_BEDAVA_MODEL_POLITIKASI.md`](docs/KOD_BEDAVA_MODEL_POLITIKASI.md)
+içindedir: aynı aile, sıfır maliyet, `reasoning`/`tool_call`, canlı models.dev
+kanıtı ve emekli kimlik değişim prosedürü.
+
 ### Bir projede ATLAS hattını kullanmak
 
 ```bash
