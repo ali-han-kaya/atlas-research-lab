@@ -28,8 +28,8 @@ otomatik uygulanmaz.
 | Kural bildiren betik | 20 |
 | Bildirilen kural | 121 |
 | Kod icinde uretilen, envantere alinmayan kimlik | 41 |
-| Batarya vakasi (toplam) | 109 |
-| — kural ateslettiren | 91 |
+| Batarya vakasi (toplam) | 116 |
+| — kural ateslettiren | 98 |
 | — beklenen bulgu | 18 |
 | Mutasyon vakasi olan (TEST EDILDI) | 95 |
 | Gerekceli kapsam disi | 26 |

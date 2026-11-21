@@ -71,7 +71,7 @@ kopyasında çalışır ve iki sözleşmeden birini ölçer:
    mutasyon sonrası çıktıda görünmelidir.
 
 Temiz taban veya sözleşme eksikse vaka `ATESLEMEDI` / `TABAN_KIRIK` olarak raporlanır
-ve betik `rc=1` ile çıkar. Güncel katalog **109 vaka = 91 hata + 18 beklenen-bulgu**;
+ve betik `rc=1` ile çıkar. Güncel katalog **116 vaka = 98 hata + 18 beklenen-bulgu**;
 ölçülen kurallar ve katmanları çıktıda ada basmadır.
 
 **Neyi ölçmez:** kuralın *doğru tasarlandığını* ölçmez — yalnız kodun o ihlali
@@ -478,10 +478,23 @@ sayaçlarını taşır.
 (kimliği tanımlamak için onu taşımak zorundadır); defter taranır, eşleşmeleri
 "tanım" sayılır. `okunamaz` kaydı yalnız gerçekten okunamayan dosya içindir ve
 dosya okunabilir hâle gelirse "onay gereksiz" diye FAIL eder; yani hiçbir dosya
-kendi kendini muaf ilan edemez. `--oztest` dokuz vakayı kanıtlar: temiz ağaç
+kendi kendini muaf ilan edemez. `--oztest` on bir vakayı kanıtlar: temiz ağaç
 (`incelenmedi=0`), tarihsel satırın muafiyeti, aktif metin, 4 MB üstü metin,
 ikili dosya (UTF-8 + UTF-16LE), onaysız incelenemeyen dosya, gereksiz onay,
-bozulan tarihsel satır ve aktif dosyaya tanım onayı. Yeni bir emekli kimlik
+bozulan tarihsel satır, aktif dosyaya tanım onayı, defterin kendi `tanim`
+onayının zorunluluğu ve PASS raporunun `aday/taranan/incelenmedi/onay/aktif`
+sayaçları. Okunamayan dosya yolu gerçek ağaçta da ölçüldü: `chmod 000` →
+`FAIL incelenmedi=1`; aynı dosya `onay` listesine gerekçesiyle eklendiğinde
+`PASS incelenmedi=1 onay=2`; izin geri açıldığında `FAIL ONAY GEREKSIZ`;
+onay kaldırıldığında `PASS incelenmedi=0 onay=1`.
+
+Bu korumaların geri alınamaması `make mutasyon` içindeki yedi adlandırılmış
+mutantla ölçülür: ikili bayt araması, 4 MB üstü sessiz atlama, onaysız
+incelenemeyenin sessiz geçilmesi, tek genel onayın tüm incelenemeyenleri
+kapsaması, defterin kendi tanım onayının silinmesi, defter tanım SHA-256'sının
+doğrulanmaması ve PASS raporundan aktif sayacının çıkarılması. Her mutant
+kapının kendi `--oztest`/`--kontrol` bulgusunu üretir; kural silinirse vaka
+`ATESLEMEDI` olur ve batarya yeşil dönemez. Yeni bir emekli kimlik
 eklenirse önce tarihsel satırlar değiştirilmeden deftere satır hash'leriyle
 kaydedilir, sonra aktif atıflar temizlenir.
 
