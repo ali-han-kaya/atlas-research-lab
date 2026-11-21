@@ -1,6 +1,6 @@
 {
-  "commit": "bd266186ea1eeae0d3fabe18e06801def3ca9a14",
-  "file_count": 245,
+  "commit": "a2f0165701b9a96d3f2007e096a86e3f089be42e",
+  "file_count": 246,
   "files": [
     {
       "mode": "100755",
@@ -1211,8 +1211,8 @@
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "d2740dc4e6f667f8cff798b6b807d09d807b0c8757a1ccdc8c22af99e5ced64f",
-      "size": 21297
+      "sha256": "7b456b2660db2be9ff61ba4468fdfdf3f935fcc735bfd5d7c9b1f71ad6e24168",
+      "size": 21415
     },
     {
       "mode": "100644",
@@ -1247,8 +1247,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "89d2ea33d947e9678334a6827fa4c21c36cb24cb1a3589311d9f66ccabacd13c",
-      "size": 468481
+      "sha256": "5d766824bebe92b98b8c1d4e7b99b2dd5f3698296876dd4e30e503f97fe3cb26",
+      "size": 469210
     },
     {
       "mode": "100644",
@@ -1439,8 +1439,8 @@
     {
       "mode": "100644",
       "path": "tools/mutasyon_bataryasi.py",
-      "sha256": "c438c31b3c2a7b5cefb10000bcf9cc9f9b498c18be58f51b35d5222d097e72e2",
-      "size": 74094
+      "sha256": "3d0451f12bf82db29c173305d70ad1c535903dc65a32aa070f464f0c93f8ae20",
+      "size": 74858
     },
     {
       "mode": "100644",
@@ -1468,12 +1468,18 @@
     },
     {
       "mode": "100644",
+      "path": "tools/src01_kaynak_siniflandirma_fiksturu.md",
+      "sha256": "b7494fb4ac8c60a2a73a9860a19772c7bafd035a69ec85eb436884aaf31c0e18",
+      "size": 510
+    },
+    {
+      "mode": "100644",
       "path": "tools/yayinla.py",
       "sha256": "5a450473f6f5c8502bbb6e3c9eba760708ce88c672cb9d41a80ccdba89077b03",
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-21T00:40:49Z",
+  "generated_at": "2026-11-21T02:42:14Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1488,6 +1494,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "2cc672a6aab952cc4855200d94315c0b7b6ac1a9",
-  "tree_sha256": "1d7abf345a418fa63264819b4d276b411aa0a4086c199ec5208c050af523cdb2"
+  "tree": "147c4a1fbc3f36ad6330491c0e1f50fb3841148e",
+  "tree_sha256": "11470e3306010c628f9671733941cbeac338d3fbfe7b5999577078ae9a4b37ac"
 }
