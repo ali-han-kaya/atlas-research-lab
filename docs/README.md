@@ -297,6 +297,10 @@ hatlarda geçen** OpenRouter kimliklerinin allowlist'idir. Canlıdan bütün mod
 almak MOD-1/MOD-2'nin "depoda geçmeyen model" disiplinini bozar. Yenileme iki
 kümenin kesişimidir: **aktif hat kaynakları ∩ models.dev**.
 
+KOD `bedava` profiline kimlik seçimi ve emekli kimlik değişimi bundan daha
+sıkıdır; bağlayıcı koşullar ve adım adım prosedür
+[`KOD_BEDAVA_MODEL_POLITIKASI.md`](KOD_BEDAVA_MODEL_POLITIKASI.md) içindedir.
+
 **Aktif kaynaklar:** `ATLAS_SABLONLAR/.opencode/agent/`,
 `KOD_SABLONLAR/.opencode/agent/`, iki `routing.profiles.json`, üç
 `opencode.json` (kök, ATLAS ve KOD). `docs/`, `SURUM.md`, tarihsel `OLCUM-*`

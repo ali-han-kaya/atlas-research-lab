@@ -160,6 +160,10 @@ claim/evidence gap, not from a broken test.
 | `make iddia` | numeric claims in README/docs, re-measured with their stored raw evidence line; named by `IDD-*` on mismatch |
 | `make iddia-yaz` | regenerate the raw evidence snapshot after an intentional change |
 
+The KOD `bedava` profile has binding selection and retirement rules — same
+family, zero cost, `reasoning`/`tool_call`, live models.dev evidence, and the
+exact retirement procedure. See `docs/KOD_BEDAVA_MODEL_POLITIKASI.md` (Turkish).
+
 `make iddia` is separate from `make dogrula`: it does not change the 8/8 verdict.
 Claims that cannot be re-run are not forced green — `AG_GEREKLI` (network; skipped
 unless `make iddia-ag`), `BEYAN` (dated/machine-bound) and `OLCULMEDI` (not
