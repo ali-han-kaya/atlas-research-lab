@@ -19,6 +19,9 @@ node_modules/
 *.bak
 *.orig
 
+# make kanit'in taşınabilir çıktısı (üretilir; git'e eklenmez)
+kanit-paketi/
+
 # Sırlar — asla commitlenmez
 .env
 .env.*

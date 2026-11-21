@@ -7,7 +7,7 @@ PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(
 yardim:
 	@echo "make dogrula   tek giris: hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
 	@echo "make dogrula-ci  runner kipi: olculebilen kalemler hukme girer, oz-testler rapor"
-	@echo "make kanit     bu agacin commit + sha256 kanitini yaz (attestation.json)"
+	@echo "make kanit     commit + sha256 kanitini ve dogrulama paketini yaz (attestation.json + kanit-paketi/)"
 	@echo "make kanit-dogrula  attestation.json'i gercek commit/agac ile dogrula"
 	@echo "make durum-yaz  tek uretilmis DURUM sayfasini yenile (docs/DURUM.md)"
 	@echo "make durum-kontrol  DURUM sayfasi kaynaklara gore bayat mi (CI)"

@@ -1,30 +1,62 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""kanit.py — bu agacin kendi commit/agac kanitini uretir.
+"""kanit.py — bu agacin commit/agac kaniti ve tasinabilir dogrulama paketi.
 
 NEDEN VAR: OLG-1'in canli kaniti ozel agacin tarihcesine bagli; public agacta
 CALISTIRILMADI. Bu betik ozel agaci OKUMAZ; yalniz bu depodaki GERCEK HEAD
 commit'ini ve izlenen dosyalarin sha256'sini yazar. Attestation kendi dosyasini
 kapsamaz; boylece commit/hash dongusu olusmaz.
 
-Kullanim:
-  python3 tools/kanit.py                 # attestation.json yaz
-  python3 tools/kanit.py --cikti <yol>   # baska dosyaya yaz
+`make kanit` ayrica makine-okur bir dogrulama paketi uretir:
+  kanit-paketi/sonuc.json       ATLAS-DOGRULAMA/v1
+  kanit-paketi/attestation.json  agac kanitinin kopyasi
+  kanit-paketi/manifest.sha256  paket dosyalarinin SHA-256 manifesti
+  kanit-paketi/komutlar/        komut stdout/stderr kayitlari
 
-CIKIS: 0 = yazildi · 1 = kirli agac/git hatasi · 2 = kullanim hatasi
+Paket, attestation yazildiktan SONRA dogrulama komutlarini kosar. Boylece T1
+yeni agac kanitini kullanir; yalniz attestation.json degistigi icin
+`kanit_dogrula`nin agac temizligi kurali bunu dislar. Paket git'e eklenmez
+(`.gitignore`); tasimak icin dizini kopyalamak yeterlidir.
+
+Kullanim:
+  python3 tools/kanit.py                    # attestation + kanit-paketi
+  python3 tools/kanit.py --cikti <yol>      # attestation'i baska yola yaz
+  python3 tools/kanit.py --paket <dizin>    # paket konumunu degistir
+  python3 tools/kanit.py --komut "make kapsam"  # varsayilan komutlari degistir
+  python3 tools/kanit.py --paketsiz         # yalniz attestation (eski davranis)
+
+CIKIS: 0 = attestation ve paket yazildi, butun komutlar PASS
+       1 = kirli agac/git hatasi veya dogrulama komutu FAIL
+       2 = kullanim/paket yazma hatasi
 """
 import argparse
 import hashlib
 import json
 import platform
+import re
+import shlex
+import shutil
 import subprocess
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
 KOK = Path(__file__).resolve().parent.parent
 SEMA = "ATLAS-KANIT/v1"
+SEMA_SONUC = "ATLAS-DOGRULAMA/v1"
 ATTESTATION = "attestation.json"
+SONUC = "sonuc.json"
+MANIFEST = "manifest.sha256"
+VARSAYILAN_PAKET = "kanit-paketi"
+VARSAYILAN_KOMUTLAR = [
+    ("dogrula", ["make", "dogrula"]),
+    ("kapsam", ["make", "kapsam"]),
+    ("iddia", ["make", "iddia"]),
+]
+BULGU_SATIRI = re.compile(
+    r"^\s*(?:FAIL|KALDI|BULGU|HATA)\s+([A-Za-z0-9_.-]+)")
+SIDDET = re.compile(r"\bP([0-2])\b")
 
 
 def git(*args, text=False):
@@ -124,10 +156,177 @@ def arac_surumu(komut):
     return "YOK"
 
 
+def sha256_metin(metin):
+    return hashlib.sha256(metin.encode("utf-8")).hexdigest()
+
+
+def bulgu_kimlikleri(metin):
+    """Yalniz satir basindaki FAIL/KALDI/BULGU/HATA kimliklerini toplar.
+
+    "0 bulgu" gibi basari satirlarini veya serbest metindeki "FAIL"
+    kelimesini bulgu saymamak icin satir basi ve ayri kimlik aranir.
+    """
+    kimlikler = set()
+    for satir in (metin or "").splitlines():
+        m = BULGU_SATIRI.match(satir)
+        if m:
+            kimlikler.add(m.group(1))
+    return sorted(kimlikler)
+
+
+def siddet_bul(metin, kimlik=None):
+    for satir in (metin or "").splitlines():
+        if kimlik and kimlik not in satir:
+            continue
+        m = SIDDET.search(satir)
+        if m:
+            return "P%s" % m.group(1)
+    return "UNKNOWN"
+
+
+def komut_id(argv, sira):
+    if len(argv) >= 2 and argv[0] == "make":
+        temiz = re.sub(r"[^A-Za-z0-9_.-]+", "-", argv[1]).strip("-")
+        if temiz:
+            return temiz
+    return "komut-%02d" % sira
+
+
+def komut_calistir(argv):
+    baslangic = time.monotonic()
+    try:
+        r = subprocess.run(argv, cwd=str(KOK), capture_output=True, text=True,
+                           timeout=1800)
+        rc = r.returncode
+        out = r.stdout or ""
+        err = r.stderr or ""
+        hata = None
+    except subprocess.TimeoutExpired:
+        rc, out, err, hata = 124, "", "ZAMAN ASIMI (1800 s)", "ZAMAN ASIMI"
+    except OSError as e:
+        rc, out, err, hata = 125, "", "KOSULAMADI: %s" % e, "KOSULAMADI"
+    sure = int(round((time.monotonic() - baslangic) * 1000))
+    return rc, out, err, sure, hata
+
+
+def attestation_verisi(commit, tree, dosyalar):
+    return {
+        "schema": SEMA,
+        "generated_at": datetime.now(timezone.utc).isoformat(
+            timespec="seconds").replace("+00:00", "Z"),
+        "commit": commit,
+        "tree": tree,
+        "file_count": len(dosyalar),
+        "files": dosyalar,
+        "tree_sha256": agac_ozeti(dosyalar),
+        "tool_versions": {
+            "python": platform.python_version(),
+            "git": arac_surumu(["git", "--version"]),
+            "make": arac_surumu(["make", "--version"]),
+            "platform": platform.platform(),
+        },
+        "scope": {
+            "source": "git ls-tree -r --full-tree HEAD",
+            "excludes": [ATTESTATION],
+            "note": "Butun izlenen dosyalar; attestation.json kendini kapsamaz.",
+        },
+    }
+
+
+def paket_yaz(paket, attestation_metni, attestation_verisi_, komutlar):
+    """Paketi yaz; (sonuc, manifest_yolu) dondur."""
+    paket = Path(paket)
+    if paket.resolve() == KOK.resolve():
+        raise ValueError("paket dizini depo koku olamaz")
+    if paket.exists():
+        shutil.rmtree(paket)
+    (paket / "komutlar").mkdir(parents=True)
+
+    (paket / ATTESTATION).write_text(attestation_metni, encoding="utf-8")
+    at_sha = sha256_metin(attestation_metni)
+
+    kayitlar = []
+    for sira, (kimlik, argv, rc, out, err, sure, hata) in enumerate(komutlar, 1):
+        ad = "komutlar/%02d-%s" % (sira, kimlik)
+        (paket / (ad + ".stdout.txt")).write_text(out, encoding="utf-8")
+        (paket / (ad + ".stderr.txt")).write_text(err, encoding="utf-8")
+        birlesik = out + "\n" + err
+        kimlikler = bulgu_kimlikleri(birlesik)
+        durum = "ERROR" if hata else ("PASS" if rc == 0 else "FAIL")
+        kayitlar.append({
+            "id": kimlik,
+            "argv": argv,
+            "exit_code": rc,
+            "status": durum,
+            "duration_ms": sure,
+            "stdout_sha256": sha256_metin(out),
+            "stderr_sha256": sha256_metin(err),
+            "stdout_bytes": len(out.encode("utf-8")),
+            "stderr_bytes": len(err.encode("utf-8")),
+            "finding_ids": kimlikler,
+        })
+
+    birlesik_metin = "\n".join(
+        (out + "\n" + err) for _k, _a, _rc, out, err, _s, _h in komutlar)
+    kimlikler = bulgu_kimlikleri(birlesik_metin)
+    bulgular = [{
+        "id": k,
+        "commands": [r["id"] for r in kayitlar if k in r["finding_ids"]],
+        "severity": siddet_bul(birlesik_metin, k),
+    } for k in kimlikler]
+
+    sifir_olmayan = [r["exit_code"] for r in kayitlar if r["exit_code"] != 0]
+    sonuc = {
+        "schema": SEMA_SONUC,
+        "generated_at": datetime.now(timezone.utc).isoformat(
+            timespec="seconds").replace("+00:00", "Z"),
+        "commit": attestation_verisi_["commit"],
+        "tree": attestation_verisi_["tree"],
+        "exit_code": sifir_olmayan[0] if sifir_olmayan else 0,
+        "verdict": "PASS" if all(r["status"] == "PASS" for r in kayitlar)
+                   else "FAIL",
+        "command_count": len(kayitlar),
+        "attestation_sha256": at_sha,
+        "commands": kayitlar,
+        "findings": bulgular,
+        "manifest": {
+            "algorithm": "sha256",
+            "root_sha256": attestation_verisi_["tree_sha256"],
+            "files": attestation_verisi_["files"],
+        },
+        "package": {
+            "format": "directory",
+            "manifest_file": MANIFEST,
+            "attestation_file": ATTESTATION,
+            "log_directory": "komutlar",
+        },
+    }
+    sonuc_metni = json.dumps(sonuc, ensure_ascii=False, indent=2,
+                             sort_keys=True) + "\n"
+    (paket / SONUC).write_text(sonuc_metni, encoding="utf-8")
+
+    satirlar = []
+    for yol in sorted(paket.rglob("*")):
+        if not yol.is_file() or yol.name == MANIFEST:
+            continue
+        rel = yol.relative_to(paket).as_posix()
+        satirlar.append("%s  %s" % (
+            hashlib.sha256(yol.read_bytes()).hexdigest(), rel))
+    manifest_yolu = paket / MANIFEST
+    manifest_yolu.write_text("\n".join(satirlar) + "\n", encoding="utf-8")
+    return sonuc, manifest_yolu
+
+
 def main():
-    ap = argparse.ArgumentParser(description="ATLAS agac kaniti uret")
+    ap = argparse.ArgumentParser(description="ATLAS agac kaniti ve paketi uret")
     ap.add_argument("--cikti", default=str(KOK / ATTESTATION),
-                    help="yazilacak JSON yolu (varsayilan: attestation.json)")
+                    help="yazilacak attestation JSON yolu")
+    ap.add_argument("--paket", default=str(KOK / VARSAYILAN_PAKET),
+                    help="tasinabilir kanit paketi dizini")
+    ap.add_argument("--komut", action="append", default=None,
+                    help="varsayilan dogrulama komutunun yerine komut ekle")
+    ap.add_argument("--paketsiz", action="store_true",
+                    help="yalniz attestation yaz; paket ve komutlari atla")
     a = ap.parse_args()
 
     try:
@@ -140,37 +339,50 @@ def main():
         commit = git_metin("rev-parse", "HEAD").strip()
         tree = git_metin("rev-parse", "HEAD^{tree}").strip()
         dosyalar = agac_dosyalari("HEAD")
-        veri = {
-            "schema": SEMA,
-            "generated_at": datetime.now(timezone.utc).isoformat(
-                timespec="seconds").replace("+00:00", "Z"),
-            "commit": commit,
-            "tree": tree,
-            "file_count": len(dosyalar),
-            "files": dosyalar,
-            "tree_sha256": agac_ozeti(dosyalar),
-            "tool_versions": {
-                "python": platform.python_version(),
-                "git": arac_surumu(["git", "--version"]),
-                "make": arac_surumu(["make", "--version"]),
-                "platform": platform.platform(),
-            },
-            "scope": {
-                "source": "git ls-tree -r --full-tree HEAD",
-                "excludes": [ATTESTATION],
-                "note": "Butun izlenen dosyalar; attestation.json kendini kapsamaz.",
-            },
-        }
+        veri = attestation_verisi(commit, tree, dosyalar)
+        at_metni = json.dumps(veri, ensure_ascii=False, indent=2,
+                              sort_keys=True) + "\n"
         yol = Path(a.cikti)
-        yol.write_text(json.dumps(veri, ensure_ascii=False, indent=2,
-                                  sort_keys=True) + "\n", encoding="utf-8")
+        yol.parent.mkdir(parents=True, exist_ok=True)
+        yol.write_text(at_metni, encoding="utf-8")
         print("KANIT: YAZILDI %s" % yol)
         print("  commit=%s tree=%s dosya=%d tree_sha256=%s"
               % (commit, tree, len(dosyalar), veri["tree_sha256"]))
-        return 0
-    except (OSError, RuntimeError, subprocess.SubprocessError) as e:
+
+        if a.paketsiz:
+            return 0
+
+        if a.komut:
+            komutlar = []
+            for sira, metin in enumerate(a.komut, 1):
+                argv = shlex.split(metin)
+                if not argv:
+                    raise ValueError("bos --komut")
+                komutlar.append((komut_id(argv, sira), argv))
+        else:
+            komutlar = list(VARSAYILAN_KOMUTLAR)
+
+        sonuclar = []
+        for kimlik, argv in komutlar:
+            print("KANIT: KOMUT %s — %s" % (kimlik, " ".join(argv)))
+            rc, out, err, sure, hata = komut_calistir(argv)
+            sonuclar.append((kimlik, argv, rc, out, err, sure, hata))
+            print("  rc=%d · %d ms · %s" % (
+                rc, sure, "PASS" if hata is None and rc == 0
+                else ("ERROR" if hata else "FAIL")))
+
+        paket = Path(a.paket)
+        if not paket.is_absolute():
+            paket = KOK / paket
+        sonuc, manifest = paket_yaz(paket, at_metni, veri, sonuclar)
+        print("KANIT: PAKET %s" % paket)
+        print("  hüküm=%s · komut=%d · bulgu=%d · manifest=%s"
+              % (sonuc["verdict"], sonuc["command_count"],
+                 len(sonuc["findings"]), manifest))
+        return 0 if sonuc["verdict"] == "PASS" else 1
+    except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as e:
         print("FAIL KANIT-01 URETILEMEDI — %s" % e)
-        return 1
+        return 2
 
 
 if __name__ == "__main__":
