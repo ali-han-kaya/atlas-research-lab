@@ -5,13 +5,13 @@
 NEDEN VAR
   Bir koruma "calisiyor" demek icin once temiz girdide sessiz kaldigini, sonra
   tek bir canli desende kirmiziya dondugunu olcmek gerekir. Bu test dokuz betik
-  vakasi, iki gercek `git commit` vakasi ve iki `git push` vakasi kosar; canli
-  DSN'in ciktida GORUNMEDIGINI de ayrica dogrular (sizinti testi).
+  vakasi, iki gercek `git commit` vakasi, iki `git push` vakasi ve dort git
+  kenari kosar; canli DSN'in ciktida GORUNMEDIGINI de ayrica dogrular.
 
 KULLANIM
   python3 tools/sir_kapisi_selftest.py
 
-CIKIS: 0 = 13/13 gecti · 1 = en az bir vaka kirmizi
+CIKIS: 0 = 17/17 gecti · 1 = en az bir vaka kirmizi
 """
 import os
 import shutil
@@ -35,6 +35,7 @@ DEGISKEN = 'postgresql://' + 'USER' + ':' + '$DB_PASS' + '@host/db'
 SUSLU_DEGISKEN = 'postgresql://' + 'USER' + ':' + '${DB_PASS}' + '@host/db'
 ADMIN_KOSELI = 'postgresql://' + 'admin' + ':' + '<parola>' + '@host/db'
 TEMIZ = 'baglanti yok; bu dosyada sir yok.\n'
+SIFIR = '0' * 40
 
 
 def _kos(komut, cwd):
@@ -164,6 +165,127 @@ def vaka_push(yeni_sir, beklenen_basarili, iz, sizinti=None):
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+def _git(depo, *args):
+    return _kos(['git'] + list(args), depo)
+
+
+def _depo_hazir(depo, ad='main'):
+    depo.mkdir(parents=True)
+    for komut in (['git', 'init', '-q', '-b', ad],
+                  ['git', 'config', 'user.name', 'Oz Test'],
+                  ['git', 'config', 'user.email', 'oztest@example.invalid']):
+        r = _kos(komut, depo)
+        if r.returncode != 0:
+            raise RuntimeError((r.stderr or r.stdout).strip()[:120])
+
+
+def _commit(depo, mesaj):
+    _git(depo, 'add', '-A')
+    r = _git(depo, 'commit', '-q', '-m', mesaj)
+    if r.returncode != 0:
+        raise RuntimeError((r.stderr or r.stdout).strip()[:120])
+    return _git(depo, 'rev-parse', 'HEAD').stdout.strip()
+
+
+def _git_vaka(komut, depo, iz, sizinti=None):
+    """Bir git kenarini kosar; ciktiyi yalniz kural/rc ile dogrular."""
+    r = _kos(komut, depo)
+    cikti = (r.stdout or '') + (r.stderr or '')
+    if r.returncode != 1:
+        return False, 'rc=%d (beklenen 1) · %s' % (r.returncode, cikti.strip()[:160])
+    if iz not in cikti:
+        return False, 'iz yok (%s) · %s' % (iz, cikti.strip()[:160])
+    if sizinti and sizinti in cikti:
+        return False, 'SIZINTI: deger ciktida gorundu'
+    return True, 'rc=1 · %s' % iz
+
+
+def vaka_merge():
+    """Merge catismasinda yalniz merge commit'ine giren sir yakalanir."""
+    tmp = Path(tempfile.mkdtemp(prefix='sir_merge_'))
+    try:
+        depo = tmp / 'depo'
+        _depo_hazir(depo)
+        _yaz(depo / 'f.txt', 'base\n')
+        base = _commit(depo, 'base')
+        _git(depo, 'checkout', '-q', '-b', 'side')
+        _yaz(depo / 'f.txt', 'side\n')
+        _commit(depo, 'side')
+        _git(depo, 'checkout', '-q', 'main')
+        _yaz(depo / 'f.txt', 'main\n')
+        _commit(depo, 'main')
+        if _git(depo, 'merge', 'side').returncode == 0:
+            return False, 'merge catismasi bekleniyordu'
+        _yaz(depo / 'f.txt', CANLI + '\n')
+        _commit(depo, 'merge')
+        return _git_vaka([sys.executable, str(KAPI), '--aralik',
+                          base + '..HEAD'], depo, 'canli-dsn',
+                         sizinti='gercekparola123')
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def vaka_rename():
+    """Yuksek benzerlikli rename'in YENI yolu staged taramada taranir."""
+    tmp = Path(tempfile.mkdtemp(prefix='sir_rename_'))
+    try:
+        depo = tmp / 'depo'
+        _depo_hazir(depo)
+        govde = '\n'.join('satir %02d' % i for i in range(1, 31)) + '\n'
+        _yaz(depo / 'old.md', govde)
+        _commit(depo, 'base')
+        _git(depo, 'mv', 'old.md', 'new.md')
+        _yaz(depo / 'new.md', govde + 'canli: ' + CANLI + '\n')
+        _git(depo, 'add', 'new.md')
+        durum = _git(depo, 'diff', '--cached', '-M', '--name-status').stdout
+        if not durum.startswith('R'):
+            return False, 'rename tespit edilmedi: %s' % durum.strip()[:80]
+        return _git_vaka([sys.executable, str(KAPI), '--staged'], depo,
+                         'canli-dsn', sizinti='gercekparola123')
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def vaka_plus():
+    """Icerigi `++` ile baslayan eklenmis satir hunk basligi sanilmaz."""
+    tmp = Path(tempfile.mkdtemp(prefix='sir_plus_'))
+    try:
+        depo = tmp / 'depo'
+        _depo_hazir(depo)
+        _yaz(depo / 'x.md', 'base\n')
+        _commit(depo, 'base')
+        _yaz(depo / 'x.md', 'base\n++' + CANLI + '\n')
+        _commit(depo, 'plus')
+        return _git_vaka([sys.executable, str(KAPI), '--aralik',
+                          'HEAD^..HEAD'], depo, 'canli-dsn',
+                         sizinti='gercekparola123')
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def vaka_shallow():
+    """Shallow clone'da yeni commit'in siri, eksik eski tarihçeye ragmen yakalanir."""
+    tmp = Path(tempfile.mkdtemp(prefix='sir_shallow_'))
+    try:
+        kaynak = tmp / 'kaynak'
+        _depo_hazir(kaynak)
+        _yaz(kaynak / 'a.md', 'temiz\n')
+        _commit(kaynak, 'clean')
+        depo = tmp / 'shallow'
+        r = _kos(['git', 'clone', '-q', '--depth=1',
+                  'file://' + str(kaynak), str(depo)], tmp)
+        if r.returncode != 0:
+            return False, 'clone: %s' % (r.stderr or r.stdout).strip()[:120]
+        _yaz(depo / 'new.md', CANLI + '\n')
+        _commit(depo, 'new')
+        yeni = _git(depo, 'rev-parse', 'HEAD').stdout.strip()
+        return _git_vaka([sys.executable, str(KAPI), '--push', yeni,
+                          SIFIR, 'origin'], depo, 'canli-dsn',
+                         sizinti='gercekparola123')
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def main():
     print('SIR KAPISI OZ-TESTI — canli desen kirmizi, yer tutucu sessiz')
     vakalar = [
@@ -189,6 +311,10 @@ def main():
         ('push yeni siri engeller',
          lambda: vaka_push(True, False, 'canli-dsn',
                            sizinti='gercekparola123')),
+        ('merge commit canliyi yakalar', vaka_merge),
+        ('rename staged canliyi yakalar', vaka_rename),
+        ('++ icerik satiri canliyi yakalar', vaka_plus),
+        ('shallow clone yeni siri yakalar', vaka_shallow),
     ]
     gecen = 0
     for ad, fn in vakalar:

@@ -101,9 +101,13 @@ def _commit_bulgulari(sha_listesi):
     """
     bulgular = []
     for sha in sha_listesi:
+        # --first-parent: merge commit'lerinde git show varsayilan olarak
+        # birlesik diff (`@@@`) uretir; bu bicimde eklenen satirlar
+        # gorunmez. Ilk ebeveyne gore normal diff, merge'de giren siri
+        # gorunur kilar. Tek ebeveynli commit'lerde davranis degismez.
         g = subprocess.run(
-            ['git', 'show', '--format=', '--unified=0', '--no-ext-diff',
-             '--find-renames', sha],
+            ['git', 'show', '--first-parent', '--format=', '--unified=0',
+             '--no-ext-diff', '--find-renames', sha],
             capture_output=True, text=True)
         if g.returncode != 0:
             continue
@@ -153,7 +157,10 @@ def oku(yol):
 
 
 def tarama_staged():
-    r = _git('diff', '--cached', '--name-only', '--diff-filter=ACM')
+    # R: yeniden adlandirilan dosyanin YENI yolu da taranmali. -M, kullanici
+    # yapilandirmasindan bagimsiz olarak rename tespitini sabitler; R yoksa
+    # git dosyayi A olarak gosterir ve yeni icerik yine taranir.
+    r = _git('diff', '--cached', '--name-only', '--diff-filter=ACMR', '-M')
     bulgular = []
     for yol in r.stdout.splitlines():
         icerik = None
