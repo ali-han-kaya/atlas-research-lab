@@ -16,6 +16,10 @@ Iki kip vardir:
 
 OLG-1: bu agac kendi `attestation.json` kanitini kullanir; `atlas_selftest`
 icindeki OLG-1 kosar. Attestation yoksa/bozuksa OLG-1 FAIL'dir.
+Her kalemin kendi hukum satiri basilir; stderr'e dusen bir uyari (or. urllib3
+NotOpenSSLWarning) hukum satiri sayilmaz. JSON rapor basan aracin ozeti kendi
+sayaclarindan uretilir.
+
 CALISTIRILMADI yalniz gercekten olculemeyen kalemler icin (or. --hizli veya
 model katalogu yoklugu) basilir ve hukme SAYILMAZ; her satir nedenini tasir.
 
@@ -205,8 +209,8 @@ def sir_tarama():
 
 def kapi_oztesti():
     """sir_kapisi oz-testi: canli desen kirmizi, yer tutucu sessiz (H5)."""
-    rc, cikti = kos([sys.executable,
-                     os.path.join(KOK, 'tools', 'sir_kapisi_selftest.py')])
+    rc, cikti, _ = kos([sys.executable,
+                        os.path.join(KOK, 'tools', 'sir_kapisi_selftest.py')])
     satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
     son = satirlar[-1][:110] if satirlar else '(bos cikti)'
     return rc == 0, son, ([] if rc == 0 else satirlar[-6:])
@@ -218,8 +222,8 @@ def demo_oztesti():
     Sayilan sekiz kaleme dahil degildir; parite gibi bir on kosuldur. Yine de
     basarisizsa dogrula yesil donmez.
     """
-    rc, cikti = kos([sys.executable,
-                     os.path.join(KOK, 'tools', 'demo_selftest.py')])
+    rc, cikti, _ = kos([sys.executable,
+                        os.path.join(KOK, 'tools', 'demo_selftest.py')])
     satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
     son = satirlar[-1][:110] if satirlar else '(bos cikti)'
     return rc == 0, son, ([] if rc == 0 else satirlar[-8:])
@@ -231,9 +235,9 @@ def model_kimlik():
     Sayilan sekiz kaleme dahil degildir; demo gibi bir on kosuldur. Aktif bir
     atif veya bayat istisna varsa dogrula yesil donmez.
     """
-    rc, cikti = kos([sys.executable,
-                     os.path.join(KOK, 'tools', 'model_kimlik.py'),
-                     '--kontrol'])
+    rc, cikti, _ = kos([sys.executable,
+                        os.path.join(KOK, 'tools', 'model_kimlik.py'),
+                        '--kontrol'])
     satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
     baslik = [s for s in satirlar if s.startswith('MODEL KIMLIK')]
     son = (baslik[0] if baslik else (satirlar[-1] if satirlar else '(bos cikti)'))
@@ -251,6 +255,11 @@ KOMUTLAR = [
 
 
 def kos(komut, cwd=None):
+    """(rc, stdout, stderr) — akislar AYRI doner.
+
+    Ayirma kozmetik degil: birlestirilmis ciktida stderr uyarisi son satir
+    olabiliyor ve "aracin ozeti" diye basilabiliyordu (olculmus kusur).
+    """
     env = dict(os.environ)
     if not env.get('ATLAS_MODEL_KATALOG'):
         env['ATLAS_MODEL_KATALOG'] = (KATALOG_SABIT
@@ -259,11 +268,11 @@ def kos(komut, cwd=None):
     try:
         r = subprocess.run(komut, cwd=cwd or KOK, capture_output=True,
                            text=True, env=env, timeout=900)
-        return r.returncode, ((r.stdout or '') + (r.stderr or '')).strip()
+        return r.returncode, (r.stdout or ''), (r.stderr or '')
     except subprocess.TimeoutExpired:
-        return 124, 'ZAMAN ASIMI (900 s)'
+        return 124, '', 'ZAMAN ASIMI (900 s)'
     except OSError as e:
-        return 125, 'KOSULAMADI: %s' % e
+        return 125, '', 'KOSULAMADI: %s' % e
 
 
 def kimlikler(cikti, fail_de=False):
@@ -295,12 +304,82 @@ def ortam_bagli_mi(kid, cikti):
     return gerekce
 
 
-def _ozet_satiri(satirlar):
-    """Aracin kendi huküm satirini secer; stderr uyarisini PASS kaniti diye basmaz."""
+# stderr'deki uyari satirlari hukum satiri degildir. Desen hem
+# `<dosya>:<satir>: XWarning:` hem de `warnings.warn(` bicimini tanir.
+UYARI_SATIRI = re.compile(r':\d+: [A-Za-z_]*Warning:|^warnings\.warn\(')
+
+
+def _json_raporu(metin):
+    """Aracin saf JSON raporunu okur; JSON degilse None (tahmin yok)."""
+    try:
+        veri = json.loads(metin)
+    except ValueError:
+        return None
+    return veri if isinstance(veri, dict) else None
+
+
+def _json_ozeti(metin):
+    """JSON raporun ozetini KENDI sayaclarindan uretir.
+
+    Sayilar bicim dizesine yazilmaz; alanlar eksik veya sayaclar hukumle
+    celiskili ise None doner ve metin satirlarina dusulur — uydurma ozet
+    basilmaz. Boylece T3'un `}` satiri yerine gercek toplam gorunur.
+    """
+    d = _json_raporu(metin)
+    if d is None:
+        return None
+    sayilar = [d.get(anahtar) for anahtar in ('toplam', 'gecti', 'kaldi')]
+    if not all(isinstance(x, int) and not isinstance(x, bool) for x in sayilar):
+        return None
+    toplam, gecen, kalan = sayilar
+    hukum = d.get('verdict')
+    if hukum not in ('ENGEL_YOK', 'ENGEL_VAR'):
+        return None
+    if gecen < 0 or kalan < 0 or gecen + kalan != toplam:
+        return None
+    if (kalan == 0) != (hukum == 'ENGEL_YOK'):
+        return None
+    ad = str(d.get('kapi') or 'OZ-TEST')[:40]
+    if toplam == 0:
+        return '%s: 0/0 test · HUKUM YOK (bos rapor)' % ad
+    if kalan:
+        return '%s: %d/%d gecti · %d kaldi · %s' % (ad, gecen, toplam, kalan, hukum)
+    return '%s: %d/%d gecti · %s' % (ad, gecen, toplam, hukum)
+
+
+def _ozet_satiri(metinler, satirlar):
+    """Aracin kendi hukum satirini secer.
+
+    Sirasiyla: (1) JSON rapor ozeti, (2) `N/N gecti` tasiyan hukum satiri,
+    (3) uyari olmayan son satir. stderr uyarisi hicbir adimda PASS kaniti
+    diye basilamaz; akislar ayri geldigi icin uyari ozete hic karismaz.
+    """
+    for metin in metinler:
+        ozet = _json_ozeti(metin or '')
+        if ozet:
+            return ozet[:110]
     for satir in reversed(satirlar):
-        if re.search(r'\d+/\d+ gecti', satir):
+        if not UYARI_SATIRI.search(satir) and re.search(r'\d+/\d+ gecti', satir):
             return satir[:110]
-    return satirlar[-1][:110] if satirlar else '(bos cikti)'
+    for satir in reversed(satirlar):
+        if not UYARI_SATIRI.search(satir):
+            return satir[:110]
+    return '(bos cikti)'
+
+
+def _kalan_satirlari(metin, satirlar):
+    """Kalan testleri adlandirir: JSON raporda `testler`, metinde `KALDI`."""
+    d = _json_raporu(metin or '')
+    if d is not None and isinstance(d.get('testler'), list):
+        adlar = []
+        for test in d['testler']:
+            if not isinstance(test, dict) or test.get('sonuc') == 'GECTI':
+                continue
+            adlar.append('KALDI %s: %s :: %s' % (test.get('id'),
+                                                test.get('aciklama'),
+                                                test.get('ayrinti')))
+        return adlar[:20]
+    return [s for s in satirlar if re.match(r'\s*KALDI', s)][:20]
 
 
 def _kanit_capasi():
@@ -422,9 +501,10 @@ def main():
                              'agir kapi atlandi'))
             continue
         cwd = kalem[3] if len(kalem) > 3 else None
-        rc, cikti = kos(kalem[2], cwd)
+        rc, stdout, stderr = kos(kalem[2], cwd)
+        cikti = ((stdout or '') + (stderr or '')).strip()
         satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
-        son = _ozet_satiri(satirlar)
+        son = _ozet_satiri([stdout, stderr], satirlar)
         if kid == 'T1' and rc == 0:
             # T1 PASS'i kendi agac kanitiyla birlikte gorunur olsun.
             son = ('%s · %s' % (son, _kanit_capasi()))[:150]
@@ -436,7 +516,7 @@ def main():
                 kalemler.append((kid, ad, True, son, [], ''))
                 continue
             sebep = ortam_bagli_mi(kid, cikti)
-            kalan = [s for s in satirlar if re.match(r'\s*KALDI', s)][:20]
+            kalan = _kalan_satirlari(stdout, satirlar)
             if sebep:
                 kalemler.append((kid, ad, None, son, kalan,
                                  'CALISTIRILMADI: %s' % sebep))
@@ -452,7 +532,7 @@ def main():
             kalemler.append((kid, ad, None, son, kalan,
                              'CALISTIRILMADI: %s' % sebep))
             continue
-        kalan = [s for s in satirlar if re.match(r'\s*KALDI', s)][:20]
+        kalan = _kalan_satirlari(stdout, satirlar)
         kalemler.append((kid, ad, False, son, kalan or satirlar[-6:], ''))
 
     for kid, ad, durum, ozet, detay, not_metni in kalemler:
