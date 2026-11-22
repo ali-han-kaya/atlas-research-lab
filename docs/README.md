@@ -456,7 +456,7 @@ dokümanlarda eski kimliğe **sıfır atıf** zorunludur:
 ```bash
 make model-kimlik   # python3 tools/model_kimlik.py --kontrol
 make kamu-lint      # ozel mutlak yol/eski alan/sahte hash taramasi
-make kamu-selftest  # kamu lint negatif fiksturleri (7/7)
+make kamu-selftest  # kamu lint negatif fiksturleri
 ```
 
 Kontrol `make dogrula`nın ön koşuludur (sayılan sekiz kaleme eklenmez): aktif
