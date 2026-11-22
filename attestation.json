@@ -1,5 +1,5 @@
 {
-  "commit": "015a2ad1024277cee1c702f761cf993b91eeeb4b",
+  "commit": "2e5c52419fdc692c9da47f21dacbc52b1af1345d",
   "file_count": 262,
   "files": [
     {
@@ -1445,7 +1445,7 @@
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "65ce0d74ee472045be2227d666134b2d85894bc6ea7ca3d553f1e12f56501550",
+      "sha256": "42f032cccecf533e643f53062531323636b471605a19203efe039cb5f6125327",
       "size": 7903
     },
     {
@@ -1575,7 +1575,7 @@
       "size": 14109
     }
   ],
-  "generated_at": "2026-11-22T12:23:42Z",
+  "generated_at": "2026-11-22T12:27:19Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1590,6 +1590,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "6c640fa25f24376562a0d412ab1b667c9a5134c1",
-  "tree_sha256": "50b84aa5ec2f88b7be094e2d3e78acb31c26066a4461d6a6c3766402c099b7cd"
+  "tree": "60f6fc70d7899d1038aaeb4e3f37cb12b6cc6f9d",
+  "tree_sha256": "78f2adb2b26dfbe4d7b0cd8945bd5832538e38545c70549ff117e7cbf76ded1c"
 }
