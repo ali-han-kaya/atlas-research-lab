@@ -8,9 +8,10 @@ iddiayi gectigi dosyadaki BIREBIR cumleye baglar, onu ureten komutu kosar ve
 beyan ile olcumu karsilastirir. Tutmayan satir kimligiyle (IDD-07) kirmizi
 basilir ve rc=1 doner.
 
-HAM KANIT: her OLCULDU satirinin son olculen ham cikti SATIRI
-`tools/iddia_olcum.json` icinde ayni IDD-* anahtariyla saklanir. Varsayilan
-kosu uc seyi birden ister:
+HAM KANIT: her OLCULDU satirinin son olculen ham cikti SATIRI defterdeki
+`olcum_dosyasi` yolunda (tek gecerli deger: `tools/iddia_olcum.json`) ayni
+IDD-* anahtariyla saklanir; defter bu yolu adlandirir, betik dogrular.
+Varsayilan kosu uc seyi birden ister:
   1. ham kanit satiri guncel komut ciktisinda BIREBIR ayni olmali,
   2. ham kanit kendi desenine uymali ve beyan edilen degeri vermeli,
   3. ham kanitin komutu/rc'si defterdeki satirla ayni olmali.
@@ -138,6 +139,13 @@ def yukle():
         raise DefterHatasi('sema: "iddialar" listesi yok')
     if not defter['iddialar']:
         raise DefterHatasi('sema: defter bos')
+    # Ham kanit yolu defterden okunur ve tek gecerli yola kilitlenir; boylece
+    # iddia -> komut -> ham kanit zinciri defterin kendisinden izlenir.
+    beklenen_olcum = OLCUM.relative_to(KOK).as_posix()
+    if defter.get('olcum_dosyasi') != beklenen_olcum:
+        raise DefterHatasi(
+            'sema: olcum_dosyasi %r olmali, bulunan %r'
+            % (beklenen_olcum, defter.get('olcum_dosyasi')))
     return defter
 
 

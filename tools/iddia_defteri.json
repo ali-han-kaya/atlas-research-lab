@@ -1,5 +1,6 @@
 {
-  "_aciklama": "Public sayisal iddia defteri. Her satir: iddia metni + gectigi dosyadaki birebir alinti + ureten komut + beklenen olcum. tools/iddia.py bu defteri denetler; alinti dosyada yoksa defter bozuktur. Tarihli kayitlar ve mekanizma sabitleri kapsam disidir (kapsam blogu).",
+  "_aciklama": "Public sayisal iddia defteri. Her satir: iddia metni + gectigi dosyadaki birebir alinti + ureten komut + beklenen olcum. tools/iddia.py bu defteri denetler; alinti dosyada yoksa defter bozuktur. Tarihli kayitlar ve mekanizma sabitleri kapsam disidir (kapsam blogu). `olcum_dosyasi` ham kanit dosyasini adlandirir; tools/iddia.py bu yolu dogrular.",
+  "olcum_dosyasi": "tools/iddia_olcum.json",
   "kapsam": {
     "dahil": [
       "README.md",

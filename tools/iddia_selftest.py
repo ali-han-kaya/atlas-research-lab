@@ -40,6 +40,7 @@ def _json_yaz(yol, veri):
 
 def _defter(kok):
     return {
+        "olcum_dosyasi": "tools/iddia_olcum.json",
         "kapsam": {"dahil": ["README.md"], "sayisal_istisna": []},
         "iddialar": [
             {
@@ -217,8 +218,27 @@ def main():
         bekle("yalniz agir secimde komut kosmadi",
               not (kok / "tools" / "dogrula.marker").exists(), cikti)
 
-        # --- KAPSAM KAPISI: sayisal iddia defterde ya da gerekceli istisnada.
+        # --- OLCUM DOSYASI: defter ham kanit yolunu tek basina tasir.
         temel = "HIZLI 7/7\nAGIR 3/3\n"
+        yanlis_yol = _kapsam_kok(gecici, "olcum-yolu-yanlis", temel)
+        defter_yolu = yanlis_yol / "tools" / "iddia_defteri.json"
+        d = json.loads(defter_yolu.read_text(encoding="utf-8"))
+        d["olcum_dosyasi"] = "tools/baska.json"
+        _json_yaz(defter_yolu, d)
+        r = _calistir(yanlis_yol, "--hizli")
+        bekle("yanlis olcum_dosyasi rc=2", r.returncode == 2, _cikti(r))
+        bekle("yanlis olcum_dosyasi adlandirilir",
+              "olcum_dosyasi" in _cikti(r), _cikti(r))
+
+        eksik_yol = _kapsam_kok(gecici, "olcum-yolu-eksik", temel)
+        defter_yolu = eksik_yol / "tools" / "iddia_defteri.json"
+        d = json.loads(defter_yolu.read_text(encoding="utf-8"))
+        d.pop("olcum_dosyasi")
+        _json_yaz(defter_yolu, d)
+        r = _calistir(eksik_yol, "--hizli")
+        bekle("eksik olcum_dosyasi rc=2", r.returncode == 2, _cikti(r))
+
+        # --- KAPSAM KAPISI: sayisal iddia defterde ya da gerekceli istisnada.
         kirli = _kapsam_kok(gecici, "kapsam-eksik",
                             temel + "YENI 42 vaka\n")
         r = _calistir(kirli, "--hizli")
