@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 """kanit.py — bu agacin commit/agac kaniti ve tasinabilir dogrulama paketi.
 
-NEDEN VAR: OLG-1'in canli kaniti ozel agacin tarihcesine bagli; public agacta
-CALISTIRILMADI. Bu betik ozel agaci OKUMAZ; yalniz bu depodaki GERCEK HEAD
-commit'ini ve izlenen dosyalarin sha256'sini yazar. Attestation kendi dosyasini
-kapsamaz; boylece commit/hash dongusu olusmaz.
+NEDEN VAR: OLG-1'in kaniti bu kamu agacinin kendi HEAD commit'i ve izlenen
+dosyalarin sha256'sidir. Bu betik yalniz bu depodaki GERCEK HEAD commit'ini ve
+izlenen dosyalarin sha256'sini yazar; dis bir agaci OKUMAZ. Attestation kendi
+dosyasini kapsamaz; boylece commit/hash dongusu olusmaz.
 
 `make kanit` ayrica makine-okur bir dogrulama paketi uretir:
   kanit-paketi/sonuc.json       ATLAS-DOGRULAMA/v1

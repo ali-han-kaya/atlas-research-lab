@@ -23,14 +23,14 @@
 
 ## KAMU AĞACI KANITI — OLG-1
 
-`OLG-1` artık özel ağacın tarihsel commit listesini aramaz. Tek makine kanıtı
+`OLG-1` artık dış labın tarihsel commit listesini aramaz. Tek makine kanıtı
 bu kamu ağacındaki `attestation.json` dosyasıdır; `olgu_lint`, onu
 `tools/kanit_dogrula.py` ile gerçek commit/tree ve dosya hash'leri üzerinden
 doğrular. Dosya yoksa veya bozuksa sonuç **FAIL** olur; başka bir kanıt
 kaynağına düşmez.
 
-Eski `baseline_commit`, `mekanizma_sayisi` ve `mekanizma_kayitlari` alanları
-makine bloğundan çıkarıldı. Yukarıdaki tarihsel tablo ve `DERSLER` içindeki eski
+Eski tarihsel taban commit alanı, mekanizma sayacı ve mekanizma listesi makine
+bloğundan çıkarıldı. Yukarıdaki tarihsel tablo ve `DERSLER` içindeki eski
 hash atıfları silinmedi; bunlar arşiv kaydıdır, `OLG-1` kanıtı değildir.
 
 ## MAKİNE-OKUNUR KAYIT
@@ -41,7 +41,7 @@ Bu tek ve katı JSON bloğu `olgu_lint.py` tarafından okunur. Tarihsel tablo li
 ```json
 {
   "schema": "OLGULAR/v2",
-  "lab_surum": "v1.7.412",
+  "lab_surum": "v1.7.413",
   "kamu_kaniti": "attestation.json",
   "atlas_envanter_sayisi": 145,
   "atlas_son_gecen": 145,

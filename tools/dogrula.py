@@ -25,7 +25,7 @@ model katalogu yoklugu) basilir ve hukme SAYILMAZ; her satir nedenini tasir.
 
 PARITE (OPSIYONEL): `ATLAS_LAB` tanimliysa once `tools/yayinla.py` kuru kosusu
 calisir; sifir suruklenme yoksa hukum FAIL olur. Tanimsizsa bu kontrol
-atlanir, cunku public klonda ozel agac yoktur; 8/8 hukmu degismez.
+atlanir, cunku public klonda dis lab yoktur; 8/8 hukmu degismez.
 
 MODEL KATALOGU: varsayilan kosu DEPODAKI sabit katalogu kullanir
 (`tools/model_katalog.json`) ve makinedeki `~/.cache/opencode/models.json`
@@ -242,6 +242,21 @@ def model_kimlik():
     baslik = [s for s in satirlar if s.startswith('MODEL KIMLIK')]
     son = (baslik[0] if baslik else (satirlar[-1] if satirlar else '(bos cikti)'))
     return rc == 0, son[:150], ([] if rc == 0 else satirlar[-8:])
+
+
+def kamu_temizligi():
+    """Ozel yol/eski alan/sahte hash geri sizmasini on kosul olarak yakalar.
+
+    Sayilan sekiz kaleme dahil degildir; demo ve model kimligi gibi bir on
+    kosuldur. Kontrolun kendi negatif fiksturleri de ayni cagrida kosar.
+    """
+    rc, cikti, _ = kos([sys.executable,
+                        os.path.join(KOK, 'tools', 'kamu_lint.py'),
+                        '--kontrol', '--oztest'])
+    satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
+    baslik = [s for s in satirlar if s.startswith('KAMU-LINT:')]
+    son = (baslik[-1] if baslik else (satirlar[-1] if satirlar else '(bos cikti)'))
+    return rc == 0, son[:150], ([] if rc == 0 else satirlar[-10:])
 
 
 KOMUTLAR = [
@@ -481,6 +496,17 @@ def main():
     if not model_gecti:
         print()
         print('  HUKUM: FAIL — MODEL KIMLIK (aktif atif veya bayat istisna)')
+        return 1
+    print()
+
+    kamu_gecti, kamu_ozet, kamu_detay = kamu_temizligi()
+    print('  %-24s %-7s %s' % ('kamu temizligi',
+                                'PASS' if kamu_gecti else 'FAIL', kamu_ozet))
+    for satir in kamu_detay:
+        print('        | %s' % satir[:400])
+    if not kamu_gecti:
+        print()
+        print('  HUKUM: FAIL — KAMU TEMIZLIGI (ozel yol/eski alan/sahte hash)')
         return 1
     print()
 

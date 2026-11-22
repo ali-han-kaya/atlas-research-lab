@@ -363,7 +363,7 @@ maddesinin bir parçasını açıklıyor: canlı FAZ4 koşusu yapılsaydı kapı
 ### 7c. Sıra düzeltildikten sonra hâlâ 5 çizgi ateşlemiyordu  (sınıf B)
 
 Kalıpların kendisi yanlıştı. Değerler `path.relative(worktree, dosya)` ile
-üretilir ve lab **kendi git deposudur** → worktree = `AI_ARASTIRMA_LABI/`.
+üretilir ve lab **kendi git deposudur** → worktree = lab kökü.
 
 | Kural | Eşleştiği değer | Sonuç |
 |---|---|---|

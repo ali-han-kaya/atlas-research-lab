@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""yayinla.py — ozel laboratuvar agacindan bu depoya MEKANIK aktarim.
+"""yayinla.py — dis laboratuvar agacindan bu depoya MEKANIK aktarim.
 
 NEDEN VAR: yayin agaci elle kopyalanirsa iki sey sessizce bozulur —
 (a) mekanizma guncellenir, depo eskir; (b) bir dosya yanlislikla makale veya
@@ -8,8 +8,8 @@ proje ciktisiyla birlikte kopyalanir. Bu arac yalniz asagidaki ACIK listedeki
 yollari tasir; liste disina cikmaz ve hedefte liste disi dosya birakmaz.
 
 Kullanim:
-    python3 tools/yayinla.py --lab ~/Desktop/MTRX/AI_ARASTIRMA_LABI            # kuru kosu
-    python3 tools/yayinla.py --lab ~/Desktop/MTRX/AI_ARASTIRMA_LABI --uygula
+    python3 tools/yayinla.py --lab <LAB_KOKU>            # kuru kosu
+    python3 tools/yayinla.py --lab <LAB_KOKU> --uygula
 
 CIKIS: 0 = plan yazildi/temiz (sifir suruklenme) · 1 = sir bulgusu veya parite
        suruklenmesi (--uygula olmadan HICBIR SEY yazilmadi) · 2 = kullanim hatasi

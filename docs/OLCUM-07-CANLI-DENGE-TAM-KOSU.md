@@ -119,7 +119,7 @@ cikti : GERCEK harcama (proje: scratch_olcum07_FJdD): $1.15 / $30.00 (119 asista
 kod   : 0
 ```
 
-Lab geneli (AI_ARASTIRMA_LABI): `$7.03 / $30.00 (657 mesaj)` — bu pencerenin payı yaklaşık `$0.26` (önceki `6.77`'den `7.03`'e artış) + kota sondaları `$0.19` hariç.
+Lab geneli (lab kökü): `$7.03 / $30.00 (657 mesaj)` — bu pencerenin payı yaklaşık `$0.26` (önceki `6.77`'den `7.03`'e artış) + kota sondaları `$0.19` hariç.
 
 Denge tahmini (routing.profiles.json): `$0.82` (9 faz). Ölçülen `$1.15`, fark `$0.33` — 4 kota sondası (`deepseek`, `glm`, `kimi`, `sonnet` her biri 1 soru, toplam 4 mesaj) + KFAZ3 devam oturumu + 2 kapı + teslim (119 mesajın 88'i fazlar, 31'i sonda/operatör) kaynaklı. **Hüküm:** tahmin alt sınırı doğru, üst sınır içinde.
 

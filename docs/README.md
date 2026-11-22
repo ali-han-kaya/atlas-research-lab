@@ -50,7 +50,7 @@ Aktarım yolu `tools/yayinla.py` ve kapsam tablosudur (aşağıda).
 | `SURUM.md` dışındaki iş günlükleri | `SURUM.md` **dahildir** (kapılar sürüm satırını oradan okur); proje-özel devir ve iş kayıtları hariçtir. |
 | `gate/FINAL-GATE-*.json` | Bir **projenin** kapı hükmü; mekanizmanın değil. |
 | `DENEME/gate/FINAL-GATE-v5.5.json` | **Bilinçli istisna:** kök `gate/` hükmü dışlanır, bu dosya ise `DENEME/` fikstürünün içindedir ve dondurulmuş yanlış `PASS`in kanıtıdır. Makale metni taşımaz (ölçüldü: `silat/makale` desenlerinde 0 eşleşme); yalnız kapı sayıları ve tarih. |
-| Kök `scripts/` (kişisel exocortex bataryası) | 33 dosya yayımlanmayan `SKILL.md`'yi okur; ayrıca sahibinin mutlak yolunu (`KOK = '/Users/…'`) taşıyordu. Laboratuvarın kendi mekanizması ATLAS/KOD ağaçlarındaki `scripts/` klasörlerindedir; bu küme kişisel çalışma sözleşmesine aittir (kendi başlığı: *Proprietary*). |
+| Kök `scripts/` (kişisel exocortex bataryası) | 33 dosya yayımlanmayan `SKILL.md`'yi okur; ayrıca sahibinin mutlak yolunu (`KOK = '<ev-yolu>/…'`) taşıyordu. Laboratuvarın kendi mekanizması ATLAS/KOD ağaçlarındaki `scripts/` klasörlerindedir; bu küme kişisel çalışma sözleşmesine aittir (kendi başlığı: *Proprietary*). |
 | `silat-makale` gibi proje adları | Yalnız kod **yorumlarında** ("hangi gerçek koşuda ölçüldü" kanıtı) ve `SURUM.md` bakım kaydında geçer. Makale metni, PDF, veri dosyası yoktur; adı silmek ölçümün kanıt izini silmek olurdu. |
 
 Bu sınır yüzünden `DERSLER` ve ölçüm dosyalarındaki bazı atıflar yayımlanmayan
@@ -279,9 +279,9 @@ doğrulamayı koşmalıdır. `gh` yoksa artifact GitHub Actions çalışma sayfa
 **Seçim — yol 1:** `OLG-1` emekliye ayrılmadı. `olgu_lint`, yalnız bu kamu
 ağacındaki `attestation.json` dosyasını `tools/kanit_dogrula.py` ile doğrular ve
 `OLGU-04`'ün commit zinciri çıpası yerine bu ağacın gerçek commit/tree kanıtını
-kullanır. Böylece özel ağaç tarihçesi public ağaçta aranmaz; sahte commit çıpası
-yazılmaz. `docs/OLGULAR.md` makine bloğundan tarihsel `baseline_commit`,
-`mekanizma_sayisi` ve `mekanizma_kayitlari` alanları **çıkarıldı**; kamu kanıtı
+kullanır. Böylece dış lab tarihçesi public ağaçta aranmaz; sahte commit çıpası
+yazılmaz. `docs/OLGULAR.md` makine bloğundan tarihsel taban commit alanı,
+mekanizma sayacı ve mekanizma listesi **çıkarıldı**; kamu kanıtı
 `kamu_kaniti: attestation.json` ile adlandırıldı. Tarihsel tablo ve DERSLER
 taşınları silinmedi; bunlar arşiv kaydıdır, OLG-1 kanıtı değildir. `OLG-06`
 atlanmaz: eksik iki DERSLER satırı (`89fb3da`, `df0d083`) gerçek commit'lerle
@@ -455,6 +455,8 @@ dokümanlarda eski kimliğe **sıfır atıf** zorunludur:
 
 ```bash
 make model-kimlik   # python3 tools/model_kimlik.py --kontrol
+make kamu-lint      # ozel mutlak yol/eski alan/sahte hash taramasi
+make kamu-selftest  # kamu lint negatif fiksturleri (7/7)
 ```
 
 Kontrol `make dogrula`nın ön koşuludur (sayılan sekiz kaleme eklenmez): aktif
@@ -496,8 +498,8 @@ kaydedilir, sonra aktif atıflar temizlenir.
 ## Ağacı yenileme
 
 ```bash
-python3 tools/yayinla.py --lab ~/Desktop/MTRX/AI_ARASTIRMA_LABI            # kuru koşu
-python3 tools/yayinla.py --lab ~/Desktop/MTRX/AI_ARASTIRMA_LABI --uygula
+python3 tools/yayinla.py --lab <LAB_KOKU>            # kuru koşu
+python3 tools/yayinla.py --lab <LAB_KOKU> --uygula
 make dogrula
 ```
 
@@ -507,8 +509,8 @@ sır taramasından geçer ve bulgu varsa hiçbir şey yazılmaz.
 
 Aktarımın iki mekanik kuralı vardır ve ikisi de ölçülebilir:
 
-1. **Yol normalizasyonu.** Metin dosyalarında sahibin ev yolu öneki (`/Users/…`)
-   `~/` olarak yazılır. Ölçüm kaydının anlamı değişmez; klonlayan için sert
+1. **Yol normalizasyonu.** Metin dosyalarında sahibin mutlak ev yolu öneki
+   (`<ev-yolu>/…`) `~/` olarak yazılır. Ölçüm kaydının anlamı değişmez; klonlayan için sert
    referans kalmaz. Parite kontrolü **normalize kaynak ↔ ham hedef** üzerinden
    yapılır, yani bu dönüşüm bir farkı gizlemez.
 2. **Ürün yasağı.** Planda `.pdf`, `.docx`, `.tex`, `.zip`, `.bundle` gibi üretilmiş

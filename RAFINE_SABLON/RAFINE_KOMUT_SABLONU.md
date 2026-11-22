@@ -4,7 +4,7 @@ Yer tutucuları doldur, aşağıdaki kod bloğunu ajana yapıştır.
 
 | Yer tutucu | Açıklama | Örnek |
 |---|---|---|
-| `{{PROJE_KOK}}` | çalışma klasörünün tam yolu | `/Users/.../CIKTI_X` |
+| `{{PROJE_KOK}}` | çalışma klasörünün tam yolu | `<PROJE_KOK>/CIKTI_X` |
 | `{{GIRDI}}` | yükseltilecek dosya | `MAKALE.md` |
 | `{{GIRDI_SURUM}}` | girdi sürümü + kelime sayısı | `v5.8, 5635 kelime` |
 | `{{CIKTI}}` | üretilecek dosya | `MAKALE_v5.9_FINAL.md` |
@@ -29,7 +29,7 @@ FAZ 0 — OKU (silme yok, yazma yok, sadece oku):
 2. {{PROJE_KOK}}/{{KEEP_DOSYA}} — korunacak parçaların listesi
 3. {{PROJE_KOK}}/{{SINIR_DOSYA}} — ilan edilmiş sınırlar
 4. Varsa önceki denetim raporları (rapor/, gate/)
-5. AI_ARASTIRMA_LABI/ATLAS_SABLONLAR/AGENTS.md — üretim disiplini
+5. ATLAS_SABLONLAR/AGENTS.md — üretim disiplini
 FAZ 0 çıktısı: okuduklarının 10 satırlık özeti. Okumadığını okudum deme.
 
 FAZ 1 — PLAN (tek satır bile yazmadan önce planı yaz):

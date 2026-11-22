@@ -89,7 +89,7 @@ include list. `make yayinla` compares the two and prints the plan; without
 `UYGULA=1` it is a **dry run** and writes nothing.
 
 ```bash
-ATLAS_LAB=~/Desktop/MTRX/AI_ARASTIRMA_LABI make yayinla
+ATLAS_LAB=<LAB_KOKU> make yayinla
 ```
 
 ```text

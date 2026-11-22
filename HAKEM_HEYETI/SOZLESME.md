@@ -1,4 +1,4 @@
-> **NOT:** Bu dosya bir **örnek proje sözleşmesidir**. Aşağıdaki Run-B (`SEKINE-2026-08-20-B`) `isimlendir/` çalışma tezgâhındaki dosyalara atıfta bulunur. Bu dış kaynaklar lab'a kopyalanmamıştır; yollar `AI_ARASTIRMA_LABI/ISARETCILER.md`'de listelenmiştir.
+> **NOT:** Bu dosya bir **örnek proje sözleşmesidir**. Aşağıdaki Run-B (`SEKINE-2026-08-20-B`) `isimlendir/` çalışma tezgâhındaki dosyalara atıfta bulunur. Bu dış kaynaklar lab'a kopyalanmamıştır; yollar lab içindeki `ISARETCILER.md`'de listelenmiştir.
 
 # SOZLESME — Audit Contract (run SEKINE-2026-08-20-B)
 

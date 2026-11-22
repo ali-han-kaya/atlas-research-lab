@@ -2,7 +2,7 @@ PY ?= python3
 # pip-audit yalniz gelistirme aracidir; varsa yerel sanal ortam kullanilir.
 PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(PY))
 
-.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon oztest demo demo-selftest temiz-teslim kapsam kapsam-yaz model-kimlik katalog-kontrol katalog-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
+.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon oztest demo demo-selftest temiz-teslim kapsam kapsam-yaz model-kimlik kamu-lint kamu-selftest katalog-kontrol katalog-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giris: hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
@@ -21,6 +21,8 @@ yardim:
 	@echo "make kapsam    mutasyon kapsam tablosu guncel mi (docs/MUTASYON_KAPSAM.md)"
 	@echo "make kapsam-yaz  kapsam tablosunu yeniden uret"
 	@echo "make model-kimlik  emekli model kimligi: kor noktasiz tarama + acik onay listesi"
+	@echo "make kamu-lint  ozel yol/eski alan/sahte hash geri sizma taramasi"
+	@echo "make kamu-selftest  kamu lint negatif fiksturleri"
 	@echo "make katalog-kontrol  canli models.dev kapisi: allowlist + bedava profili + append-only kanit (KAYIT_ARGS ile yol)"
 	@echo "make katalog-selftest  katalog kapisi ve uretici oz-testleri (ag yok; dogrula on kosulu)"
 	@echo "make iddia    README/docs sayisal iddialarini ureten komutla yeniden olc (ag haric)"
@@ -31,7 +33,7 @@ yardim:
 	@echo "make guvenlik  pip-audit: bilinen CVE taramasi (requirements-dev.txt)"
 	@echo "make kur       commit/push korumasini bu klonda etkinlestir"
 	@echo "make oztest    yalniz oz-test paketleri"
-	@echo "make yayinla   ozel agactan aktarim (ATLAS_LAB=<yol>; kuru kosu; drift varsa hata)"
+	@echo "make yayinla   dis labdan aktarim (ATLAS_LAB=<yol>; kuru kosu; drift varsa hata)"
 	@echo "make yayinla UYGULA=1  aktarimi yaz"
 
 dogrula: katalog-selftest
@@ -81,6 +83,12 @@ kapsam-yaz:
 
 model-kimlik:
 	@$(PY) tools/model_kimlik.py --kontrol
+
+kamu-lint:
+	@$(PY) tools/kamu_lint.py --kontrol
+
+kamu-selftest:
+	@$(PY) tools/kamu_lint.py --oztest
 
 KAYIT_ARGS ?= --kayit docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl
 

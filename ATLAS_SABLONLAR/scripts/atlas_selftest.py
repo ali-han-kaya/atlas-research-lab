@@ -3583,7 +3583,7 @@ def calis(tmp):
 
 
     # ---- v5.5.4: yeni denetim betikleri ----
-    LAB = SCRIPTS.parent.parent          # AI_ARASTIRMA_LABI
+    LAB = SCRIPTS.parent.parent          # lab koku
     rc, o = kos("check_models.py", "--dizin", str(LAB), "--sessiz")
     kontrol("MOD-1", "check_models: tum ajan modelleri katalogda gecerli",
             rc == 0 and "MODEL-DENETIM PASS" in o, f"rc={rc}")

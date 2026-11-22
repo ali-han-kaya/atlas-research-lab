@@ -443,7 +443,7 @@ ATLAS 0 · toolkit 0 · isimlendir 0 · DENEME 0 · yahuditurk 0 · ATLAS_SABLON
 toolkit hash kilidi (paket kokunden)       -> 29 OK / 0 FAILED
 ```
 
-`AI_ARASTIRMA_LABI/` içinde **17 değişik + 2 yeni** dosya vardır ve ikiye ayrılır:
+Lab kökünde **17 değişik + 2 yeni** dosya vardır ve ikiye ayrılır:
 
 - **Ölçüm fazı (3):** `docs/OLCUM-03-DUZELTME-SONRASI.md` (yeni) · `SURUM.md` ·
   `docs/TASARIM-KOD-HATTI.md` **[v4]**. Ölçüm sırasında `KOD_SABLONLAR/`

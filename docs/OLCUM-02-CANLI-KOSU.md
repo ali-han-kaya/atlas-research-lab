@@ -728,7 +728,7 @@ K14'te görüldüğü gibi bu uyarı **haklıydı** ve kimse üzerine gitmemişt
 
 ## 10. KOŞUYU YÜRÜTEBİLMEK İÇİN YAPILAN YEREL ONARIMLAR
 
-Hepsi **scratchpad'deki atılabilir kopyada** yapıldı; `AI_ARASTIRMA_LABI/`
+Hepsi **scratchpad'deki atılabilir kopyada** yapıldı; lab kökü
 içindeki `KOD_SABLONLAR/` **değiştirilmedi**.
 
 | # | Onarım | Hangi kırık için |
@@ -1051,5 +1051,5 @@ metin modunda görünürlüğü korundu. Regresyon testi: `JSON-1`, `JSON-2`.
 `/tmp/kosu_kf/` (RECK-07 karşı-olgu fikstürü) · `/tmp/SENTETIK-2b.json` ·
 `/tmp/KOD-gate-2a.BOZUK.json` (zaman aşımının bıraktığı geçersiz verdict).
 
-`AI_ARASTIRMA_LABI/` içinde **yalnız bu rapor** ve `SURUM.md`'ye bir satır yazıldı.
+Lab kökünde **yalnız bu rapor** ve `SURUM.md`'ye bir satır yazıldı.
 `KOD_SABLONLAR/` değiştirilmedi.

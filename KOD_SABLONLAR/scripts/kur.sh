@@ -43,7 +43,7 @@ done
 
 BETIK_DIZIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SABLON="$(cd "$BETIK_DIZIN/.." && pwd)"          # KOD_SABLONLAR/
-LAB="$(cd "$SABLON/.." && pwd)"                  # AI_ARASTIRMA_LABI/
+LAB="$(cd "$SABLON/.." && pwd)"                  # lab koku
 
 [ -d "$HEDEF" ] || { echo "FAIL: hedef dizin yok: $HEDEF" >&2; exit 1; }
 HEDEF="$(cd "$HEDEF" && pwd)"

@@ -298,6 +298,7 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 | Kırmızı hüküm demosu | `./demo` → `tools/demo.py` (kanonik; beklenen `rc=1`, fikstür bozuksa `rc=2`, yeşilde `rc=0`) |
 | Sentetik temiz teslim | `make temiz-teslim` → makale metni taşımayan temiz kök `rc=0`; 5 kenar kökü beklenen kodlarla sınanır |
 | Mutasyon kapsamı | `make kapsam` → `docs/MUTASYON_KAPSAM.md` güncel mi (üretilmiş tablo) |
+| Kamu temizliği | `make kamu-lint` → özel mutlak yol, kaldırılmış alan ve sahte hash taraması; `make kamu-selftest` → 7/7 negatif fikstür; `make dogrula` ön koşulu |
 | Bedava canlı katalog kanaryası | `.github/workflows/katalog-canary.yml` → haftalık, required değil; yalnız `python3 tools/katalog_kontrol.py`; bulgu varsa issue açar. Elle koşu: `make katalog-kontrol` |
 | İddia defteri | `make iddia` → README/docs sayısal iddialarını üreten komutla ve ham kanıt satırıyla yeniden ölçer; tutmayan satır `IDD-*` ile kırmızı |
 | Hızlı iddia | `make iddia-hizli` → `dogrula`/`mutasyon` gibi pahalı satırları atlar; atlananlar `ATLANDI` ve PASS değil, tam koşu değişmez |
@@ -308,7 +309,7 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 | Commit/push koruması | `make kur` → `core.hooksPath=.githooks`; canlı DSN commit edilemez |
 | Runner doğrulaması | `make dogrula-ci` — yalnız o ortamda ölçülebilen kalemler hükme girer, öz-testler rapor |
 | Sürekli doğrulama | `.github/workflows/dogrula.yml` — `dogrula` ve `iddia` job'ları; her push/PR ve haftalık |
-| Özel ağaçtan aktarım | `tools/yayinla.py --lab <yol>` (kuru koşu) · `--uygula` (yazar) |
+| Dış labdan aktarım | `tools/yayinla.py --lab <yol>` (kuru koşu) · `--uygula` (yazar) |
 
 `tools/yayinla.py` yalnız **açık listedeki** mekanizma yollarını taşır; liste dışına
 çıkmaz, hedefte liste dışı dosya bırakmaz ve yazmadan önce sır taraması yapar —
@@ -417,8 +418,8 @@ defterin durum dağılımıyla karşılaştırılır; ayrışma `rc=2` ile kırm
 `olgu_lint`, bu dosyayı `make kanit-dogrula` ile doğrular ve gerçek commit/tree
 kanıtını kullanır. Tarihsel `docs/OLGULAR.md` tablosu ve `DERSLER` satırlarındaki
 eski atıflar silinmedi; bunlar arşiv kaydıdır, public ağaçta makine kanıtı
-değildir. `OLGULAR.md` makine bloğundaki `baseline_commit`, `mekanizma_sayisi`
-ve `mekanizma_kayitlari` alanları çıkarıldı; `attestation.json` yoksa/bozuksa
+değildir. `OLGULAR.md` makine bloğundaki tarihsel taban commit alanı, mekanizma
+sayacı ve mekanizma listesi çıkarıldı; `attestation.json` yoksa/bozuksa
 OLG-1 **FAIL** olur ve tarihsel commit listesine düşmez. Sahte commit çıpası
 yoktur; `make dogrula` bu depoda **8/8** verir ve T1 PASS'tir.
 Koşu çıktısı T1 satırında çıpayı
