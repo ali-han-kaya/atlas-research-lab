@@ -88,6 +88,12 @@ jobs:
       - name: make mutasyon
         run: make mutasyon
 
+      # Dort sir kapisi kenarinin duzeltmesi geri alininca ilgili selftest
+      # vakasinin FAIL verdigini ve duzeltmeyle PASS verdigini yeniden olcer.
+      # Kayit JSON'u ve DEVIR blogu bu kosudan uretilir; bayatlarsa kirmizi.
+      - name: Sir kapisi mutasyon kaniti
+        run: make sir-mutasyon
+
       # Tablo elle yazilmaz; kapi envanteri degisip tablo bayatlarsa kirmizi.
       - name: Mutasyon kapsami guncel mi
         run: make kapsam

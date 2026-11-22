@@ -2,7 +2,7 @@ PY ?= python3
 # pip-audit yalniz gelistirme aracidir; varsa yerel sanal ortam kullanilir.
 PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(PY))
 
-.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon oztest demo demo-selftest temiz-teslim kapsam kapsam-yaz model-kimlik kamu-lint kamu-selftest katalog-kontrol katalog-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
+.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon sir-mutasyon oztest demo demo-selftest temiz-teslim kapsam kapsam-yaz model-kimlik kamu-lint kamu-selftest katalog-kontrol katalog-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giris: hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
@@ -16,6 +16,7 @@ yardim:
 	@echo "make durum-kontrol  DURUM sayfasi kaynaklara gore bayat mi (CI)"
 	@echo "make durum-selftest  DURUM bayatlik kapisinin negatif testleri (gecici kok)"
 	@echo "make mutasyon  kapi sozlesmeleri: temiz taban + ihlal; hata rc!=0, beklenen-bulgu isaretli"
+	@echo "make sir-mutasyon  dort sir kapisi kenarinin FAIL->PASS mutasyon kanitini dogrula"
 	@echo "make demo      ince sarmalayici: ./demo (kod ayrimi icin ./demo; make her hatada 2 doner)"
 	@echo "make demo-selftest  demo 0/2 sozlesmesini gecici fiksturlerle sinar"
 	@echo "make temiz-teslim  sentetik temiz teslimi ve 5 kenar fiksturunu uctan uca sinar"
@@ -69,6 +70,9 @@ durum-selftest:
 
 mutasyon:
 	@$(PY) tools/mutasyon_bataryasi.py
+
+sir-mutasyon:
+	@$(PY) tools/sir_kapisi_mutasyon.py --kontrol
 
 demo:
 	@./demo
