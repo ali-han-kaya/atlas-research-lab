@@ -1,6 +1,6 @@
 {
-  "commit": "357b3cbb8f2c2aa5a70337b885625a3553a7679c",
-  "file_count": 262,
+  "commit": "7c43a8ed4b13169e3bbfa1aad65d7c5cf9e43427",
+  "file_count": 263,
   "files": [
     {
       "mode": "100755",
@@ -413,8 +413,8 @@
     {
       "mode": "100755",
       "path": "ATLAS_SABLONLAR/scripts/atlas_selftest.py",
-      "sha256": "6dd2dec2dde8228ffc29b302dd8bb1bc9caef334f52ca82f19e8c0f6a180e974",
-      "size": 196976
+      "sha256": "46b53d132c73cf080351a4b0d3dc83da861cf048894339bc4fb1c5fe079bf0d8",
+      "size": 196967
     },
     {
       "mode": "100755",
@@ -671,14 +671,14 @@
     {
       "mode": "100644",
       "path": "HAKEM_HEYETI/HAKEM_BRUTAL_2TUR_KOMUT_v2.md",
-      "sha256": "7f97ac7acd86e4ce3ad481efb42a398fbe286ec8c993a3107eb1c9e321084d7d",
-      "size": 8357
+      "sha256": "70095c66e7668fd2286a4192de3c8aac7551aee5f3de5450c6d1f5d9bebf2d6f",
+      "size": 8349
     },
     {
       "mode": "100644",
       "path": "HAKEM_HEYETI/SOZLESME.md",
-      "sha256": "2bd16197b97b81bb713e7d317e8020a7fb1fe98709e860b180cad7c41d21b99b",
-      "size": 4791
+      "sha256": "d65dca253089096a37ba6cf5af75d5f89346d7d3eb75c5b36efd2db4109d44af",
+      "size": 4787
     },
     {
       "mode": "100644",
@@ -905,8 +905,8 @@
     {
       "mode": "100755",
       "path": "KOD_SABLONLAR/scripts/kur.sh",
-      "sha256": "706bf076aa55b3073c19dd659e5941298204524c419990b1f282e46a9dbeb322",
-      "size": 9331
+      "sha256": "4f8a60fbfeb402c1d3fa2f04f8191b5c0782a7b460f318cdda04226cf57295bd",
+      "size": 9321
     },
     {
       "mode": "100755",
@@ -1163,8 +1163,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "dbcb0afceecce1e7217f14f036f88bad16aa6fc094b03b2501b7c5366f74266c",
-      "size": 4550
+      "sha256": "70e71f77182f2240fbb30d68f61a5c8954a1831d444a818e06c1d29f6500c606",
+      "size": 4807
     },
     {
       "mode": "100644",
@@ -1199,8 +1199,8 @@
     {
       "mode": "100644",
       "path": "RAFINE_SABLON/RAFINE_KOMUT_SABLONU.md",
-      "sha256": "8cadaf580bdc7a0e29edace27bb5c151fc87922c15e98d429319c336bbd2894a",
-      "size": 3382
+      "sha256": "714383e9bc22f3ebbc02c883ea24dbef042c169e4ec11059a6fdc075dc462532",
+      "size": 3365
     },
     {
       "mode": "100644",
@@ -1217,14 +1217,14 @@
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "7eab9686d2af92c5f89f36e640458af98e19fae9e3d71d389ac046e7873f53a7",
-      "size": 29261
+      "sha256": "1a8e1471b5f1e57e6e760ddd2174525448f3d9f11299409b3870079fc8c47038",
+      "size": 29435
     },
     {
       "mode": "100644",
       "path": "SURUM.md",
-      "sha256": "0b27f07abd65053e1182ed3022ce1422d60079094b8b0832e17753dd7f5f3063",
-      "size": 582403
+      "sha256": "15ab04efa1c8c96be244f7a828fb2f320da9dfc46b88f25610b3e1e8fc5d21e3",
+      "size": 582961
     },
     {
       "mode": "100755",
@@ -1253,8 +1253,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "c0334777f8a894d5cb69b54eed2e37872f372561c0e1df234ed50d33607916f8",
-      "size": 479439
+      "sha256": "4b60fdf3245c3f1dcc867fc43dedda6fdfcb735ea015ef8b1c6a56ed8c336567",
+      "size": 480554
     },
     {
       "mode": "100644",
@@ -1265,14 +1265,14 @@
     {
       "mode": "100644",
       "path": "docs/DURUM.md",
-      "sha256": "c1716826e54edc7213f24600811c4a2cee1fa67b59c11bc6082671ce7d87a586",
+      "sha256": "1b5d62ddb7830072dc40371fc5adad44e481077eb5d3642c4ff9bbbd921cdcdf",
       "size": 1489
     },
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "7c2a20be49fcaa48c6414fb628e338dc4d3de86fcb66b3977a44445e310859c5",
-      "size": 11378
+      "sha256": "2400141e1db4b23c161ab50e5a3ca57ea78d7aa0b955d85b8eb28b42167c905e",
+      "size": 11356
     },
     {
       "mode": "100644",
@@ -1313,20 +1313,20 @@
     {
       "mode": "100644",
       "path": "docs/OLCUM-01-IZIN-GLOB.md",
-      "sha256": "4383f6ab499487011a3cf9d0dcebabb7b533a562747f18afa6af2ea62e373c9c",
-      "size": 23041
+      "sha256": "aff331e56a826a8fa9251975f18bbfe877a4cd06e4858d2e97bcbaad140ab047",
+      "size": 23031
     },
     {
       "mode": "100644",
       "path": "docs/OLCUM-02-CANLI-KOSU.md",
-      "sha256": "0db69119db3d4fd3984b8882c78601864fa49ccc5984a30a198b9515bc0f3dcd",
-      "size": 52703
+      "sha256": "8c23ead937b4b174080bfc411b8a38e79cfadeb901a92dd07ae1c1530e4fc17b",
+      "size": 52678
     },
     {
       "mode": "100644",
       "path": "docs/OLCUM-03-DUZELTME-SONRASI.md",
-      "sha256": "ea4312bf3b41e16273adf35e596523261047bfb0f52581140fa2674364afba55",
-      "size": 34287
+      "sha256": "f62a37ddab78ca11b7f66f72672488016c1db8d4bc33c24ac8050a1b1d952701",
+      "size": 34272
     },
     {
       "mode": "100644",
@@ -1355,20 +1355,20 @@
     {
       "mode": "100644",
       "path": "docs/OLCUM-07-CANLI-DENGE-TAM-KOSU.md",
-      "sha256": "b3a59c6c5422f2650723e41c270c104add1174c4a10d832c92f2e419c6536c3a",
-      "size": 20018
+      "sha256": "062254660aa4ac5323e3273dfc4a5e11537112a4a859d7b5def2eab92dd40159",
+      "size": 20011
     },
     {
       "mode": "100644",
       "path": "docs/OLGULAR.md",
-      "sha256": "29eb280d83612f094136d68323636f8c86e66f876a11a3f6122057dc995bac5a",
-      "size": 3207
+      "sha256": "31b55cc02e43cf290e3635982e29953418f368190a90eb2f5b9173d4d7bbdf45",
+      "size": 3201
     },
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "57dc4ceaeba03c851493c5225bd53f6fe955ce5a380164caab58ff4296ef7f97",
-      "size": 30498
+      "sha256": "040730ad48907a8a71b29a542291f8c925ae31184b1f946e18c547f410859761",
+      "size": 30577
     },
     {
       "mode": "100644",
@@ -1409,8 +1409,8 @@
     {
       "mode": "100644",
       "path": "tools/dogrula.py",
-      "sha256": "6b5fceb2827e979f3ca2ab97986fa171e235a70eecb5d362edea99d37c31d2f5",
-      "size": 23072
+      "sha256": "c997c212b793eb808c04d3989b44fd9aa0f84734191e49364a5c37f58c53c1f0",
+      "size": 24178
     },
     {
       "mode": "100644",
@@ -1439,13 +1439,13 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "1607b8ed654d9ff10c7ee507fb2b6552bee6481503335a2d74910f4f90e5117a",
-      "size": 32808
+      "sha256": "b5df3c8a2ea464404020abda38de7d5c04437ef040437c62c4f029c6308b503d",
+      "size": 32806
     },
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "4bbd5ec84d814c9cdea5fe465565e69cbbd4212b804789e63a51f680493f3e2e",
+      "sha256": "f9e7398a594492604f37c0c367c9d3622cdd8dd9ca2e30f63006c83b92218762",
       "size": 8099
     },
     {
@@ -1456,9 +1456,15 @@
     },
     {
       "mode": "100644",
+      "path": "tools/kamu_lint.py",
+      "sha256": "36128631fce620371e7881b4386e5de10884132badd44de560d073c6b51dce3f",
+      "size": 9207
+    },
+    {
+      "mode": "100644",
       "path": "tools/kanit.py",
-      "sha256": "76164598dd8f76c7cbae8c0c5c984e31401f564fad9baa2f36981124f3ef86c3",
-      "size": 14151
+      "sha256": "823490e72063b1522acf1263cf9122d8084c412bb2e3c99bcba658d134bff2cd",
+      "size": 14160
     },
     {
       "mode": "100644",
@@ -1571,11 +1577,11 @@
     {
       "mode": "100644",
       "path": "tools/yayinla.py",
-      "sha256": "4cb58d236c03852d2cb51edb763de5f194490d613694dbbfbd275bfb94a67ed0",
-      "size": 14109
+      "sha256": "812fc990e250d73bffa6ef99957594fee0060fcfa17bdbb4d500fb07e7e2564e",
+      "size": 14064
     }
   ],
-  "generated_at": "2026-11-22T15:42:16Z",
+  "generated_at": "2026-11-22T16:11:33Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1590,6 +1596,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "57920b5163127a1af01f322873ffe86c43295da8",
-  "tree_sha256": "e08b66fa7f5cc1659d9b8dfe8a9927f32c3cbdcaf3507a413f50c96b368eb2ef"
+  "tree": "a2d43fb402cb2dde2e1813bd4c5a280273d5df33",
+  "tree_sha256": "7faddd126b22f57b0dbbfdf3e1e09a4c4fd0911fd6049e7945e670d8129e3e5b"
 }
