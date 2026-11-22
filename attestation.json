@@ -1,5 +1,5 @@
 {
-  "commit": "88362535b63baec11e537e7773325143852f2eea",
+  "commit": "96e8c3adbbd4a7ddc96b38b0e76ac4cd321022a9",
   "file_count": 265,
   "files": [
     {
@@ -1223,8 +1223,8 @@
     {
       "mode": "100644",
       "path": "SURUM.md",
-      "sha256": "d49ff69c1ac7b5c8e605bdd74dfeab8953f15a49e94dfec97d37418eebd75f00",
-      "size": 585487
+      "sha256": "5e29d83d5baf7940ba9cfede1dca5bef6165a877ad736a686070bc101c34fa93",
+      "size": 586118
     },
     {
       "mode": "100755",
@@ -1253,8 +1253,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "8455eeec53d191330ad8957768a77adf8887f0de376ad89794047c62f226004a",
-      "size": 487055
+      "sha256": "98f879cb6743d18f3bde4271836462bd322789bdf0085474add259928bb0c762",
+      "size": 487847
     },
     {
       "mode": "100644",
@@ -1265,8 +1265,8 @@
     {
       "mode": "100644",
       "path": "docs/DEVIR-2026-11-22-1923.md",
-      "sha256": "54bdc45880717cea6f75c596ff23147b39b76d371bb0a70c6fa799e1fe769e94",
-      "size": 5219
+      "sha256": "fec453e34dddfd7f474a0cf5d43ddbc7216798239472ee1faf100851b967615c",
+      "size": 5855
     },
     {
       "mode": "100644",
@@ -1367,7 +1367,7 @@
     {
       "mode": "100644",
       "path": "docs/OLGULAR.md",
-      "sha256": "c9c00f63c7c1a418f0b660466e57b5afea191a7663719e3dfc0347dff9998430",
+      "sha256": "fbb426176cb12cd80d5f7caafcdb471f026ae14940e495e217f50554e963803f",
       "size": 3201
     },
     {
@@ -1571,8 +1571,8 @@
     {
       "mode": "100644",
       "path": "tools/sir_kapisi_selftest.py",
-      "sha256": "002cff671a550146dda2df4b224845af237d11c305bbb846ddadfec7d73b589d",
-      "size": 14559
+      "sha256": "56b2d9210a86cf598678420ae2a220834ee059a1e4ca235b2c283fafb592b409",
+      "size": 14780
     },
     {
       "mode": "100644",
@@ -1593,7 +1593,7 @@
       "size": 14185
     }
   ],
-  "generated_at": "2026-11-22T19:34:24Z",
+  "generated_at": "2026-11-22T19:47:23Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1608,6 +1608,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "536dc1ecb76007ebae4700eb1d1734a3e49186c1",
-  "tree_sha256": "1565ff4662757e0ba7e9744594dfdec436dc21fcdffb8c0e054b6ed3e379a9e0"
+  "tree": "d5ffb5b05ba8f327ba1a52d4e1b3a042dfdc5d17",
+  "tree_sha256": "6553bf93f518b19c4e57c66e26fc3f9ea3831c648dafa664bbb725c6b54e408b"
 }
