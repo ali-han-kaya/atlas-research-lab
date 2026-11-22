@@ -1,0 +1,75 @@
+{
+  "schema": "ATLAS-SIR-MUTASYON/v1",
+  "surum": "v1.7.419",
+  "kod_commit": "d6d19e4773e41cac9e0ae5df049a707f84c1ab1f",
+  "kaynak": "tools/sir_kapisi.py",
+  "kaynak_sha256": "cae55f145ba5faf877b2c952ce22a84aaf527e66997b62615c3cc142576c9f1b",
+  "selftest": "tools/sir_kapisi_selftest.py",
+  "selftest_sha256": "54013e62fa0a29921c83f3f307a39fab4f13c4002eb48ccede230c09b7e5b0e1",
+  "hermetik": {
+    "HOME": "gecici",
+    "GIT_CONFIG_NOSYSTEM": "1",
+    "GIT_CONFIG_GLOBAL": "gecici; [user] useConfigOnly=true"
+  },
+  "komut": "python3 tools/sir_kapisi_mutasyon.py --kontrol",
+  "temel": {
+    "komut": "python3 tools/sir_kapisi_selftest.py",
+    "rc": 0,
+    "test_sayisi": "17/17",
+    "satir": "SIR KAPISI OZ-TEST: 17/17 gecti"
+  },
+  "vakalar": [
+    {
+      "id": "H5-MUT-01",
+      "kenar": "merge",
+      "duzeltme": "git show --first-parent",
+      "test": "merge commit canliyi yakalar",
+      "mutasyon": "git show komutundan --first-parent kaldirildi",
+      "fail_rc": 1,
+      "fail_test_sayisi": "16/17",
+      "fail_satiri": "merge commit canliyi yakalar FAIL rc=0 (beklenen 1) · SIR-KAPISI: aralik temiz (3b141a4d7eb3d0e93a1d4b43de8883d4cc021b61..HEAD)",
+      "pass_rc": 0,
+      "pass_test_sayisi": "17/17",
+      "pass_satiri": "merge commit canliyi yakalar PASS rc=1 · canli-dsn"
+    },
+    {
+      "id": "H5-MUT-02",
+      "kenar": "rename",
+      "duzeltme": "staged --diff-filter=ACMR -M",
+      "test": "rename staged canliyi yakalar",
+      "mutasyon": "staged filtresi ACMR -M yerine ACM yapildi",
+      "fail_rc": 1,
+      "fail_test_sayisi": "16/17",
+      "fail_satiri": "rename staged canliyi yakalar FAIL rc=0 (beklenen 1) · SIR-KAPISI PASS — canli DSN/Neon token yok",
+      "pass_rc": 0,
+      "pass_test_sayisi": "17/17",
+      "pass_satiri": "rename staged canliyi yakalar PASS rc=1 · canli-dsn"
+    },
+    {
+      "id": "H5-MUT-03",
+      "kenar": "++ icerik satiri",
+      "duzeltme": "+++ yalniz hunk basligi sayilir",
+      "test": "++ icerik satiri canliyi yakalar",
+      "mutasyon": "+++ ile baslayan eklenmis icerik satiri atlandi",
+      "fail_rc": 1,
+      "fail_test_sayisi": "16/17",
+      "fail_satiri": "++ icerik satiri canliyi yakalar FAIL rc=0 (beklenen 1) · SIR-KAPISI: aralik temiz (HEAD^..HEAD)",
+      "pass_rc": 0,
+      "pass_test_sayisi": "17/17",
+      "pass_satiri": "++ icerik satiri canliyi yakalar PASS rc=1 · canli-dsn"
+    },
+    {
+      "id": "H5-MUT-04",
+      "kenar": "shallow clone / hermetik git kimligi",
+      "duzeltme": "klonda _kimlik(depo)",
+      "test": "shallow clone yeni siri yakalar",
+      "mutasyon": "klonun _kimlik(depo) cagrisi kaldirildi",
+      "fail_rc": 1,
+      "fail_test_sayisi": "16/17",
+      "fail_satiri": "shallow clone yeni siri yakalar FAIL ISTISNA: Author identity unknown",
+      "pass_rc": 0,
+      "pass_test_sayisi": "17/17",
+      "pass_satiri": "shallow clone yeni siri yakalar PASS rc=1 · canli-dsn"
+    }
+  ]
+}
