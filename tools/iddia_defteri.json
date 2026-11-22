@@ -754,7 +754,7 @@
         "{py}",
         "ATLAS_SABLONLAR/scripts/olgu_lint.py"
       ],
-      "ayikla": "OLGU-LINT PASS",
+      "ayikla": "(OLGU-LINT PASS)",
       "beklenen": "OLGU-LINT PASS",
       "ham_grup": true
     },
