@@ -335,6 +335,17 @@ aşağıdaki `git grep` yol listesine de eklenir.
   değiştiyse: bunlar aktif model kaynağı değildir.
 - Sadece `_kaynak` tarihi değişsin diye: tarih, gerçek yenileme günüdür.
 
+### Haftalık kanarya
+
+Aynı canlı kapı, required olmayan haftalık bir iş olarak da koşar:
+`.github/workflows/katalog-canary.yml` (Pazartesi 04:00 UTC) yalnız
+`python3 tools/katalog_kontrol.py` çalıştırır; PR/push hükmüne girmez ve
+`make dogrula` ile mevcut CI hükmünü değiştirmez. `rc=1` kimlik/uyuşmazlık,
+`rc=2` ölçülemedi demektir; ikisi de PASS sayılmaz ve iş, aynı başlıklı açık
+issue'yu güncelleyerek (yoksa açarak) kırmızı kalır. Kanarya yalnız haber
+verir; allowlist'i kendisi yenilemez — yenileme yine aşağıdaki elle adımlarla
+ve diff incelemesiyle yapılır. Elle tetikleme: `workflow_dispatch`.
+
 ### 1. Canlı kataloğu indir
 
 ```bash
