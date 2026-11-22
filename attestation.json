@@ -1,5 +1,5 @@
 {
-  "commit": "96e8c3adbbd4a7ddc96b38b0e76ac4cd321022a9",
+  "commit": "7d2c25a5f9af4607948f69d1c6c331da4f2b4d2a",
   "file_count": 265,
   "files": [
     {
@@ -1571,8 +1571,8 @@
     {
       "mode": "100644",
       "path": "tools/sir_kapisi_selftest.py",
-      "sha256": "56b2d9210a86cf598678420ae2a220834ee059a1e4ca235b2c283fafb592b409",
-      "size": 14780
+      "sha256": "54013e62fa0a29921c83f3f307a39fab4f13c4002eb48ccede230c09b7e5b0e1",
+      "size": 14694
     },
     {
       "mode": "100644",
@@ -1593,7 +1593,7 @@
       "size": 14185
     }
   ],
-  "generated_at": "2026-11-22T19:47:23Z",
+  "generated_at": "2026-11-22T20:07:04Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1608,6 +1608,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "d5ffb5b05ba8f327ba1a52d4e1b3a042dfdc5d17",
-  "tree_sha256": "6553bf93f518b19c4e57c66e26fc3f9ea3831c648dafa664bbb725c6b54e408b"
+  "tree": "10153aace9667a479397e6c1373af07f7b9e3efa",
+  "tree_sha256": "6a6524e6c2404f92ccebaa483ccbc813e22900da33242787a5768a1964764a9b"
 }
