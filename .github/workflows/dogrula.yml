@@ -70,6 +70,11 @@ jobs:
       - name: Agac kaniti guncel mi
         run: make kanit-dogrula
 
+      # KANIT-00..06'nin her kodu gercek bir bozulmayla ateslenmeli. Vaka
+      # beklenen kodu vermezse veya ana agac degisirse is kirmizi olur.
+      - name: Kanit kapisi negatif kontrolu (KANIT-00..06)
+        run: make kanit-negatif
+
       # OLG-1 negatif kontrolu: ana agac degismeden gecici bir klonda
       # attestation commit'i bozulur. `olgu_lint` KANIT_GECERSIZ ile rc=1
       # vermeli; `atlas_selftest` 144/145 ile kalmali. Kapi zayiflarsa veya
