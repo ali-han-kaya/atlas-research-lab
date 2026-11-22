@@ -60,13 +60,13 @@ after-mutation contract holds. A green baseline alone is not enough; a marker
 in the baseline fails the case before the mutation is even evaluated.
 
 ```text
-SONUC: 98/98 kural atesledi · 18/18 beklenen bulgu dogrulandi · taban temiz olmayan=0
+SONUC: 100/100 kural atesledi · 18/18 beklenen bulgu dogrulandi · taban temiz olmayan=0
 HUKUM: PASS — her vaka temiz tabanda sessiz, ihlalde kirmizi/beklenen bulgu.
 ```
 
 Exit code 0. Every published gate rule is listed in
-[`../MUTASYON_KAPSAM.md`](../MUTASYON_KAPSAM.md): of 121 rules, **95** are
-mutation-tested, **26** are out of scope with a measured reason
+[`../MUTASYON_KAPSAM.md`](../MUTASYON_KAPSAM.md): of 121 rules, **97** are
+mutation-tested, **24** are out of scope with a measured reason
 (secret key, commit history, run state, repo state, or a rule id no
 code branch emits), and **0** are explicit gaps — 0 mentioned only in
 self-tests, 0 in no test at all. All nine previous gaps now have mutation

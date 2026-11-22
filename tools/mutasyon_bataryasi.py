@@ -119,6 +119,19 @@ SRC01_SANDBOX = 'sandbox/sinif_src01.md'
 SRC01_BOZUK_ESKI = '| SC-002 | Yontem | MAKALE | 2 | IKINCIL | kapsandi |'
 SRC01_BOZUK_YENI = '| SC-002 | Yontem | MAKALE | 2 | BIRINCIL | kapsandi |'
 
+# teslim_imza.py'nin ZORUNLU listesiyle ayni olmali. Liste betikte degisirse
+# temiz taban TSL-06 ile kirilir; fikstur sessizce eski listeye bagli kalmaz.
+TESLIM_ZORUNLU = [
+    '00-FAZ-0-SCOPE-CONTRACT-ve-REGISTER.md',
+    '01-FAZ-1-LENS-ANALYSIS.json',
+    '02-FAZ-2-FIX-MANIFEST.md',
+    '03-FAZ-3-MASTER-v5.5.md',
+    '04-FAZ-4-STRONG-GATE-RAPORU-v5.5.md',
+    'gate/STRONG-gate-2a-v5.5.json',
+    'gate/STRONG-gate-2b-v5.5.json',
+    'gate/FINAL-GATE-v5.5.json',
+]
+
 JUNIT_TST5 = ('<?xml version="1.0"?><testsuite tests="5" failures="0" errors="0" '
               'skipped="0"></testsuite>')
 JUNIT_TST2 = ('<?xml version="1.0"?><testsuite tests="2" failures="0" errors="0" '
@@ -344,6 +357,40 @@ def _frz02_kayip(k):
     """FRZ-02 kayip dali: dondurulmus kapi betigi silinir; terminal GATE_TAMPERED."""
     (k / 'scripts' / 'kapi.py').unlink()
     return None
+
+
+def _dep01_hazirla(k):
+    """DEP-01: manifest + kilit dosyasi birlikte var; taban sessiz."""
+    yaz(k / 'bagimlilik-manifest.txt', 'requests==2.32.0\n')
+    yaz(k / 'bagimlilik-kilit.txt', 'requests==2.32.0\n')
+    return _json_duzenle(k, 'kod_profil.json', lambda v: (
+        v.__setitem__('bagimlilik_manifesti', ['bagimlilik-manifest.txt']),
+        v.__setitem__('kilit_dosyasi', ['bagimlilik-kilit.txt'])))
+
+
+def _dep01(k):
+    """Tek ihlal: kilit_dosyasi anahtari profilden silinir."""
+    return _json_duzenle(k, 'kod_profil.json',
+                         lambda v: v.pop('kilit_dosyasi', None))
+
+
+def _tsl03_hazirla(k):
+    """TSL-03: 8 zorunlu artefakt + kapi betiginin kendi --uret manifesti."""
+    sandbox = k / 'sandbox_teslim'
+    for ad in TESLIM_ZORUNLU:
+        yaz(sandbox / ad, '# artefakt\n')
+    r = subprocess.run(
+        [sys.executable, str(k / 'ATLAS_SABLONLAR' / 'scripts' / 'teslim_imza.py'),
+         '--uret'], cwd=str(sandbox), capture_output=True, text=True, timeout=120)
+    if r.returncode != 0:
+        # Taban TSL-01/TSL-06 ile kirilir; sessizce yesil kalmasin.
+        yaz(sandbox / 'URETIM-HATASI.txt',
+            (r.stdout or '') + (r.stderr or '') + '\n')
+
+
+def _tsl03(k):
+    """Tek ihlal: manifest uretildikten sonra bir artefakt degistirilir."""
+    yaz(k / 'sandbox_teslim' / '03-FAZ-3-MASTER-v5.5.md', '# artefakt degisti\n')
 
 
 def _frz01_02(k):
@@ -1137,10 +1184,21 @@ def vakalar():
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          _frz08,
          'FRZ-08', {'terminal': True, 'kur': _frz08_hazirla, 'env': _frz08_env()}),
+        ('DEP-01', 'KOD', 'manifest varken kilit beyani zorunlu',
+         'KOD_SABLONLAR/scripts/dep_audit.py',
+         lambda k: [],
+         _dep01,
+         'DEP-01', {'kur': _dep01_hazirla, 'kontrol': True}),
         ('DEP-05', 'KOD', 'lisans catismasi P0', 'KOD_SABLONLAR/scripts/dep_audit.py',
          lambda k: [],
          lambda k: yaz(k / 'LICENSES.json', '{"paket": "GPL-3.0"}\n'),
          'DEP-05'),
+        ('TSL-03', 'ATLAS', 'teslim artefakti tahrifati yakalanir',
+         'ATLAS_SABLONLAR/scripts/teslim_imza.py',
+         lambda k: ['--dogrula'],
+         _tsl03,
+         'TSL-03', {'cwd': 'sandbox_teslim', 'kur': _tsl03_hazirla,
+                    'kontrol': True}),
         # --- chg_reconcile: git diff + plan kapsami ----------------------------
         ('RECK-01', 'KOD', 'her REQ planinda karsilik bulur',
          'KOD_SABLONLAR/scripts/chg_reconcile.py',

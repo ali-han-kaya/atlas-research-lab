@@ -71,7 +71,7 @@ kopyasında çalışır ve iki sözleşmeden birini ölçer:
    mutasyon sonrası çıktıda görünmelidir.
 
 Temiz taban veya sözleşme eksikse vaka `ATESLEMEDI` / `TABAN_KIRIK` olarak raporlanır
-ve betik `rc=1` ile çıkar. Güncel katalog **116 vaka = 98 hata + 18 beklenen-bulgu**;
+ve betik `rc=1` ile çıkar. Güncel katalog **118 vaka = 100 hata + 18 beklenen-bulgu**;
 ölçülen kurallar ve katmanları çıktıda ada basmadır.
 
 **Neyi ölçmez:** kuralın *doğru tasarlandığını* ölçmez — yalnız kodun o ihlali
