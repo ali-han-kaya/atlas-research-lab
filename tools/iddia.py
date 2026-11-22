@@ -115,7 +115,7 @@ OLCUM_SOZCUK = re.compile(r"""
 """, re.X | re.I)
 SONUC_SOZCUK = re.compile(r'^(?:yeni|degisen|silinen|new|changed|deleted)\b',
                           re.I)
-# Uretilmis sayac alanlari: kalem=8, incelenmedi=0, planda=214 ...
+# Uretilmis sayac alanlari: kalem=8, incelenmedi=0, planda=216 ...
 SAYAC_ALAN = re.compile(
     r'(?<![A-Za-z0-9_])(?:kalem|gecen|kalan|calistirilmadi|olculdu|atlandi|'
     r'olculmedi|planda|yeni|degisen|ayni|silinecek|taranan|incelenmedi|'
