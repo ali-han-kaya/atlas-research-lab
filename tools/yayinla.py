@@ -51,6 +51,8 @@ DOCS_DOSYALARI = [
     'MUTASYON_KOSUM.md', 'CORRIGENDUM-KIMLIK-ENVANTER-2026-09-01.md',
     # Kapıların pinlediği kanonik OLGU-06 devri — sürüm satırı buna bağlı.
     'DEVIR-2026-09-03-1945-AUD-06-07.md',
+    # H5 penceresinin kamu kaydı; plan dışında kalırsa `fazlalik` onu silmek ister.
+    'DEVIR-2026-11-22-1923.md',
     'EN/QUICKSTART.md', 'GUVENLIK.md', 'MUTASYON_KAPSAM.md',
     'KOD_BEDAVA_MODEL_POLITIKASI.md',
 ]

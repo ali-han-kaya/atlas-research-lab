@@ -2,7 +2,7 @@
 
 > **Tarihsel kimlik notu (19 Kasım 2026):** 2026-08 kayıtlarındaki eski Nemotron Super free kimliği models.dev'den kaldırılmıştır; güncel allowlist `nvidia/nemotron-3-ultra-550b-a55b:free` kullanır. Tarihsel satırlar değiştirilmedi.
 
-Sürüm: v1.7.415 (güncel: Değişiklik Kaydı'nın ilk satırı) · Tarih: 22 Kasım 2026
+Sürüm: v1.7.416 (güncel: Değişiklik Kaydı'nın ilk satırı) · Tarih: 22 Kasım 2026
 
 > **21 Kasım 2026 düzeltmesi:** Canlı `make katalog-kontrol` ağ gerektirdiği için CI'dan çıkarıldı; CI yalnız çevrimdışı `make dogrula-ci`/`katalog-selftest` koşar. v1.7.411 satırındaki CI kaydı tarihseldir.
 
@@ -40,6 +40,7 @@ taban dosyası yoktur; güncel KOD sayısı da DURUM'dadır.
 > **Tarihsel kayıt:** Aşağıdaki `v1.7.x` satırlarındaki sayılar o günkü ölçümdür;
 > güncel öz-test ve envanter durumu `docs/DURUM.md`dir.
 
+- v1.7.416 (22 Kasım 2026, lab kaydı): **Public/private yayın planı DEVIR kaydını kapsayacak şekilde düzeltildi ve özel lab yayınlanmış içerikle hizalandı.** `docs/DEVIR-2026-11-22-1923.md` açık `DOCS_DOSYALARI` listesine eklendi; plan **216 → 217** dosya oldu. `SURUM.md`, `docs/DERSLER_v1_2026-08-30.md`, `docs/EN/QUICKSTART.md` ve `docs/OLGULAR.md` public’ten özel laba kopyalandı; `SURUM` ↔ `OLGULAR.lab_surum` çifti v1.7.416 olarak korundu. **Ölçülen:** `make yayinla` kuru koşusu `217 / 0 / 0 / 0`, sır taraması 0 bulgu; `make dogrula` 8/8; `make iddia` 37/37; özel lab attestation 1216 dosya. DERSLER 12.143.
 - v1.7.415 (22 Kasım 2026, lab kaydı): **H5 sır kapısı öz-testi yer tutucu/canlı sınırını beş kalıcı vakayla kilitledi.** `USER:***` ve parolası `$` ile başlayan canlı DSN artık kalıcı olarak kırmızı; `USER:$DB_PASS`, `${DB_PASS}` ve `admin:<parola>` kalıcı olarak sessiz. Vaka sayısı **8/8 → 13/13**. **Ölçülen:** `python3 tools/sir_kapisi_selftest.py` 13/13; `make dogrula` 8/8 (H5 13/13, T1 145/145, T2 174/174, T3 45/45); `make iddia` 37/37; `attestation.json` yeni ağaç için yeniden üretildi. DERSLER 12.141.
 - v1.7.414 (22 Kasım 2026, lab kaydı): **Kanıt kapısı KANIT-00..06 için kalıcı negatif batarya kazandı.** `tools/kanit_negatif.py` geçici bir klonda gerçek bozulmalarla her kodu ayrı ayrı ateşler: eksik/bozuk attestation, şema, var olmayan/ata olmayan/tree uyuşmayan commit, dosya hash'i, dosya sayısı/ağaç özeti, HEAD ağaç sürüklenmesi ve kirli ağaç. `make kanit-negatif` 14/14 PASS verir; CI'daki `tek giris dogrulama` işine bağlandı. Ana ağaç değişmez. DERSLER 12.140.
 - v1.7.413 (22 Kasım 2026, lab kaydı): **Kamu ağacına dış-lab geri sızması kapıya bağlandı.** Yeni `tools/kamu_lint.py` (`make kamu-lint`, `make kamu-selftest`) özel mutlak yol, kaldırılmış tarihsel makine alanları, dış-lab bağımlılık ifadesi ve `OLGULAR` makine bloğundaki commit-benzeri hash'leri tarar; `make dogrula` ön koşuludur ve kendi negatif fikstürlerini 7/7 koşar. `kanit_dogrula` KANIT-05 ile HEAD ağacının kayıtlı ağaçtan farkını fail-closed ölçer; geçici bir commit ile `FAIL KANIT-05 AGAC_SURUKLENDI` doğrulandı. DERSLER 12.139.
