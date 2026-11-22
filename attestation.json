@@ -1,5 +1,5 @@
 {
-  "commit": "3ba5b7f23a2c81f6bd04abfa83b467671b7db10d",
+  "commit": "327cd1c0ef21604e2de95f53dd49183c9368c3a2",
   "file_count": 262,
   "files": [
     {
@@ -467,8 +467,8 @@
     {
       "mode": "100644",
       "path": "ATLAS_SABLONLAR/scripts/olgu_lint.py",
-      "sha256": "c940e4db0dc39d87df0c5a62ec5ce8adab9b98ce55c07da7cd7977e00bbc7379",
-      "size": 24588
+      "sha256": "f677e87913c4bbd11bb645c84fe92ec63b00a9b61668d050c822db657a604c34",
+      "size": 22446
     },
     {
       "mode": "100755",
@@ -1163,8 +1163,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "aa125199f2d6d4ff3a11fc4d8aeb4c2ee562edf80540ac762cbdc8901d7fa54c",
-      "size": 4563
+      "sha256": "dbcb0afceecce1e7217f14f036f88bad16aa6fc094b03b2501b7c5366f74266c",
+      "size": 4550
     },
     {
       "mode": "100644",
@@ -1211,20 +1211,20 @@
     {
       "mode": "100644",
       "path": "README.en.md",
-      "sha256": "492954778d606594e5d3b0bdef70b4fafc87eca7287995ba19867c10410b81c3",
-      "size": 5053
+      "sha256": "f1ba7259087f6f81aad62e4f063d3a5862dda0999eae57edc3b7ca1b69105a6e",
+      "size": 5116
     },
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "ebfabcb14406d45c64d43afcc5bf0f996435113720e95918b63367dd16cb6c76",
-      "size": 29008
+      "sha256": "7eab9686d2af92c5f89f36e640458af98e19fae9e3d71d389ac046e7873f53a7",
+      "size": 29261
     },
     {
       "mode": "100644",
       "path": "SURUM.md",
-      "sha256": "732f512cd3dee3d38d62fe52402021dc9ad3e6dcd4140aaccf97155b71756a72",
-      "size": 581870
+      "sha256": "0b27f07abd65053e1182ed3022ce1422d60079094b8b0832e17753dd7f5f3063",
+      "size": 582403
     },
     {
       "mode": "100755",
@@ -1253,8 +1253,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "2d9c03676fda74754bcadf8e53153c453a59dc7bd5448094e126d2d8e188fd68",
-      "size": 478418
+      "sha256": "c0334777f8a894d5cb69b54eed2e37872f372561c0e1df234ed50d33607916f8",
+      "size": 479439
     },
     {
       "mode": "100644",
@@ -1271,8 +1271,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "4b2aa5e1b964d1fbecac487cb9d37da95a9b79c675fe1e49e35ea6c8f22809ad",
-      "size": 11380
+      "sha256": "7c2a20be49fcaa48c6414fb628e338dc4d3de86fcb66b3977a44445e310859c5",
+      "size": 11378
     },
     {
       "mode": "100644",
@@ -1283,7 +1283,7 @@
     {
       "mode": "100644",
       "path": "docs/IDDIA-OZET.md",
-      "sha256": "e52a58c216ccacd24fbf5813fd71f489c87d48e46d669d9b024bf9a8f96fdd3a",
+      "sha256": "5df02807ef9d352465dc875fff8db00113f7eaff8fad54035c52b38505e84652",
       "size": 1241
     },
     {
@@ -1361,14 +1361,14 @@
     {
       "mode": "100644",
       "path": "docs/OLGULAR.md",
-      "sha256": "024acf18312c72b5a40335f3153b90825199c2e72e9f3fed69223ca7f344cc7d",
-      "size": 3170
+      "sha256": "29eb280d83612f094136d68323636f8c86e66f876a11a3f6122057dc995bac5a",
+      "size": 3207
     },
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "24d42660a6626aa15c03a04517571da02ae508c737ac6da0da5dd02426aad9a0",
-      "size": 30368
+      "sha256": "57dc4ceaeba03c851493c5225bd53f6fe955ce5a380164caab58ff4296ef7f97",
+      "size": 30498
     },
     {
       "mode": "100644",
@@ -1421,8 +1421,8 @@
     {
       "mode": "100644",
       "path": "tools/durum_selftest.py",
-      "sha256": "a15786f238a54b0ca924f87512ed910ef1434bbb018492932cb722e4d14b9b25",
-      "size": 6706
+      "sha256": "87395420d65839d89036219a446ecbcfadbedcc88045e98a8e6eccdc34bf68d2",
+      "size": 6636
     },
     {
       "mode": "100644",
@@ -1439,8 +1439,8 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "59c0064f3952742b1568651201f6f80fcea402113250cc735455a7b7ebcabb28",
-      "size": 33047
+      "sha256": "fe984757fbe8eeb3a75e9431980abc7225833e50a0c4fdf8972fc7cd24ba1387",
+      "size": 32834
     },
     {
       "mode": "100644",
@@ -1535,8 +1535,8 @@
     {
       "mode": "100644",
       "path": "tools/olgu1_negatif.py",
-      "sha256": "3e7195b8629ad0e162608c422969d5cff33735423046960aa40e0e504d4ce6b4",
-      "size": 8321
+      "sha256": "c230097f3ae046501dc07f81bc3a8fc4dc46b060a88ddad6ecc840e7bb95d9ec",
+      "size": 9105
     },
     {
       "mode": "100644",
@@ -1575,7 +1575,7 @@
       "size": 14109
     }
   ],
-  "generated_at": "2026-11-22T13:52:56Z",
+  "generated_at": "2026-11-22T15:18:47Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1590,6 +1590,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "3c213836e01afe19a8c9d52535ae615875ae41d4",
-  "tree_sha256": "7e8b890f8c4ab89b799f3d458c12f57a36259a11b1f4f7fdc765e82e894ea280"
+  "tree": "ac6779bfed6f9a354924f3a088292fda2259d7ae",
+  "tree_sha256": "0268d534fd4ede4c75b56f94fa9bc31d91828d77798484121dc88b8f0821b1ea"
 }
