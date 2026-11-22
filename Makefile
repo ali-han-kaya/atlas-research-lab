@@ -114,4 +114,5 @@ oztest:
 	@cd KOMUT_TOOLKIT_v4/ARACLAR/betikler && $(PY) v4_selftest.py >/dev/null && echo "TOOLKIT OZ-TEST: gecti"
 
 yayinla:
-	@$(PY) tools/yayinla.py --lab "$${ATLAS_LAB:?ATLAS_LAB degiskeni gerekli}" $(if $(UYGULA),--uygula,)
+	@if [ -z "$(ATLAS_LAB)" ]; then echo "ATLAS_LAB degiskeni gerekli" >&2; exit 2; fi
+	@$(PY) tools/yayinla.py --lab "$(ATLAS_LAB)" $(if $(UYGULA),--uygula,)
