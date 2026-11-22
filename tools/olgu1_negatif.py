@@ -22,6 +22,7 @@ CIKIS: 0 = dort sozlesme de tuttu · 1 = sapma veya kurulum hatasi
 """
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -35,11 +36,11 @@ OZET_RE = re.compile(r"^OZ-TEST:\s*(\d+)/(\d+)\s+gecti\s*$", re.MULTILINE)
 KALDI_RE = re.compile(r"^\s*KALDI\s+([^\s:]+)\s*:", re.MULTILINE)
 
 
-def kos(komut, cwd, timeout):
+def kos(komut, cwd, timeout, env=None):
     """Alt sureci kos; (sonuc, hata_metni) dondur."""
     try:
         return subprocess.run(komut, cwd=str(cwd), capture_output=True,
-                              text=True, timeout=timeout), None
+                              text=True, timeout=timeout, env=env), None
     except (OSError, subprocess.SubprocessError) as exc:
         return None, "%s: %s" % (type(exc).__name__, exc)
 
@@ -105,9 +106,14 @@ def senaryo(gecici, head, bekle):
 
     lint = klon / "ATLAS_SABLONLAR" / "scripts" / "olgu_lint.py"
     selftest = klon / "ATLAS_SABLONLAR" / "scripts" / "atlas_selftest.py"
-    for yol in (lint, selftest):
+    katalog = klon / "tools" / "model_katalog.json"
+    for yol in (lint, selftest, katalog):
         if not yol.is_file():
-            raise RuntimeError("klonda arac yok: %s" % yol)
+            raise RuntimeError("klonda arac/katalog yok: %s" % yol)
+    # `make dogrula` T1 de ayni sabit katalogu enjekte eder. Enjekte edilmezse
+    # runner'da ~/.cache/opencode/models.json yok diye MOD-1/MOD-2 de duser ve
+    # 144/145 yerine 142/145 olur; bu, OLG-1 negatif kontrolunu bozar.
+    ortam = dict(os.environ, ATLAS_MODEL_KATALOG=str(katalog))
 
     sonuc, hata = kos([sys.executable, str(lint)], klon, 180)
     temiz_cikti = cikti(sonuc)
@@ -147,7 +153,8 @@ def senaryo(gecici, head, bekle):
         hata or bozuk_cikti,
     )
 
-    sonuc, hata = kos([sys.executable, str(selftest), "--sessiz"], klon, 900)
+    sonuc, hata = kos([sys.executable, str(selftest), "--sessiz"], klon, 900,
+                      env=ortam)
     atlas_cikti = cikti(sonuc)
     ozetler = OZET_RE.findall(atlas_cikti)
     ozet = (int(ozetler[-1][0]), int(ozetler[-1][1])) if ozetler else None
