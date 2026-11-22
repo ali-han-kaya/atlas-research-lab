@@ -4,14 +4,14 @@
 
 NEDEN VAR
   Bir koruma "calisiyor" demek icin once temiz girdide sessiz kaldigini, sonra
-  tek bir canli desende kirmiziya dondugunu olcmek gerekir. Bu test dort betik
+  tek bir canli desende kirmiziya dondugunu olcmek gerekir. Bu test dokuz betik
   vakasi, iki gercek `git commit` vakasi ve iki `git push` vakasi kosar; canli
   DSN'in ciktida GORUNMEDIGINI de ayrica dogrular (sizinti testi).
 
 KULLANIM
   python3 tools/sir_kapisi_selftest.py
 
-CIKIS: 0 = 8/8 gecti · 1 = en az bir vaka kirmizi
+CIKIS: 0 = 13/13 gecti · 1 = en az bir vaka kirmizi
 """
 import os
 import shutil
@@ -29,6 +29,11 @@ KAPI = KOK / 'tools' / 'sir_kapisi.py'
 CANLI = 'postgresql://' + 'kullanici' + ':' + 'gercekparola123' + '@host/db'
 TOKEN = 'npg_' + 'A1b2C3d4E5f6'
 YER = 'postgresql://' + 'NEON_KULLANICI' + ':' + 'NEON_PAROLA' + '@host/db'
+MASKE = 'postgresql://' + 'USER' + ':' + '***' + '@host/db'
+DOLAR_CANLI = 'postgresql://' + 'USER' + ':' + '$gercek123' + '@host/db'
+DEGISKEN = 'postgresql://' + 'USER' + ':' + '$DB_PASS' + '@host/db'
+SUSLU_DEGISKEN = 'postgresql://' + 'USER' + ':' + '${DB_PASS}' + '@host/db'
+ADMIN_KOSELI = 'postgresql://' + 'admin' + ':' + '<parola>' + '@host/db'
 TEMIZ = 'baglanti yok; bu dosyada sir yok.\n'
 
 
@@ -164,6 +169,13 @@ def main():
     vakalar = [
         ('canli DSN kirmizi', lambda: vaka_dosya('canli', CANLI, 1, 'canli-dsn',
                                                 sizinti='gercekparola123')),
+        ('USER:*** kirmizi', lambda: vaka_dosya('maske', MASKE, 1, 'canli-dsn')),
+        ('$ parolali canli kirmizi',
+         lambda: vaka_dosya('dolar', DOLAR_CANLI, 1, 'canli-dsn',
+                            sizinti='gercek123')),
+        ('USER:$DB_PASS sessiz', lambda: vaka_dosya('degisken', DEGISKEN, 0, None)),
+        ('${DB_PASS} sessiz', lambda: vaka_dosya('suslu', SUSLU_DEGISKEN, 0, None)),
+        ('admin:<parola> sessiz', lambda: vaka_dosya('admin', ADMIN_KOSELI, 0, None)),
         ('npg_ token kirmizi', lambda: vaka_dosya('token', TOKEN, 1, 'neon-token',
                                                   sizinti=TOKEN)),
         ('yer tutucu sessiz', lambda: vaka_dosya('yer', YER, 0, None)),

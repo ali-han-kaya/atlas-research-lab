@@ -161,8 +161,8 @@
         "tools/dogrula.py"
       ],
       "rc": 0,
-      "ham": "  H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 8/8 gecti",
-      "deger": "8/8"
+      "ham": "  H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 13/13 gecti",
+      "deger": "13/13"
     },
     "IDD-19": {
       "komut": [

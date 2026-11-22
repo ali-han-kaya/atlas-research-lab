@@ -25,7 +25,7 @@ commit history, and a shallow clone fails that check.
   H2  python sozdizimi         PASS    <güncel> dosya
   H3  kabuk sozdizimi          PASS    7 dosya
   H4  sir taramasi             PASS    0 bulgu
-  H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 8/8 gecti
+  H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 13/13 gecti
   T1  ATLAS oz-testi           PASS    OZ-TEST: <güncel>/<güncel> gecti · KANIT commit=<sha> tree=<sha>
   T2  KOD oz-testi             PASS    KOD OZ-TEST: <güncel>/<güncel> gecti
   T3  Toolkit oz-testi         PASS    ...
