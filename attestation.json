@@ -1,5 +1,5 @@
 {
-  "commit": "e2bf690baaeed79c6487685f95bc383081cbf36b",
+  "commit": "391470843f8984c1b9d7626cdb4a9f0f4f32cca1",
   "file_count": 265,
   "files": [
     {
@@ -1253,8 +1253,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "c2ed96ecee64e0ba7e43be0b30f5c9f5be5eb4d0a467b13b367608bcf0815f34",
-      "size": 482494
+      "sha256": "6d540a3090257a8c6d6ae6ad1ce57ead1dcb267332a885a5ab057be79c63adeb",
+      "size": 483216
     },
     {
       "mode": "100644",
@@ -1265,8 +1265,8 @@
     {
       "mode": "100644",
       "path": "docs/DEVIR-2026-11-22-1923.md",
-      "sha256": "4b7a17364a2706f44c101035bbf6f696b06f16352362bfe10d7c03835c6ef981",
-      "size": 2577
+      "sha256": "47e43a1b96a22517ee0778ab86bdfc8ecdcfd9cd425d9bc87ef91af743921f6b",
+      "size": 2986
     },
     {
       "mode": "100644",
@@ -1367,7 +1367,7 @@
     {
       "mode": "100644",
       "path": "docs/OLGULAR.md",
-      "sha256": "be33312ae2e666781841b3ee91e784ee212a14ead65880170fd027bfbef4fc6b",
+      "sha256": "b8c68219fef39f9210ee357db1fbd807b12f6b1b4c2d2804d7bec2b5e6b982fa",
       "size": 3201
     },
     {
@@ -1593,7 +1593,7 @@
       "size": 14064
     }
   ],
-  "generated_at": "2026-11-22T18:24:51Z",
+  "generated_at": "2026-11-22T18:31:33Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1608,6 +1608,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "1163aa21681062d920998546dcc9129c6f9edad5",
-  "tree_sha256": "fbed4f6a5b48148eb07b49f495fd879983de86634f5252149c883cf7fe2461a9"
+  "tree": "e158181e3f4ca28b0111eaad9a43242bb0b43657",
+  "tree_sha256": "43abce94688d2f2f52fe70a3211bd55a486758654811a382f335228823060bcd"
 }
