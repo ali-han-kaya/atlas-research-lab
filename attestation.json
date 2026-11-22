@@ -1,6 +1,6 @@
 {
-  "commit": "7d2c25a5f9af4607948f69d1c6c331da4f2b4d2a",
-  "file_count": 265,
+  "commit": "088a26ec6a37ed618321abfdabfc1694253b2419",
+  "file_count": 267,
   "files": [
     {
       "mode": "100755",
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "b13d22d6ce53c264cbebb1d5f8405bb8361f9c203807ca8222cc78ca49aa8b2d",
-      "size": 7389
+      "sha256": "0238e33fbddb70865ba9620c7af41d9372fdfe0cc32523328b4191611ca3be76",
+      "size": 7692
     },
     {
       "mode": "100644",
@@ -1163,8 +1163,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "8eabe070c7c28b85c61e48a05de1c3510fe8c8c24bc1d4a8c5e236c9f8a6aa42",
-      "size": 4956
+      "sha256": "bab1e9946293c885ffcb275eb7f596aaac40f62fa44aca161fe8e052da9e1a68",
+      "size": 5122
     },
     {
       "mode": "100644",
@@ -1223,8 +1223,8 @@
     {
       "mode": "100644",
       "path": "SURUM.md",
-      "sha256": "5e29d83d5baf7940ba9cfede1dca5bef6165a877ad736a686070bc101c34fa93",
-      "size": 586118
+      "sha256": "c3f845be00158ba35d171af371831da5d5da8381c9611260e323687410f62f92",
+      "size": 587008
     },
     {
       "mode": "100755",
@@ -1253,8 +1253,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "98f879cb6743d18f3bde4271836462bd322789bdf0085474add259928bb0c762",
-      "size": 487847
+      "sha256": "a6421f9624ed771d4037ab336b8a26c169aa10639953a23c5204e758089d0e31",
+      "size": 489001
     },
     {
       "mode": "100644",
@@ -1265,13 +1265,13 @@
     {
       "mode": "100644",
       "path": "docs/DEVIR-2026-11-22-1923.md",
-      "sha256": "fec453e34dddfd7f474a0cf5d43ddbc7216798239472ee1faf100851b967615c",
-      "size": 5855
+      "sha256": "af96bf9d7998a10638a5d1f3bc06a817d29542a04e462af8972b1d69893f59b9",
+      "size": 8028
     },
     {
       "mode": "100644",
       "path": "docs/DURUM.md",
-      "sha256": "6b187495a4797f918bdbb36bde9e91788f5b2ec1e39fc42ab1cf91b8bcb0a99f",
+      "sha256": "0b0c0a40119c5f5e3e268108de402d4da4b102c8391e227b8bdadc2c4c80c49a",
       "size": 1489
     },
     {
@@ -1367,7 +1367,7 @@
     {
       "mode": "100644",
       "path": "docs/OLGULAR.md",
-      "sha256": "fbb426176cb12cd80d5f7caafcdb471f026ae14940e495e217f50554e963803f",
+      "sha256": "31971d828fab10c379dd46b8b49c87c5375b598d00df54434bcd540568b09a80",
       "size": 3201
     },
     {
@@ -1445,7 +1445,7 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "79662d5151445948a7eb19f48a510f7f43bbac158ae4ed7acef532161e294793",
+      "sha256": "6c6ba97e1bdd60f93933d3defbe6d40a6f9d421a20080e02af5d9cc903738e16",
       "size": 32812
     },
     {
@@ -1570,6 +1570,18 @@
     },
     {
       "mode": "100644",
+      "path": "tools/sir_kapisi_mutasyon.py",
+      "sha256": "17258ed1c975be706895bfcd84db228bc4662d8f1395d97626364d6885878a3c",
+      "size": 15650
+    },
+    {
+      "mode": "100644",
+      "path": "tools/sir_kapisi_mutasyon_kaniti.json",
+      "sha256": "0c4f2f2ff9cbcac80f2ae8a44243ebbafe59a53152c24d48c1626f197712035b",
+      "size": 2931
+    },
+    {
+      "mode": "100644",
       "path": "tools/sir_kapisi_selftest.py",
       "sha256": "54013e62fa0a29921c83f3f307a39fab4f13c4002eb48ccede230c09b7e5b0e1",
       "size": 14694
@@ -1593,7 +1605,7 @@
       "size": 14185
     }
   ],
-  "generated_at": "2026-11-22T20:07:04Z",
+  "generated_at": "2026-11-22T20:36:03Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1608,6 +1620,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "10153aace9667a479397e6c1373af07f7b9e3efa",
-  "tree_sha256": "6a6524e6c2404f92ccebaa483ccbc813e22900da33242787a5768a1964764a9b"
+  "tree": "898611f2789b2c6c786303bfca8d66520fb468ce",
+  "tree_sha256": "6a7dc9307f80933460d8217a7f5627e462176629443b9f92bd2a12dba30f2e96"
 }
