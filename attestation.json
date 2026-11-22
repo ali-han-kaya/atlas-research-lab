@@ -1,6 +1,6 @@
 {
-  "commit": "0d3ac3348d9954382a3a983bcbe5320e57890e55",
-  "file_count": 260,
+  "commit": "ff62e25c2871e1e3b2b294f3448b4ec739c69d29",
+  "file_count": 261,
   "files": [
     {
       "mode": "100755",
@@ -1217,8 +1217,8 @@
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "9648a19eddc602cc2b39267fc7c85947944595ddfabe4693e1a16c3c4679f124",
-      "size": 27452
+      "sha256": "aac7c7bddf9a4bf0ffe03cf9a437358b3b47e5faefb5ba1e672ef0ba0613d647",
+      "size": 29008
     },
     {
       "mode": "100644",
@@ -1271,14 +1271,20 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "7b92e80a92d66f92763f2d8c8a05d58844c5e050bd93c4ba2681022a1b1a89ae",
-      "size": 10382
+      "sha256": "1c3b7e2ffa77d2281f9c9bec67edca94c6af6f1122e91bfe022fface04bc3517",
+      "size": 11378
     },
     {
       "mode": "100644",
       "path": "docs/GUVENLIK.md",
       "sha256": "d42737491b6f478c42f511f08c1d642cf82e74a7cf37ecd62565591ed569066e",
       "size": 1917
+    },
+    {
+      "mode": "100644",
+      "path": "docs/IDDIA-OZET.md",
+      "sha256": "e52a58c216ccacd24fbf5813fd71f489c87d48e46d669d9b024bf9a8f96fdd3a",
+      "size": 1241
     },
     {
       "mode": "100644",
@@ -1361,8 +1367,8 @@
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "79231cf1b7b45c66b95a8daed6e9e093141cfe08b3fb9a9ecc0bdf0c37a62aba",
-      "size": 29789
+      "sha256": "aa584aed0c5c4bddf7b29c94e96a91f5026b4fe07f1081099b16dc5cc255e80e",
+      "size": 30251
     },
     {
       "mode": "100644",
@@ -1427,26 +1433,26 @@
     {
       "mode": "100644",
       "path": "tools/iddia.py",
-      "sha256": "d737baf15501c95d2f8be37e4c563e18e519028d134f686d704647659b1384ac",
-      "size": 33348
+      "sha256": "0dc58cc7f03471fb7b951845b22203be0799b4527be288c7c02a5ce5af7b8772",
+      "size": 34993
     },
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "806f06a6310f9470e33c11a574d0862a3bccafe0b0c50412bc94ce6a403fd10e",
-      "size": 32934
+      "sha256": "eb0b443edab15bb0f1a0199c0d2a055dc620a895b7344da6b80c8fcc26a00f68",
+      "size": 33029
     },
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "3bfd405dfef02060ade06e6882577ff270c55ca05b6342898855f189ef4af6a6",
+      "sha256": "65ce0d74ee472045be2227d666134b2d85894bc6ea7ca3d553f1e12f56501550",
       "size": 7903
     },
     {
       "mode": "100644",
       "path": "tools/iddia_selftest.py",
-      "sha256": "fb243becdb900b777a2f2bf51142663c33484ce1f95975b5db13027d738996b6",
-      "size": 11479
+      "sha256": "ba774cf24c7215642a1ed92cba355952bfcf715c3e34ad492ef666d2cf2ba6d9",
+      "size": 12279
     },
     {
       "mode": "100644",
@@ -1559,11 +1565,11 @@
     {
       "mode": "100644",
       "path": "tools/yayinla.py",
-      "sha256": "d7fbd05ec0e9c5efd95e9d781dc249e3c1f97cb6d306e8bd3802be8604e807ea",
-      "size": 14076
+      "sha256": "4cb58d236c03852d2cb51edb763de5f194490d613694dbbfbd275bfb94a67ed0",
+      "size": 14109
     }
   ],
-  "generated_at": "2026-11-22T08:14:15Z",
+  "generated_at": "2026-11-22T08:50:12Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1578,6 +1584,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "fbf29344076dd908546f3a1df5f1631eb3c06bea",
-  "tree_sha256": "dd02f031cf06965284156c64a0105dbc578c036b631bf4d4058082cb817c9307"
+  "tree": "10960ed3ea234215d040c83c68804d8b73bdcd2f",
+  "tree_sha256": "8430f07a8fc700a1f2f82eab5c4a3c137d9dec52991949680b20a38d4f72e287"
 }
