@@ -2,15 +2,17 @@
 # -*- coding: utf-8 -*-
 """OLG-1 NEGATIF KONTROL — bozuk kanitin kapida yandigini ana agaci kirletmeden olc.
 
-Her kosu ana agacin HEAD'inden gecici bir git klonu uretir ve dort sozlesmeyi
+Her kosu ana agacin HEAD'inden gecici bir git klonu uretir ve bes sozlesmeyi
 siralar:
 
   1. temiz taban: `olgu_lint` rc=0 ve `OLGU-LINT PASS` — kapi gercekten acik,
-  2. `attestation.json` commit alani var olmayan bir SHA'ya bozulur; `olgu_lint`
+  2. `attestation.json` silinir; `olgu_lint` rc=1 ve `FAIL OLGU-04 KANIT_YOK`
+     basar; tarihsel commit fallback'ine dusmez,
+  3. `attestation.json` commit alani var olmayan bir SHA'ya bozulur; `olgu_lint`
      rc=1 ve `FAIL OLGU-04 KANIT_GECERSIZ ... COMMIT_YOK` basar,
-  3. `atlas_selftest --sessiz` rc=1, `OZ-TEST: 144/145 gecti` ve kalan tek
+  4. `atlas_selftest --sessiz` rc=1, `OZ-TEST: 144/145 gecti` ve kalan tek
      kimlik `OLG-1` olur,
-  4. ana agacin git durumu, HEAD'i ve attestation hash'i degismez.
+  5. ana agacin git durumu, HEAD'i ve attestation hash'i degismez.
 
 Klonda `atlas_selftest`in butun kalemleri kosar; boylece kontrol yalniz
 `olgu_lint`in kirmizisini degil, genis paketin 144/145 verdigini de olcer.
@@ -128,9 +130,26 @@ def senaryo(gecici, head, bekle):
 
     attest = klon / ATTESTATION
     try:
+        yedek = attest.read_bytes()
+        attest.unlink()
+    except OSError as exc:
+        raise RuntimeError("klonda attestation silinemedi: %s"
+                           % type(exc).__name__)
+    sonuc, hata = kos([sys.executable, str(lint)], klon, 180)
+    yok_cikti = cikti(sonuc)
+    bekle(
+        "attestation yok: rc=1 · KANIT_YOK · tarihsel fallback yok",
+        sonuc is not None and sonuc.returncode == 1
+        and "FAIL OLGU-04 KANIT_YOK" in yok_cikti
+        and "COMMIT_ATA_DEGIL" not in yok_cikti
+        and "COMMIT_DOGRULANAMADI" not in yok_cikti,
+        hata or yok_cikti,
+    )
+    try:
+        attest.write_bytes(yedek)
         veri = json.loads(attest.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
-        raise RuntimeError("klonda attestation okunamadi: %s"
+        raise RuntimeError("klonda attestation geri yuklenemedi: %s"
                            % type(exc).__name__)
     eski = veri.get("commit") if isinstance(veri, dict) else None
     if not isinstance(eski, str) or not COMMIT_RE.fullmatch(eski):

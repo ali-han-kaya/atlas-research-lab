@@ -7,7 +7,7 @@ yazılmaz: defter bilinçli değiştiğinde burada da bilinçli olarak güncelle
 aksi halde kapı sessiz kaymaya izin vermez.
 
 <!-- IDDIA-OZET:BASLA -->
-olculdu=36 · ag=1 · beyan=12 · olculmedi=1
+olculdu=37 · ag=1 · beyan=10 · olculmedi=1
 <!-- IDDIA-OZET:BITIR -->
 
 - `OLCULDU` — komutu koşan, ham kanıt satırı defterdeki komutla ve beyanla

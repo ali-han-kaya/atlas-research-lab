@@ -49,9 +49,9 @@ def _hazirla(kok):
     _json_yaz(kok / "ATLAS_SABLONLAR" / "scripts" / "OZTEST-TABAN.json", taban)
 
     olgular = {
-        "schema": "OLGULAR/v1",
+        "schema": "OLGULAR/v2",
         "lab_surum": "v0-test",
-        "baseline_commit": "0000000",
+        "kamu_kaniti": "attestation.json",
         "atlas_envanter_sayisi": 145,
         "atlas_son_gecen": 145,
         "kod_son_gecen": 174,
@@ -59,8 +59,6 @@ def _hazirla(kok):
         "attest_taban": 145,
         "attest_p0": 0,
         "attest_p1": 0,
-        "mekanizma_sayisi": 1,
-        "mekanizma_kayitlari": ["0000000"],
     }
     _yaz(kok / "docs" / "OLGULAR.md",
          "<!-- OLGULAR_JSON_BASLA -->\n```json\n"

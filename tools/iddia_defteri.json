@@ -742,15 +742,21 @@
     },
     {
       "id": "IDD-33",
-      "iddia": "ozel agacta ATLAS 145/145",
+      "iddia": "kamu agacinda OLG-1 kaniti yalniz attestation.json",
       "kaynaklar": [
         {
-          "dosya": "docs/README.md",
-          "alinti": "Özel ağaçta (145/145)"
+          "dosya": "README.md",
+          "alinti": "`T1` (`OLG-1`) yalnız bu kamu ağacındaki `attestation.json` kanıtını kullanır."
         }
       ],
-      "durum": "BEYAN",
-      "gerekce": "ozel agac olcumu; public agacta tarihce ve kanit seti yok"
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "ATLAS_SABLONLAR/scripts/olgu_lint.py"
+      ],
+      "ayikla": "^(OLGU-LINT PASS)",
+      "beklenen": "OLGU-LINT PASS",
+      "ham_grup": true
     },
     {
       "id": "IDD-34",
@@ -1009,18 +1015,6 @@
       ],
       "durum": "BEYAN",
       "gerekce": "21 Kasim 2026 yerel makine olcumleri; dosya sistemi ve donanima bagli, kapida yeniden kosulmaz"
-    },
-    {
-      "id": "IDD-47",
-      "iddia": "ozel agac 36 tarihsel commit; public agacta aranmaz",
-      "kaynaklar": [
-        {
-          "dosya": "docs/README.md",
-          "alinti": "ağacın 36 tarihsel commit'i public ağaçta aranmaz; sahte commit çıpası yazılmaz."
-        }
-      ],
-      "durum": "BEYAN",
-      "gerekce": "ozel agac tarihcesi; public klonda yok, yeniden olculemez"
     },
     {
       "id": "IDD-48",

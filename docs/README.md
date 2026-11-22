@@ -53,9 +53,9 @@ Aktarım yolu `tools/yayinla.py` ve kapsam tablosudur (aşağıda).
 | Kök `scripts/` (kişisel exocortex bataryası) | 33 dosya yayımlanmayan `SKILL.md`'yi okur; ayrıca sahibinin mutlak yolunu (`KOK = '/Users/…'`) taşıyordu. Laboratuvarın kendi mekanizması ATLAS/KOD ağaçlarındaki `scripts/` klasörlerindedir; bu küme kişisel çalışma sözleşmesine aittir (kendi başlığı: *Proprietary*). |
 | `silat-makale` gibi proje adları | Yalnız kod **yorumlarında** ("hangi gerçek koşuda ölçüldü" kanıtı) ve `SURUM.md` bakım kaydında geçer. Makale metni, PDF, veri dosyası yoktur; adı silmek ölçümün kanıt izini silmek olurdu. |
 
-Bu sınır yüzünden `DERSLER` ve ölçüm dosyalarındaki bazı atıflar özel ağaçtaki
+Bu sınır yüzünden `DERSLER` ve ölçüm dosyalarındaki bazı atıflar yayımlanmayan
 devir dosyalarını gösterir. Bu bir kırık bağ değil, **bilinçli yayın sınırıdır**:
-kayıt yerinde durur, kanıtı özel ağaçta kalır.
+kayıt yerinde durur; bu atıflar arşiv notudur, `OLG-1` kanıtı değildir.
 
 ## Mutasyon bataryası
 
@@ -149,10 +149,10 @@ içeriğinden** geliyordu; sabit katalog bu değişkeni kaldırdı.
 CI aynı kuralları kullanır: `make dogrula-ci` için ayrı muafiyet yoktur; iki kipin
 çıktısı başlık dışında birebirdir.
 
-Neden attestation: testler sağlam; eksik olan özel ağacın tarihsel canlı
-kanıtıydı. Bu ağacın kendi `attestation.json`'ı, tarihsel commit zincirinin
-yerine geçen **gerçek** bir ağaç kanıtıdır; sahte commit çıpası yoktur. Ayrıntı
-aşağıdaki bölümdedir.
+Neden attestation: testler sağlam; eksik olan kamu ağacında yeniden üretilebilir
+bir ağaç kanıtıydı. Bu ağacın kendi `attestation.json`'ı, tarihsel commit
+zincirinin yerine geçen **tek** kamu kanıtıdır; sahte commit çıpası yoktur.
+Ayrıntı aşağıdaki bölümdedir.
 
 ## Ağaç kanıtı — `make kanit`
 
@@ -276,22 +276,24 @@ attestation'ı `KANIT-05` ile kırmızı olur. Üçüncü kişi kendi klonunda �
 doğrulamayı koşmalıdır. `gh` yoksa artifact GitHub Actions çalışma sayfasındaki
 **Artifacts → `atlas-kanit-paketi`** bağlantısından da indirilebilir.
 
-**Seçim — yol 1:** `OLG-1` emekliye ayrılmadı. `olgu_lint`, `attestation.json`
-varsa `tools/kanit_dogrula.py` ile onu doğrular ve `OLGU-04`'ün commit zinciri
-çıpası yerine bu ağacın gerçek commit/tree kanıtını kullanır. Böylece özel
-ağacın 36 tarihsel commit'i public ağaçta aranmaz; sahte commit çıpası yazılmaz.
-`docs/OLGULAR.md` içindeki tarihsel `baseline_commit` ve mekanizma listesi
-**silinmedi**; public ağaçta makine kanıtı sayılmaz, tarihsel kayıt olarak durur.
-Özel ağaçta (145/145) kaydı da tarihseldir; public ağaçta yeniden üretilmez.
-`OLG-06` atlanmaz: eksik iki DERSLER satırı (`89fb3da`, `df0d083`) gerçek
-commit'lerle eklendi ve `--dersler` PASS verir.
+**Seçim — yol 1:** `OLG-1` emekliye ayrılmadı. `olgu_lint`, yalnız bu kamu
+ağacındaki `attestation.json` dosyasını `tools/kanit_dogrula.py` ile doğrular ve
+`OLGU-04`'ün commit zinciri çıpası yerine bu ağacın gerçek commit/tree kanıtını
+kullanır. Böylece özel ağaç tarihçesi public ağaçta aranmaz; sahte commit çıpası
+yazılmaz. `docs/OLGULAR.md` makine bloğundan tarihsel `baseline_commit`,
+`mekanizma_sayisi` ve `mekanizma_kayitlari` alanları **çıkarıldı**; kamu kanıtı
+`kamu_kaniti: attestation.json` ile adlandırıldı. Tarihsel tablo ve DERSLER
+taşınları silinmedi; bunlar arşiv kaydıdır, OLG-1 kanıtı değildir. `OLG-06`
+atlanmaz: eksik iki DERSLER satırı (`89fb3da`, `df0d083`) gerçek commit'lerle
+eklendi ve `--dersler` PASS verir.
 
-`attestation.json` yoksa `OLG-1` tarihsel commit denetimine döner ve bu public
-ağaçta `OLGU-04` ile **FAIL** olur; dosya bozuksa `KANIT_GECERSIZ` olur. İkisi
-de `CALISTIRILMADI` olarak gizlenmez. Negatif kontrol: kayıtlı commit/tree
-bozulduğunda `olgu_lint` rc=1 ve `atlas_selftest` içinde `KALDI OLG-1` görülür.
-Bu kontrol CI'da `make olgu-negatif` ile geçici bir klonda her koşuda yeniden
-ölçülür; ana ağaç değişmez.
+`attestation.json` yoksa `OLG-1` **`KANIT_YOK`** ile FAIL olur; dosya bozuksa
+`KANIT_GECERSIZ` olur. İkisi de tarihsel commit denetimine dönmez ve
+`CALISTIRILMADI` olarak gizlenmez. Negatif kontrol: attestation silindiğinde
+`KANIT_YOK`, kayıtlı commit/tree bozulduğunda `KANIT_GECERSIZ` ve
+`atlas_selftest` içinde `KALDI OLG-1` görülür. Bu kontrol CI'da
+`make olgu-negatif` ile geçici bir klonda her koşuda yeniden ölçülür; ana ağaç
+değişmez.
 `make dogrula` bu depoda **8/8** verir; T1 PASS'tir. Kod değişince `make kanit`
 yeniden üretilmelidir; `make kanit-dogrula` ve CI bayat kaydı `KANIT-05` ile
 kırmızıya çevirir. `make kanit-dogrula` CI'da tam geçmişle (`fetch-depth: 0`)

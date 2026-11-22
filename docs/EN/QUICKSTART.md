@@ -34,9 +34,9 @@ commit history, and a shallow clone fails that check.
   HUKUM: PASS — 8/8 kalem gecti
 ```
 
-Exit code 0. `T1` runs against this repository's `attestation.json`; it no
-longer needs the private tree's commit history. If the attestation is missing
-or corrupt, `OLG-1` fails rather than being reported as not run. See *OLG-1 and
+Exit code 0. `T1` runs only against this repository's `attestation.json`; it has
+no historical or private-tree fallback. If the attestation is missing or
+corrupt, `OLG-1` fails rather than being reported as not run. See *OLG-1 and
 tree evidence* in the Turkish README. Current generated values are in
 [`docs/DURUM.md`](../DURUM.md); numbers are not maintained by hand.
 

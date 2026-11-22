@@ -10,7 +10,7 @@ yardim:
 	@echo "make kanit     commit + sha256 kanitini ve dogrulama paketini yaz (attestation.json + kanit-paketi/)"
 	@echo "make kanit-dogrula  attestation.json'i gercek commit/agac ile dogrula"
 	@echo "make kanit-paket-dogrula  kanit-paketi/ icindeki sema, attestation, manifest ve ham kayitlari dogrula"
-	@echo "make olgu-negatif  OLG-1 negatif kontrol: gecici klonda bozuk attestation commit'i 144/145 vermeli"
+	@echo "make olgu-negatif  OLG-1 negatif kontrol: eksik/bozuk attestation ve 144/145 sinamasi"
 	@echo "make durum-yaz  tek uretilmis DURUM sayfasini yenile (docs/DURUM.md)"
 	@echo "make durum-kontrol  DURUM sayfasi kaynaklara gore bayat mi (CI)"
 	@echo "make durum-selftest  DURUM bayatlik kapisinin negatif testleri (gecici kok)"

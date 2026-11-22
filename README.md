@@ -399,12 +399,13 @@ defterin durum dağılımıyla karşılaştırılır; ayrışma `rc=2` ile kırm
 - `DENEME/` kapanış kapısının yanlış pozitif verebildiğini gösterir; kapı sonradan
   `fix_reconcile.py` ile sertleştirildi, ama "kapı her şeyi görür" iddiası yoktur.
 - Makale içerikleri, kaynak korpusları ve oturum devir kayıtları bu depoda yoktur.
-  Bu yüzden `DERSLER` ve ölçüm dosyalarındaki bazı atıflar özel ağaçtaki devir
-  dosyalarına işaret eder; kapsam notu: [docs/README.md](docs/README.md).
+  Bu yüzden `DERSLER` ve ölçüm dosyalarındaki bazı atıflar yayımlanmayan devir
+  dosyalarına işaret eder; bunlar arşiv notudur, kanıt girdisi değildir. Kapsam
+  notu: [docs/README.md](docs/README.md).
 - Bu depoda standart `make dogrula` koşusunda **`CALISTIRILMADI` kalem yoktur**:
   `OLG-1` bu ağacın kendi `attestation.json` kanıtıyla koşar. `attestation.json`
-  yoksa `OLG-1` tarihsel commit denetiminde **FAIL** olur; bozuksa
-  `KANIT_GECERSIZ` olur; ikisi de `CALISTIRILMADI` olarak gizlenmez. Model
+  yoksa `KANIT_YOK` ile **FAIL** olur; bozuksa `KANIT_GECERSIZ` olur; ikisi de
+  başka bir kanıt kaynağına düşmez ve `CALISTIRILMADI` olarak gizlenmez. Model
   kalemleri sabit katalogla koşar; katalog yoksa onlar `CALISTIRILMADI` olur.
   Ayrıntı: [docs/README.md](docs/README.md).
 
@@ -412,12 +413,15 @@ defterin durum dağılımıyla karşılaştırılır; ayrışma `rc=2` ile kırm
 
 ## OLG-1 ve ağaç kanıtı
 
-`T1` (`OLG-1`) artık özel ağacın commit zincirini aramaz: `olgu_lint`, bu depodaki
-`attestation.json`'ı `make kanit-dogrula` ile doğrular ve gerçek commit/tree
-kanıtını kullanır. Tarihsel `docs/OLGULAR.md` kayıtları silinmedi; public ağaçta
-makine kanıtı sayılmaz. `OLGU-06` iki gerçek DERSLER satırıyla kapatıldı. Sahte
-commit çıpası yoktur; `make dogrula` bu depoda **8/8** verir ve T1 PASS'tir.
-Attestation yoksa/bozuksa OLG-1 FAIL olur. Koşu çıktısı T1 satırında çıpayı
+`T1` (`OLG-1`) yalnız bu kamu ağacındaki `attestation.json` kanıtını kullanır.
+`olgu_lint`, bu dosyayı `make kanit-dogrula` ile doğrular ve gerçek commit/tree
+kanıtını kullanır. Tarihsel `docs/OLGULAR.md` tablosu ve `DERSLER` satırlarındaki
+eski atıflar silinmedi; bunlar arşiv kaydıdır, public ağaçta makine kanıtı
+değildir. `OLGULAR.md` makine bloğundaki `baseline_commit`, `mekanizma_sayisi`
+ve `mekanizma_kayitlari` alanları çıkarıldı; `attestation.json` yoksa/bozuksa
+OLG-1 **FAIL** olur ve tarihsel commit listesine düşmez. Sahte commit çıpası
+yoktur; `make dogrula` bu depoda **8/8** verir ve T1 PASS'tir.
+Koşu çıktısı T1 satırında çıpayı
 görünür basar — `OZ-TEST: <güncel>/<güncel> gecti · KANIT commit=<sha> tree=<sha>` —
 yani PASS, doğrulanan ağacın kanıtıyla birlikte okunur; kanıt satırı stderr
 uyarısı değildir. T1 herhangi bir nedenle koşmazsa satır

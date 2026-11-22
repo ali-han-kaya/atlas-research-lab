@@ -6,10 +6,10 @@ karsilastirir. OLGU-KANIT/v1 metadatasi HEAD, run_id, zaman damgasi ve timeout
 bagini gorunur kilar; eksik, bayat veya uyusmayan bag WARN'dir ve sayisal
 OLGU-05 sonucunu FAIL'e cevirmez. Metadata imzali koken kaniti degildir.
 
-OLGU-04, `attestation.json` varsa bu agacin gercek commit/agac kanitini
-(`tools/kanit_dogrula.py`) kullanir; tarihsel ozel-agac commit listesini public
-agacta varlik/ata diye aramaz. Dosya yoksa eski tarihsel denetim aynen kalir.
-Kanit yoksa veya bozuksa OLGU-04 FAIL'dir; "kosmadi" degildir.
+OLGU-04, yalniz bu kamu agacinin `attestation.json` kanitini kullanir ve
+`tools/kanit_dogrula.py` ile gercek commit/agac kanitini dogrular. Tarihsel
+ozel-agac commit listesine veya baska bir kamu-disi kaynaga DUSMEZ. Kanit yoksa
+veya bozuksa OLGU-04 FAIL'dir; "kosmadi" degildir.
 
 OLGU-06, son kanonik DEVIR'den sonraki mekanizma commit hash'lerinin bicimsel
 olarak DERSLER satirlarinda bulunup Git commitlerine cozuldugunu denetler.
@@ -32,7 +32,6 @@ JSON_BLOK = re.compile(
     r"<!-- OLGULAR_JSON_BITIR -->",
     re.DOTALL,
 )
-COMMIT = re.compile(r"^[0-9a-f]{7,40}$")
 ATLAS_OZET = re.compile(r"^OZ-TEST:\s*(\d+)/(\d+)\s+gecti\s*$", re.MULTILINE)
 KOD_OZET = re.compile(r"^KOD OZ-TEST:\s*(\d+)/(\d+)\s+gecti\s*$", re.MULTILINE)
 KANIT_BASLIK = re.compile(
@@ -54,7 +53,6 @@ SAYISAL_ALANLAR = (
     "attest_taban",
     "attest_p0",
     "attest_p1",
-    "mekanizma_sayisi",
 )
 
 
@@ -472,13 +470,13 @@ def main(argv=None):
     except (json.JSONDecodeError, TypeError) as exc:
         fail("OLGU-02", "SEMA_GECERSIZ", beklenen="gecerli JSON", bulunan=type(exc).__name__)
         return 1
-    if not isinstance(veri, dict) or veri.get("schema") != "OLGULAR/v1":
+    if not isinstance(veri, dict) or veri.get("schema") != "OLGULAR/v2":
         bulunan = veri.get("schema") if isinstance(veri, dict) else type(veri).__name__
-        fail("OLGU-02", "SEMA_GECERSIZ", beklenen="OLGULAR/v1", bulunan=bulunan)
+        fail("OLGU-02", "SEMA_GECERSIZ", beklenen="OLGULAR/v2", bulunan=bulunan)
         return 1
 
     hatalar = 0
-    for alan in ("lab_surum", "baseline_commit", "mekanizma_kayitlari", *SAYISAL_ALANLAR):
+    for alan in ("lab_surum", "kamu_kaniti", *SAYISAL_ALANLAR):
         if alan not in veri:
             fail("OLGU-02", "SEMA_GECERSIZ", beklenen=f"alan:{alan}", bulunan="YOK")
             hatalar += 1
@@ -493,17 +491,10 @@ def main(argv=None):
     if not isinstance(veri["lab_surum"], str):
         fail("OLGU-02", "SEMA_GECERSIZ", beklenen="lab_surum:string", bulunan=type(veri["lab_surum"]).__name__)
         hatalar += 1
-    mekanizmalar = veri["mekanizma_kayitlari"]
-    if not isinstance(mekanizmalar, list) or not all(isinstance(x, str) for x in mekanizmalar):
-        fail("OLGU-02", "SEMA_GECERSIZ", beklenen="mekanizma_kayitlari:string[]", bulunan=type(mekanizmalar).__name__)
-        return 1
-    if len(set(mekanizmalar)) != len(mekanizmalar):
-        fail("OLGU-02", "SEMA_GECERSIZ", beklenen="benzersiz commit dizisi", bulunan="YINELENEN")
-        hatalar += 1
-    if veri["mekanizma_sayisi"] != len(mekanizmalar):
+    if veri["kamu_kaniti"] != "attestation.json":
         fail(
-            "OLGU-03", "DEGER_UYUSMAZLIGI id=mekanizma_sayisi kaynak=mekanizma_kayitlari",
-            beklenen=len(mekanizmalar), bulunan=veri["mekanizma_sayisi"],
+            "OLGU-04", "KAMU_KANITI_GECERSIZ",
+            beklenen="attestation.json", bulunan=repr(veri["kamu_kaniti"]),
         )
         hatalar += 1
 
@@ -541,42 +532,15 @@ def main(argv=None):
 
     hatalar += olgu05_kontrol(veri, kanitlar, git_kok)
 
-    baseline = veri["baseline_commit"]
-    commitler = [baseline, *mekanizmalar]
-    kanit_dosyasi = kok / "attestation.json"
-    if kanit_dosyasi.is_file():
-        # Attestation varsa OLGU-04'un kaynagi bu agacin gercek commit/tree
-        # kanitidir. Tarihsel commit listesi silinmez; bicim denetimi kalir,
-        # public agacta varlik/ata aramasi yapilmaz. Kanit bozuksa FAIL'dir.
-        for commit in commitler:
-            if not isinstance(commit, str) or not COMMIT.fullmatch(commit):
-                fail("OLGU-04", "COMMIT_DOGRULANAMADI",
-                     beklenen="7-40 kucuk-hex", bulunan=repr(commit))
-                hatalar += 1
-        hatalar += olgu04_kanit(kok, kanit_dosyasi)
-    else:
-        for commit in commitler:
-            if not isinstance(commit, str) or not COMMIT.fullmatch(commit):
-                fail("OLGU-04", "COMMIT_DOGRULANAMADI",
-                     beklenen="7-40 kucuk-hex", bulunan=repr(commit))
-                hatalar += 1
-                continue
-            varlik = git_kos(git_kok, "cat-file", "-e", f"{commit}^{{commit}}")
-            if varlik is None or varlik.returncode != 0:
-                bulunan = "git-yok" if varlik is None else (varlik.stderr.strip() or f"exit={varlik.returncode}")
-                fail("OLGU-04", "COMMIT_DOGRULANAMADI", beklenen=f"commit:{commit}", bulunan=bulunan)
-                hatalar += 1
-                continue
-            ata = git_kos(git_kok, "merge-base", "--is-ancestor", commit, "HEAD")
-            if ata is None or ata.returncode != 0:
-                bulunan = "git-yok" if ata is None else (ata.stderr.strip() or f"exit={ata.returncode}")
-                fail("OLGU-04", "COMMIT_ATA_DEGIL", beklenen=f"{commit}<=HEAD", bulunan=bulunan)
-                hatalar += 1
+    # OLG-1'in tek kaniti bu kamu agacinin attestation.json'idir. Tarihsel
+    # ozel-agac commit listesi makine blogundan cikarildi; yoksa/bozuksa
+    # baska bir kaynaga dusmeden FAIL eder.
+    hatalar += olgu04_kanit(kok, kok / veri["kamu_kaniti"])
 
     hatalar += olgu06_kontrol(kok, git_kok)
     if hatalar:
         return 1
-    print(f"OLGU-LINT PASS olgu={len(veri) - 1} kaynak={2 + len(commitler)}")
+    print(f"OLGU-LINT PASS olgu={len(veri) - 1} kaynak=3")
     return 0
 
 

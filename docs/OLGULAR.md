@@ -21,6 +21,18 @@
 
 **Sonraki eklenecekler (tohum):** Lumbard/Anjum DOI’leri, Ibn Manẓūr/Mufradāt sayfaları, Qušayrī/Iḥyāʾ locator’ları, Rāzī 2:165/5:54 doğrulaması.
 
+## KAMU AĞACI KANITI — OLG-1
+
+`OLG-1` artık özel ağacın tarihsel commit listesini aramaz. Tek makine kanıtı
+bu kamu ağacındaki `attestation.json` dosyasıdır; `olgu_lint`, onu
+`tools/kanit_dogrula.py` ile gerçek commit/tree ve dosya hash'leri üzerinden
+doğrular. Dosya yoksa veya bozuksa sonuç **FAIL** olur; başka bir kanıt
+kaynağına düşmez.
+
+Eski `baseline_commit`, `mekanizma_sayisi` ve `mekanizma_kayitlari` alanları
+makine bloğundan çıkarıldı. Yukarıdaki tarihsel tablo ve `DERSLER` içindeki eski
+hash atıfları silinmedi; bunlar arşiv kaydıdır, `OLG-1` kanıtı değildir.
+
 ## MAKİNE-OKUNUR KAYIT
 
 Bu tek ve katı JSON bloğu `olgu_lint.py` tarafından okunur. Tarihsel tablo lint girdisi değildir.
@@ -28,54 +40,16 @@ Bu tek ve katı JSON bloğu `olgu_lint.py` tarafından okunur. Tarihsel tablo li
 <!-- OLGULAR_JSON_BASLA -->
 ```json
 {
-  "schema": "OLGULAR/v1",
-  "lab_surum": "v1.7.411",
-  "baseline_commit": "4b2ae32",
+  "schema": "OLGULAR/v2",
+  "lab_surum": "v1.7.412",
+  "kamu_kaniti": "attestation.json",
   "atlas_envanter_sayisi": 145,
   "atlas_son_gecen": 145,
   "kod_son_gecen": 174,
   "attest_canli": 134,
   "attest_taban": 134,
   "attest_p0": 0,
-  "attest_p1": 0,
-  "mekanizma_sayisi": 35,
-  "mekanizma_kayitlari": [
-    "b11ed8f",
-    "019b7c3",
-    "ee6c660",
-    "067af4e",
-    "5dbe9bf",
-    "119dea5",
-    "0d8327c",
-    "768f099",
-    "b6d097b",
-    "67202b7",
-    "c777160",
-    "35eafea",
-    "da0cbd5",
-    "9363a36",
-    "a3bbd63",
-    "04e228f",
-    "10c567b",
-    "477dc87",
-    "b80c5a6",
-    "9e25c27",
-    "f2ac6de",
-    "b7ef4a3",
-    "15243d3",
-    "d9ed7ac",
-    "4b7b23e",
-    "c352335",
-    "b66b4f2",
-    "3a8b34a",
-    "3854859",
-    "ac9abe6",
-    "8cc18f1",
-    "a4ae1df",
-    "1fb55c0",
-    "b525aa7",
-    "8da53a9"
-  ]
+  "attest_p1": 0
 }
 ```
 <!-- OLGULAR_JSON_BITIR -->
