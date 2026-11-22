@@ -290,6 +290,8 @@ commit'lerle eklendi ve `--dersler` PASS verir.
 ağaçta `OLGU-04` ile **FAIL** olur; dosya bozuksa `KANIT_GECERSIZ` olur. İkisi
 de `CALISTIRILMADI` olarak gizlenmez. Negatif kontrol: kayıtlı commit/tree
 bozulduğunda `olgu_lint` rc=1 ve `atlas_selftest` içinde `KALDI OLG-1` görülür.
+Bu kontrol CI'da `make olgu-negatif` ile geçici bir klonda her koşuda yeniden
+ölçülür; ana ağaç değişmez.
 `make dogrula` bu depoda **8/8** verir; T1 PASS'tir. Kod değişince `make kanit`
 yeniden üretilmelidir; `make kanit-dogrula` ve CI bayat kaydı `KANIT-05` ile
 kırmızıya çevirir. `make kanit-dogrula` CI'da tam geçmişle (`fetch-depth: 0`)

@@ -70,6 +70,13 @@ jobs:
       - name: Agac kaniti guncel mi
         run: make kanit-dogrula
 
+      # OLG-1 negatif kontrolu: ana agac degismeden gecici bir klonda
+      # attestation commit'i bozulur. `olgu_lint` KANIT_GECERSIZ ile rc=1
+      # vermeli; `atlas_selftest` 144/145 ile kalmali. Kapi zayiflarsa veya
+      # negatif kontrol sessizce kosmazsa bu adim kirmizi olur.
+      - name: OLG-1 negatif kontrolu
+        run: make olgu-negatif
+
       # Kapı kanıtı: her kural için temiz taban + tek ihlal; hata vakasında kırmızı,
       # beklenen-bulgu vakasında işaretli bulgu.
       # Model, ağ ve yerel katalog gerektirmez; bu yüzden runner'da hükme girer.
