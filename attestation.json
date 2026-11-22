@@ -1,5 +1,5 @@
 {
-  "commit": "f951a831b6f24382c3d3ff49fb4379af8b6944bd",
+  "commit": "843fb84a3af8c8675b852d31a026285ddcbb17d9",
   "file_count": 262,
   "files": [
     {
@@ -1217,8 +1217,8 @@
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "aac7c7bddf9a4bf0ffe03cf9a437358b3b47e5faefb5ba1e672ef0ba0613d647",
-      "size": 29008
+      "sha256": "ce650b052d66890e3f5c4d1fd07219ec814da205bdb38a9329b36694ebb052a4",
+      "size": 29012
     },
     {
       "mode": "100644",
@@ -1271,8 +1271,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "1c3b7e2ffa77d2281f9c9bec67edca94c6af6f1122e91bfe022fface04bc3517",
-      "size": 11378
+      "sha256": "ddb2eb4a9c0b406dfc7490451c593a46483cf8568af5cfab37eede73171d86c3",
+      "size": 11380
     },
     {
       "mode": "100644",
@@ -1301,8 +1301,8 @@
     {
       "mode": "100644",
       "path": "docs/MUTASYON_KAPSAM.md",
-      "sha256": "5ed30e4351ed804be782eff5dfa81c32ff983f418e586933636a8ba4c146e231",
-      "size": 29651
+      "sha256": "ad37d72c1bd41cd2c83ac8714c1668c5b0aa70f450b34ed69288211bf349218f",
+      "size": 29535
     },
     {
       "mode": "100644",
@@ -1367,8 +1367,8 @@
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "8a7420e4e6650675dfdb32fc4e76f1189a6025175d5aadf5da94a81c6dd7aea5",
-      "size": 30367
+      "sha256": "d86fac7b9df44ccbac0c077fa10ab89182b2c3f26acc6a98eb7741097aca4583",
+      "size": 30368
     },
     {
       "mode": "100644",
@@ -1439,8 +1439,8 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "49b10055dfa0452a42219713add96b7c4d96fa107df033ed7c38306d1646c21a",
-      "size": 33029
+      "sha256": "d524def7b6f3de3c6503033ea06267a62dacbb577b581feb40b20d2ab26562de",
+      "size": 33047
     },
     {
       "mode": "100644",
@@ -1475,8 +1475,8 @@
     {
       "mode": "100644",
       "path": "tools/kapsam.py",
-      "sha256": "2a4fe60bcd5c69a3d7b33457da9255a3c479f134d66088a3d1cbdac298dd2529",
-      "size": 37573
+      "sha256": "b9187b480a1f136352ebe8e53b5cd251e9eccaafca365880aeef3c837c8e7d82",
+      "size": 37461
     },
     {
       "mode": "100644",
@@ -1523,8 +1523,8 @@
     {
       "mode": "100644",
       "path": "tools/mutasyon_bataryasi.py",
-      "sha256": "ac3f1aeb665ed0104a34004855c4b7cff4fda1703e004067f51e518462870c56",
-      "size": 78600
+      "sha256": "b908b70a8dd653f24dab37ef6846e8184d2b1b86cb305d1f63493b7930efa6f6",
+      "size": 80941
     },
     {
       "mode": "100644",
@@ -1575,7 +1575,7 @@
       "size": 14109
     }
   ],
-  "generated_at": "2026-11-22T12:48:05Z",
+  "generated_at": "2026-11-22T13:17:09Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1590,6 +1590,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "7e0773e89380540752861939848139895c36262d",
-  "tree_sha256": "22c90bf7861e972d18561641e1d171a68f98b7da0b48cfbcc967e3449ac8df6c"
+  "tree": "6cbed16ceecbca39fb7b9dee0a855f3e1974972f",
+  "tree_sha256": "e8b04c9667b62edbdf5af9a307dd837c5f29f6157caceac537120f45767e334d"
 }
