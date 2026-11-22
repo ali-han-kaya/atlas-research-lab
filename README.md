@@ -112,6 +112,7 @@ cd atlas-research-lab
 python3 -m pip install -r requirements-dev.txt   # sürümler sabit: requests + pip-audit + jsonschema
 make kur       # commit/push korumasını bu klonda etkinleştirir
 make dogrula
+make iddia     # tam iddia zinciri: defter → komut → ham kanıt
 ./demo         # beklenen: rc=1 (kırmızı)
 make temiz-teslim  # sentetik temiz kök rc=0 + 5 kenar fikstürü
 ```
@@ -352,6 +353,39 @@ jetonla kırmızı olur; hiçbir iddiayı kapsamayan ölü istisna veya üç sat
 geniş istisna da kırmızıdır. Kimlik, sürüm, tarih ve çıkış kodu değerleri bu
 tanımın dışındadır. Böylece elle tutulan satır listesi değil, kapsamın kendisi
 kapıya bağlanır.
+
+### Tek bir iddiayı elle izlemek
+
+Örnek: `IDD-48` — KOD `bedava` profilinin alt sınırı.
+
+1. **Defter satırı.** `tools/iddia_defteri.json` içindeki `IDD-48` kaydı,
+   yukarıdaki alt sınır cümlesini `kaynaklar` alanında birebir taşır;
+   `komut` alanı `KOD_SABLONLAR/routing.profiles.json` dosyasını okur ve
+   `beklenen` alanı aşağıdaki çıktı satırındaki değerdir.
+2. **Komut.** Depo kökünde:
+
+   ```bash
+   python3 -c "import json; d=json.load(open('KOD_SABLONLAR/routing.profiles.json')); a=d['bedava_politika']['asgari_limit']; print('LIMIT: %d/%d' % (a['context'], a['output']))"
+   ```
+
+   Çıktı:
+
+   ```text
+   LIMIT: 200000/32768
+   ```
+
+3. **Ham kanıt.** `tools/iddia_olcum.json` → `olcumler.IDD-48`: `ham` alanı
+   yukarıdaki çıktı satırının birebir aynısıdır, `deger` aynı değeri taşır,
+   `rc` alanı sıfırdır. `make iddia` bu satırın güncel çıktıda birebir aynı
+   olmasını ister.
+4. **Hüküm.** `make iddia --kanit` çıktısında `PASS IDD-48` satırı ve
+   `kanit: LIMIT: 200000/32768` görünür; özet sayımı
+   [`docs/IDDIA-OZET.md`](docs/IDDIA-OZET.md) içindedir.
+
+Defterin üst düzeyindeki `olcum_dosyasi` alanı ham kanıt dosyasını adlandırır
+(`tools/iddia_olcum.json`); `make iddia` bu yolun tam olarak o dosya olduğunu
+doğrular. `docs/IDDIA-OZET.md` içindeki makine okunur özet de her koşuda
+defterin durum dağılımıyla karşılaştırılır; ayrışma `rc=2` ile kırmızıdır.
 
 ---
 

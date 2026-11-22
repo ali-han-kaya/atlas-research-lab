@@ -67,6 +67,9 @@ from pathlib import Path
 KOK = Path(__file__).resolve().parents[1]
 DEFTER = KOK / 'tools' / 'iddia_defteri.json'
 OLCUM = KOK / 'tools' / 'iddia_olcum.json'
+OZET_DOSYASI = KOK / 'docs' / 'IDDIA-OZET.md'
+OZET_BASLA = '<!-- IDDIA-OZET:BASLA -->'
+OZET_BITIR = '<!-- IDDIA-OZET:BITIR -->'
 ZAMAN_ASIMI = 600
 DURUMLAR = ('OLCULDU', 'AG_GEREKLI', 'BEYAN', 'OLCULMEDI')
 # --hizli bu betikleri kosan satirlari atlar; varsayilan kosu hepsini olcer.
@@ -147,6 +150,39 @@ def yukle():
             'sema: olcum_dosyasi %r olmali, bulunan %r'
             % (beklenen_olcum, defter.get('olcum_dosyasi')))
     return defter
+
+
+def ozet_satiri(defter):
+    """Defterin durum dagilimini belgelenen tek satir biciminde dondur."""
+    sayim = {durum: 0 for durum in DURUMLAR}
+    for kayit in defter['iddialar']:
+        sayim[kayit['durum']] += 1
+    return ('olculdu=%d · ag=%d · beyan=%d · olculmedi=%d'
+            % (sayim['OLCULDU'], sayim['AG_GEREKLI'],
+               sayim['BEYAN'], sayim['OLCULMEDI']))
+
+
+def ozet_denetle(defter):
+    """Belgelenen ozet satiri defterin durum dagilimiyla birebir ayni olmali.
+    Ozet otomatik yazilmaz; ayrisma sessiz kayma degil, rc=2 kirmizidir."""
+    yol = OZET_DOSYASI.relative_to(KOK)
+    try:
+        metin = OZET_DOSYASI.read_text(encoding='utf-8')
+    except OSError as e:
+        raise DefterHatasi('%s okunamadi: %s' % (yol, e))
+    if OZET_BASLA not in metin or OZET_BITIR not in metin:
+        raise DefterHatasi('%s: %s ... %s blogu yok'
+                           % (yol, OZET_BASLA, OZET_BITIR))
+    blok = metin.split(OZET_BASLA, 1)[1].split(OZET_BITIR, 1)[0]
+    satirlar = [s.strip() for s in blok.splitlines() if s.strip()]
+    if len(satirlar) != 1:
+        raise DefterHatasi('%s: ozet blogu tek satir olmali (bulunan=%d)'
+                           % (yol, len(satirlar)))
+    beklenen = ozet_satiri(defter)
+    if satirlar[0] != beklenen:
+        raise DefterHatasi('%s: ozet drift — belge %r, defter %r'
+                           % (yol, satirlar[0], beklenen))
+    return beklenen
 
 
 def denetle(defter):
@@ -560,6 +596,7 @@ def main(argv):
     try:
         defter = yukle()
         denetle(defter)
+        defter_ozeti = ozet_denetle(defter)
         if yaz:
             olcum = {'olcumler': {}}
         else:
@@ -580,6 +617,7 @@ def main(argv):
 
     kapsam = defter.get('kapsam') or {}
     print('ATLAS — iddia defteri · %s' % DEFTER.relative_to(KOK))
+    print('defter ozeti: %s' % defter_ozeti)
     print('ham kanit: %s' % OLCUM.relative_to(KOK))
     print('kapsam: %s' % ' · '.join(kapsam_denetimi['dosyalar']))
     for haric in kapsam.get('haric') or []:

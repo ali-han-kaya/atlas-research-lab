@@ -24,6 +24,9 @@ import tempfile
 from pathlib import Path
 
 ARAC = Path(__file__).resolve().with_name("iddia.py")
+OZET = ("<!-- IDDIA-OZET:BASLA -->\n"
+        "olculdu=3 · ag=0 · beyan=0 · olculmedi=0\n"
+        "<!-- IDDIA-OZET:BITIR -->\n")
 HIZLI_KOMUT = ["{py}", "-c", "print('HIZLI 7/7')"]
 AGIR_DOGRULA = ["{py}", "tools/dogrula.py"]
 AGIR_MUTASYON = ["{py}", "tools/mutasyon_bataryasi.py"]
@@ -36,6 +39,10 @@ def _yaz(yol, metin):
 
 def _json_yaz(yol, veri):
     _yaz(yol, json.dumps(veri, ensure_ascii=False, indent=2) + "\n")
+
+
+def _ozet_yaz(kok, icerik=OZET):
+    _yaz(kok / "docs" / "IDDIA-OZET.md", icerik)
 
 
 def _defter(kok):
@@ -112,6 +119,7 @@ def _kapsam_kok(gecici, ad, metin, istisna=None, dahil=None):
     (kok / "tools").mkdir(parents=True)
     shutil.copy2(ARAC, kok / "tools" / "iddia.py")
     _yaz(kok / "README.md", metin)
+    _ozet_yaz(kok)
     defter = _defter(kok)
     defter["kapsam"] = {"dahil": dahil or ["README.md"],
                         "sayisal_istisna": istisna or []}
@@ -126,6 +134,7 @@ def _hazirla(kok):
     (kok / "tools").mkdir(parents=True)
     shutil.copy2(ARAC, kok / "tools" / "iddia.py")
     _yaz(kok / "README.md", "HIZLI 7/7\nAGIR 3/3\n")
+    _ozet_yaz(kok)
     _json_yaz(kok / "tools" / "iddia_defteri.json", _defter(kok))
     _json_yaz(kok / "tools" / "iddia_olcum.json", _hizli_kanit())
     _sahte_agir(kok, "dogrula")
@@ -220,6 +229,16 @@ def main():
 
         # --- OLCUM DOSYASI: defter ham kanit yolunu tek basina tasir.
         temel = "HIZLI 7/7\nAGIR 3/3\n"
+        ozet_drift = _kapsam_kok(gecici, "ozet-drift", temel)
+        _ozet_yaz(ozet_drift, OZET.replace("olculdu=3", "olculdu=2"))
+        r = _calistir(ozet_drift, "--hizli")
+        bekle("ozet drift rc=2", r.returncode == 2, _cikti(r))
+        bekle("ozet drift adlandirilir", "ozet drift" in _cikti(r), _cikti(r))
+
+        ozet_yok = _kapsam_kok(gecici, "ozet-yok", temel)
+        (ozet_yok / "docs" / "IDDIA-OZET.md").unlink()
+        r = _calistir(ozet_yok, "--hizli")
+        bekle("ozet blogu yoksa rc=2", r.returncode == 2, _cikti(r))
         yanlis_yol = _kapsam_kok(gecici, "olcum-yolu-yanlis", temel)
         defter_yolu = yanlis_yol / "tools" / "iddia_defteri.json"
         d = json.loads(defter_yolu.read_text(encoding="utf-8"))

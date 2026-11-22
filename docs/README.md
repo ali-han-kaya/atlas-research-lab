@@ -530,6 +530,13 @@ gerekçesiz, ölü veya çok geniş istisna da kendi adıyla kırmızı olur. Ki
 sürüm, tarih ve çıkış kodu değerleri bu tanımın dışındadır; kapsamın kendisi
 böylece her koşuda denetlenir.
 
+Defterin üst düzeyindeki `olcum_dosyasi` alanı ham kanıt dosyasını adlandırır
+(`tools/iddia_olcum.json`); `make iddia` bu yolun tam olarak o dosya olduğunu
+doğrular. Defterin durum dağılımı [`IDDIA-OZET.md`](IDDIA-OZET.md) içindeki
+makine okunur özetle her koşuda karşılaştırılır; ayrışma `rc=2` ile kırmızıdır.
+Tek bir satırın defter → komut → ham kanıt izi kök README'deki *Tek bir
+iddiayı elle izlemek* bölümündedir.
+
 `make iddia-hizli` yalnız hızlı satırları ölçer; `dogrula` ve `mutasyon`
 komutlarını koşmaz. Atlanan satırlar `ATLANDI` olarak basılır ve PASS sayılmaz;
 varsayılan `make iddia` tam koşu olarak değişmez. `--yaz --hizli` reddedilir,

@@ -646,7 +646,7 @@
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "planda=214 · yeni=0 · degisen=0 · ayni=214 · silinecek=0"
+          "alinti": "planda=216 · yeni=0 · degisen=0 · ayni=216 · silinecek=0"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
@@ -658,11 +658,11 @@
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "part of the plan, so the 214-file count is deterministic."
+          "alinti": "part of the plan, so the 216-file count is deterministic."
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "**Approximate duration:** under a second (214 files hashed, no subprocesses)."
+          "alinti": "**Approximate duration:** under a second (216 files hashed, no subprocesses)."
         }
       ],
       "durum": "OLCULMEDI",
@@ -1029,6 +1029,10 @@
         {
           "dosya": "README.md",
           "alinti": "`bedava_politika.asgari_limit` (200.000/32.768) alt sınırı. İhlal `rc=1`;"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "LIMIT: 200000/32768"
         }
       ],
       "durum": "OLCULDU",

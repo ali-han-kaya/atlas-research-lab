@@ -94,7 +94,7 @@ ATLAS_LAB=~/Desktop/MTRX/AI_ARASTIRMA_LABI make yayinla
 
 ```text
 YAYIN PLANI · kaynak: <lab path>
-  planda=214 · yeni=0 · degisen=0 · ayni=214 · silinecek=0
+  planda=216 · yeni=0 · degisen=0 · ayni=216 · silinecek=0
 
 SIR TARAMASI: temiz (0 bulgu)
 
@@ -106,14 +106,14 @@ Exit code 0. A drifted, missing or extra file is named and the command exits
 then applies the plan. The same run scans the planned bytes for live
 credentials and blocks the transfer on a finding. Runtime files under
 `.opencode/` (`package.json`, lockfiles) are ignored in both trees and are not
-part of the plan, so the 214-file count is deterministic.
+part of the plan, so the 216-file count is deterministic.
 
 This is a maintainer check: without a lab tree the target stops before writing
 — `ATLAS_LAB degiskeni gerekli` when the variable is unset, `HATA: kaynak
 dizin yok` for a bad path — both with exit code 2. It is deliberately not part
 of `make dogrula`.
 
-**Approximate duration:** under a second (214 files hashed, no subprocesses).
+**Approximate duration:** under a second (216 files hashed, no subprocesses).
 
 ## 4. `./demo` — reproduce the historical failure, on purpose
 
@@ -146,6 +146,23 @@ Exit codes of the canonical `./demo` (measured with `echo $?`):
 recipe, so it cannot carry the 1-vs-2 distinction. Use `./demo` (or
 `python3 tools/demo.py`) when the code matters; the red must come from the
 claim/evidence gap, not from a broken test.
+
+## 5. `make iddia` — the claim suite
+
+`make iddia` is the entry point for the numeric claims printed in this repository.
+Each `OLCULDU` row in `tools/iddia_defteri.json` names the file and exact quote it
+supports, the command that produces it, and the expected value. The raw output line
+is stored under the same `IDD-*` key in the file named by the ledger's top-level
+`olcum_dosyasi` field (`tools/iddia_olcum.json`); `tools/iddia.py` rejects a missing
+or different path. The documented summary in `docs/IDDIA-OZET.md` is recomputed from
+the ledger on every run, so a stale summary fails with `rc=2` instead of drifting
+silently.
+
+A claim you cannot re-run is never forced green: `AG_GEREKLI` (network), `BEYAN`
+(dated/machine-bound) and `OLCULMEDI` are counted separately and marked
+`ham kanit yok`. Run `make iddia-hizli` for the offline subset; the default
+`make iddia` is the full suite. A concrete hand-trace of one row is in the Turkish
+README, section *Tek bir iddiayı elle izlemek*.
 
 ## What else is measured
 
