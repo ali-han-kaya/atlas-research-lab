@@ -1,6 +1,6 @@
 {
-  "commit": "e4ab137e07f87b5ddabfa02b28ff0a531350b5b6",
-  "file_count": 264,
+  "commit": "e2bf690baaeed79c6487685f95bc383081cbf36b",
+  "file_count": 265,
   "files": [
     {
       "mode": "100755",
@@ -1223,8 +1223,8 @@
     {
       "mode": "100644",
       "path": "SURUM.md",
-      "sha256": "d25c19675c7a04f67e34fe5c0dc69dbf157a03f6ff2bd87731949fcbd9377344",
-      "size": 583467
+      "sha256": "b28a861ee0c4223c5b9f643d59bddb523c57b68d5e7735ea8a49d03c02190446",
+      "size": 584017
     },
     {
       "mode": "100755",
@@ -1253,14 +1253,20 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "f2a9518416ffc21445d5d90f6ca56a95063fdabe209196baacdaa3225108c2c3",
-      "size": 481672
+      "sha256": "c2ed96ecee64e0ba7e43be0b30f5c9f5be5eb4d0a467b13b367608bcf0815f34",
+      "size": 482494
     },
     {
       "mode": "100644",
       "path": "docs/DEVIR-2026-09-03-1945-AUD-06-07.md",
       "sha256": "a340cb305aaf6d591ec93a749c1e13e06fd066b57b282542eab0344d342802df",
       "size": 4831
+    },
+    {
+      "mode": "100644",
+      "path": "docs/DEVIR-2026-11-22-1923.md",
+      "sha256": "4b7a17364a2706f44c101035bbf6f696b06f16352362bfe10d7c03835c6ef981",
+      "size": 2577
     },
     {
       "mode": "100644",
@@ -1271,8 +1277,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "2400141e1db4b23c161ab50e5a3ca57ea78d7aa0b955d85b8eb28b42167c905e",
-      "size": 11356
+      "sha256": "34b4741d8374678bbb0d1bc5f9441c6db48a5db3288e58f6c792450e06940d47",
+      "size": 11358
     },
     {
       "mode": "100644",
@@ -1439,14 +1445,14 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "b2a446b93155b54571df84354504f503df3af6de51b52873d7283c75b5d0b5fe",
-      "size": 32806
+      "sha256": "8f928f0d53ff3d4cd801f768d9e850f1864cf91a56fa09a294fbd7cfeab0b3c3",
+      "size": 32812
     },
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "0030d7ef2d138967592a10c3836a72a26b8a5165934e62d5d38f5abbd3c0c2ed",
-      "size": 8099
+      "sha256": "a9b02b6f46d280f93c40a9194892aa1620bdc20c24a04365ea9669b2292491a9",
+      "size": 8103
     },
     {
       "mode": "100644",
@@ -1565,8 +1571,8 @@
     {
       "mode": "100644",
       "path": "tools/sir_kapisi_selftest.py",
-      "sha256": "0279925105df51217600b924c20b7d81650788f2d7ddbdbedb9f8d85287e2c29",
-      "size": 8862
+      "sha256": "20315b03aacde6d33eb34f750f66319e4b0adcdf2293d440ee0a3df21111791b",
+      "size": 9708
     },
     {
       "mode": "100644",
@@ -1587,7 +1593,7 @@
       "size": 14064
     }
   ],
-  "generated_at": "2026-11-22T17:01:16Z",
+  "generated_at": "2026-11-22T18:24:51Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1602,6 +1608,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "1605dda807790c1f240a6d4697240d57e901e437",
-  "tree_sha256": "a0ce508fa8c4ddaa35a35838b2232f58595e0e0432de29182bee0788ba8c900d"
+  "tree": "1163aa21681062d920998546dcc9129c6f9edad5",
+  "tree_sha256": "fbed4f6a5b48148eb07b49f495fd879983de86634f5252149c883cf7fe2461a9"
 }
