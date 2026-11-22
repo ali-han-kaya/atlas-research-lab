@@ -374,23 +374,54 @@ def _dep01(k):
                          lambda v: v.pop('kilit_dosyasi', None))
 
 
-def _tsl03_hazirla(k):
-    """TSL-03: 8 zorunlu artefakt + kapi betiginin kendi --uret manifesti."""
+def _teslim_hazirla(k, imzala=False):
+    """8 zorunlu artefakt + kapi betiginin kendi --uret manifesti.
+
+    imzala=True ise sabit test anahtari yalniz bu alt surece verilir; depoya
+    yazilmaz. Boylece TSL-04 temiz tabani gercekten gecerli bir imza tasir.
+    """
     sandbox = k / 'sandbox_teslim'
     for ad in TESLIM_ZORUNLU:
         yaz(sandbox / ad, '# artefakt\n')
+    env = dict(os.environ)
+    if imzala:
+        env['LAB_IMZA_ANAHTARI'] = 'a' * 64
     r = subprocess.run(
         [sys.executable, str(k / 'ATLAS_SABLONLAR' / 'scripts' / 'teslim_imza.py'),
-         '--uret'], cwd=str(sandbox), capture_output=True, text=True, timeout=120)
+         '--uret'], cwd=str(sandbox), capture_output=True, text=True, timeout=120,
+        env=env)
     if r.returncode != 0:
         # Taban TSL-01/TSL-06 ile kirilir; sessizce yesil kalmasin.
         yaz(sandbox / 'URETIM-HATASI.txt',
             (r.stdout or '') + (r.stderr or '') + '\n')
 
 
+def _tsl03_hazirla(k):
+    return _teslim_hazirla(k, imzala=False)
+
+
+def _tsl04_hazirla(k):
+    return _teslim_hazirla(k, imzala=True)
+
+
 def _tsl03(k):
     """Tek ihlal: manifest uretildikten sonra bir artefakt degistirilir."""
     yaz(k / 'sandbox_teslim' / '03-FAZ-3-MASTER-v5.5.md', '# artefakt degisti\n')
+
+
+def _tsl04(k):
+    """Tek ihlal: gecerli imzanin ilk hanesi bozulur."""
+    return _json_duzenle(
+        k, 'sandbox_teslim/TESLIM-MANIFEST.json',
+        lambda v: v.__setitem__(
+            'imza', ('0' if v['imza'][0] != '0' else '1') + v['imza'][1:]))
+
+
+def _tsl06(k):
+    """Tek ihlal: manifestten zorunlu bir artefakt kaydi cikarilir."""
+    return _json_duzenle(
+        k, 'sandbox_teslim/TESLIM-MANIFEST.json',
+        lambda v: v['dosyalar'].pop('04-FAZ-4-STRONG-GATE-RAPORU-v5.5.md'))
 
 
 def _frz01_02(k):
@@ -1198,6 +1229,19 @@ def vakalar():
          lambda k: ['--dogrula'],
          _tsl03,
          'TSL-03', {'cwd': 'sandbox_teslim', 'kur': _tsl03_hazirla,
+                    'kontrol': True}),
+        ('TSL-04', 'ATLAS', 'gecersiz teslim imzasi yakalanir',
+         'ATLAS_SABLONLAR/scripts/teslim_imza.py',
+         lambda k: ['--dogrula'],
+         _tsl04,
+         'TSL-04', {'cwd': 'sandbox_teslim', 'kur': _tsl04_hazirla,
+                    'kontrol': True,
+                    'env': dict(os.environ, LAB_IMZA_ANAHTARI='a' * 64)}),
+        ('TSL-06', 'ATLAS', 'zorunlu artefakt manifestte eksik olamaz',
+         'ATLAS_SABLONLAR/scripts/teslim_imza.py',
+         lambda k: ['--dogrula'],
+         _tsl06,
+         'TSL-06', {'cwd': 'sandbox_teslim', 'kur': _tsl03_hazirla,
                     'kontrol': True}),
         # --- chg_reconcile: git diff + plan kapsami ----------------------------
         ('RECK-01', 'KOD', 'her REQ planinda karsilik bulur',
