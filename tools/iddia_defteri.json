@@ -92,7 +92,7 @@
         },
         {
           "dosya": "README.md",
-          "alinti": "commit çıpası yoktur; `make dogrula` bu depoda **8/8** verir ve T1 PASS'tir."
+          "alinti": "`make dogrula` bu depoda **8/8** verir ve T1 PASS'tir."
         },
         {
           "dosya": "docs/README.md",

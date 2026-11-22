@@ -333,6 +333,15 @@
       "rc": 0,
       "ham": "SCOPE: 22",
       "deger": "22"
+    },
+    "IDD-33": {
+      "komut": [
+        "{py}",
+        "ATLAS_SABLONLAR/scripts/olgu_lint.py"
+      ],
+      "rc": 0,
+      "ham": "OLGU-LINT PASS",
+      "deger": "OLGU-LINT PASS"
     }
   }
 }
