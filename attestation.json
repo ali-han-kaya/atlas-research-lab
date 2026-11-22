@@ -1,5 +1,5 @@
 {
-  "commit": "1efea9f43b4e327249fb995ed4254efe791e5f24",
+  "commit": "88362535b63baec11e537e7773325143852f2eea",
   "file_count": 265,
   "files": [
     {
@@ -1253,8 +1253,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "386abe92bddd9d700686b58037280960356c65056ad6c46ff20e03699b24ca89",
-      "size": 485280
+      "sha256": "8455eeec53d191330ad8957768a77adf8887f0de376ad89794047c62f226004a",
+      "size": 487055
     },
     {
       "mode": "100644",
@@ -1593,7 +1593,7 @@
       "size": 14185
     }
   ],
-  "generated_at": "2026-11-22T19:15:45Z",
+  "generated_at": "2026-11-22T19:34:24Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1608,6 +1608,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "656de68cfcc802c0034067d0d445473099b61a55",
-  "tree_sha256": "12377bfc5ef231238a81ab56b5155393113edfc85a765ac5c7b8f3e2b2eb168d"
+  "tree": "536dc1ecb76007ebae4700eb1d1734a3e49186c1",
+  "tree_sha256": "1565ff4662757e0ba7e9744594dfdec436dc21fcdffb8c0e054b6ed3e379a9e0"
 }
