@@ -41,7 +41,7 @@ Bu tek ve katı JSON bloğu `olgu_lint.py` tarafından okunur. Tarihsel tablo li
 ```json
 {
   "schema": "OLGULAR/v2",
-  "lab_surum": "v1.7.417",
+  "lab_surum": "v1.7.418",
   "kamu_kaniti": "attestation.json",
   "atlas_envanter_sayisi": 145,
   "atlas_son_gecen": 145,

@@ -169,14 +169,21 @@ def _git(depo, *args):
     return _kos(['git'] + list(args), depo)
 
 
-def _depo_hazir(depo, ad='main'):
-    depo.mkdir(parents=True)
-    for komut in (['git', 'init', '-q', '-b', ad],
-                  ['git', 'config', 'user.name', 'Oz Test'],
+def _kimlik(depo):
+    """Klonda global git kimligine guvenme; test hermetik olsun."""
+    for komut in (['git', 'config', 'user.name', 'Oz Test'],
                   ['git', 'config', 'user.email', 'oztest@example.invalid']):
         r = _kos(komut, depo)
         if r.returncode != 0:
             raise RuntimeError((r.stderr or r.stdout).strip()[:120])
+
+
+def _depo_hazir(depo, ad='main'):
+    depo.mkdir(parents=True)
+    r = _kos(['git', 'init', '-q', '-b', ad], depo)
+    if r.returncode != 0:
+        raise RuntimeError((r.stderr or r.stdout).strip()[:120])
+    _kimlik(depo)
 
 
 def _commit(depo, mesaj):
@@ -276,6 +283,7 @@ def vaka_shallow():
                   'file://' + str(kaynak), str(depo)], tmp)
         if r.returncode != 0:
             return False, 'clone: %s' % (r.stderr or r.stdout).strip()[:120]
+        _kimlik(depo)
         _yaz(depo / 'new.md', CANLI + '\n')
         _commit(depo, 'new')
         yeni = _git(depo, 'rev-parse', 'HEAD').stdout.strip()
