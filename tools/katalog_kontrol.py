@@ -7,9 +7,10 @@ NEDEN VAR
   hermetik kalsin diye canli kataloga bakmaz; bu yuzden allowlist sessizce
   bayatlayabilir. Bu betik models.dev'i okur, allowlist'teki her kimligi ve
   `KOD_SABLONLAR/routing.profiles.json` -> `profiller.bedava` altindaki on rolu
-  canli kayitla karsilastirir. Normal CI yolunda `.github/workflows/dogrula.yml`
-  icindeki `bedava canli katalog` isi olarak her push/PR'da, haftalik cron'da ve
-  elle tetiklemede kosar; artik istege bagli bir yerel kontrol degildir.
+  canli kayitla karsilastirir. Normal CI yolunda bu betik
+  `.github/workflows/katalog-canary.yml` icindeki haftalik, required olmayan
+  kanarya isi olarak kosar; `dogrula.yml` hermetik kalir ve bu betigi kosmaz.
+  Elle/yerel kosu icin `make katalog-kontrol` kullanilir.
 
   KOSULLAR (bedava profili, politika: docs/KOD_BEDAVA_MODEL_POLITIKASI.md)
     - on rolun tamami ayni kimlige bakar (tek kimlik),

@@ -1,0 +1,85 @@
+name: katalog canary
+
+# Required check DEGILDIR. Yalniz schedule + workflow_dispatch ile kosar;
+# PR/push hukmune girmez. `make dogrula` ve dogrula.yml degismez.
+on:
+  schedule:
+    # Haftalik: models.dev kimlikleri sessizce emekli olmasin.
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  canary:
+    name: models.dev kimlik kanaryasi (required degil)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Tek olcum: baska kapi kosmaz; cikti ve rc bir sonraki adima kalir.
+      - name: Katalog kontrolu
+        id: kontrol
+        shell: bash
+        run: |
+          set +e
+          python3 tools/katalog_kontrol.py > katalog.log 2>&1
+          rc=$?
+          set -e
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          cat katalog.log
+          exit 0
+
+      # rc=1 kimlik/uyusmazlik, rc=2 olculemedi. Ikisi de PASS degil.
+      - name: Bulgu varsa issue ac
+        if: steps.kontrol.outputs.rc != '0'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RC: ${{ steps.kontrol.outputs.rc }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          if [ "$RC" = "1" ]; then
+            TITLE="[katalog canary] models.dev kimlik kaymasi"
+            NEDEN="models.dev canli kaydi ile yerel allowlist/bedava profili uyusmuyor."
+          else
+            TITLE="[katalog canary] models.dev olculmedi"
+            NEDEN="Canli katalog okunamadi; olcum yok, PASS sayilmaz."
+          fi
+          export TITLE
+
+          {
+            echo "## katalog canary"
+            echo
+            echo "- **Hukum:** rc=$RC"
+            echo "- **Neden:** $NEDEN"
+            echo "- **Commit:** \`$GITHUB_SHA\`"
+            echo "- **Kosu:** $RUN_URL"
+            echo "- **Zaman:** $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo
+            echo '```text'
+            cat katalog.log
+            echo '```'
+            echo
+            echo "Bu is **required check degildir**; \`make dogrula\` ve mevcut CI hukmunu degistirmez."
+          } > issue.md
+
+          existing="$(gh issue list --state open --limit 100 --json number,title \
+            | python3 -c 'import json,os,sys; t=os.environ["TITLE"]; print(next((str(i["number"]) for i in json.load(sys.stdin) if i["title"]==t), ""))')"
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body-file issue.md
+            echo "Mevcut issue #$existing guncellendi."
+          else
+            gh issue create --title "$TITLE" --body-file issue.md
+          fi
+
+          # Kanarya kirmizi kalsin; required olmadigi icin PR'i bloklamaz.
+          exit 1

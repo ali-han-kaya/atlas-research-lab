@@ -40,7 +40,7 @@ CI runs the runner form of the checks, the mutation battery, scope freshness, de
 - **The archive is out of scope.** Generated papers, corpora and session handoffs are deliberately not published. This repository is the mechanism; some documents still cite handoff files that live in the private tree.
 - **Tests measure gate behaviour, not content truth.** They show that a gate fires on a known violation. They do not prove that the content is correct, and an empty test can still pass a gate; the layering reduces that risk but does not eliminate it.
 - **`DENEME/` is frozen on purpose.** It is a deliberately defective run kept as a regression fixture. Do not "fix" it: the defect is the lesson.
-- **Network checks are optional.** The live model-catalogue check needs network, is not part of CI and is never required for the local battery.
+- **Network checks are optional.** The live model-catalogue check needs network; a weekly non-required canary reports drift, but it is not part of the required CI verdict and is never required for the local battery.
 
 ## Read more
 

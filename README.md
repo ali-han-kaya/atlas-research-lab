@@ -214,9 +214,11 @@ her klonda ve runner'da aynı çıkar. Canlı katalogla denetim isteğe bağlıd
 `ATLAS_MODEL_KATALOG=~/.cache/opencode/models.json make dogrula`.
 
 Sabit allowlist'in models.dev'de hâlâ geçerli olup olmadığını ölçen canlı kapı
-`make katalog-kontrol`tür. Ağ gerektirir; bu nedenle **CI dışında**, elle/yerel
-olarak koşulur. CI yalnız çevrimdışı `make katalog-selftest` testini
-`make dogrula-ci` üzerinden çalıştırır. Canlı kapı yalnız allowlist'i değil,
+`make katalog-kontrol`tür. Ağ gerektirir; bu nedenle **required CI hükmünün
+dışında** koşulur: haftalık `katalog-canary.yml` yalnız bunu çalıştırır ve bulgu
+varsa issue açar; `make dogrula` ile mevcut CI hükmü değişmez. CI yalnız
+çevrimdışı `make katalog-selftest` testini `make dogrula-ci` üzerinden
+çalıştırır. Canlı kapı yalnız allowlist'i değil,
 `profiller.bedava` altındaki **on rolü** de canlı kayıtla karşılaştırır: tek
 kimlik, sıfır `cost.input`/`cost.output`, canlı ve yerel
 `reasoning`/`tool_call`, `deprecated` olmayan `status` ve
@@ -295,7 +297,7 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 | Kırmızı hüküm demosu | `./demo` → `tools/demo.py` (kanonik; beklenen `rc=1`, fikstür bozuksa `rc=2`, yeşilde `rc=0`) |
 | Sentetik temiz teslim | `make temiz-teslim` → makale metni taşımayan temiz kök `rc=0`; 5 kenar kökü beklenen kodlarla sınanır |
 | Mutasyon kapsamı | `make kapsam` → `docs/MUTASYON_KAPSAM.md` güncel mi (üretilmiş tablo) |
-| Bedava canlı katalog (elle) | `make katalog-kontrol` → allowlist + `profiller.bedava` on rolü models.dev'de; ağ gerekir, CI dışında elle/yerel; `OLCULMEDI` ayrı hüküm |
+| Bedava canlı katalog kanaryası | `.github/workflows/katalog-canary.yml` → haftalık, required değil; yalnız `python3 tools/katalog_kontrol.py`; bulgu varsa issue açar. Elle koşu: `make katalog-kontrol` |
 | İddia defteri | `make iddia` → README/docs sayısal iddialarını üreten komutla ve ham kanıt satırıyla yeniden ölçer; tutmayan satır `IDD-*` ile kırmızı |
 | Hızlı iddia | `make iddia-hizli` → `dogrula`/`mutasyon` gibi pahalı satırları atlar; atlananlar `ATLANDI` ve PASS değil, tam koşu değişmez |
 | Ham kanıt yenileme | `make iddia-yaz` → bilinçli değişiklikten sonra `tools/iddia_olcum.json` anlık görüntüsünü yeniler |
