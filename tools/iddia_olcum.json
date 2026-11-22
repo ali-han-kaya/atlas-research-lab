@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-22T12:27:10Z",
+  "zaman": "2026-11-22T13:20:37Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -35,8 +35,8 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 98/98 kural atesledi · 18/18 beklenen bulgu dogrulandi · taban temiz olmayan=0",
-      "deger": "98/98"
+      "ham": "SONUC: 100/100 kural atesledi · 18/18 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "deger": "100/100"
     },
     "IDD-05": {
       "komut": [
@@ -44,7 +44,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 98/98 kural atesledi · 18/18 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "ham": "SONUC: 100/100 kural atesledi · 18/18 beklenen bulgu dogrulandi · taban temiz olmayan=0",
       "deger": "18/18"
     },
     "IDD-06": {
@@ -53,8 +53,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Mutasyon vakasi olan (TEST EDILDI) | 95 |",
-      "deger": "95"
+      "ham": "| Mutasyon vakasi olan (TEST EDILDI) | 97 |",
+      "deger": "97"
     },
     "IDD-07": {
       "komut": [
@@ -71,8 +71,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Gerekceli kapsam disi | 26 |",
-      "deger": "26"
+      "ham": "| Gerekceli kapsam disi | 24 |",
+      "deger": "24"
     },
     "IDD-09": {
       "komut": [
@@ -265,8 +265,8 @@
         "import sys; sys.path.insert(0, 'tools'); import mutasyon_bataryasi as m; print('VAKA: %d' % len(m.vakalar()))"
       ],
       "rc": 0,
-      "ham": "VAKA: 116",
-      "deger": "116"
+      "ham": "VAKA: 118",
+      "deger": "118"
     },
     "IDD-40": {
       "komut": [
