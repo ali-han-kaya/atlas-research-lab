@@ -1,6 +1,6 @@
 {
-  "commit": "5bbec11866b26e659aae9c2c01a8784a56410f95",
-  "file_count": 259,
+  "commit": "f405f1d6142228885348771b0de9744c717615e8",
+  "file_count": 260,
   "files": [
     {
       "mode": "100755",
@@ -19,6 +19,12 @@
       "path": ".github/workflows/dogrula.yml",
       "sha256": "57a38ea7f620dfe147b3bac997f0ab36629ee4e6b0b1aa878bc7de0f949bbf73",
       "size": 6798
+    },
+    {
+      "mode": "100644",
+      "path": ".github/workflows/katalog-canary.yml",
+      "sha256": "9e98029d38f3ddccb48807cb1b37b33fd0698780b2430df57947286ab6288d49",
+      "size": 2848
     },
     {
       "mode": "100644",
@@ -1205,14 +1211,14 @@
     {
       "mode": "100644",
       "path": "README.en.md",
-      "sha256": "7b9eac7eafc680252dbb0574b6d7d885903897000b60d9b775638679c7ebc1fc",
-      "size": 4981
+      "sha256": "492954778d606594e5d3b0bdef70b4fafc87eca7287995ba19867c10410b81c3",
+      "size": 5053
     },
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "54d458f08b6841494152b1f2498041b5f793eab2a5144e912e3c5391aa359cbe",
-      "size": 27281
+      "sha256": "9648a19eddc602cc2b39267fc7c85947944595ddfabe4693e1a16c3c4679f124",
+      "size": 27452
     },
     {
       "mode": "100644",
@@ -1433,7 +1439,7 @@
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "b715d45d59d7d70d4352bd20f914141817729d0fe36378f372e9000c632dc02c",
+      "sha256": "3bfd405dfef02060ade06e6882577ff270c55ca05b6342898855f189ef4af6a6",
       "size": 7903
     },
     {
@@ -1469,8 +1475,8 @@
     {
       "mode": "100644",
       "path": "tools/katalog_kontrol.py",
-      "sha256": "22161a5fb4a95c038c67a6da01b0eb6aa17d30046956ef8baf4fe3ab5648058a",
-      "size": 22939
+      "sha256": "80713581f63e93cbebd432e35fbdc93543ae4f7008a641f336ac13cfbbdd334d",
+      "size": 22975
     },
     {
       "mode": "100644",
@@ -1557,7 +1563,7 @@
       "size": 11819
     }
   ],
-  "generated_at": "2026-11-21T21:47:42Z",
+  "generated_at": "2026-11-22T06:45:26Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1572,6 +1578,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "7cd2486195d47e9b7c3119237f27fa6a0b541b8a",
-  "tree_sha256": "652b05d739d917c70b8ade35741fe7d38a37adda43bd09571c386b962efc1af3"
+  "tree": "8f22a570f9ef02b5ec19dd73ff0cd6b6466b4659",
+  "tree_sha256": "2746e3e01e023e7070f742f0e7bf2fd21c6eefeb9750c88acec4588976e00b89"
 }
