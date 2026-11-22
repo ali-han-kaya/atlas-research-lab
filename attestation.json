@@ -1,5 +1,5 @@
 {
-  "commit": "c4736520049b2e3bb4b097d8cda1185746de84eb",
+  "commit": "709e0250d250b03769a5836c4f94bfa5c89d0511",
   "file_count": 261,
   "files": [
     {
@@ -1409,8 +1409,8 @@
     {
       "mode": "100644",
       "path": "tools/dogrula.py",
-      "sha256": "65a37f9dabb53135694e33501349d16b3b67e48dd65e1c2efd347b763675dac5",
-      "size": 19974
+      "sha256": "6b5fceb2827e979f3ca2ab97986fa171e235a70eecb5d362edea99d37c31d2f5",
+      "size": 23072
     },
     {
       "mode": "100644",
@@ -1569,7 +1569,7 @@
       "size": 14109
     }
   ],
-  "generated_at": "2026-11-22T09:52:17Z",
+  "generated_at": "2026-11-22T11:30:29Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1584,6 +1584,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "090e906e1ff5bd1144198db55b7f21df4c2a197c",
-  "tree_sha256": "1dbac91a76ad92ee1659e3a4bcbccc8cc8c0ebceeebcdd017b5d88fc5895aad1"
+  "tree": "4cc7e2fef7c86b97187aa30de4f07125e4c908b0",
+  "tree_sha256": "a6b6445038b2d0bccb84359f3a0693c0f14df44fc3d93fc824c77160f379d6eb"
 }
