@@ -47,7 +47,7 @@ def _yaz(yol, metin):
     yol.write_text(metin, encoding='utf-8')
 
 
-def vaka_dosya(ad, icerik, beklenen_rc, iz, sizinti=None):
+def vaka_dosya(icerik, beklenen_rc, iz, sizinti=None):
     tmp = Path(tempfile.mkdtemp(prefix='sir_kapi_'))
     try:
         f = tmp / 'deneme.md'
@@ -297,19 +297,19 @@ def vaka_shallow():
 def main():
     print('SIR KAPISI OZ-TESTI — canli desen kirmizi, yer tutucu sessiz')
     vakalar = [
-        ('canli DSN kirmizi', lambda: vaka_dosya('canli', CANLI, 1, 'canli-dsn',
+        ('canli DSN kirmizi', lambda: vaka_dosya(CANLI, 1, 'canli-dsn',
                                                 sizinti='gercekparola123')),
-        ('USER:*** kirmizi', lambda: vaka_dosya('maske', MASKE, 1, 'canli-dsn')),
+        ('USER:*** kirmizi', lambda: vaka_dosya(MASKE, 1, 'canli-dsn')),
         ('$ parolali canli kirmizi',
-         lambda: vaka_dosya('dolar', DOLAR_CANLI, 1, 'canli-dsn',
+         lambda: vaka_dosya(DOLAR_CANLI, 1, 'canli-dsn',
                             sizinti='gercek123')),
-        ('USER:$DB_PASS sessiz', lambda: vaka_dosya('degisken', DEGISKEN, 0, None)),
-        ('${DB_PASS} sessiz', lambda: vaka_dosya('suslu', SUSLU_DEGISKEN, 0, None)),
-        ('admin:<parola> sessiz', lambda: vaka_dosya('admin', ADMIN_KOSELI, 0, None)),
-        ('npg_ token kirmizi', lambda: vaka_dosya('token', TOKEN, 1, 'neon-token',
+        ('USER:$DB_PASS sessiz', lambda: vaka_dosya(DEGISKEN, 0, None)),
+        ('${DB_PASS} sessiz', lambda: vaka_dosya(SUSLU_DEGISKEN, 0, None)),
+        ('admin:<parola> sessiz', lambda: vaka_dosya(ADMIN_KOSELI, 0, None)),
+        ('npg_ token kirmizi', lambda: vaka_dosya(TOKEN, 1, 'neon-token',
                                                   sizinti=TOKEN)),
-        ('yer tutucu sessiz', lambda: vaka_dosya('yer', YER, 0, None)),
-        ('temiz dosya sessiz', lambda: vaka_dosya('temiz', TEMIZ, 0, None)),
+        ('yer tutucu sessiz', lambda: vaka_dosya(YER, 0, None)),
+        ('temiz dosya sessiz', lambda: vaka_dosya(TEMIZ, 0, None)),
         ('hook canli commit engeller', lambda: vaka_hook(CANLI, False, 'canli-dsn')),
         ('hook yer tutucuyu gecirir', lambda: vaka_hook(YER, True)),
         ('push eski siri uyariyla gecirir',
