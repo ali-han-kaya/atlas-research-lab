@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-22T08:47:49Z",
+  "zaman": "2026-11-22T12:27:10Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -134,8 +134,8 @@
         "tools/dogrula.py"
       ],
       "rc": 0,
-      "ham": "  H2  python sozdizimi         PASS    68 dosya",
-      "deger": "68"
+      "ham": "  H2  python sozdizimi         PASS    69 dosya",
+      "deger": "69"
     },
     "IDD-16": {
       "komut": [
@@ -311,7 +311,7 @@
         "--kontrol"
       ],
       "rc": 0,
-      "ham": "MODEL KIMLIK: PASS — 1 emekli kimlik · aday=262 dosya · taranan=262 dosya · incelenmedi=0 dosya · onay=1 kayit · aktif=0",
+      "ham": "MODEL KIMLIK: PASS — 1 emekli kimlik · aday=263 dosya · taranan=263 dosya · incelenmedi=0 dosya · onay=1 kayit · aktif=0",
       "deger": "0/1"
     },
     "IDD-48": {
