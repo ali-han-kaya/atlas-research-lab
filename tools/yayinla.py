@@ -16,6 +16,7 @@ CIKIS: 0 = plan yazildi/temiz (sifir suruklenme) · 1 = sir bulgusu veya parite
 """
 import argparse
 import hashlib
+import json
 import os
 import re
 import shutil
@@ -51,6 +52,7 @@ DOCS_DOSYALARI = [
     # Kapıların pinlediği kanonik OLGU-06 devri — sürüm satırı buna bağlı.
     'DEVIR-2026-09-03-1945-AUD-06-07.md',
     'EN/QUICKSTART.md', 'GUVENLIK.md', 'MUTASYON_KAPSAM.md',
+    'KOD_BEDAVA_MODEL_POLITIKASI.md',
 ]
 
 # --- HARIC -------------------------------------------------------------------
@@ -69,7 +71,8 @@ def opencode_artefakti(rel):
     return '.opencode' in parcalar[:-1] and parcalar[-1] in OPENCODE_ATLA
 
 # --- BU DEPONUN KENDI KATMANI (aktarimla silinmez/uzerine yazilmaz) ----------
-KORUNAN = {'README.md', 'LICENSE', 'Makefile', '.gitignore', 'docs/README.md'}
+KORUNAN = {'README.md', 'LICENSE', 'Makefile', '.gitignore', 'docs/README.md',
+           'docs/DURUM.md', 'docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl'}
 KORUNAN_KOKLER = ('.github', 'tools')
 
 SIR_KALIPLARI = [
@@ -81,8 +84,17 @@ SIR_KALIPLARI = [
     ('slack', re.compile(r'xox[bap]-[A-Za-z0-9-]{10,}')),
     ('google', re.compile(r'AIza[0-9A-Za-z_-]{35}')),
 ]
-FIKSTUR = ('AKIAXXX', 'AKIA1234567890')
+FIKSTUR_ONEK = ('AKIAXXX', 'AKIA1234567890')
 ANAHTAR = re.compile(r'-----BEGIN [A-Z ]*PRIVATE KEY-----\r?\n[A-Za-z0-9+/=]{64,}')
+
+# Belgelenmis sahte/teslim fiksturleri: dosya + TAM satir SHA-256'si.
+# Defter TARANAN agactan degil, bu depodan okunur; boylece kaynak agac
+# kendini muaf tutamaz. Desen/uzanti/dizin adiyla toplu muafiyet yoktur.
+FIKSTUR_DOSYALARI = {
+    'docs/OLCUM-02-CANLI-KOSU.md',
+    'KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_selftest.py',
+}
+FIKSTUR_DOSYASI = os.path.join(KOK, 'tools', 'secret_fixtures.json')
 
 
 # Uretilmis urun/arsiv izleri yayina giremez: bu depo mekanizmadir.
@@ -198,8 +210,41 @@ def fazlalik(istenen):
     return sorted(silinecek)
 
 
+def satir_hash(satir):
+    return hashlib.sha256(satir.encode('utf-8')).hexdigest()
+
+
+def fikstur_kayitlari():
+    """(dosya, satir_sha256) -> kayit. Manifest yoksa bos; bozuksa FAIL-CLOSED."""
+    if not os.path.isfile(FIKSTUR_DOSYASI):
+        return {}
+    try:
+        with open(FIKSTUR_DOSYASI, encoding='utf-8') as f:
+            veri = json.load(f)
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise SystemExit('HATA: fikstur manifesti okunamadi: %s' % type(exc).__name__)
+    if not isinstance(veri, dict) or not isinstance(veri.get('fiksturler'), list):
+        raise SystemExit('HATA: fikstur manifesti semasi gecersiz')
+    kayitlar = {}
+    for kayit in veri['fiksturler']:
+        if not isinstance(kayit, dict):
+            raise SystemExit('HATA: fikstur kaydi nesne degil')
+        dosya = str(kayit.get('dosya', '')).replace('\\', '/')
+        h = str(kayit.get('satir_sha256', ''))
+        if (dosya not in FIKSTUR_DOSYALARI or
+                not re.fullmatch(r'[0-9a-f]{64}', h) or
+                not str(kayit.get('gerekce', '')).strip() or
+                not str(kayit.get('kanit', '')).strip()):
+            raise SystemExit('HATA: fikstur kaydi gecersiz/izinli dosya disinda: %r' % dosya)
+        if (dosya, h) in kayitlar:
+            raise SystemExit('HATA: yinelenen fikstur kaydi: %s' % dosya)
+        kayitlar[(dosya, h)] = kayit
+    return kayitlar
+
+
 def sir_tara(istenen):
     bulgular = []
+    fikstur = fikstur_kayitlari()
     for rel, tam in sorted(istenen.items()):
         if os.path.islink(tam) or os.path.getsize(tam) > 2 * 1024 * 1024:
             continue
@@ -208,14 +253,21 @@ def sir_tara(istenen):
                 metin = f.read()
         except (UnicodeDecodeError, OSError):
             continue
-        for no, satir in enumerate(metin.splitlines(), 1):
-            if any(f in satir for f in FIKSTUR):
+        satirlar = metin.splitlines()
+        rel_posix = rel.replace(os.sep, '/')
+        for no, satir in enumerate(satirlar, 1):
+            if any(f in satir for f in FIKSTUR_ONEK):
                 continue
             for ad, kalip in SIR_KALIPLARI:
                 if kalip.search(satir):
+                    if (rel_posix, satir_hash(satir)) in fikstur:
+                        continue
                     bulgular.append((rel, no, ad))
         for m in ANAHTAR.finditer(metin):
-            bulgular.append((rel, metin[:m.start()].count('\n') + 1, 'private-key'))
+            no = metin[:m.start()].count('\n') + 1
+            if (rel_posix, satir_hash(satirlar[no - 1])) in fikstur:
+                continue
+            bulgular.append((rel, no, 'private-key'))
     return bulgular
 
 
