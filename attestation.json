@@ -1,5 +1,5 @@
 {
-  "commit": "e7c07141003256c64a6571f3b71fbdbd6737ccb1",
+  "commit": "1efea9f43b4e327249fb995ed4254efe791e5f24",
   "file_count": 265,
   "files": [
     {
@@ -1223,8 +1223,8 @@
     {
       "mode": "100644",
       "path": "SURUM.md",
-      "sha256": "b5e5ab40675c0d7f1b8b0c409541fabc79e05a9ca1aa7e75c9486609bf71ebdc",
-      "size": 584665
+      "sha256": "d49ff69c1ac7b5c8e605bdd74dfeab8953f15a49e94dfec97d37418eebd75f00",
+      "size": 585487
     },
     {
       "mode": "100755",
@@ -1253,8 +1253,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "397af0ea2996c3a51cab3bac4fb3236519c715e7836ad4329af20f8c3827e9fc",
-      "size": 484273
+      "sha256": "386abe92bddd9d700686b58037280960356c65056ad6c46ff20e03699b24ca89",
+      "size": 485280
     },
     {
       "mode": "100644",
@@ -1265,8 +1265,8 @@
     {
       "mode": "100644",
       "path": "docs/DEVIR-2026-11-22-1923.md",
-      "sha256": "c5c134d9f9bb3802200d42db072e490afba9c764059df96a0865e82254ba473e",
-      "size": 3905
+      "sha256": "54bdc45880717cea6f75c596ff23147b39b76d371bb0a70c6fa799e1fe769e94",
+      "size": 5219
     },
     {
       "mode": "100644",
@@ -1277,7 +1277,7 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "6ab959a3ba99bf118c57313bb3bfd86bc3b8a081ae49c0c26e58c5eca890e2d8",
+      "sha256": "3ffb4a2e28272c9620ac5e1be01c0aece7873cd9e978a684aa104ebaa138b82a",
       "size": 11358
     },
     {
@@ -1367,7 +1367,7 @@
     {
       "mode": "100644",
       "path": "docs/OLGULAR.md",
-      "sha256": "602978e054e9d0d273f0c45b244a76d919d59a11181c52ecb4a547346f523a2c",
+      "sha256": "c9c00f63c7c1a418f0b660466e57b5afea191a7663719e3dfc0347dff9998430",
       "size": 3201
     },
     {
@@ -1445,13 +1445,13 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "5e29e9c4a61fe65ac4000d8297fc1cc225006bd32767cd5647f551c15e923c86",
+      "sha256": "79662d5151445948a7eb19f48a510f7f43bbac158ae4ed7acef532161e294793",
       "size": 32812
     },
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "11639f6bb48b5965fb9f2e1ad5b9840e2f775818480f92f0c3cc5a7fea7bdad8",
+      "sha256": "3b81251363d2f6f3846508c95e66542b010b696d939a946741d31f8c3601c700",
       "size": 8103
     },
     {
@@ -1565,14 +1565,14 @@
     {
       "mode": "100755",
       "path": "tools/sir_kapisi.py",
-      "sha256": "677ba383cb1931681af116ae976e446ac72dc2f8b7df91f26091f672c138e63f",
-      "size": 10830
+      "sha256": "cae55f145ba5faf877b2c952ce22a84aaf527e66997b62615c3cc142576c9f1b",
+      "size": 11357
     },
     {
       "mode": "100644",
       "path": "tools/sir_kapisi_selftest.py",
-      "sha256": "20315b03aacde6d33eb34f750f66319e4b0adcdf2293d440ee0a3df21111791b",
-      "size": 9708
+      "sha256": "002cff671a550146dda2df4b224845af237d11c305bbb846ddadfec7d73b589d",
+      "size": 14559
     },
     {
       "mode": "100644",
@@ -1593,7 +1593,7 @@
       "size": 14185
     }
   ],
-  "generated_at": "2026-11-22T18:52:11Z",
+  "generated_at": "2026-11-22T19:15:45Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1608,6 +1608,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "af7e4ab4aa2a6774bcdb7a454bd290ef337d81ed",
-  "tree_sha256": "75eb2f435a8a94d4a7b61db44320fe4d55296246759dbf1b3d05922b60f6ac00"
+  "tree": "656de68cfcc802c0034067d0d445473099b61a55",
+  "tree_sha256": "12377bfc5ef231238a81ab56b5155393113edfc85a765ac5c7b8f3e2b2eb168d"
 }
