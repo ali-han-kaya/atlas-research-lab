@@ -134,8 +134,8 @@
         "tools/dogrula.py"
       ],
       "rc": 0,
-      "ham": "  H2  python sozdizimi         PASS    72 dosya",
-      "deger": "72"
+      "ham": "  H2  python sozdizimi         PASS    73 dosya",
+      "deger": "73"
     },
     "IDD-16": {
       "komut": [
@@ -320,7 +320,7 @@
         "--kontrol"
       ],
       "rc": 0,
-      "ham": "MODEL KIMLIK: PASS — 1 emekli kimlik · aday=268 dosya · taranan=268 dosya · incelenmedi=0 dosya · onay=1 kayit · aktif=0",
+      "ham": "MODEL KIMLIK: PASS — 1 emekli kimlik · aday=272 dosya · taranan=272 dosya · incelenmedi=0 dosya · onay=1 kayit · aktif=0",
       "deger": "0/1"
     },
     "IDD-48": {

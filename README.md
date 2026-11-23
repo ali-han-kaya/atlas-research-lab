@@ -1,10 +1,66 @@
-## ATLAS Research Lab — in brief
+# ATLAS Research Lab
 
 [![dogrula](https://github.com/ali-han-kaya/atlas-research-lab/actions/workflows/dogrula.yml/badge.svg)](https://github.com/ali-han-kaya/atlas-research-lab/actions/workflows/dogrula.yml)
 
 **A verification-first, multi-agent research lab.** ATLAS treats verification as the
 product: a delivery is judged by gates that run over its own bytes, never by a model's
 claim that the work was done.
+
+> **Kısa tur:** [ATLAS'ı kısa turda anla](docs/ATLAS-KISA-TUR.md) — lab ne yapar,
+> kime yarar, iddiasını nasıl kanıtlar. Depoyu ilk kez açan için başlangıç noktası.
+
+## Kısa tur — üç soru, üç cevap
+
+| Soru | Kısa cevap |
+|---|---|
+| **Bu lab ne yapar?** | Akademik metni ve yazılımı, modelin "tamamlandı" beyanına değil teslimin kendi baytları üzerinde koşan kapılara bağlar. Ürettiği makaleleri değil, üretim mekanizmasını yayımlar. |
+| **Kime yarar?** | Araştırmacıya kaynak/iddia disiplini; yazılım ekibine kanıtlı teslim; denetçiye ve işe alım ekibine ölçülebilir süreç; yeni öğrenene çalışan örnekler. |
+| **İddiasını nasıl kanıtlar?** | Her sayıyı üreten komuta, her teslimi commit/ağaç hash'ine, her kapıyı temiz taban + ihlal testine bağlar. Ölçülemeyen şey `OLCULMEYEN` kalır; `PASS` sayılmaz. |
+
+## Mimari — tek bakışta
+
+```mermaid
+flowchart LR
+  K[Brief / kaynak] --> A[ATLAS hattı]
+  K --> D[KOD hattı]
+  T[Toolkit] --> G[Kapılar]
+  A --> G
+  D --> G
+  G --> E[attestation + kanıt paketi]
+  G --> C[CI + iddia defteri]
+  E --> P[public yayın manifesti]
+```
+
+- **ATLAS hattı:** kapsam → paralel inceleme mercekleri → hedefli düzeltme → MASTER → çift hakem kabulü.
+- **KOD hattı:** kapsam, tasarım, uygulama, kanıt ve bağımsız kapılar; teslimin tabanı zorunludur.
+- **Toolkit:** model-agnostik oturum sözleşmesi ve çalıştırılabilir denetimler.
+- **Kanıt katmanı:** `attestation.json` commit/ağaç/dosya hash'lerini; `make iddia` ise kamu belgelerindeki sayıları üreten komutlara bağlar.
+
+## Kapı ve test kapsamı — nerede?
+
+| Katman | Giriş | Ne ölçer? |
+|---|---|---|
+| Tek giriş | `make dogrula` | Depo hijyeni, sözdizimi, sır taraması, kapı öz-testleri ve üç öz-test paketi |
+| Sayısal iddia | `make iddia` | README ve kamu belgelerindeki sayıları, onları üreten komut ve ham çıktıyla |
+| Kapı davranışı | `make mutasyon` | Temiz taban + tek ihlal + kırmızı hüküm; kuralların gerçekten ateşlediğini |
+| Ağaç kanıtı | `make kanit-dogrula` | `attestation.json` içindeki commit, ağaç ve dosya hash'lerini |
+| Yayın sınırı | `make yayin-kapisi` | Manifest, listelenmemiş dosya, makale izi, sır ve kişisel mutlak yol |
+| Kırmızı demo | `./demo` | Bilerek kusurlu koşuda beklenen reddi; `make demo` değil, doğrudan `./demo` |
+
+Güncel öz-test ve envanter sayıları üretilmiş [`docs/DURUM.md`](docs/DURUM.md)
+dosyasındadır; README'ye elle sayı yazılmaz. Yayın kapısı `make dogrula`nın
+**ön koşuludur**, sayılan sekiz kaleme eklenmez.
+
+## Yayın sınırı
+
+Bu depo **üretim mekanizmasıdır, ürün arşivi değildir.** Makale metinleri,
+PDF'ler, konu korpusları, `projeler/` ve ham araştırma çıktıları public ağaca
+girmez. Hangi dosyanın girdiği `tools/yayin_manifest.json` ile açıkça listelenir;
+liste dışı dosya, sır, kişisel mutlak yol veya makale iskeleti `make yayin-kapisi`
+tarafından fail-closed durdurulur. Ayrıntı ve ekleme prosedürü:
+[Yayın sözleşmesi](docs/YAYIN-SOZLESMESI.md).
+
+## In brief (English)
 
 - **What it does.** Academic audit and hardening (scope → three parallel review lenses →
 targeted fixes → master revision → 2-of-2 acceptance) and a code pipeline (KFAZ0–5 with a
@@ -32,7 +88,7 @@ in [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md); dependent-package findi
 
 ---
 
-# ATLAS Research Lab
+## Ayrıntılı tanıtım
 
 **Kanıt disiplinli, çok ajanlı üretim laboratuvarı.** Akademik metin ve yazılım
 üretimini "model şöyle dedi" üzerine değil, **teslimin kendi baytları üzerinde

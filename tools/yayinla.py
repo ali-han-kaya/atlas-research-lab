@@ -75,6 +75,7 @@ def opencode_artefakti(rel):
 # --- BU DEPONUN KENDI KATMANI (aktarimla silinmez/uzerine yazilmaz) ----------
 KORUNAN = {'README.md', 'LICENSE', 'Makefile', '.gitignore', 'docs/README.md',
            'docs/DURUM.md', 'docs/IDDIA-OZET.md',
+           'docs/ATLAS-KISA-TUR.md', 'docs/YAYIN-SOZLESMESI.md',
            'docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl'}
 KORUNAN_KOKLER = ('.github', 'tools')
 

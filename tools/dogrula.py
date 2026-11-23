@@ -259,6 +259,21 @@ def kamu_temizligi():
     return rc == 0, son[:150], ([] if rc == 0 else satirlar[-10:])
 
 
+def yayin_kapisi():
+    """Yayin manifesti + makale/sir/ozel yol kapisini on kosul yapar.
+
+    Sayilan sekiz kaleme dahil degildir; kamu temizligi gibi bir on kosuldur.
+    Kendi negatif fiksturlerini de ayni cagrida kosar.
+    """
+    rc, cikti, _ = kos([sys.executable,
+                        os.path.join(KOK, 'tools', 'yayin_kapisi.py'),
+                        '--kontrol', '--oztest'])
+    satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
+    baslik = [s for s in satirlar if s.startswith('YAYIN-KAPISI:')]
+    son = (baslik[-1] if baslik else (satirlar[-1] if satirlar else '(bos cikti)'))
+    return rc == 0, son[:150], ([] if rc == 0 else satirlar[-12:])
+
+
 KOMUTLAR = [
     ('T1', 'ATLAS oz-testi',
      [sys.executable, 'ATLAS_SABLONLAR/scripts/atlas_selftest.py', '--sessiz']),
@@ -507,6 +522,17 @@ def main():
     if not kamu_gecti:
         print()
         print('  HUKUM: FAIL — KAMU TEMIZLIGI (ozel yol/eski alan/sahte hash)')
+        return 1
+    print()
+
+    yayin_gecti, yayin_ozet, yayin_detay = yayin_kapisi()
+    print('  %-24s %-7s %s' % ('yayin kapisi',
+                                'PASS' if yayin_gecti else 'FAIL', yayin_ozet))
+    for satir in yayin_detay:
+        print('        | %s' % satir[:400])
+    if not yayin_gecti:
+        print()
+        print('  HUKUM: FAIL — YAYIN KAPISI (manifest/makale/sir/ozel yol)')
         return 1
     print()
 
