@@ -35,7 +35,8 @@ KOKLER = ['ATLAS_SABLONLAR', 'KOD_SABLONLAR', 'ORTAK', 'RAFINE_SABLON',
 # `scripts/` istisnasi: yalniz `scripts/kur_hooks.sh` acik listede tasinir.
 KALDIRILAN_KOKLER = ['scripts']
 DOSYALAR = ['AGENTS.md', 'AI_CALISMA_SISTEMI_v1.md', 'ISARETCILER.md',
-            'opencode.json', 'SURUM.md', 'scripts/kur_hooks.sh']
+            'opencode.json', 'SURUM.md', 'scripts/kur_hooks.sh',
+            'scripts/yedek_al.sh']
 TOOLKIT_DOSYALARI = ['KOMUT_TOOLKIT_v4/000_ONCE_BUNU_YAPISTIR.md',
                      'KOMUT_TOOLKIT_v4/001_SORUN_CIKARSA_OKU.md']
 TOOLKIT_KOKLER = ['KOMUT_TOOLKIT_v4/ARACLAR']
@@ -53,7 +54,8 @@ DOCS_DOSYALARI = [
     'DEVIR-2026-09-03-1945-AUD-06-07.md',
     # H5 penceresinin kamu kaydı; plan dışında kalırsa `fazlalik` onu silmek ister.
     'DEVIR-2026-11-22-1923.md',
-    'EN/QUICKSTART.md', 'GUVENLIK.md', 'MUTASYON_KAPSAM.md',
+    'GUVENLIK.md', 'MUTASYON_KAPSAM.md',
+    'YEDEK.md',
     'KOD_BEDAVA_MODEL_POLITIKASI.md',
 ]
 
@@ -76,7 +78,8 @@ def opencode_artefakti(rel):
 KORUNAN = {'README.md', 'LICENSE', 'Makefile', '.gitignore', 'docs/README.md',
            'docs/DURUM.md', 'docs/IDDIA-OZET.md',
            'docs/ATLAS-KISA-TUR.md', 'docs/YAYIN-SOZLESMESI.md',
-           'docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl'}
+           'docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl',
+           'docs/EN/QUICKSTART.md', 'docs/assets/demo-red.gif'}
 KORUNAN_KOKLER = ('.github', 'tools')
 
 SIR_KALIPLARI = [
@@ -126,7 +129,11 @@ def icerik(tam):
     if b'\x00' in veri[:1024]:
         return veri
     try:
-        return veri.decode('utf-8').replace(EV_ONEK, '~').encode('utf-8')
+        metin = veri.decode('utf-8').replace(EV_ONEK, '~')
+        # Yerel yedek dizini de sahibin makinesine bagli bir yoldur; kamu
+        # kopyasinda genel bir hedefe donusturulur.
+        metin = metin.replace('Desktop/' + 'MTRX/ATLAS_YEDEK', 'atlas-yedek')
+        return metin.encode('utf-8')
     except UnicodeDecodeError:
         return veri
 
