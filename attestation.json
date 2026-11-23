@@ -1,6 +1,6 @@
 {
-  "commit": "89f3da273372aa8e1bb5cee4b34c434b7c5b9e22",
-  "file_count": 267,
+  "commit": "81360c39b5b8e4bcfe99f9d45115f1e19e95f0ba",
+  "file_count": 271,
   "files": [
     {
       "mode": "100755",
@@ -1163,8 +1163,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "bab1e9946293c885ffcb275eb7f596aaac40f62fa44aca161fe8e052da9e1a68",
-      "size": 5122
+      "sha256": "9fa7f1c9603bce5cac9f5242b6055fa11a79f2f5eba4899f7279f0dc85aa6b72",
+      "size": 5292
     },
     {
       "mode": "100644",
@@ -1217,8 +1217,8 @@
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "2a91749c65090300fd5d695755d93573abfac58a87005f7324fcc39726211a12",
-      "size": 29572
+      "sha256": "b2b328c82846cd4e9d7c3857f7ef78c3ae736eb038401c61032dccd6a8749147",
+      "size": 32706
     },
     {
       "mode": "100644",
@@ -1231,6 +1231,12 @@
       "path": "demo",
       "sha256": "1bff7623c7ee3893d9e01f2967aaacc175298fd5ca39646f0dbe8ca39a65a134",
       "size": 335
+    },
+    {
+      "mode": "100644",
+      "path": "docs/ATLAS-KISA-TUR.md",
+      "sha256": "b8a9dc2fe85d454965032cd4a4c55f836b52421803eee92ab5c7d8d745851756",
+      "size": 4623
     },
     {
       "mode": "100644",
@@ -1271,7 +1277,7 @@
     {
       "mode": "100644",
       "path": "docs/DURUM.md",
-      "sha256": "0b0c0a40119c5f5e3e268108de402d4da4b102c8391e227b8bdadc2c4c80c49a",
+      "sha256": "667ce85e798f4816d2bdbc4e9bd900ecaf612957a539184e43fc7c2beb8a6024",
       "size": 1489
     },
     {
@@ -1373,8 +1379,14 @@
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "19be9797aa2b305f4859a9395e4f132d9b71305db4ad58254ffc12677734106d",
-      "size": 31044
+      "sha256": "858f486243c6a0be8af65a0de6bfccbecd6766f5d9750d1f83f6df700574e321",
+      "size": 31124
+    },
+    {
+      "mode": "100644",
+      "path": "docs/YAYIN-SOZLESMESI.md",
+      "sha256": "eba4ba7d17850312384fda16d1a859845e46500bf0d753b4e574e4a377230810",
+      "size": 5128
     },
     {
       "mode": "100644",
@@ -1415,8 +1427,8 @@
     {
       "mode": "100644",
       "path": "tools/dogrula.py",
-      "sha256": "c997c212b793eb808c04d3989b44fd9aa0f84734191e49364a5c37f58c53c1f0",
-      "size": 24178
+      "sha256": "51127cc431d4a6fb54e6c66457fc5a5319f545a325811c146a8b718d3c011991",
+      "size": 25268
     },
     {
       "mode": "100644",
@@ -1445,13 +1457,13 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "a12189b2d22779ce2c1f0cc7d9819e194c50f4dae33cb579cf3746785c6f89d8",
+      "sha256": "84910db920b6828e51d1c52d70de8f28fe3e647e2b0d12e240ea8ace9c6363a1",
       "size": 33226
     },
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "c4b68915030a790864b8ab097a38acc366b9cb94391c9c3a9dfed4318fa34a65",
+      "sha256": "08391f901f7fad08f38f3f5b8e8f15927288af4e8bd583e94d38b535a7abafc4",
       "size": 8103
     },
     {
@@ -1600,12 +1612,24 @@
     },
     {
       "mode": "100644",
+      "path": "tools/yayin_kapisi.py",
+      "sha256": "2f540aeb3bb6d7fb01a988d92819c94002fedf01e33ad00f56862a73fb610559",
+      "size": 14341
+    },
+    {
+      "mode": "100644",
+      "path": "tools/yayin_manifest.json",
+      "sha256": "2a92764bb1f76e1e3cf97ffd4bec9b109089ab452bbcb5e31d790bfb560b912e",
+      "size": 12518
+    },
+    {
+      "mode": "100644",
       "path": "tools/yayinla.py",
-      "sha256": "47fa1763e7bf10f39fdcc18fa559aa1c3837852764bb2bab270b55d6ac90be9f",
-      "size": 14185
+      "sha256": "835fc2a5e029a92023b459e9bce736792bea93d8f4b65e092cdf0e81ae60eb27",
+      "size": 14250
     }
   ],
-  "generated_at": "2026-11-23T10:13:34Z",
+  "generated_at": "2026-11-23T13:01:59Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1620,6 +1644,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "32fa77fbc704ef69fef8b14fab3c299f37a8c454",
-  "tree_sha256": "4d3125d745abb8f9c5fd11d8c87acce8e742db02037a0ea1be0abaf46b1b7bf1"
+  "tree": "46a4cbdb3b7eb67678bebdf6cc1ce3ff7caddc59",
+  "tree_sha256": "6afb8a1196e90bd4780dd821748e4265ba1f6b8a699d6ffd131bc3ec744d2828"
 }
