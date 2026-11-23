@@ -1,5 +1,7 @@
 # ATLAS Research Lab
 
+![Terminal recording of ./demo returning the expected red verdict](docs/assets/demo-red.gif)
+
 [![dogrula](https://github.com/ali-han-kaya/atlas-research-lab/actions/workflows/dogrula.yml/badge.svg)](https://github.com/ali-han-kaya/atlas-research-lab/actions/workflows/dogrula.yml)
 
 **A verification-first, multi-agent research lab.** A delivery is judged by fail-closed gates that run over its own bytes—never by a model's confidence.
