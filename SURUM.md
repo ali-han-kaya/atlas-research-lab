@@ -2,7 +2,7 @@
 
 > **Tarihsel kimlik notu (19 Kasım 2026):** 2026-08 kayıtlarındaki eski Nemotron Super free kimliği models.dev'den kaldırılmıştır; güncel allowlist `nvidia/nemotron-3-ultra-550b-a55b:free` kullanır. Tarihsel satırlar değiştirilmedi.
 
-Sürüm: v1.7.419 (güncel: Değişiklik Kaydı'nın ilk satırı) · Tarih: 22 Kasım 2026
+Sürüm: v1.7.420 (güncel: Değişiklik Kaydı'nın ilk satırı) · Tarih: 23 Kasım 2026
 
 > **21 Kasım 2026 düzeltmesi:** Canlı `make katalog-kontrol` ağ gerektirdiği için CI'dan çıkarıldı; CI yalnız çevrimdışı `make dogrula-ci`/`katalog-selftest` koşar. v1.7.411 satırındaki CI kaydı tarihseldir.
 

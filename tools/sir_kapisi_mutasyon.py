@@ -10,7 +10,7 @@ NEDEN VAR
   bölümü aynı kayıttan üretir.
 
   Kayıt süs değildir: `--kontrol` her koşuda dört mutasyonu yeniden uygular,
-  baseline 17/17 ile her vakanın 16/17 FAIL çıktısını birebir arar, kaynak/test
+  baseline 19/19 ile her vakanın 18/19 FAIL çıktısını birebir arar, kaynak/test
   SHA-256'larını ve sürümü denetler. CI'da `make sir-mutasyon` ile koşar.
 
 HERMETİK ORTAM
@@ -46,8 +46,8 @@ SELFTEST = 'tools/sir_kapisi_selftest.py'
 SEMA = 'ATLAS-SIR-MUTASYON/v1'
 BASLANGIC = '<!-- SIR_MUTASYON_KANITI:BASLA -->'
 BITIS = '<!-- SIR_MUTASYON_KANITI:BITISI -->'
-BEKLENEN_TEST = 17
-BEKLENEN_BASARISIZ = 16
+BEKLENEN_TEST = 19
+BEKLENEN_BASARISIZ = 18
 BASLIK = 'SIR KAPISI OZ-TEST:'
 
 # Her vaka: (id, kenar, düzeltme, test adı, mutasyon açıklaması, dosya, eski, yeni)

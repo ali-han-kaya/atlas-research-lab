@@ -443,11 +443,11 @@
     },
     {
       "id": "IDD-18",
-      "iddia": "H5 sir kapisi oz-testi 17/17",
+      "iddia": "H5 sir kapisi oz-testi 19/19",
       "kaynaklar": [
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "  H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 17/17 gecti"
+          "alinti": "  H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 19/19 gecti"
         }
       ],
       "durum": "OLCULDU",
@@ -456,7 +456,7 @@
         "tools/dogrula.py"
       ],
       "ayikla": "SIR KAPISI OZ-TEST:\\s*(\\d+/\\d+)",
-      "beklenen": "17/17"
+      "beklenen": "19/19"
     },
     {
       "id": "IDD-19",

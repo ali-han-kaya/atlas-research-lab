@@ -4,14 +4,14 @@
 
 NEDEN VAR
   Bir koruma "calisiyor" demek icin once temiz girdide sessiz kaldigini, sonra
-  tek bir canli desende kirmiziya dondugunu olcmek gerekir. Bu test dokuz betik
-  vakasi, iki gercek `git commit` vakasi, iki `git push` vakasi ve dort git
+  tek bir canli desende kirmiziya dondugunu olcmek gerekir. Bu test on betik
+  vakasi, iki gercek `git commit` vakasi, iki `git push` vakasi ve bes git
   kenari kosar; canli DSN'in ciktida GORUNMEDIGINI de ayrica dogrular.
 
 KULLANIM
   python3 tools/sir_kapisi_selftest.py
 
-CIKIS: 0 = 17/17 gecti · 1 = en az bir vaka kirmizi
+CIKIS: 0 = 19/19 gecti · 1 = en az bir vaka kirmizi
 """
 import os
 import shutil
@@ -31,6 +31,9 @@ TOKEN = 'npg_' + 'A1b2C3d4E5f6'
 YER = 'postgresql://' + 'NEON_KULLANICI' + ':' + 'NEON_PAROLA' + '@host/db'
 MASKE = 'postgresql://' + 'USER' + ':' + '***' + '@host/db'
 DOLAR_CANLI = 'postgresql://' + 'USER' + ':' + '$gercek123' + '@host/db'
+# Kullanici degisken, parola GERCEK: kullanici tarafinin yer tutucu olmasi
+# parolayi aklamaz; DSN canli sayilmalidir.
+DOLAR_KULLANICI = 'postgresql://' + '$USER' + ':' + 'gercekparola123' + '@host/db'
 DEGISKEN = 'postgresql://' + 'USER' + ':' + '$DB_PASS' + '@host/db'
 SUSLU_DEGISKEN = 'postgresql://' + 'USER' + ':' + '${DB_PASS}' + '@host/db'
 ADMIN_KOSELI = 'postgresql://' + 'admin' + ':' + '<parola>' + '@host/db'
@@ -294,12 +297,52 @@ def vaka_shallow():
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+def vaka_aralik_tekillestirme():
+    """Ayni satir iki commit'te eklenirse TEK bulgu sayilir, iki commit gorunur.
+
+    `--aralik` commit'leri tek tek tarar; sil + geri ekle ayni (dosya, satir,
+    kural)i iki kez uretir. Ozet tekillestirmeli, ama iki commit izini de
+    tasimali; canli deger yine basilMAmali.
+    """
+    tmp = Path(tempfile.mkdtemp(prefix='sir_tekil_'))
+    try:
+        depo = tmp / 'depo'
+        _depo_hazir(depo)
+        _yaz(depo / 'f.md', 'base\n')
+        base = _commit(depo, 'base')
+        _yaz(depo / 'f.md', CANLI + '\n')
+        ilk = _commit(depo, 'ilk')
+        _git(depo, 'rm', '-q', 'f.md')
+        _commit(depo, 'sil')
+        _yaz(depo / 'f.md', CANLI + '\n')
+        son = _commit(depo, 'yeniden')
+        r = _kos([sys.executable, str(KAPI), '--aralik', base + '..HEAD'], depo)
+        cikti = (r.stdout or '') + (r.stderr or '')
+        if r.returncode != 1:
+            return False, 'rc=%d (beklenen 1) · %s' % (r.returncode,
+                                                       cikti.strip()[:160])
+        if 'SIR-KAPISI FAIL — 1 eslesme · 1 dosya' not in cikti:
+            return False, 'tekillestirme yok · %s' % cikti.strip()[:160]
+        for kisa in (ilk[:8], son[:8]):
+            if kisa not in cikti:
+                return False, 'commit izi yok (%s) · %s' % (kisa,
+                                                           cikti.strip()[:160])
+        if 'gercekparola123' in cikti:
+            return False, 'SIZINTI: deger ciktida gorundu'
+        return True, 'rc=1 · 1 eslesme · 2 commit izi'
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def main():
     print('SIR KAPISI OZ-TESTI — canli desen kirmizi, yer tutucu sessiz')
     vakalar = [
         ('canli DSN kirmizi', lambda: vaka_dosya(CANLI, 1, 'canli-dsn',
                                                 sizinti='gercekparola123')),
         ('USER:*** kirmizi', lambda: vaka_dosya(MASKE, 1, 'canli-dsn')),
+        ('$USER:<gercek parola> kirmizi',
+         lambda: vaka_dosya(DOLAR_KULLANICI, 1, 'canli-dsn',
+                            sizinti='gercekparola123')),
         ('$ parolali canli kirmizi',
          lambda: vaka_dosya(DOLAR_CANLI, 1, 'canli-dsn',
                             sizinti='gercek123')),
@@ -323,6 +366,7 @@ def main():
         ('rename staged canliyi yakalar', vaka_rename),
         ('++ icerik satiri canliyi yakalar', vaka_plus),
         ('shallow clone yeni siri yakalar', vaka_shallow),
+        ('--aralik tekillestirir', vaka_aralik_tekillestirme),
     ]
     gecen = 0
     for ad, fn in vakalar:
