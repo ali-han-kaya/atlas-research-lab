@@ -1,11 +1,11 @@
 {
   "schema": "ATLAS-SIR-MUTASYON/v1",
-  "surum": "v1.7.419",
-  "kod_commit": "d6d19e4773e41cac9e0ae5df049a707f84c1ab1f",
+  "surum": "v1.7.420",
+  "kod_commit": "c3401384f1c3aa476f13e90191250cb2abe6776e",
   "kaynak": "tools/sir_kapisi.py",
   "kaynak_sha256": "cae55f145ba5faf877b2c952ce22a84aaf527e66997b62615c3cc142576c9f1b",
   "selftest": "tools/sir_kapisi_selftest.py",
-  "selftest_sha256": "54013e62fa0a29921c83f3f307a39fab4f13c4002eb48ccede230c09b7e5b0e1",
+  "selftest_sha256": "1d5aceb89ff49f155ce115ad3435718ac7b5f2030ca895b884be57e0c5a8049f",
   "hermetik": {
     "HOME": "gecici",
     "GIT_CONFIG_NOSYSTEM": "1",
@@ -15,8 +15,8 @@
   "temel": {
     "komut": "python3 tools/sir_kapisi_selftest.py",
     "rc": 0,
-    "test_sayisi": "17/17",
-    "satir": "SIR KAPISI OZ-TEST: 17/17 gecti"
+    "test_sayisi": "19/19",
+    "satir": "SIR KAPISI OZ-TEST: 19/19 gecti"
   },
   "vakalar": [
     {
@@ -26,10 +26,10 @@
       "test": "merge commit canliyi yakalar",
       "mutasyon": "git show komutundan --first-parent kaldirildi",
       "fail_rc": 1,
-      "fail_test_sayisi": "16/17",
-      "fail_satiri": "merge commit canliyi yakalar FAIL rc=0 (beklenen 1) · SIR-KAPISI: aralik temiz (3b141a4d7eb3d0e93a1d4b43de8883d4cc021b61..HEAD)",
+      "fail_test_sayisi": "18/19",
+      "fail_satiri": "merge commit canliyi yakalar FAIL rc=0 (beklenen 1) · SIR-KAPISI: aralik temiz (31abcd65bd0b4bbc96a95f3e21f5138ca8d64804..HEAD)",
       "pass_rc": 0,
-      "pass_test_sayisi": "17/17",
+      "pass_test_sayisi": "19/19",
       "pass_satiri": "merge commit canliyi yakalar PASS rc=1 · canli-dsn"
     },
     {
@@ -39,10 +39,10 @@
       "test": "rename staged canliyi yakalar",
       "mutasyon": "staged filtresi ACMR -M yerine ACM yapildi",
       "fail_rc": 1,
-      "fail_test_sayisi": "16/17",
+      "fail_test_sayisi": "18/19",
       "fail_satiri": "rename staged canliyi yakalar FAIL rc=0 (beklenen 1) · SIR-KAPISI PASS — canli DSN/Neon token yok",
       "pass_rc": 0,
-      "pass_test_sayisi": "17/17",
+      "pass_test_sayisi": "19/19",
       "pass_satiri": "rename staged canliyi yakalar PASS rc=1 · canli-dsn"
     },
     {
@@ -52,10 +52,10 @@
       "test": "++ icerik satiri canliyi yakalar",
       "mutasyon": "+++ ile baslayan eklenmis icerik satiri atlandi",
       "fail_rc": 1,
-      "fail_test_sayisi": "16/17",
+      "fail_test_sayisi": "18/19",
       "fail_satiri": "++ icerik satiri canliyi yakalar FAIL rc=0 (beklenen 1) · SIR-KAPISI: aralik temiz (HEAD^..HEAD)",
       "pass_rc": 0,
-      "pass_test_sayisi": "17/17",
+      "pass_test_sayisi": "19/19",
       "pass_satiri": "++ icerik satiri canliyi yakalar PASS rc=1 · canli-dsn"
     },
     {
@@ -65,10 +65,10 @@
       "test": "shallow clone yeni siri yakalar",
       "mutasyon": "klonun _kimlik(depo) cagrisi kaldirildi",
       "fail_rc": 1,
-      "fail_test_sayisi": "16/17",
+      "fail_test_sayisi": "18/19",
       "fail_satiri": "shallow clone yeni siri yakalar FAIL ISTISNA: Author identity unknown",
       "pass_rc": 0,
-      "pass_test_sayisi": "17/17",
+      "pass_test_sayisi": "19/19",
       "pass_satiri": "shallow clone yeni siri yakalar PASS rc=1 · canli-dsn"
     }
   ]
