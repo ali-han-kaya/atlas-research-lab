@@ -33,6 +33,15 @@ artık **arşivli / salt okunur**) yayımlanabilir kısmıdır. Sıfırdan yeni 
 Eski depo arşivlendiği için push kabul etmez; tarihçeler **birleştirilmez**.
 Aktarım yolu `tools/yayinla.py` ve kapsam tablosudur (aşağıda).
 
+## Parite notu — 2026-11-23
+
+Bu depo özel çalışma kopyasının yayımlanabilir kopyasıdır ve parite tamdır:
+`planda=217 · yeni=0 · degisen=0 · ayni=217 · silinecek=0`. Eski `arsiv`
+remote'u (`ATLAS_Research_Lab`) `7948525`te durur; oradan bu depoya bir aktarım,
+43 dosyada attestation ve kanıt araçları, OLGULAR/model politikası ve DERSLER
+iyileştirmelerini geri alır. Bu yüzden aktarım yönü tek yönlüdür: özel çalışma
+kopyası → bu depo.
+
 ## Yayın kapsamı
 
 **Dahil:** hatların mekanizması (ajanlar, komutlar, şablonlar, kapı betikleri),

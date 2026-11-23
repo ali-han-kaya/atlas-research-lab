@@ -66,6 +66,14 @@
       {
         "desen": "Yalnız 1 devam eder",
         "neden": "diff cikis kodu; katalog yenileme akisinin sozlesmesi"
+      },
+      {
+        "desen": "planda=217 · yeni=0 · degisen=0 · ayni=217 · silinecek=0",
+        "neden": "ozel lab calisma kopyasiyla tarihli parite olcumu (2026-11-23); public agacta yeniden olculemez, kaynagi tools/yayinla.py --liste"
+      },
+      {
+        "desen": "43 dosyada attestation",
+        "neden": "arsiv remote 7948525 ile fark sayisi; dis agac karsilastirmasi, public agacta olculemez"
       }
     ]
   },
