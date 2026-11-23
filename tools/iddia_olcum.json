@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-22T13:51:22Z",
+  "zaman": "2026-11-22T20:39:47Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -134,8 +134,8 @@
         "tools/dogrula.py"
       ],
       "rc": 0,
-      "ham": "  H2  python sozdizimi         PASS    71 dosya",
-      "deger": "71"
+      "ham": "  H2  python sozdizimi         PASS    72 dosya",
+      "deger": "72"
     },
     "IDD-16": {
       "komut": [
@@ -221,6 +221,15 @@
       "rc": 0,
       "ham": "9",
       "deger": "9"
+    },
+    "IDD-33": {
+      "komut": [
+        "{py}",
+        "ATLAS_SABLONLAR/scripts/olgu_lint.py"
+      ],
+      "rc": 0,
+      "ham": "OLGU-LINT PASS",
+      "deger": "OLGU-LINT PASS"
     },
     "IDD-34": {
       "komut": [
@@ -311,7 +320,7 @@
         "--kontrol"
       ],
       "rc": 0,
-      "ham": "MODEL KIMLIK: PASS — 1 emekli kimlik · aday=266 dosya · taranan=266 dosya · incelenmedi=0 dosya · onay=1 kayit · aktif=0",
+      "ham": "MODEL KIMLIK: PASS — 1 emekli kimlik · aday=268 dosya · taranan=268 dosya · incelenmedi=0 dosya · onay=1 kayit · aktif=0",
       "deger": "0/1"
     },
     "IDD-48": {
@@ -333,15 +342,6 @@
       "rc": 0,
       "ham": "SCOPE: 22",
       "deger": "22"
-    },
-    "IDD-33": {
-      "komut": [
-        "{py}",
-        "ATLAS_SABLONLAR/scripts/olgu_lint.py"
-      ],
-      "rc": 0,
-      "ham": "OLGU-LINT PASS",
-      "deger": "OLGU-LINT PASS"
     }
   }
 }
