@@ -1,6 +1,6 @@
 # docs/ — yayımlanan ölçüm ve öğrenim kayıtları
 
-Geri dönüş: [depo README'si](../README.md) · [kısa tur](ATLAS-KISA-TUR.md) · [yayın sözleşmesi](YAYIN-SOZLESMESI.md) · [English quickstart](EN/QUICKSTART.md)
+Geri dönüş: [depo README'si](../README.tr.md) · [kısa tur](ATLAS-KISA-TUR.md) · [yayın sözleşmesi](YAYIN-SOZLESMESI.md) · [English quickstart](EN/QUICKSTART.md)
 
 Bu klasör laboratuvarın **kendi üzerine** tuttuğu kayıtları taşır: canlı koşu
 ölçümleri, denetim raporları, ders defteri ve kanonik olgu tablosu. Amaç, deponun
@@ -531,8 +531,8 @@ Aktarımın iki mekanik kuralı vardır ve ikisi de ölçülebilir:
 üzerinden yeniden ölçer; her `OLCULDU` satırının son ölçülen ham çıktı satırı
 `tools/iddia_olcum.json` içinde aynı `IDD-*` anahtarıyla saklanır. Ham kanıt güncel
 çıktıyla birebir aynı değilse veya beyanla çelişirse satır kırmızı olur; anlık
-görüntü yalnızca `make iddia-yaz` ile yenilenir. Defter üç dokümanı tarar: kök
-`README.md`, bu dosya ve `docs/EN/QUICKSTART.md`. Tarihli kayıtlar (`OLCUM-*`, `SURUM.md`) ve üretilmiş
+görüntü yalnızca `make iddia-yaz` ile yenilenir. Defter dört dokümanı tarar: kök
+`README.md`, `README.tr.md`, bu dosya ve `docs/EN/QUICKSTART.md`. Tarihli kayıtlar (`OLCUM-*`, `SURUM.md`) ve üretilmiş
 tablolar (`MUTASYON_KAPSAM.md`, `GUVENLIK.md`) kapsam dışıdır: bunlar yeniden
 koşulacak iddia değil, ölçümün o günkü kaydıdır. Kapsam dışı dosyalar yeşil
 sayılmaz; defterin `kapsam.haric` bloğunda gerekçeleriyle listelenir.

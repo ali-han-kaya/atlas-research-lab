@@ -1,6 +1,6 @@
 # ATLAS Research Lab — quickstart (English)
 
-[Türkçe README](../../README.md) · [Published scope](../README.md)
+[Türkçe README](../../README.tr.md) · [Published scope](../README.md)
 
 ATLAS is a verification-first, multi-agent research lab. This repository is the
 mechanism, not the archive: generated papers and corpora are deliberately excluded.

@@ -34,7 +34,7 @@ bu satirlari ATLANDI basar ve PASS saymaz. --yaz ile birlesemez (kismi anlik
 goruntu tam kaniti silerdi); varsayilan tam kosu aynen kalir.
 
 KAPSAM KAPISI: defter yalniz kendi satirlarini degil kapsamini da denetler.
-README.md, docs/README.md ve docs/EN/QUICKSTART.md icindeki her sayisal olcum
+README.md, README.tr.md, docs/README.md ve docs/EN/QUICKSTART.md icindeki her sayisal olcum
 iddiasi (oran `8/8`, olcum adi tasiyan sayi `116 vaka`, uretilmis sayac
 `incelenmedi=0`) ya defterdeki bir alintinin icinde olmali ya da
 `kapsam.sayisal_istisna` icindeki dar ve gerekceli bir desenle eslesmelidir.

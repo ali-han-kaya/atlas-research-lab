@@ -4,6 +4,7 @@
   "kapsam": {
     "dahil": [
       "README.md",
+      "README.tr.md",
       "docs/README.md",
       "docs/EN/QUICKSTART.md"
     ],
@@ -83,7 +84,7 @@
       "iddia": "make dogrula hukmu 8/8 (8 pass, 0 fail, 0 not run)",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "`make dogrula` → **8 pass / 0 fail / 0 not run** (T1, `OLG-1`, now"
         },
         {
@@ -95,11 +96,11 @@
           "alinti": "  HUKUM: PASS — 8/8 kalem gecti"
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "`make dogrula` hükmüne girmez; 8/8 hükmü attestation ile ayrıca doğrulanır."
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "`make dogrula` bu depoda **8/8** verir ve T1 PASS'tir."
         },
         {
@@ -115,8 +116,20 @@
           "alinti": "`make iddia` is separate from `make dogrula`: it does not change the 8/8 verdict."
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "yazılır; 8/8 denmez. Ayrıntı ve negatif kontrol:"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "**8/8** gate checks"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "`make dogrula` reports **8/8**"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "`make dogrula` reports 8/8"
         }
       ],
       "durum": "OLCULDU",
@@ -134,6 +147,10 @@
         {
           "dosya": "docs/DURUM.md",
           "alinti": "| KOD öz-testi | 174/174 |"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "**174/174** KOD self-tests"
         }
       ],
       "durum": "OLCULDU",
@@ -168,7 +185,7 @@
       "iddia": "mutasyon bataryasi 102/102 vaka atesledi",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "Mutation battery **102/102 cases red + 18/18 expected findings** over 99 rules."
         },
         {
@@ -176,12 +193,16 @@
           "alinti": "SONUC: 102/102 kural atesledi · 18/18 beklenen bulgu dogrulandi · taban temiz olmayan=0"
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "102 hata + 18 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,"
         },
         {
           "dosya": "docs/README.md",
           "alinti": "Güncel katalog **120 vaka = 102 hata + 18 beklenen-bulgu**;"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "The current battery is **102/102** cases plus **18/18** expected findings over **99** rules;"
         }
       ],
       "durum": "OLCULDU",
@@ -197,7 +218,7 @@
       "iddia": "mutasyon bataryasi 18/18 beklenen bulgu",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "Mutation battery **102/102 cases red + 18/18 expected findings** over 99 rules."
         },
         {
@@ -207,6 +228,10 @@
         {
           "dosya": "docs/EN/QUICKSTART.md",
           "alinti": "cases; the 18 expected-finding cases (including TST-06, CHK-05 and the"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "The current battery is **102/102** cases plus **18/18** expected findings over **99** rules;"
         }
       ],
       "durum": "OLCULDU",
@@ -222,16 +247,20 @@
       "iddia": "mutasyon vakasi olan kural sayisi 99",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "Mutation battery **102/102 cases red + 18/18 expected findings** over 99 rules."
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "- **TEST EDİLDİ** — 99 kural (mutasyon vakası adıyla)"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
           "alinti": "of 121 rules, **99** are"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "The current battery is **102/102** cases plus **18/18** expected findings over **99** rules;"
         }
       ],
       "durum": "OLCULDU",
@@ -264,7 +293,7 @@
       "iddia": "gerekceli kapsam disi kural sayisi 22",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "- **KAPSAM DIŞI** — 22 kural, her biri ölçülmüş bir gerekçeyle: gizli anahtar"
         },
         {
@@ -285,7 +314,7 @@
       "iddia": "gerekcesiz bosluk kural sayisi 0",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "- **BOŞLUK** — 0 kural: 9 boşluğun tamamı mutasyon vakasıyla kapandı; yalnız öz-testte anılan 0, hiçbir testte geçmeyen 0."
         },
         {
@@ -306,7 +335,7 @@
       "iddia": "yalniz oz-testte anilan bosluk sayisi 0",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "- **BOŞLUK** — 0 kural: 9 boşluğun tamamı mutasyon vakasıyla kapandı; yalnız öz-testte anılan 0, hiçbir testte geçmeyen 0."
         },
         {
@@ -327,7 +356,7 @@
       "iddia": "hicbir testte gecmeyen bosluk sayisi 0",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "- **BOŞLUK** — 0 kural: 9 boşluğun tamamı mutasyon vakasıyla kapandı; yalnız öz-testte anılan 0, hiçbir testte geçmeyen 0."
         },
         {
@@ -348,7 +377,7 @@
       "iddia": "make dogrula kalem sayisi 8",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "`make dogrula` tek giriştir; **sekiz kalemi** sırayla koşar ve **ham çıktılarını** yazar:"
         },
         {
@@ -471,7 +500,7 @@
       "iddia": "demo fiksturu 8 FIX beyan ediyor",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "`./demo` prints the frozen 8-vs-2 failure with a **red verdict and"
         },
         {
@@ -479,19 +508,19 @@
           "alinti": "manifest declared 8 fixes as applied, only 2 reached the master text, and the"
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "prints the frozen 8-vs-2 failure with a **red verdict and"
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "`DENEME/` 23 Ağustos 2026'da dondurulmuş, bilerek kusurlu bir koşudur: manifesto 8 FIX'i"
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "manifesto iddiasi : 8 FIX \"UYGULANMIS\""
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "HUKUM: FAIL — iddia 8, kanit 2; dondurulmus kapi PASS dedi."
         },
         {
@@ -500,6 +529,10 @@
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "HUKUM: FAIL — iddia 8, kanit 2; dondurulmus kapi PASS dedi."
+        },
+        {
+          "dosya": "README.md",
           "alinti": "HUKUM: FAIL — iddia 8, kanit 2; dondurulmus kapi PASS dedi."
         }
       ],
@@ -517,7 +550,7 @@
       "iddia": "demo fiksturunde MASTER'da gorunen 2 FIX",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "`./demo` prints the frozen 8-vs-2 failure with a **red verdict and"
         },
         {
@@ -525,16 +558,20 @@
           "alinti": "manifest declared 8 fixes as applied, only 2 reached the master text, and the"
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "\"UYGULANMIŞ\" ilan etti, MASTER'a yalnız 2'si yansıdı, o günün FINAL GATE'i yine de PASS"
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "MASTER'da gorunen : 2 FIX"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
           "alinti": "MASTER'da gorunen : 2 FIX"
+        },
+        {
+          "dosya": "README.md",
+          "alinti": "HUKUM: FAIL — iddia 8, kanit 2; dondurulmus kapi PASS dedi."
         }
       ],
       "durum": "OLCULDU",
@@ -551,7 +588,7 @@
       "iddia": "./demo beklenen kirmiziyi rc=1 ile veriyor",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin"
         },
         {
@@ -591,7 +628,7 @@
       "iddia": "ATLAS scripts/ altinda 22 denetim betigi",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "ATLAS_SABLONLAR/   akademik hat: ajanlar, komutlar, şablonlar, 22 denetim betiği"
         }
       ],
@@ -627,7 +664,7 @@
       "iddia": "canli katalogda allowlist 9/9 gecerli",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "Allowlist'in canlı katalogda 9/9 geçerli olup olmadığı"
         },
         {
@@ -649,7 +686,7 @@
       "iddia": "yayin plani 217 dosya; parite 0 yeni / 0 degisen / 0 silinen",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "0 new / 0 changed / 0 deleted). The same commands run in CI on GitHub Actions."
         },
         {
@@ -681,7 +718,7 @@
       "iddia": "make dogrula suresi 52 s",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "| `make dogrula` | 52 s | macOS 27.2 · arm64 · Python 3.9.6 · 2026-11-19 |"
         }
       ],
@@ -693,7 +730,7 @@
       "iddia": "make mutasyon suresi 66 s",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "| `make mutasyon` | 66 s | aynı makine ve oturum |"
         }
       ],
@@ -705,7 +742,7 @@
       "iddia": "./demo suresi 1 s altinda",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "| `./demo` | < 1 s | aynı makine ve oturum |"
         }
       ],
@@ -753,7 +790,7 @@
       "iddia": "kamu agacinda OLG-1 kaniti yalniz attestation.json",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "`T1` (`OLG-1`) yalnız bu kamu ağacındaki `attestation.json` kanıtını kullanır."
         }
       ],
@@ -771,7 +808,7 @@
       "iddia": "demo REC-01: 8 bulgu == 8 FIX",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "  PASS REC-01: FAZ1 8 bulgu == FAZ2 8 FIX"
         }
       ],
@@ -789,7 +826,7 @@
       "iddia": "demo REC-02: oncelik dagilimi P0=3, P1=5",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "  PASS REC-02: oncelik dagilimi ayni {'P0': 3, 'P1': 5}"
         }
       ],
@@ -807,7 +844,7 @@
       "iddia": "demo REC-04: 8 FIX'in 6'si MASTER'da yok",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "  FAIL REC-04: 6/8 'UYGULANMIS' FIX MASTER'da yok"
         }
       ],
@@ -825,7 +862,7 @@
       "iddia": "tutarli fikstur yesil (rc=0)",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin"
         }
       ],
@@ -842,7 +879,7 @@
       "iddia": "yerel batarya maliyeti $0 (model cagrisi yok)",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "kendileri basar. Model çağrısı yoktur: yerel batarya **$0**. İngilizce hızlı başlangıç:"
         }
       ],
@@ -854,11 +891,11 @@
       "iddia": "mutasyon katalogunda 120 vaka (102 hata + 18 beklenen-bulgu)",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "120 battery cases: silent clean baseline + one violation + a red verdict or expected finding), and `tools/yayinla.py`"
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "veya ihlal sonrası beklenen iz yoksa vaka geçmez. Katalog 120 vakadır:"
         },
         {
@@ -880,11 +917,11 @@
       "iddia": "temiz teslim 6/6 fikstur (1 temiz + 5 kenar)",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "sentetik temiz kök rc=0 + 5 kenar fikstürü"
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "| Sentetik temiz teslim | `make temiz-teslim` → makale metni taşımayan temiz kök `rc=0`; 5 kenar kökü beklenen kodlarla sınanır |"
         }
       ],
@@ -901,7 +938,7 @@
       "iddia": "demo REC-03: 8 bulgunun tamami FAZ2'de atifli",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "PASS REC-03: 8 bulgunun tamami FAZ2'de atifli"
         }
       ],
@@ -919,7 +956,7 @@
       "iddia": "demo REC-05: gate 2B 6 FIX'i KANITLI ilan etti",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "FAIL REC-05: gate 2B '6' FIX'i KANITLI ilan etti ama MASTER'da yok: ['FIX-003', 'FIX-004', 'FIX-005', 'FIX-006', 'FIX-007', 'FIX-008']"
         }
       ],
@@ -937,7 +974,7 @@
       "iddia": "demo REC-06: MASTER'daki 2 FIX-ID manifestoda tanimli",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "PASS REC-06: MASTER'daki 2 FIX-ID manifestoda tanimli"
         }
       ],
@@ -955,7 +992,7 @@
       "iddia": "model-kimlik PASS satiri incelenmedi=0 dosya · onay=1 kayit",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "`taranan`, `incelenmedi=0` ve `onay` sayaçlarını gösterir."
         },
         {
@@ -1029,11 +1066,11 @@
       "iddia": "bedava profili asgari limiti 200.000/32.768",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "`bedava_politika.asgari_limit` (200.000/32.768) alt sınırı. İhlal `rc=1`;"
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.tr.md",
           "alinti": "LIMIT: 200000/32768"
         }
       ],
@@ -1075,6 +1112,18 @@
       ],
       "durum": "BEYAN",
       "gerekce": "21 Kasim 2026 yerel desen taramasi; fikstur dondurulmus, kapida yeniden kosulmaz"
+    },
+    {
+      "id": "IDD-51",
+      "iddia": "hero evidence line: 8/8 gate checks; 54/54 historical mutation baseline; 174/174 KOD self-tests",
+      "kaynaklar": [
+        {
+          "dosya": "README.md",
+          "alinti": "**8/8 · 54/54 · 174/174**"
+        }
+      ],
+      "durum": "BEYAN",
+      "gerekce": "54/54 is the earlier frozen mutation baseline, retained as a historical snapshot. Current HEAD measures 102/102 cases + 18/18 expected findings over 99 rules; 8/8 and 174/174 are current and measured by IDD-01/IDD-02."
     }
   ]
 }

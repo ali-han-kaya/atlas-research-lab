@@ -96,7 +96,7 @@ GNU make tarif hatasını 2'ye çevirdiği için 1/2 ayrımını taşımaz.
 
 ## 5. Nerede okumalı?
 
-- Giriş ve hızlı başlangıç: [`../README.md`](../README.md)
+- Giriş ve hızlı başlangıç: [`../README.tr.md`](../README.tr.md)
 - Ölçüm ve öğrenim kayıtları: [`README.md`](README.md)
 - Yayın sınırı ve manifest: [`YAYIN-SOZLESMESI.md`](YAYIN-SOZLESMESI.md)
 - Güncel sayılar (üretilmiş): [`DURUM.md`](DURUM.md)

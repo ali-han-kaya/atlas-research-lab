@@ -7,7 +7,7 @@ yazılmaz: defter bilinçli değiştiğinde burada da bilinçli olarak güncelle
 aksi halde kapı sessiz kaymaya izin vermez.
 
 <!-- IDDIA-OZET:BASLA -->
-olculdu=37 · ag=1 · beyan=10 · olculmedi=1
+olculdu=37 · ag=1 · beyan=11 · olculmedi=1
 <!-- IDDIA-OZET:BITIR -->
 
 - `OLCULDU` — komutu koşan, ham kanıt satırı defterdeki komutla ve beyanla
@@ -21,4 +21,4 @@ olculdu=37 · ag=1 · beyan=10 · olculmedi=1
 Ham kanıt dosyası defterin üst düzeyindeki `olcum_dosyasi` alanındadır
 (`tools/iddia_olcum.json`); `tools/iddia.py` bu yolun tam olarak o dosya
 olduğunu doğrular. Tek bir satırın defter → komut → ham kanıt → hüküm izi kök
-`README.md` içindeki **Tek bir iddiayı elle izlemek** bölümündedir.
+`README.tr.md` içindeki **Tek bir iddiayı elle izlemek** bölümündedir.
