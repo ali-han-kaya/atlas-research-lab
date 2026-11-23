@@ -1,6 +1,6 @@
 # ATLAS Research Lab
 
-[English](README.md) · **Türkçe**
+[English](README.en.md) · **Türkçe**
 
 [![dogrula](https://github.com/ali-han-kaya/atlas-research-lab/actions/workflows/dogrula.yml/badge.svg)](https://github.com/ali-han-kaya/atlas-research-lab/actions/workflows/dogrula.yml)
 

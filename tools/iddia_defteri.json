@@ -3,6 +3,7 @@
   "olcum_dosyasi": "tools/iddia_olcum.json",
   "kapsam": {
     "dahil": [
+      "README.en.md",
       "README.md",
       "README.tr.md",
       "docs/README.md",
@@ -120,15 +121,15 @@
           "alinti": "yazılır; 8/8 denmez. Ayrıntı ve negatif kontrol:"
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.en.md",
           "alinti": "**8/8** gate checks"
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.en.md",
           "alinti": "`make dogrula` reports **8/8**"
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.en.md",
           "alinti": "`make dogrula` reports 8/8"
         }
       ],
@@ -149,7 +150,7 @@
           "alinti": "| KOD öz-testi | 174/174 |"
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.en.md",
           "alinti": "**174/174** KOD self-tests"
         }
       ],
@@ -201,7 +202,7 @@
           "alinti": "Güncel katalog **120 vaka = 102 hata + 18 beklenen-bulgu**;"
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.en.md",
           "alinti": "The current battery is **102/102** cases plus **18/18** expected findings over **99** rules;"
         }
       ],
@@ -230,7 +231,7 @@
           "alinti": "cases; the 18 expected-finding cases (including TST-06, CHK-05 and the"
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.en.md",
           "alinti": "The current battery is **102/102** cases plus **18/18** expected findings over **99** rules;"
         }
       ],
@@ -259,7 +260,7 @@
           "alinti": "of 121 rules, **99** are"
         },
         {
-          "dosya": "README.md",
+          "dosya": "README.en.md",
           "alinti": "The current battery is **102/102** cases plus **18/18** expected findings over **99** rules;"
         }
       ],
@@ -534,6 +535,10 @@
         {
           "dosya": "README.md",
           "alinti": "HUKUM: FAIL — iddia 8, kanit 2; dondurulmus kapi PASS dedi."
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "HUKUM: FAIL — iddia 8, kanit 2; dondurulmus kapi PASS dedi."
         }
       ],
       "durum": "OLCULDU",
@@ -571,6 +576,10 @@
         },
         {
           "dosya": "README.md",
+          "alinti": "HUKUM: FAIL — iddia 8, kanit 2; dondurulmus kapi PASS dedi."
+        },
+        {
+          "dosya": "README.en.md",
           "alinti": "HUKUM: FAIL — iddia 8, kanit 2; dondurulmus kapi PASS dedi."
         }
       ],
@@ -1118,7 +1127,7 @@
       "iddia": "hero evidence line: 8/8 gate checks; 54/54 historical mutation baseline; 174/174 KOD self-tests",
       "kaynaklar": [
         {
-          "dosya": "README.md",
+          "dosya": "README.en.md",
           "alinti": "**8/8 · 54/54 · 174/174**"
         }
       ],
