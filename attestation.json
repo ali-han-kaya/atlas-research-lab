@@ -1,5 +1,5 @@
 {
-  "commit": "0d32af1ed8ea487afcb0feade7ad938059b04388",
+  "commit": "5a4df7b2adfd439f2e9f6a711360b32ec505052b",
   "file_count": 271,
   "files": [
     {
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "0238e33fbddb70865ba9620c7af41d9372fdfe0cc32523328b4191611ca3be76",
-      "size": 7692
+      "sha256": "e126e8bcbc81787e4082afafde6f859e07d49bb68af8a0f097df0a274f2f6e4e",
+      "size": 7920
     },
     {
       "mode": "100644",
@@ -1163,8 +1163,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "9fa7f1c9603bce5cac9f5242b6055fa11a79f2f5eba4899f7279f0dc85aa6b72",
-      "size": 5292
+      "sha256": "80d57e1cbe186fd628cabf20ee7605b457557e077567240c4ac7dba87289cfe2",
+      "size": 5617
     },
     {
       "mode": "100644",
@@ -1217,8 +1217,8 @@
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "3dd122e0df06305164b8112f3bbf31cf77e3292bdcb6cf91ee15d0cca467e2a8",
-      "size": 34468
+      "sha256": "f7face4ed92d9ade18fbed1662cde4638e47acb111d239621bf3b2a9e0108035",
+      "size": 35312
     },
     {
       "mode": "100644",
@@ -1475,8 +1475,8 @@
     {
       "mode": "100644",
       "path": "tools/kamu_lint.py",
-      "sha256": "36128631fce620371e7881b4386e5de10884132badd44de560d073c6b51dce3f",
-      "size": 9207
+      "sha256": "c909ba3e9162e589444d61ef67aac0ef598321cdb4101964732044490e31d40f",
+      "size": 20348
     },
     {
       "mode": "100644",
@@ -1629,7 +1629,7 @@
       "size": 14250
     }
   ],
-  "generated_at": "2026-11-23T14:01:31Z",
+  "generated_at": "2026-11-23T16:04:23Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1644,6 +1644,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "53de20453ab1454adf5414f3bfa1ec2af9101187",
-  "tree_sha256": "36a0a0d87ae2567fe1f23510126049277399821f383d2336f336a30c9f13bc8d"
+  "tree": "ecec6cb31382c4749872f75e9a9612a2fa8cd1d7",
+  "tree_sha256": "eb94eef848f6b912767d41a8c65be65329a8ec81659ee30c8b31f7a4b9fb2634"
 }
