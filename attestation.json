@@ -1,6 +1,6 @@
 {
-  "commit": "1bd14a81c5e023aa070de3cf265c96454f8a9707",
-  "file_count": 273,
+  "commit": "54f6b322242996793ee50d0eb40a4c43cd338f0e",
+  "file_count": 275,
   "files": [
     {
       "mode": "100755",
@@ -1396,6 +1396,12 @@
     },
     {
       "mode": "100644",
+      "path": "docs/YEDEK.md",
+      "sha256": "0e78558c4a6c8f9a956a558f26ee679f5147a29596ea811cb492a7e1badd1843",
+      "size": 3518
+    },
+    {
+      "mode": "100644",
       "path": "docs/assets/demo-red.gif",
       "sha256": "f1f092dba5ee4cc4888cf87e1f53bf57fd76aa2f7bca17573493ccb7d13782b9",
       "size": 255253
@@ -1423,6 +1429,12 @@
       "path": "scripts/kur_hooks.sh",
       "sha256": "792cf812d0c725137913008c38be2c902d630d6d23d605c0464e77de5a2d250d",
       "size": 358
+    },
+    {
+      "mode": "100755",
+      "path": "scripts/yedek_al.sh",
+      "sha256": "bd323d963fe0b1d8cf24dcc4a0990a3e193e6209fed8cd1648ef1066818975d5",
+      "size": 1611
     },
     {
       "mode": "100644",
@@ -1631,17 +1643,17 @@
     {
       "mode": "100644",
       "path": "tools/yayin_manifest.json",
-      "sha256": "47023b788f4f663114537d94b81887b61e894759549923ac2b9a04efefd8a16c",
-      "size": 12570
+      "sha256": "9f7eedd603a90a8211a0df8d3dea366e3b22163a4f480f1f99034a6f8c44376c",
+      "size": 12618
     },
     {
       "mode": "100644",
       "path": "tools/yayinla.py",
-      "sha256": "835fc2a5e029a92023b459e9bce736792bea93d8f4b65e092cdf0e81ae60eb27",
-      "size": 14250
+      "sha256": "b42513202a75d1a648f740204572ac9937f6baf212b4b8dc291b8808c31fb26c",
+      "size": 14571
     }
   ],
-  "generated_at": "2026-11-23T21:26:07Z",
+  "generated_at": "2026-11-23T22:21:51Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1656,6 +1668,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "250e2282995c3eda41ddd3c10440f23391951a57",
-  "tree_sha256": "a9855d1dd3f54af9d361fe331884520be9aeb56451a61f342deebb5498a6eaf2"
+  "tree": "73d8a36011fbf920d471e99f06b651bdab283280",
+  "tree_sha256": "b4de6db83dac9ff329bf7015c3fecf4fd5047cb2b132d1bf2e4e37db50b66e4e"
 }
