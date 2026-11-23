@@ -36,6 +36,22 @@ flowchart LR
 - **Toolkit:** model-agnostik oturum sözleşmesi ve çalıştırılabilir denetimler.
 - **Kanıt katmanı:** `attestation.json` commit/ağaç/dosya hash'lerini; `make iddia` ise kamu belgelerindeki sayıları üreten komutlara bağlar.
 
+### Bir brief'in izlediği yol
+
+| Aşama | Gerçek giriş (bu depoda) | Üretilen / teslim edilen |
+|---|---|---|
+| Kapsam | `ATLAS_SABLONLAR/.opencode/command/atlas-faz0.md` · `ATLAS_SABLONLAR/.opencode/agent/atlas-scoper.md` | Hedef projede kapsam sözleşmesi; public sınır `docs/README.md` |
+| Üç lens | `ATLAS_SABLONLAR/.opencode/command/atlas-faz1.md` · `atlas-lens-consistency.md` · `atlas-lens-structure.md` · `atlas-lens-editor.md` | Bağımsız bulgu listesi |
+| Hedefli düzeltme | `ATLAS_SABLONLAR/.opencode/command/atlas-faz2.md` · `atlas-writer-master.md` | FIX manifesti ve değişen metin |
+| MASTER + kapı | `ATLAS_SABLONLAR/.opencode/command/atlas-faz3.md` · `atlas-gate-2a.md` · `atlas-gate-2b.md` | MASTER sürümü; kabul/red kararı |
+| Kanıt | `make dogrula` · `make iddia` · `./demo` · `make kanit-dogrula` | Ham komut çıktısı, `attestation.json`, `kanit-paketi/` |
+| Public yayın | `tools/yayin_kapisi.py` · `tools/yayinla.py` | Yalnız manifestteki mekanizma; makale/çıktı arşivi değil |
+
+KOD hattı aynı mantığı `KOD_SABLONLAR/00_KOD_OKU_BENI.md` → `kod-faz0` … `kod-teslim`
+komutlarıyla yürütür; KOD'un zorunlu artefaktı taban (`BASELINE`) ve 2A/2B/2C
+kapılarıdır. Yukarıdaki girişler gerçek dosyalardır; hedef projede kopyalanan
+şablonlar bu depodaki mekanizmayı çağırır.
+
 ## Kapı ve test kapsamı — nerede?
 
 | Katman | Giriş | Ne ölçer? |
@@ -136,9 +152,10 @@ olarak saklandı.
 | **Kayıt** | `docs/` | Ölçüm koşuları, denetim raporları, ders defteri, kanonik olgu tablosu. |
 | **Mutasyon** | `tools/mutasyon_bataryasi.py` | Kapı kuralları gerçekten ateşliyor mu: sessiz temiz taban + tek ihlal + hata vakasında kırmızı hüküm, beklenen-bulgu vakasında işaretli bulgu. SRC-01 tablo fikstürü `tools/src01_kaynak_siniflandirma_fiksturu.md` altında izlenir; temiz ve bozuk sürüm ondan üretilir. Kişisel yol yok, `SKILL.md` bağımlılığı yok. |
 
-Ajan tanımları `.opencode/agent/` ve `.opencode/command/` altındadır; her girdi
-`ATLAS_SABLONLAR/.opencode/` içindeki tek kaynağa **göreli symlink**'tir — ikinci
-nüsha yoktur.
+Ajan tanımları `.opencode/agent/` ve `.opencode/command/` altındadır; ATLAS
+girdileri `ATLAS_SABLONLAR/.opencode/` içindeki tek kaynağa **göreli symlink**'tir
+(kırık bağ yok; tümü çözülüyor). Tek istisna `.opencode/agent/lab-orchestrator.md` gerçek
+dosyadır: laboratuvarın kendi birincil koordinatörüdür.
 
 ---
 
@@ -172,6 +189,8 @@ make iddia     # tam iddia zinciri: defter → komut → ham kanıt
 ./demo         # beklenen: rc=1 (kırmızı)
 make temiz-teslim  # sentetik temiz kök rc=0 + 5 kenar fikstürü
 ```
+
+> Tam klon kullanın; `--depth 1` T1'in `attestation.json` geçmiş doğrulamasını kırar.
 
 `make dogrula` tek giriştir; **sekiz kalemi** sırayla koşar ve **ham çıktılarını** yazar:
 depo hijyeni, Python sözdizimi, kabuk sözdizimi, sır taraması, sır kapısı öz-testi ve üç
@@ -242,6 +261,8 @@ olarak kurar. Temiz kök `tools/demo.py` ve `scripts/check_integrity.sh --full`
 | `make mutasyon` | 66 s | aynı makine ve oturum |
 | `./demo` | < 1 s | aynı makine ve oturum |
 
+Bu satırlar tarihli yerel ölçümlerdir; taze bir `/tmp` klonunda Python 3.9 alt
+testleri daha uzun sürebilir. Süre hüküm değildir; hüküm `make dogrula` rc'sidir.
 CI süreleri runner'a bağlıdır; burada iddia edilmez, iş akışı kaydı esastır.
 
 Paketleri ayrı ayrı koşmak istersen (yollar depo köküne görelidir):
