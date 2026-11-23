@@ -2,7 +2,7 @@ PY ?= python3
 # pip-audit yalniz gelistirme aracidir; varsa yerel sanal ortam kullanilir.
 PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(PY))
 
-.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon sir-mutasyon oztest demo demo-selftest temiz-teslim kapsam kapsam-yaz model-kimlik kamu-lint kamu-selftest yayin-kapisi katalog-kontrol katalog-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
+.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon sir-mutasyon oztest demo demo-selftest temiz-teslim kapsam kapsam-yaz model-kimlik kamu-lint kamu-selftest kamu-arama kamu-arama-selftest yayin-kapisi katalog-kontrol katalog-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giris: hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
@@ -25,6 +25,8 @@ yardim:
 	@echo "make model-kimlik  emekli model kimligi: kor noktasiz tarama + acik onay listesi"
 	@echo "make kamu-lint  ozel yol/eski alan/sahte hash geri sizma taramasi"
 	@echo "make kamu-selftest  kamu lint negatif fiksturleri"
+	@echo "make kamu-arama  repo kapsamli GitHub kod aramasi; yalniz incomplete_results=false 0'lari kanit"
+	@echo "make kamu-arama-selftest  kod arama sozlesmesini agsiz sina"
 	@echo "make yayin-kapisi  yayin manifesti + makale/sir/ozel yol kapisi (dogrula on kosulu)"
 	@echo "make katalog-kontrol  canli models.dev kapisi: allowlist + bedava profili + append-only kanit (KAYIT_ARGS ile yol)"
 	@echo "make katalog-selftest  katalog kapisi ve uretici oz-testleri (ag yok; dogrula on kosulu)"
@@ -98,6 +100,12 @@ kamu-lint:
 
 kamu-selftest:
 	@$(PY) tools/kamu_lint.py --oztest
+
+kamu-arama:
+	@$(PY) tools/kamu_lint.py --github-arama
+
+kamu-arama-selftest:
+	@$(PY) tools/kamu_lint.py --github-oztest
 
 yayin-kapisi:
 	@$(PY) tools/yayin_kapisi.py --kontrol --oztest

@@ -61,11 +61,21 @@ kapılarıdır. Yukarıdaki girişler gerçek dosyalardır; hedef projede kopyal
 | Kapı davranışı | `make mutasyon` | Temiz taban + tek ihlal + kırmızı hüküm; kuralların gerçekten ateşlediğini |
 | Ağaç kanıtı | `make kanit-dogrula` | `attestation.json` içindeki commit, ağaç ve dosya hash'lerini |
 | Yayın sınırı | `make yayin-kapisi` | Manifest, listelenmemiş dosya, makale izi, sır ve kişisel mutlak yol |
+| Kod arama kanıtı | `make kamu-arama` | GitHub kod aramasında repo kapsamlı sorgular; yalnız `incomplete_results=false` olan sıfır sonuçlar kanıt; indeks gecikmesi `OLCULEMEDI` |
 | Kırmızı demo | `./demo` | Bilerek kusurlu koşuda beklenen reddi; `make demo` değil, doğrudan `./demo` |
 
 Güncel öz-test ve envanter sayıları üretilmiş [`docs/DURUM.md`](docs/DURUM.md)
 dosyasındadır; README'ye elle sayı yazılmaz. Yayın kapısı `make dogrula`nın
 **ön koşuludur**, sayılan sekiz kaleme eklenmez.
+
+`make kamu-arama` GitHub kod aramasını repo kapsamında sorgular. Bir sıfır sonuç
+yalnız `incomplete_results=false` ise kanıt sayılır; `incomplete_results=true` ise
+sonuç `OLCULEMEDI INDEKS_YETISMEDI` olarak raporlanır ve **PASS sayılmaz**. Token
+`GITHUB_TOKEN`/`GH_TOKEN` ortamından veya `gh auth token` üzerinden okunur; token
+çıktıya yazılmaz. Ağsız sözleşme testi `make kamu-arama-selftest`tir. Kendi
+sorgularınızı `python3 tools/kamu_lint.py --github-arama --sorgu '<metin>'` ile
+verebilirsiniz. Bu kontrol ağ ve kimlik gerektirdiği için `make dogrula`nın
+sekiz kalemine dahil değildir; canlı koşu ayrıca yapılır.
 
 ## Yayın sınırı
 

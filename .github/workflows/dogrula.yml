@@ -65,6 +65,11 @@ jobs:
       - name: make dogrula-ci
         run: make dogrula-ci
 
+      # GitHub kod arama sozlesmesi agsiz sahte API ile sinanir. Canli sorgu
+      # token ve guncel indeks gerektirir; CI hukmune dahil edilmez.
+      - name: Kod arama sozlesmesi (agsiz)
+        run: make kamu-arama-selftest
+
       # Agac kaniti: gercek commit + dosya sha256'lari + guncel agac uyumu.
       # Kayitli commit'in cozulmesi icin checkout tam gecmisi indirir.
       - name: Agac kaniti guncel mi
