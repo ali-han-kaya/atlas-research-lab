@@ -1,5 +1,5 @@
 {
-  "commit": "5a4df7b2adfd439f2e9f6a711360b32ec505052b",
+  "commit": "6cf3fd0291b8f0609c0b587555b6014f91aad115",
   "file_count": 271,
   "files": [
     {
@@ -1210,15 +1210,15 @@
     },
     {
       "mode": "100644",
-      "path": "README.en.md",
-      "sha256": "f1ba7259087f6f81aad62e4f063d3a5862dda0999eae57edc3b7ca1b69105a6e",
-      "size": 5116
+      "path": "README.md",
+      "sha256": "8d739c5a071eec01a9f900b9affc97ae643349a024a679dcab8f707821d0712c",
+      "size": 5621
     },
     {
       "mode": "100644",
-      "path": "README.md",
-      "sha256": "f7face4ed92d9ade18fbed1662cde4638e47acb111d239621bf3b2a9e0108035",
-      "size": 35312
+      "path": "README.tr.md",
+      "sha256": "4d5606bc784bb18c8129c38a734ec42e2c8ca454b5df6029310575abcfdd83aa",
+      "size": 35367
     },
     {
       "mode": "100644",
@@ -1235,8 +1235,8 @@
     {
       "mode": "100644",
       "path": "docs/ATLAS-KISA-TUR.md",
-      "sha256": "b8a9dc2fe85d454965032cd4a4c55f836b52421803eee92ab5c7d8d745851756",
-      "size": 4623
+      "sha256": "8ea3b73876e9fb56aee01c9ed36e78fb1969f98e7f09e359a2ece2fe18c07af7",
+      "size": 4629
     },
     {
       "mode": "100644",
@@ -1283,8 +1283,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "036acf86628bad486e35e4e9c62954912621ce0ce2e8399b5a030b17aa526f53",
-      "size": 11358
+      "sha256": "e5c5c16377413b81367660028c7fad07697af57494f677008e2de4c49bef799d",
+      "size": 11361
     },
     {
       "mode": "100644",
@@ -1295,8 +1295,8 @@
     {
       "mode": "100644",
       "path": "docs/IDDIA-OZET.md",
-      "sha256": "5df02807ef9d352465dc875fff8db00113f7eaff8fad54035c52b38505e84652",
-      "size": 1241
+      "sha256": "09ffa74597c94657913f0c6897742c62e997f70d41da886404d45f9db7549592",
+      "size": 1244
     },
     {
       "mode": "100644",
@@ -1379,8 +1379,8 @@
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "858f486243c6a0be8af65a0de6bfccbecd6766f5d9750d1f83f6df700574e321",
-      "size": 31124
+      "sha256": "6f42922c8c1b4bd48e9bf007bd14c2f60fc02d60ddb2d4bb0a8113f7cabb79be",
+      "size": 31144
     },
     {
       "mode": "100644",
@@ -1451,14 +1451,14 @@
     {
       "mode": "100644",
       "path": "tools/iddia.py",
-      "sha256": "2f1dc9ddb558ddd4934a198ef743a8c211217e8afbc4dfbc9545175a07151715",
-      "size": 34993
+      "sha256": "bfcf8771d0421f563ce37ff2380da3077277c05c9b3fbc6d88c04e06e60093ec",
+      "size": 35007
     },
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "84910db920b6828e51d1c52d70de8f28fe3e647e2b0d12e240ea8ace9c6363a1",
-      "size": 33226
+      "sha256": "a857c42da5b9e3c2352dac8688d7fc2a61a61b2bd27f3e6394bdc92fb1c92523",
+      "size": 35108
     },
     {
       "mode": "100644",
@@ -1619,7 +1619,7 @@
     {
       "mode": "100644",
       "path": "tools/yayin_manifest.json",
-      "sha256": "2a92764bb1f76e1e3cf97ffd4bec9b109089ab452bbcb5e31d790bfb560b912e",
+      "sha256": "5998e3ee6360afa14215062a599242750df3ee1318f020619485c1ea9a0c3753",
       "size": 12518
     },
     {
@@ -1629,7 +1629,7 @@
       "size": 14250
     }
   ],
-  "generated_at": "2026-11-23T16:04:23Z",
+  "generated_at": "2026-11-23T20:33:22Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1644,6 +1644,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "ecec6cb31382c4749872f75e9a9612a2fa8cd1d7",
-  "tree_sha256": "eb94eef848f6b912767d41a8c65be65329a8ec81659ee30c8b31f7a4b9fb2634"
+  "tree": "d1dcf26231ad66f885648c7d5647c8ae4823cc52",
+  "tree_sha256": "1b753c41f83fe264430fd3b5acde53594fad7608124614e900e8ab98272c2e64"
 }
