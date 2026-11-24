@@ -68,6 +68,63 @@ DEC_BASLIKLAR = ['Etik Kurul', 'Cikar Catismasi', 'Finansman', 'credit',
 # Yalniz REC ailesi: "tek ihlal -> yalniz hedef FAIL etiketi" ve "ihlali geri al
 # -> yeniden yesil" sozlesmesini her kosuda zorunlu kilar.
 FAIL_ETIKET = re.compile(r'\bFAIL\s+([A-Z]{2,8}(?:-[A-Z0-9]{1,8}){0,2}-\d{2,3})\b')
+# iz degerinden izinli kural kimlikleri turetilirken kullanilir.
+KIMLIK_ARAMA = re.compile(r'[A-Z]{2,8}(?:-[A-Z0-9]{1,8}){0,2}-\d{2,3}')
+ONEK_ARAMA = re.compile(r'[A-Z]{2,8}-\Z')
+
+# Genel kontroller HER vakada aciktir (varsayilan). Case bazinda yalniz
+# kapatilabilir; kapatma gerekcesi vaka kaydindaki opsiyonda gorunur.
+VARSAYILAN_YALNIZ = True
+VARSAYILAN_KONTROL = True
+
+
+def kontrol_yedek(kok):
+    """Geri-alma yedegi: depo kopyasinin TAMAMI (kardes fiksturler dahil).
+
+    Bazi vakalar fiksturu depo kopyasinin YANINA kurar (or. PL-19 icin
+    `kok.parent/sandbox_pl19`). Yalniz `kok`u yedeklemek o dosyalari geri
+    almaz ve kontrol yanlislikla kirmizi kalirdi.
+    """
+    yedek = Path(tempfile.mkdtemp(prefix='atlas_mut_kontrol_'))
+    kopya = yedek / 'kopya'
+    shutil.copytree(kok.parent, kopya, symlinks=True)
+    return yedek, kopya
+
+
+def kontrol_geri(kok, yedek, kopya):
+    """Ihlali geri al: gecici calisma agacini yedekten aynen kur."""
+    shutil.rmtree(kok.parent)
+    shutil.copytree(kopya, kok.parent, symlinks=True)
+    shutil.rmtree(yedek, ignore_errors=True)
+
+
+def izinli_etiketler(iz):
+    """`iz`den izinli kural etiketleri kumesini turet.
+
+    - somut kimlik ('REC-05')  -> {'REC-05'}
+    - tuple ('FRZ-01','FRZ-02') -> iki kimlik
+    - onek ('SEC-')             -> ONEK modu; bu onekle baslayan her etiket
+    - etiketsiz ('FAIL — ikili') -> bos kume (kapi kural kimligi basmiyor)
+    """
+    parcalar = [iz] if isinstance(iz, str) else list(iz)
+    onekler = tuple(p for p in parcalar
+                    if isinstance(p, str) and ONEK_ARAMA.match(p))
+    if onekler:
+        return 'ONEK', onekler
+    kume = set()
+    for p in parcalar:
+        if isinstance(p, str):
+            kume.update(KIMLIK_ARAMA.findall(p))
+    return 'KUME', frozenset(kume)
+
+
+def sizan_etiketler(iz, cikti):
+    """Ciktida gecen ama `iz`in izin verdigi kumenin disinda kalan FAIL etiketleri."""
+    tur, kume = izinli_etiketler(iz)
+    etiketler = set(FAIL_ETIKET.findall(cikti))
+    if tur == 'ONEK':
+        return sorted(e for e in etiketler if not e.startswith(kume))
+    return sorted(etiketler - set(kume))
 REC_KONTROL = {'kontrol': True, 'yalniz': True}
 
 
@@ -289,8 +346,8 @@ def vaka_sozlesmesi(vaka):
 
 
 def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None,
-                      terminal=False, env=None, kontrol=False, yalniz=False,
-                      taban_bilgi=None):
+                      terminal=False, env=None, kontrol=VARSAYILAN_KONTROL,
+                      yalniz=VARSAYILAN_YALNIZ, taban_bilgi=None):
     """(durum, ayrinti) dondurur. taban_rc: temiz kopyada beklenen cikis kodu.
 
     `iz` bir dize veya dize dizisi olabilir; hepsi mutasyon ciktisinda aranir.
@@ -314,11 +371,9 @@ def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None,
     komut = [sys.executable, betik] + argumanlar(kok)
     calisma = cwd or kok
     yedek = None
+    yedek = kopya = None
     if kontrol:
-        yedek = kok.parent / (kok.name + '_kontrol_yedek')
-        if yedek.exists():
-            shutil.rmtree(yedek)
-        shutil.copytree(kok, yedek, symlinks=True)
+        yedek, kopya = kontrol_yedek(kok)
 
     rc0, o0 = kos(komut, cwd=calisma, env=env)
     if rc0 != taban_rc:
@@ -356,18 +411,12 @@ def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None,
         return 'ATESLEMEDI', 'rc=%d ama beklenen iz(ler) (%s) ciktida yok' % (
             rc1, ', '.join(eksik_iz))
     if yalniz:
-        etiketler = FAIL_ETIKET.findall(o1)
-        if iz not in etiketler:
-            return 'ATESLEMEDI', 'beklenen FAIL %s yok; FAIL etiketleri=%s' % (
-                iz, ', '.join(sorted(set(etiketler))) or 'yok')
-        diger = sorted(set(etiketler) - {iz})
+        diger = sizan_etiketler(iz, o1)
         if diger:
             return 'ATESLEMEDI', 'baska kural etiketi sizdi: %s' % ', '.join(diger)
 
     if kontrol:
-        shutil.rmtree(kok)
-        shutil.copytree(yedek, kok, symlinks=True)
-        shutil.rmtree(yedek)
+        kontrol_geri(kok, yedek, kopya)
         rc2, o2 = kos(komut, cwd=calisma, env=env)
         if rc2 != taban_rc:
             return 'KONTROL_KIRMIZI', 'kontrol rc=%d (beklenen %d) · %s' % (
@@ -1270,13 +1319,17 @@ def _mk_aktif_sayac_sil(k):
         "            ''\n")
 
 
-def taban_ve_bulgu(kok, kapi, argumanlar, mutasyon, iz, cwd=None, env=None):
+def taban_ve_bulgu(kok, kapi, argumanlar, mutasyon, iz, cwd=None, env=None,
+                   kontrol=VARSAYILAN_KONTROL, yalniz=VARSAYILAN_YALNIZ):
     """Kirmizi uretmeyen kural icin: temiz tabanda iz YOK, ihlalde iz VAR."""
     betik = kok / kapi
     if not betik.is_file():
         return 'EKSIK', 'kapi betigi yok: %s' % kapi
     komut = [sys.executable, betik] + argumanlar(kok)
     calisma = cwd or kok
+    yedek = kopya = None
+    if kontrol:
+        yedek, kopya = kontrol_yedek(kok)
     rc0, o0 = kos(komut, cwd=calisma, env=env)
     if rc0 != 0:
         return 'TABAN_KIRIK', 'taban rc=%d (beklenen 0) · %s' % (
@@ -1289,7 +1342,23 @@ def taban_ve_bulgu(kok, kapi, argumanlar, mutasyon, iz, cwd=None, env=None):
     rc1, o1 = kos(komut, cwd=calisma, env=env)
     if iz not in o1:
         return 'ATESLEMEDI', 'beklenen bulgu (%s) mutasyon sonrasi ciktida yok (rc=%d)' % (iz, rc1)
-    return 'GECTI-BULGU', 'taban sessiz · mutasyon bulgusu=%s (rc=%d)' % (iz, rc1)
+    if yalniz:
+        diger = sizan_etiketler(iz, o1)
+        if diger:
+            return 'ATESLEMEDI', 'baska kural etiketi sizdi: %s' % ', '.join(diger)
+    if kontrol:
+        kontrol_geri(kok, yedek, kopya)
+        rc2, o2 = kos(komut, cwd=calisma, env=env)
+        if rc2 != 0:
+            return 'KONTROL_KIRMIZI', 'kontrol rc=%d (beklenen 0) · %s' % (
+                rc2, o2.strip().splitlines()[-1] if o2.strip() else '')
+        if iz in o2:
+            return 'KONTROL_KIRMIZI', 'kontrol ciktisinda hala bulgu var: %s' % iz
+        if FAIL_ETIKET.findall(o2):
+            return 'KONTROL_KIRMIZI', 'kontrol ciktisinda FAIL etiketi var: %s' % (
+                ', '.join(sorted(set(FAIL_ETIKET.findall(o2)))))
+    return 'GECTI-BULGU', ('taban sessiz · mutasyon bulgusu=%s (rc=%d) · '
+                            'kontrol rc=0 · FAIL iz yok' % (iz, rc1))
 
 
 def vakalar():
@@ -1398,9 +1467,13 @@ def vakalar():
          lambda k: ekle(k, 'sandbox/metin_tr.md', 'Ikinci yazim: sak\u012bna.\n'),
          'TR-02'),
         # --- cite_match ------------------------------------------------------
+        # EKLEME, degistirme degil: mevcut atif korunur ki CITE-02 (kaynakca
+        # girdisi anilmiyor) sizmasin; tek ihlal kaynakcada olmayan yeni atif.
         ('CITE-01', 'ATLAS', 'metindeki atif kaynakcada', 'ATLAS_SABLONLAR/scripts/cite_match.py',
          lambda k: ['--dosya', str(k / 'sandbox' / 'cite.md')],
-         lambda k: degistir(k, 'sandbox/cite.md', '(Yazar, 2020)', '(Diger, 2021)'),
+         lambda k: degistir(k, 'sandbox/cite.md',
+                            'Govde metni (Yazar, 2020).',
+                            'Govde metni (Yazar, 2020) ve (Yabanci, 2021).'),
          'CITE-01'),
         ('CITE-02', 'ATLAS', 'kaynakcadaki girdi anilir', 'ATLAS_SABLONLAR/scripts/cite_match.py',
          lambda k: ['--dosya', str(k / 'sandbox' / 'cite.md')],
@@ -1831,9 +1904,13 @@ def vakalar():
          'UYARI QR-02-denge', 'BULGU'),
         ('PERM-03', 'KOD', 'uzanti kalibi kok seviye', 'KOD_SABLONLAR/scripts/perm_lint.py',
          lambda k: ['--dizin', str(k / 'sandbox_perm')],
+         # Cift kalipla yazilir: kok "*.log" ve ic ice "**/*.log" birlikte.
+         # Yalniz "**/*.log" verilince PERM-01 (olu kural) ve PERM-02 (esdes
+         # kalip eksik) da atesler ve PERM-03'u izole etmek mumkun olmazdi.
          lambda k: degistir(k, 'sandbox_perm/.opencode/agent/ajan.md',
                             '  read:\n    "*": allow\n',
-                            '  read:\n    "*": allow\n    "**/*.log": deny\n'),
+                            '  read:\n    "*": allow\n'
+                            '    "*.log": deny\n    "**/*.log": deny\n'),
          'PERM-03', 'BULGU'),
         ('PERM-05', 'KOD', 'tek deny dize bicimi', 'KOD_SABLONLAR/scripts/perm_lint.py',
          lambda k: ['--dizin', str(k / 'sandbox_perm')],
@@ -1849,9 +1926,13 @@ def vakalar():
          'PERM-06', 'BULGU'),
         ('PERM-07', 'KOD', 'yol kalibi goreli', 'KOD_SABLONLAR/scripts/perm_lint.py',
          lambda k: ['--dizin', str(k / 'sandbox_perm')],
+         # Mutlak yol kalibi ciftiyle yazilir; tek basina PERM-02 (ic ice yol
+         # korunmuyor) sizardi. Amac yalniz PERM-07 uyarisini izole etmek.
          lambda k: degistir(k, 'sandbox_perm/.opencode/agent/ajan.md',
                             '  read:\n    "*": allow\n',
-                            '  read:\n    "*": allow\n    "/etc/passwd": deny\n'),
+                            '  read:\n    "*": allow\n'
+                            '    "/etc/passwd": deny\n'
+                            '    "**//etc/passwd": deny\n'),
          'PERM-07', 'BULGU'),
         ('PERM-08', 'KOD', 'bash deny tek sinir degil', 'KOD_SABLONLAR/scripts/perm_lint.py',
          lambda k: ['--dizin', str(k / 'sandbox_perm')],
@@ -2166,20 +2247,22 @@ def main():
             if sozlesme == SOZLESME_BULGU:
                 durum, ayrinti = taban_ve_bulgu(
                     hedef, kapi, argumanlar, mutasyon, iz, cwd=calisma,
-                    env=opsiyon.get('env'))
+                    env=opsiyon.get('env'),
+                    kontrol=bool(opsiyon.get('kontrol', VARSAYILAN_KONTROL)),
+                    yalniz=bool(opsiyon.get('yalniz', VARSAYILAN_YALNIZ)))
             elif sozlesme == SOZLESME_TERMINAL:
                 durum, ayrinti = taban_ve_terminal(
                     hedef, kapi, argumanlar, mutasyon, iz, cwd=calisma,
                     env=opsiyon.get('env'),
-                    kontrol=bool(opsiyon.get('kontrol')),
-                    yalniz=bool(opsiyon.get('yalniz')),
+                    kontrol=bool(opsiyon.get('kontrol', VARSAYILAN_KONTROL)),
+                    yalniz=bool(opsiyon.get('yalniz', VARSAYILAN_YALNIZ)),
                     taban_bilgi=opsiyon.get('taban_bilgi'))
             else:
                 durum, ayrinti = taban_ve_mutasyon(
                     hedef, kapi, argumanlar, mutasyon, iz, cwd=calisma,
                     env=opsiyon.get('env'),
-                    kontrol=bool(opsiyon.get('kontrol')),
-                    yalniz=bool(opsiyon.get('yalniz')),
+                    kontrol=bool(opsiyon.get('kontrol', VARSAYILAN_KONTROL)),
+                    yalniz=bool(opsiyon.get('yalniz', VARSAYILAN_YALNIZ)),
                     taban_bilgi=opsiyon.get('taban_bilgi'))
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
