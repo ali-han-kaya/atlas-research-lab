@@ -582,13 +582,19 @@ tek ihlal → işaretli bulgu (`rc=0` olabilir). **Her kuralın** durumu ise
 - **TEST EDİLDİ** — 93 kural (ateşleyen HATA/TERMINAL vakasıyla)
 - **BEKLENEN BULGU** — 24 kural (yalnız P1/beklenen-bulgu sözleşmesiyle;
   kapsam sayısına eklenmez)
-- **KAPSAM DIŞI** — 4 kural, her biri ölçülmüş bir gerekçeyle: başlıkta
-  bildirilen ama kodda hiçbir dalın basmadığı ölü kimlikler (DEP-02, API-03,
-  OZT-04, SEC-04)
+- **ENVANTER DIŞI — ölü kimlik** — 4 kimlik, her biri ölçülmüş bir gerekçeyle:
+  başlıkta bildirilen ama kodda hiçbir dalın basmadığı kimlikler (DEP-02, API-03,
+  OZT-04, SEC-04). Kural sayılmazlar, envanter sayısına girmezler; ölçüm AST ile
+  her koşuda yeniden alınır (`tools/kapsam.py --oztest`)
+- **ENVANTER DIŞI — dış referans** — 1 kimlik: `DEC-027` bir karar referansıdır,
+  `verify_doi.py` bu kuralı uygulamaz
 - **BOŞLUK** — 0 kural: 9 boşluğun tamamı mutasyon vakasıyla kapandı; yalnız öz-testte anılan 0, hiçbir testte geçmeyen 0.
 
 `verify_doi.py` tarandı; bildirilen kural kimliği yok — dosyadaki `DEC-027`
-bir karar referansıdır, kural değil.
+bir karar referansıdır, kural değil. Bu iki sınıf (ölü kimlik, dış referans)
+`MUTASYON_KAPSAM.md` içinde **her satırı gerekçeli** ayrı tablolarda durur;
+gerekçesiz yeni bir ölü kimlik ya da gerekçesi bayatlamış bir kayıt
+`make kapsam`ı fail-closed durdurur.
 
 Boşluk "kapsam dışı" diye etiketlenmez; gerekçesi yoksa boşluk olarak kalır ve tabloda
 adıyla durur. `make kapsam` tablonun güncelliğini denetler; CI'da bu adım kırılırsa

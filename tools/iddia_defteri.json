@@ -258,19 +258,15 @@
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "Mutation battery **114/114 firing cases + 27/27 expected findings** over 117 verified rules: **93 firing-tested** and **24 expected-finding-only**."
-        },
-        {
-          "dosya": "README.tr.md",
           "alinti": "- **TEST EDİLDİ** — 93 kural (ateşleyen HATA/TERMINAL vakasıyla)"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "of 121 rules, **93** are"
+          "alinti": "of 117 rules, **93** are"
         },
         {
           "dosya": "README.en.md",
-          "alinti": "The current battery is **114/114** firing cases plus **27/27** expected findings over **117** verified rules: **93 firing-tested** and **24 expected-finding-only**;"
+          "alinti": "The current battery is **114/114** firing cases plus **27/27** expected findings over **117** veri"
         }
       ],
       "durum": "OLCULDU",
@@ -286,11 +282,11 @@
     },
     {
       "id": "IDD-07",
-      "iddia": "bildirilen kapi kurali sayisi 121",
+      "iddia": "bildirilen kapi kurali sayisi 117",
       "kaynaklar": [
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "of 121 rules, **93** are"
+          "alinti": "of 117 rules, **93** are"
         }
       ],
       "durum": "OLCULDU",
@@ -299,22 +295,18 @@
         "tools/kapsam.py",
         "--json"
       ],
-      "beklenen": "121",
+      "beklenen": "117",
       "kapi": {
         "kontrol": "KAPSAM.bildirilen"
       }
     },
     {
       "id": "IDD-08",
-      "iddia": "gerekceli kapsam disi kural sayisi 4",
+      "iddia": "envanter disi olu kimlik sayisi 4 (gerekceli)",
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "- **KAPSAM DIŞI** — 4 kural, her biri ölçülmüş bir gerekçeyle: başlıkta"
-        },
-        {
-          "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "**4** are out of scope with a"
+          "alinti": "- **ENVANTER DIŞI — ölü kimlik** — 4 kimlik, her biri ölçülmüş bir gerekçeyle:"
         }
       ],
       "durum": "OLCULDU",
@@ -325,7 +317,7 @@
       ],
       "beklenen": "4",
       "kapi": {
-        "kontrol": "KAPSAM.kapsam_disi"
+        "kontrol": "KAPSAM.olu_kimlik"
       }
     },
     {
@@ -338,7 +330,7 @@
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "OZT-04, SEC-04), and **0** are explicit gaps — 0 mentioned only in"
+          "alinti": "of them is counted as a rule. Of the rules that are counted, 0 are mentioned"
         }
       ],
       "durum": "OLCULDU",
@@ -362,7 +354,7 @@
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "OZT-04, SEC-04), and **0** are explicit gaps — 0 mentioned only in"
+          "alinti": "of them is counted as a rule. Of the rules that are counted, 0 are mentioned"
         }
       ],
       "durum": "OLCULDU",
@@ -386,7 +378,7 @@
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "self-tests, 0 in no test at all. All nine previous gaps now have mutation"
+          "alinti": "only in self-tests and 0 appear in no test at all. All nine previous gaps now"
         }
       ],
       "durum": "OLCULDU",
@@ -1217,6 +1209,26 @@
       "beklenen": "117",
       "kapi": {
         "kontrol": "KAPSAM.toplam_dogrulanan"
+      }
+    },
+    {
+      "id": "IDD-54",
+      "iddia": "envanter disi dis referans sayisi 1 (DEC-027)",
+      "kaynaklar": [
+        {
+          "dosya": "README.tr.md",
+          "alinti": "- **ENVANTER DIŞI — dış referans** — 1 kimlik: `DEC-027` bir karar referansıdır,"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/kapsam.py",
+        "--json"
+      ],
+      "beklenen": "1",
+      "kapi": {
+        "kontrol": "KAPSAM.referans"
       }
     }
   ]
