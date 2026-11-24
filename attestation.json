@@ -1,5 +1,5 @@
 {
-  "commit": "aec7164cb9873afaf4affc48dbcabc0007a4cf75",
+  "commit": "0a5bd13dcca045f88eaabff20214f1e10e041bac",
   "file_count": 284,
   "files": [
     {
@@ -1223,8 +1223,8 @@
     {
       "mode": "100644",
       "path": "README.tr.md",
-      "sha256": "232cb862b10aa57a463bed53c72811f96dd303c8fa8dd418f98e12a76bc088b6",
-      "size": 35944
+      "sha256": "3de7f8a3801a48c0c17081b617f55a110a4a068f71552c9a2004be5225288da2",
+      "size": 36456
     },
     {
       "mode": "100644",
@@ -1271,8 +1271,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "a2fc1f9d0de2c745e8c0d4c5473f572468e9b46b6393166aca9bb6d0502edd20",
-      "size": 493727
+      "sha256": "f1bb8b8d07e1593d1135892ed42d240a55845afd2ed9f90a3c201adb7e06c72f",
+      "size": 494951
     },
     {
       "mode": "100644",
@@ -1301,8 +1301,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "c2c02fae224389518e52dde473211e140b2ed4ad1592d7665eaf73c099ac1e39",
-      "size": 11721
+      "sha256": "3c4b721cff2955ab18eb972ff64596a006fe0e2a9d7a4654eaf83b0fdd0ad5ed",
+      "size": 12011
     },
     {
       "mode": "100644",
@@ -1313,7 +1313,7 @@
     {
       "mode": "100644",
       "path": "docs/IDDIA-OZET.md",
-      "sha256": "0ed5c0f2c3de99c232f2f0af0558e50a6df70f03bf198d47fa6f0e612fc8ec40",
+      "sha256": "0b0c3b405e2608b81f21f97ed6f50d6ab20be57f74c1ce7a0551adddbbd69c7a",
       "size": 1244
     },
     {
@@ -1331,8 +1331,8 @@
     {
       "mode": "100644",
       "path": "docs/MUTASYON_KAPSAM.md",
-      "sha256": "05aa2f700c5fb6beb37b24e8edf17e562ce9ab12a3556d7a8c3328b1b40b19a5",
-      "size": 32433
+      "sha256": "6c1287340dc95f167c50ba4051f9044e9c0c864aa222a2d3ccaf139151e80d61",
+      "size": 33633
     },
     {
       "mode": "100644",
@@ -1505,8 +1505,8 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "8b977b39faa2d9e4f221aa3e3153fbc2fd366bc1c3f250cd1689096cdb2bcde4",
-      "size": 37172
+      "sha256": "073f44a34896fcbc5d8839a30c891ed6d66551a3f0e996358ec18ce7238cbf9c",
+      "size": 37292
     },
     {
       "mode": "100644",
@@ -1565,8 +1565,8 @@
     {
       "mode": "100644",
       "path": "tools/kapsam.py",
-      "sha256": "7e88d3803f2c09c45b1bab89cb7ed56bab061e48d711d2dc0c7b5b6b47fbc144",
-      "size": 53683
+      "sha256": "7e0eebf65406afc42a2fdb9db78a7c7c058e6797759983d7720771df3bd15b61",
+      "size": 65220
     },
     {
       "mode": "100644",
@@ -1707,7 +1707,7 @@
       "size": 14681
     }
   ],
-  "generated_at": "2026-11-24T16:17:09Z",
+  "generated_at": "2026-11-24T17:47:15Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1722,6 +1722,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "f0c93435329a8849bda3f491627e1e8586209ef3",
-  "tree_sha256": "42ad0edfa583bb25be00c60902e20435797052ff8cbd59091d2efb09dd2d30c3"
+  "tree": "62d51383be5108d9b2ac1eb2aa7950a25c4aa07d",
+  "tree_sha256": "ae7f5e676fbf7010a0da28ad8d3cb762bc6b22ddb05118c5dbfb0f3700833baa"
 }
