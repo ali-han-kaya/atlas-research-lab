@@ -937,7 +937,7 @@
     },
     {
       "id": "IDD-39",
-      "iddia": "mutasyon katalogunda 141 vaka (114 atesleyen + 27 beklenen-bulgu)",
+      "iddia": "mutasyon katalogunda 140 vaka (113 atesleyen + 27 beklenen-bulgu)",
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
@@ -963,7 +963,7 @@
         "import sys; sys.path.insert(0, 'tools'); import mutasyon_bataryasi as m; print('VAKA: %d' % len(m.vakalar()))"
       ],
       "ayikla": "VAKA: (\\d+)",
-      "beklenen": "141"
+      "beklenen": "140"
     },
     {
       "id": "IDD-40",
