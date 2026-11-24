@@ -14,7 +14,9 @@ KULLANIM
   python3 tools/kapsam.py --yaz     # docs/MUTASYON_KAPSAM.md'yi yaz
   python3 tools/kapsam.py --kontrol # dosya guncel mi (CI; farkliysa rc=1)
 """
+import contextlib
 import importlib.util
+import io
 import re
 import sys
 from pathlib import Path
@@ -848,6 +850,14 @@ def markdown():
 
 def json_rapor():
     """Kapı çıktısını sürümlü zarfla üret; serbest metin ayrıştırması yok."""
+    oztest_gecti = True
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            kod_ici_oztest()
+            sozlesme_oztest()
+            ratchet_oztest()
+    except SystemExit:
+        oztest_gecti = False
     satirlar, envan, (test, disi, bosluk, oz_anilan, beklenen) = olc()
     yeni, geri, test_eksik, bosluk_fazla = ratchet(satirlar)
     testte_gecmeyen = max(0, bosluk - oz_anilan)
@@ -855,6 +865,11 @@ def json_rapor():
     toplam_dogrulanan = test + beklenen
     ratchet_gecti = not (yeni or geri or test_eksik or bosluk_fazla)
     kontroller = [
+        kapi_cikti.kontrol('KAPSAM.oztest', 'kapsam ic oz-testleri',
+                           'PASS' if oztest_gecti else 'FAIL',
+                           deger='PASS' if oztest_gecti else 'FAIL',
+                           ham='kapsam oz-testleri %s' % (
+                               'PASS' if oztest_gecti else 'FAIL')),
         kapi_cikti.kontrol('KAPSAM.ratchet', 'kapsam regresyon ratchet',
                            'PASS' if ratchet_gecti else 'FAIL',
                            deger='PASS' if ratchet_gecti else 'FAIL',
@@ -886,9 +901,12 @@ def json_rapor():
                            'PASS', deger=str(toplam_dogrulanan),
                            ham='toplam_dogrulanan=%d' % toplam_dogrulanan),
     ]
+    gecti = oztest_gecti and ratchet_gecti
     return kapi_cikti.uret('kapsam', kontroller,
-                           rc=0 if ratchet_gecti else 1,
-                           hata=None if ratchet_gecti else 'ratchet ihlali')
+                           rc=0 if gecti else 1,
+                           hata=None if gecti else (
+                               'ratchet ihlali' if not ratchet_gecti
+                               else 'kapsam oz-testi FAIL'))
 
 
 def main(argv):
