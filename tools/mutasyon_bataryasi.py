@@ -562,6 +562,251 @@ def _tsl06(k):
         lambda v: v['dosyalar'].pop('04-FAZ-4-STRONG-GATE-RAPORU-v5.5.md'))
 
 
+def _sil(k, rel):
+    """Tek ihlal: hedef dosyayi sil; yoksa HATA dondur."""
+    p = k / rel
+    if not p.is_file():
+        return 'HATA: hedef yok: %s' % rel
+    p.unlink()
+    return None
+
+
+def _git_komut(k, *args):
+    """Gecici depo icin kimlik enjekte edilmis git cagrisi."""
+    r = subprocess.run(
+        ['git', '-C', str(k), '-c', 'user.name=Atlas Test',
+         '-c', 'user.email=test@example.invalid', *args],
+        capture_output=True, text=True, timeout=120)
+    if r.returncode != 0:
+        raise RuntimeError('git %s: %s' % (
+            ' '.join(args), (r.stderr or r.stdout).strip()[:200]))
+    return r
+
+
+def _dep_hazirla(k):
+    """DEP-03/04/06: gecici git deposu + manifest/kilit cifti."""
+    sandbox = k / 'sandbox_dep'
+    yaz(sandbox / 'bagimlilik-manifest.txt', 'requests==2.32.0\n')
+    yaz(sandbox / 'bagimlilik-kilit.txt', 'requests==2.32.0\n')
+    yaz(sandbox / 'kod_profil.json', json.dumps({
+        'profil': 'test',
+        'bagimlilik_manifesti': ['bagimlilik-manifest.txt'],
+        'kilit_dosyasi': ['bagimlilik-kilit.txt'],
+    }, ensure_ascii=False, indent=2) + '\n')
+    _git_komut(sandbox, 'init', '-q')
+    _git_komut(sandbox, 'add', '-A')
+    _git_komut(sandbox, 'commit', '-qm', 'DEP tabani')
+
+
+def _dep_argumanlar(k):
+    return ['--profil', str(k / 'sandbox_dep' / 'kod_profil.json')]
+
+
+def _dep03(k):
+    return ekle(k, 'sandbox_dep/bagimlilik-manifest.txt', 'flask==latest\n')
+
+
+def _dep04(k):
+    return ekle(k, 'sandbox_dep/bagimlilik-kilit.txt', '# lock bump\n')
+
+
+def _dep06(k):
+    return _json_duzenle(
+        k, 'sandbox_dep/kod_profil.json',
+        lambda v: v.__setitem__('bagimlilik_manifesti', []))
+
+
+def _tsl01(k):
+    return _sil(k, 'sandbox_teslim/TESLIM-MANIFEST.json')
+
+
+def _tsl02(k):
+    return _sil(k, 'sandbox_teslim/03-FAZ-3-MASTER-v5.5.md')
+
+
+def _tsl05(k):
+    return _json_duzenle(
+        k, 'sandbox_teslim/TESLIM-MANIFEST.json',
+        lambda v: v.pop('imza', None))
+
+
+def _api_hazirla(k, t2=False):
+    sandbox = k / 'sandbox_api'
+    yaz(sandbox / 'kaynak.py',
+        'def foo():\n    return 1\n\ndef bar():\n    return 2\n')
+    yaz(sandbox / 'imza-envanter.txt', 'foo\nbar\n')
+    profil = {'profil': 'test'}
+    if not t2:
+        profil['imza_komutu'] = 'cat imza-envanter.txt'
+    yaz(sandbox / 'kod_profil.json',
+        json.dumps(profil, ensure_ascii=False, indent=2) + '\n')
+    yaz(sandbox / '_KOSU' / 'gate' / 'BASELINE.json',
+        json.dumps({'dis_imza': ['foo', 'bar']},
+                   ensure_ascii=False, indent=2) + '\n')
+
+
+def _api04_hazirla(k):
+    return _api_hazirla(k, t2=True)
+
+
+def _api_argumanlar(k):
+    return ['--profil', str(k / 'sandbox_api' / 'kod_profil.json'),
+            '--taban', str(k / 'sandbox_api' / '_KOSU' / 'gate' /
+                           'BASELINE.json')]
+
+
+def _api01(k):
+    return _json_duzenle(
+        k, 'sandbox_api/_KOSU/gate/BASELINE.json',
+        lambda v: v.pop('dis_imza', None))
+
+
+def _api02(k):
+    return _json_duzenle(
+        k, 'sandbox_api/_KOSU/gate/BASELINE.json',
+        lambda v: v['dis_imza'].append('kayip'))
+
+
+def _api04(k):
+    return degistir(k, 'sandbox_api/kaynak.py', 'def foo():', 'def baz():')
+
+
+def _api05(k):
+    return _json_duzenle(
+        k, 'sandbox_api/kod_profil.json',
+        lambda v: v.__setitem__('imza_komutu', 'false'))
+
+
+def _ozt_taban(kimlikler):
+    return {
+        'sema': 'OZTEST-TABAN/v1',
+        'sayi': len(kimlikler),
+        'kimlikler': list(kimlikler),
+        'kimlik_hash': 'sha256:' + hashlib.sha256(
+            '\n'.join(sorted(kimlikler)).encode('utf-8')).hexdigest(),
+    }
+
+
+def _ozt_hazirla(k):
+    sandbox = k / 'sandbox_ozt'
+    yaz(sandbox / 'OZTEST-TABAN.json',
+        json.dumps(_ozt_taban(['AA-1', 'BB-1']),
+                   ensure_ascii=False, indent=2) + '\n')
+    yaz(sandbox / 'cikti.txt',
+        '  OK   AA-1: gecti\n  OK   BB-1: gecti\n')
+
+
+def _ozt_argumanlar(k):
+    return ['--cikti', str(k / 'sandbox_ozt' / 'cikti.txt'),
+            '--taban', str(k / 'sandbox_ozt' / 'OZTEST-TABAN.json')]
+
+
+def _ozt01(k):
+    return _sil(k, 'sandbox_ozt/OZTEST-TABAN.json')
+
+
+def _ozt02(k):
+    yaz(k / 'sandbox_ozt' / 'cikti.txt', '  OK   BB-1: gecti\n')
+
+
+def _ozt03(k):
+    yaz(k / 'sandbox_ozt' / 'cikti.txt', '')
+
+
+def _ozt05(k):
+    return ekle(k, 'sandbox_ozt/cikti.txt', '  OK   CC-1: gecti\n')
+
+
+def _ozt06(k):
+    return _json_duzenle(
+        k, 'sandbox_ozt/OZTEST-TABAN.json',
+        lambda v: v.__setitem__('kimlik_hash', 'sha256:' + '0' * 64))
+
+
+def _olgu_hazirla(k):
+    """OLGU-04/05/06: tek commit'li gecici depo + taze attestation."""
+    _git_komut(k, 'init', '-q')
+    _git_komut(k, 'add', '-A')
+    _git_komut(k, 'commit', '-qm', 'OLGU tabani')
+    r = subprocess.run(
+        [sys.executable, str(k / 'tools' / 'kanit.py'), '--paketsiz'],
+        cwd=str(k), capture_output=True, text=True, timeout=300)
+    if r.returncode != 0:
+        raise RuntimeError('OLGU attestation uretilemedi: %s' % (
+            (r.stdout or '') + (r.stderr or '')).strip()[:300])
+    metin = (k / 'docs' / 'OLGULAR.md').read_text(encoding='utf-8')
+    m = re.search(
+        r'<!-- OLGULAR_JSON_BASLA -->\s*```json\s*(\{.*?\})\s*```\s*'
+        r'<!-- OLGULAR_JSON_BITIR -->', metin, re.DOTALL)
+    if not m:
+        raise RuntimeError('OLGU fiksturu: OLGULAR JSON blogu okunamadi')
+    v = json.loads(m.group(1))
+    out = k / 'sandbox_olgu'
+    yaz(out / 'atlas-cikti.txt',
+        'OZ-TEST: %d/%d gecti\n' % (v['atlas_son_gecen'],
+                                    v['atlas_envanter_sayisi']))
+    yaz(out / 'kod-cikti.txt',
+        'KOD OZ-TEST: %d/%d gecti\n' % (v['kod_son_gecen'],
+                                        v['kod_son_gecen']))
+    yaz(out / 'attest-cikti.json', json.dumps({
+        'sema': 'OZTEST-ATTEST/v1',
+        'canli_sayi': v['attest_canli'],
+        'taban_sayi': v['attest_taban'],
+        'p0': v['attest_p0'],
+        'p1': v['attest_p1'],
+    }, ensure_ascii=False, indent=2) + '\n')
+
+
+def _olgu_argumanlar(k):
+    return ['--kok', str(k), '--git-kok', str(k)]
+
+
+def _olgu05_argumanlar(k):
+    return _olgu_argumanlar(k) + [
+        '--atlas-cikti', str(k / 'sandbox_olgu' / 'atlas-cikti.txt'),
+        '--attest-cikti', str(k / 'sandbox_olgu' / 'attest-cikti.json'),
+        '--kod-cikti', str(k / 'sandbox_olgu' / 'kod-cikti.txt'),
+    ]
+
+
+def _olgu04(k):
+    return _sil(k, 'attestation.json')
+
+
+def _olgu05(k):
+    p = k / 'sandbox_olgu' / 'atlas-cikti.txt'
+    metin = p.read_text(encoding='utf-8')
+    m = re.search(r'OZ-TEST: (\d+)/(\d+)', metin)
+    if not m:
+        return 'HATA: atlas-cikti ozeti yok'
+    eski = m.group(0)
+    yeni = 'OZ-TEST: %d/%s' % (int(m.group(1)) - 1, m.group(2))
+    p.write_text(metin.replace(eski, yeni, 1), encoding='utf-8')
+    return None
+
+
+def _olgu06(k):
+    p = k / 'SURUM.md'
+    metin = p.read_text(encoding='utf-8')
+    yeni = re.sub(r'^Kanonik OLGU-06 DEVIR:.*\n', '', metin,
+                  flags=re.MULTILINE)
+    if yeni == metin:
+        return 'HATA: SURUM.md kanonik DEVIR satiri yok'
+    p.write_text(yeni, encoding='utf-8')
+    try:
+        _git_komut(k, 'add', 'SURUM.md')
+        _git_komut(k, 'commit', '-qm', 'OLGU-06 mutasyonu')
+        r = subprocess.run(
+            [sys.executable, str(k / 'tools' / 'kanit.py'), '--paketsiz'],
+            cwd=str(k), capture_output=True, text=True, timeout=300)
+    except RuntimeError as e:
+        return 'HATA: %s' % e
+    if r.returncode != 0:
+        return 'HATA: attestation yenilenemedi: %s' % (
+            (r.stdout or '') + (r.stderr or '')).strip()[:200]
+    return None
+
+
 def _frz01_02(k):
     """Tek ihlal: profil ve kapi betigi birlikte degistirilir (FRZ-01+FRZ-02)."""
     hata = degistir(k, 'kod_profil.json', '{"profil": "test"}\n',
@@ -1741,6 +1986,85 @@ def vakalar():
         ('MODELKIM-AKTIF-SAYAC', 'ATLAS', 'PASS raporu aktif sayacini tasir',
          'tools/model_kimlik.py', lambda k: ['--oztest'],
          _mk_aktif_sayac_sil, 'FAIL — rapor', {'kontrol': True}),
+        # --- kapsam disi kalan uygulanabilir kurallar: sentetik fikstur ------
+        # dep_audit: DEP-03/04/06 P1'dir; rc=0 oldugu icin beklenen-bulgu.
+        ('DEP-03', 'KOD', 'sabitlenmemis surum P1',
+         'KOD_SABLONLAR/scripts/dep_audit.py',
+         _dep_argumanlar, _dep03, 'DEP-03', 'BULGU',
+         {'cwd': 'sandbox_dep', 'kur': _dep_hazirla}),
+        ('DEP-04', 'KOD', 'kilit/manifest diff uyusmazligi P1',
+         'KOD_SABLONLAR/scripts/dep_audit.py',
+         _dep_argumanlar, _dep04, 'DEP-04', 'BULGU',
+         {'cwd': 'sandbox_dep', 'kur': _dep_hazirla}),
+        ('DEP-06', 'KOD', 'bos bagimlilik manifesti P1',
+         'KOD_SABLONLAR/scripts/dep_audit.py',
+         _dep_argumanlar, _dep06, 'DEP-06', 'BULGU',
+         {'cwd': 'sandbox_dep', 'kur': _dep_hazirla}),
+        # teslim_imza: TSL-01/02 P0, TSL-05 P1.
+        ('TSL-01', 'ATLAS', 'manifest yok fail-closed',
+         'ATLAS_SABLONLAR/scripts/teslim_imza.py',
+         lambda k: ['--dogrula'], _tsl01, 'TSL-01',
+         {'cwd': 'sandbox_teslim', 'kur': _teslim_hazirla}),
+        ('TSL-02', 'ATLAS', 'manifestteki dosya diskte yok',
+         'ATLAS_SABLONLAR/scripts/teslim_imza.py',
+         lambda k: ['--dogrula'], _tsl02, 'TSL-02',
+         {'cwd': 'sandbox_teslim', 'kur': _teslim_hazirla}),
+        ('TSL-05', 'ATLAS', 'imza yok dusuk guven',
+         'ATLAS_SABLONLAR/scripts/teslim_imza.py',
+         lambda k: ['--dogrula'], _tsl05, 'TSL-05', 'BULGU',
+         {'cwd': 'sandbox_teslim', 'kur': _tsl04_hazirla,
+          'env': _frz08_env()}),
+        # api_surface: API-02 P0; API-01/04/05 P1.
+        ('API-01', 'KOD', 'KFAZ0 imza envanteri yok P1',
+         'KOD_SABLONLAR/scripts/api_surface.py',
+         _api_argumanlar, _api01, 'API-01', 'BULGU',
+         {'cwd': 'sandbox_api', 'kur': _api_hazirla}),
+        ('API-02', 'KOD', 'disa acik imza kayboldu',
+         'KOD_SABLONLAR/scripts/api_surface.py',
+         _api_argumanlar, _api02, 'API-02',
+         {'cwd': 'sandbox_api', 'kur': _api_hazirla}),
+        ('API-04', 'KOD', 'T2 regex adayi kayboldu P1',
+         'KOD_SABLONLAR/scripts/api_surface.py',
+         _api_argumanlar, _api04, 'API-04', 'BULGU',
+         {'cwd': 'sandbox_api', 'kur': _api04_hazirla}),
+        ('API-05', 'KOD', 'imza komutu kosmadi P1',
+         'KOD_SABLONLAR/scripts/api_surface.py',
+         _api_argumanlar, _api05, 'API-05', 'BULGU',
+         {'cwd': 'sandbox_api', 'kur': _api_hazirla}),
+        # oztest_attest: OZT-01/02/03/06 P0; OZT-05 P1.
+        ('OZT-01', 'ATLAS', 'taban yok fail-closed',
+         'ATLAS_SABLONLAR/scripts/oztest_attest.py',
+         _ozt_argumanlar, _ozt01, 'OZT-01',
+         {'cwd': 'sandbox_ozt', 'kur': _ozt_hazirla}),
+        ('OZT-02', 'ATLAS', 'tabandaki test kosuda yok',
+         'ATLAS_SABLONLAR/scripts/oztest_attest.py',
+         _ozt_argumanlar, _ozt02, 'OZT-02',
+         {'cwd': 'sandbox_ozt', 'kur': _ozt_hazirla}),
+        ('OZT-03', 'ATLAS', 'sifir test temiz degil',
+         'ATLAS_SABLONLAR/scripts/oztest_attest.py',
+         _ozt_argumanlar, _ozt03, 'OZT-03',
+         {'cwd': 'sandbox_ozt', 'kur': _ozt_hazirla}),
+        ('OZT-05', 'ATLAS', 'tabanda olmayan yeni test P1',
+         'ATLAS_SABLONLAR/scripts/oztest_attest.py',
+         _ozt_argumanlar, _ozt05, 'OZT-05', 'BULGU',
+         {'cwd': 'sandbox_ozt', 'kur': _ozt_hazirla}),
+        ('OZT-06', 'ATLAS', 'taban hash kurcalanmis',
+         'ATLAS_SABLONLAR/scripts/oztest_attest.py',
+         _ozt_argumanlar, _ozt06, 'OZT-06',
+         {'cwd': 'sandbox_ozt', 'kur': _ozt_hazirla}),
+        # olgu_lint: gecici git deposu + taze attestation; OLGU-04/05/06 FAIL.
+        ('OLGU-04', 'ATLAS', 'attestation yok',
+         'ATLAS_SABLONLAR/scripts/olgu_lint.py',
+         _olgu_argumanlar, _olgu04, 'OLGU-04',
+         {'kur': _olgu_hazirla}),
+        ('OLGU-05', 'ATLAS', 'kanit sayisi kanonikten farkli',
+         'ATLAS_SABLONLAR/scripts/olgu_lint.py',
+         _olgu05_argumanlar, _olgu05, 'OLGU-05',
+         {'kur': _olgu_hazirla}),
+        ('OLGU-06', 'ATLAS', 'kanonik DEVIR satiri yok',
+         'ATLAS_SABLONLAR/scripts/olgu_lint.py',
+         _olgu_argumanlar, _olgu06, 'OLGU-06',
+         {'kur': _olgu_hazirla}),
     ]
 
 

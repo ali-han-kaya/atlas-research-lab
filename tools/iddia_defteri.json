@@ -183,27 +183,27 @@
     },
     {
       "id": "IDD-04",
-      "iddia": "mutasyon bataryasi 104/104 vaka atesledi",
+      "iddia": "mutasyon bataryasi 114/114 vaka atesledi",
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "Mutation battery **104/104 firing cases + 19/19 expected findings** over 99 verified rules: **83 firing-tested** and **16 expected-finding-only**."
+          "alinti": "Mutation battery **114/114 firing cases + 27/27 expected findings** over 117 verified rules: **93 firing-tested** and **24 expected-finding-only**."
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "SONUC: 104/104 kural atesledi · 19/19 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+          "alinti": "SONUC: 114/114 kural atesledi · 27/27 beklenen bulgu dogrulandi · taban temiz olmayan=0"
         },
         {
           "dosya": "README.tr.md",
-          "alinti": "104 ateşleyen (95 HATA + 9 TERMINAL) + 19 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,"
+          "alinti": "114 ateşleyen (105 HATA + 9 TERMINAL) + 27 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,"
         },
         {
           "dosya": "docs/README.md",
-          "alinti": "Güncel katalog **123 vaka = 104 ateşleyen (95 HATA + 9 TERMINAL)"
+          "alinti": "Güncel katalog **141 vaka = 114 ateşleyen (105 HATA + 9 TERMINAL)"
         },
         {
           "dosya": "README.en.md",
-          "alinti": "The current battery is **104/104** firing cases plus **19/19** expected findings over **99** verified rules: **83 firing-tested** and **16 expected-finding-only**;"
+          "alinti": "The current battery is **114/114** firing cases plus **27/27** expected findings over **117** verified rules: **93 firing-tested** and **24 expected-finding-only**;"
         }
       ],
       "durum": "OLCULDU",
@@ -212,27 +212,27 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "ayikla": "SONUC:\\s*(\\d+/\\d+) kural atesledi",
-      "beklenen": "104/104"
+      "beklenen": "114/114"
     },
     {
       "id": "IDD-05",
-      "iddia": "mutasyon bataryasi 19/19 beklenen bulgu",
+      "iddia": "mutasyon bataryasi 27/27 beklenen bulgu",
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "Mutation battery **104/104 firing cases + 19/19 expected findings** over 99 verified rules: **83 firing-tested** and **16 expected-finding-only**."
+          "alinti": "Mutation battery **114/114 firing cases + 27/27 expected findings** over 117 verified rules: **93 firing-tested** and **24 expected-finding-only**."
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "SONUC: 104/104 kural atesledi · 19/19 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+          "alinti": "SONUC: 114/114 kural atesledi · 27/27 beklenen bulgu dogrulandi · taban temiz olmayan=0"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "cases; the 19 expected-finding cases (including TST-06, CHK-05 and the"
+          "alinti": "cases; the 27 expected-finding cases (including TST-06, CHK-05 and the"
         },
         {
           "dosya": "README.en.md",
-          "alinti": "The current battery is **104/104** firing cases plus **19/19** expected findings over **99** verified rules: **83 firing-tested** and **16 expected-finding-only**;"
+          "alinti": "The current battery is **114/114** firing cases plus **27/27** expected findings over **117** verified rules: **93 firing-tested** and **24 expected-finding-only**;"
         }
       ],
       "durum": "OLCULDU",
@@ -241,27 +241,27 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "ayikla": "(\\d+/\\d+) beklenen bulgu",
-      "beklenen": "19/19"
+      "beklenen": "27/27"
     },
     {
       "id": "IDD-06",
-      "iddia": "mutasyonla atesleyen kural sayisi 83",
+      "iddia": "mutasyonla atesleyen kural sayisi 93",
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "Mutation battery **104/104 firing cases + 19/19 expected findings** over 99 verified rules: **83 firing-tested** and **16 expected-finding-only**."
+          "alinti": "Mutation battery **114/114 firing cases + 27/27 expected findings** over 117 verified rules: **93 firing-tested** and **24 expected-finding-only**."
         },
         {
           "dosya": "README.tr.md",
-          "alinti": "- **TEST EDİLDİ** — 83 kural (ateşleyen HATA/TERMINAL vakasıyla)"
+          "alinti": "- **TEST EDİLDİ** — 93 kural (ateşleyen HATA/TERMINAL vakasıyla)"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "of 121 rules, **83** are"
+          "alinti": "of 121 rules, **93** are"
         },
         {
           "dosya": "README.en.md",
-          "alinti": "The current battery is **104/104** firing cases plus **19/19** expected findings over **99** verified rules: **83 firing-tested** and **16 expected-finding-only**;"
+          "alinti": "The current battery is **114/114** firing cases plus **27/27** expected findings over **117** verified rules: **93 firing-tested** and **24 expected-finding-only**;"
         }
       ],
       "durum": "OLCULDU",
@@ -270,7 +270,7 @@
         "tools/kapsam.py"
       ],
       "ayikla": "\\|\\s*Atesleyen vakayla test edilen kural \\(TEST EDILDI\\)\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "83"
+      "beklenen": "93"
     },
     {
       "id": "IDD-07",
@@ -278,7 +278,7 @@
       "kaynaklar": [
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "of 121 rules, **83** are"
+          "alinti": "of 121 rules, **93** are"
         }
       ],
       "durum": "OLCULDU",
@@ -291,15 +291,15 @@
     },
     {
       "id": "IDD-08",
-      "iddia": "gerekceli kapsam disi kural sayisi 22",
+      "iddia": "gerekceli kapsam disi kural sayisi 4",
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "- **KAPSAM DIŞI** — 22 kural, her biri ölçülmüş bir gerekçeyle: gizli anahtar"
+          "alinti": "- **KAPSAM DIŞI** — 4 kural, her biri ölçülmüş bir gerekçeyle: başlıkta"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "**22** are out of scope with a"
+          "alinti": "**4** are out of scope with a"
         }
       ],
       "durum": "OLCULDU",
@@ -308,7 +308,7 @@
         "tools/kapsam.py"
       ],
       "ayikla": "\\|\\s*Gerekceli kapsam disi\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "22"
+      "beklenen": "4"
     },
     {
       "id": "IDD-09",
@@ -320,7 +320,7 @@
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "code branch emits), and **0** are explicit gaps — 0 mentioned only in"
+          "alinti": "OZT-04, SEC-04), and **0** are explicit gaps — 0 mentioned only in"
         }
       ],
       "durum": "OLCULDU",
@@ -341,7 +341,7 @@
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "code branch emits), and **0** are explicit gaps — 0 mentioned only in"
+          "alinti": "OZT-04, SEC-04), and **0** are explicit gaps — 0 mentioned only in"
         }
       ],
       "durum": "OLCULDU",
@@ -897,23 +897,23 @@
     },
     {
       "id": "IDD-39",
-      "iddia": "mutasyon katalogunda 123 vaka (104 atesleyen + 19 beklenen-bulgu)",
+      "iddia": "mutasyon katalogunda 141 vaka (114 atesleyen + 27 beklenen-bulgu)",
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "each exercised by a 123-case battery: silent clean baseline + one violation + a red/terminal"
+          "alinti": "each exercised by a 141-case battery: silent clean baseline + one violation + a red/terminal"
         },
         {
           "dosya": "README.tr.md",
-          "alinti": "veya ihlal sonrası beklenen iz yoksa vaka geçmez. Katalog 123 vakadır:"
+          "alinti": "veya ihlal sonrası beklenen iz yoksa vaka geçmez. Katalog 141 vakadır:"
         },
         {
           "dosya": "docs/README.md",
-          "alinti": "Güncel katalog **123 vaka = 104 ateşleyen (95 HATA + 9 TERMINAL)"
+          "alinti": "Güncel katalog **141 vaka = 114 ateşleyen (105 HATA + 9 TERMINAL)"
         },
         {
           "dosya": "README.tr.md",
-          "alinti": "`make mutasyon` 123 vakanın gerçekten ateşlediğini kanıtlar: HATA vakalarında"
+          "alinti": "`make mutasyon` 141 vakanın gerçekten ateşlediğini kanıtlar: HATA vakalarında"
         }
       ],
       "durum": "OLCULDU",
@@ -923,7 +923,7 @@
         "import sys; sys.path.insert(0, 'tools'); import mutasyon_bataryasi as m; print('VAKA: %d' % len(m.vakalar()))"
       ],
       "ayikla": "VAKA: (\\d+)",
-      "beklenen": "123"
+      "beklenen": "141"
     },
     {
       "id": "IDD-40",
@@ -1128,15 +1128,15 @@
         }
       ],
       "durum": "BEYAN",
-      "gerekce": "54/54 is the earlier frozen mutation baseline, retained as a historical snapshot. Current HEAD measures 104/104 firing cases + 19/19 expected findings over 99 verified rules (83 firing-tested, 16 expected-finding-only); 8/8 and 174/174 are current and measured by IDD-01/IDD-02."
+      "gerekce": "54/54 is the earlier frozen mutation baseline, retained as a historical snapshot. Current HEAD measures 114/114 firing cases + 27/27 expected findings over 117 verified rules (93 firing-tested, 24 expected-finding-only); 8/8 and 174/174 are current and measured by IDD-01/IDD-02."
     },
     {
       "id": "IDD-52",
-      "iddia": "ayrik sozlesme ozeti 95/95 HATA, 9/9 TERMINAL, 19/19 beklenen-bulgu",
+      "iddia": "ayrik sozlesme ozeti 105/105 HATA, 9/9 TERMINAL, 27/27 beklenen-bulgu",
       "kaynaklar": [
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "SOZLESME: 95/95 HATA (rc=1) · 9/9 TERMINAL (rc=2) · 19/19 BEKLENEN_BULGU"
+          "alinti": "SOZLESME: 105/105 HATA (rc=1) · 9/9 TERMINAL (rc=2) · 27/27 BEKLENEN_BULGU"
         }
       ],
       "durum": "OLCULDU",
@@ -1145,19 +1145,19 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "ayikla": "SOZLESME: (\\d+/\\d+) HATA",
-      "beklenen": "95/95"
+      "beklenen": "105/105"
     },
     {
       "id": "IDD-53",
-      "iddia": "kapsam: 99 dogrulanan kural = 83 atesleyen + 16 beklenen-bulgu",
+      "iddia": "kapsam: 117 dogrulanan kural = 93 atesleyen + 24 beklenen-bulgu",
       "kaynaklar": [
         {
           "dosya": "docs/README.md",
-          "alinti": "+ 19 beklenen-bulgu**; 99 doğrulanan kuralın 83'ü ateşleyen vakayla, 16'sı yalnız"
+          "alinti": "+ 27 beklenen-bulgu**; 117 doğrulanan kuralın 93'ü ateşleyen vakayla, 24'ü yalnız"
         },
         {
           "dosya": "README.tr.md",
-          "alinti": "- **BEKLENEN BULGU** — 16 kural (yalnız P1/beklenen-bulgu sözleşmesiyle;"
+          "alinti": "- **BEKLENEN BULGU** — 24 kural (yalnız P1/beklenen-bulgu sözleşmesiyle;"
         }
       ],
       "durum": "OLCULDU",
@@ -1166,7 +1166,7 @@
         "tools/kapsam.py"
       ],
       "ayikla": "\\|\\s*Toplam dogrulanan kural\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "99"
+      "beklenen": "117"
     }
   ]
 }

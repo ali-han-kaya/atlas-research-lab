@@ -51,7 +51,7 @@ GUNCEL_IZINLI_BOSLUKLAR = frozenset()
 # Regresyon ratchet tabani: mevcut tabloda 83 kural atesleyen vakayla test
 # edilmis, bosluk 0'dir. Bu sayilar yalniz ARTABILIR; test edilen kural azalirsa
 # (or. bir kural yalniz beklenen-bulguya donerse) veya bosluk artarsa kirmizi.
-TABAN_TEST_EDILEN = 83
+TABAN_TEST_EDILEN = 93
 TABAN_BOSLUK_SAYISI = 0
 
 # Kapsam disi gerekceleri BETIKLERIN GERCEK BAGIMLILIKLARINA dayanir:
@@ -62,19 +62,19 @@ TABAN_BOSLUK_SAYISI = 0
 #   teslim_imza  : HMAC anahtari (LAB_IMZA_ANAHTARI veya ~/.config/lab_imza.key)
 #   verify_doi   : kural kimligi bildirmiyor; DEC-027 bir karar referansi
 KAPSAM_DISI = {
-    'ATLAS_SABLONLAR/scripts/teslim_imza.py':
-        ('gizli-anahtar', 'HMAC anahtari ister (LAB_IMZA_ANAHTARI / '
-                          '~/.config/lab_imza.key); anahtar depoya konmaz'),
-    'ATLAS_SABLONLAR/scripts/olgu_lint.py':
-        ('tarihce', 'SURUM.md makine blogunu HEAD/commit hashleriyle karsilastirir'),
+    # OLCULDU: bu dort kimlik yalniz baslikta/riski kaydinda bildirilir; betikte
+    # bu kimligi basan bir dal yoktur. Bu yuzden mutasyonla ateslenemezler.
     'ATLAS_SABLONLAR/scripts/oztest_attest.py':
-        ('kosu-durumu', 'butun agacin selftest hash tabanini ve ham kosu '
-                        'ciktisini ister'),
+        ('olu-kimlik', 'OZT-04 kaldirilmis sayac kuralidir; kodda bu kimligi '
+                       'basan dal yok, kimlik sayisi dususu OZT-02 ile yakalanir'),
     'KOD_SABLONLAR/scripts/api_surface.py':
-        ('kosu-durumu', 'KFAZ0 _KOSU/gate/BASELINE.json imza envanterini ister; '
-                        'envanter yoksa CALISTIRILMADI'),
+        ('olu-kimlik', 'API-03 baslikta bildirilir ama api_surface yalniz kayip '
+                       'imza (API-02) ve regex adayi (API-04) dallarini uygular; '
+                       'imza degisimi karsilastirmasi kodda yok'),
     'KOD_SABLONLAR/scripts/dep_audit.py':
-        ('depo-durumu', '`git diff --name-only HEAD` ile degisen dosyalari okur'),
+        ('olu-kimlik', 'DEP-02 baslikta bildirilir ama dep_audit kodunda kilit '
+                       'paketlerini manifestle karsilastiran dal yok; yalniz '
+                       'DEP-01/03/04/05/06 dallari uygulanir'),
     # OLCULDU (19.11.2026): SEC-04 baslikta bildirilir ama secret_scan'in
     # hicbir dalinda bu kimlikle bulgu BASILMAZ; atlanan dosyalar yalniz sayilir.
     # Kural kimligi olu oldugu icin mutasyonla ateslenemez; gercek bulgu uretmez.
@@ -87,27 +87,9 @@ KAPSAM_DISI = {
 # kural eklenirse script gerekcesi otomatik olarak ona da uygulanmaz; yeni
 # kural ya mutasyon vakasi ya asagidaki KAPSAM_ISTISNA kaydi ister.
 TABAN_KAPSAM_DISI = frozenset({
-    ('ATLAS_SABLONLAR/scripts/olgu_lint.py', 'OLGU-04'),
-    ('ATLAS_SABLONLAR/scripts/olgu_lint.py', 'OLGU-05'),
-    ('ATLAS_SABLONLAR/scripts/olgu_lint.py', 'OLGU-06'),
-    ('ATLAS_SABLONLAR/scripts/oztest_attest.py', 'OZT-01'),
-    ('ATLAS_SABLONLAR/scripts/oztest_attest.py', 'OZT-02'),
-    ('ATLAS_SABLONLAR/scripts/oztest_attest.py', 'OZT-03'),
     ('ATLAS_SABLONLAR/scripts/oztest_attest.py', 'OZT-04'),
-    ('ATLAS_SABLONLAR/scripts/oztest_attest.py', 'OZT-05'),
-    ('ATLAS_SABLONLAR/scripts/oztest_attest.py', 'OZT-06'),
-    ('ATLAS_SABLONLAR/scripts/teslim_imza.py', 'TSL-01'),
-    ('ATLAS_SABLONLAR/scripts/teslim_imza.py', 'TSL-02'),
-    ('ATLAS_SABLONLAR/scripts/teslim_imza.py', 'TSL-05'),
-    ('KOD_SABLONLAR/scripts/api_surface.py', 'API-01'),
-    ('KOD_SABLONLAR/scripts/api_surface.py', 'API-02'),
     ('KOD_SABLONLAR/scripts/api_surface.py', 'API-03'),
-    ('KOD_SABLONLAR/scripts/api_surface.py', 'API-04'),
-    ('KOD_SABLONLAR/scripts/api_surface.py', 'API-05'),
     ('KOD_SABLONLAR/scripts/dep_audit.py', 'DEP-02'),
-    ('KOD_SABLONLAR/scripts/dep_audit.py', 'DEP-03'),
-    ('KOD_SABLONLAR/scripts/dep_audit.py', 'DEP-04'),
-    ('KOD_SABLONLAR/scripts/dep_audit.py', 'DEP-06'),
     ('KOD_SABLONLAR/scripts/secret_scan.py', 'SEC-04'),
 })
 
@@ -278,7 +260,7 @@ RISK_NOT = {
 # her kuralin somut riskini tek cumlede tutar; yeni kural icin kayit zorunludur.
 RISK_NOT.update({
     'DEP-01': 'Manifest varken kilit anahtari yok, bos ya da kilit dosyasi eksikse bagimlilik surumleri denetimsiz kalir; kapi P0 verir.',
-    'DEP-02': 'Manifestteki bir paket kilit dosyasinda yoksa kilit bayattir ve kurulan surum beyanla celisir; P0.',
+    'DEP-02': 'Baslikta bildirilir; dep_audit kodunda kilit paketlerini manifestle karsilastiran dal yok, bu yuzden kimlik olu. Uygulanirsa kilit bayatligi P0 olur.',
     'DEP-06': 'Profilde bagimlilik_manifesti bos birakilirsa bagimlilik yuzeyi hic denetlenmez; kapi CALISTIRILMADI/P1 verir.',
     'DEP-03': 'Surum sabitlenmezse (*, latest, bos ya da kilitsiz ^/~) ayni manifest farkli paket surumleri kurabilir; P1.',
     'DEP-04': 'Kilit dosyasi diffte degisirken manifest guncellenmezse beyan edilen bagimlilik ile kilit ayrisir; P1.',
@@ -290,7 +272,7 @@ RISK_NOT.update({
     'TSL-06': 'Zorunlu teslim artefakti manifestte hic yoksa imza eksik kumeyi dogrular; kapsam boslugu P0.',
     'API-01': 'KFAZ0 API envanteri yoksa disa acik yuzey karsilastirilamaz; kapi CALISTIRILMADI/P1 verir.',
     'API-02': 'KFAZ0 envanterindeki disa acik imza kaybolursa mevcut cagiranlar sessizce kirilir; P0.',
-    'API-03': 'Disa acik imzanin parametre veya donusu degisirse cagiranlarin sozlesmesi bozulur; P0.',
+    'API-03': 'Baslikta bildirilir; api_surface yalniz kayip imza ve regex adayi dallarini uygular, imza degisimi karsilastirmasi kodda yok; P0 vaadi olu kimliktir.',
     'API-04': 'Regex taramasi bir adayi kacirirsa disa acik yuzey eksik sayilir; DUSUK_GUVEN/P1.',
     'API-05': 'API kademelerinden hicbiri kosmazsa disa acik yuzey denetimi tamamen korlesir; CALISTIRILMADI/P1.',
     'OZT-01': 'Oz-test taban dosyasi yok veya bozuksa onceki test envanteriyle karsilastirma yapilamaz; fail-closed P0.',
