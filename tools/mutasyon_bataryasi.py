@@ -215,13 +215,17 @@ def qr_govde(uzun_mu):
 
 
 def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None,
-                      terminal=False, env=None, kontrol=False, yalniz=False):
+                      terminal=False, env=None, kontrol=False, yalniz=False,
+                      taban_bilgi=None):
     """(durum, ayrinti) dondurur. taban_rc: temiz kopyada beklenen cikis kodu.
 
     `iz` bir dize veya dize dizisi olabilir; hepsi mutasyon ciktisinda aranir.
     terminal=True ise temiz tabanda GATE_TAMPERED/TERMINAL izi BULUNMAZ, mutasyon
     sonrasi rc=2, `GATE_TAMPERED` ve `TERMINAL FAIL` birlikte aranir; yalniz
     kirmizi yanmak terminal sozlesmesini kanitlamaz.
+    taban_bilgi: temiz tabanda yalniz `BILGI ... IMZALI` satirinda gorunmesi
+    beklenen kural; gecerli imzali taban bu bilgi satirini uretir, terminal
+    sozlesmesini ihlal etmez. Diger her gorunum hala TABAN_KIRLI sayilir.
     kontrol=True ise ihlal uygulandiktan sonra fikstur yedekten geri yuklenir ve
     ayni kapi tekrar kosulur: rc=taban_rc ve FAIL etiketi yok. Boylece vaka
     "her mutasyonda kirmizi" olan vacuous bir test degildir.
@@ -249,9 +253,16 @@ def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None,
     if yalniz and FAIL_ETIKET.findall(o0):
         return 'TABAN_KIRLI', 'temiz tabanda FAIL etiketi var: %s' % (
             ', '.join(sorted(set(FAIL_ETIKET.findall(o0)))))
-    if terminal and any(x in o0 for x in ('GATE_TAMPERED', 'TERMINAL FAIL') + tuple(izler)):
-        return 'TABAN_KIRLI', 'temiz tabanda terminal/iz bulgusu var: %s' % (
-            o0.strip().splitlines()[-1] if o0.strip() else 'bos cikti')
+    if terminal:
+        yasak = ('GATE_TAMPERED', 'TERMINAL FAIL') + tuple(izler)
+        if taban_bilgi and any(
+                taban_bilgi in satir and 'BILGI' in satir and 'IMZALI' in satir
+                for satir in o0.splitlines()):
+            # Gecerli imzali taban, kendi BILGI satirini uretir; bu bir ihlal degil.
+            yasak = tuple(x for x in yasak if x != taban_bilgi)
+        if any(x in o0 for x in yasak):
+            return 'TABAN_KIRLI', 'temiz tabanda terminal/iz bulgusu var: %s' % (
+                o0.strip().splitlines()[-1] if o0.strip() else 'bos cikti')
 
     hata = mutasyon(kok)
     if hata:
@@ -345,6 +356,28 @@ def _frz08(k):
 def _frz08_env():
     # Anahtar yalniz bu vaka icin ortamda; depoya yazilmaz.
     return dict(os.environ, LAB_IMZA_ANAHTARI='a' * 64)
+
+
+def _frz08_imza_hazirla(k):
+    """FRZ-08 imzali taban: gecerli HMAC uret, temiz tabani imzala."""
+    taban = k / '_KOSU' / 'gate' / 'BASELINE.json'
+    sonuc = subprocess.run(
+        [sys.executable, str(k / 'KOD_SABLONLAR' / 'scripts' / 'imzala.py'),
+         '--taban', str(taban)],
+        cwd=str(k), env=_frz08_env(), capture_output=True, text=True, timeout=120)
+    if sonuc.returncode != 0:
+        raise RuntimeError('FRZ-08 imza hazirlanamadi: %s' % (
+            (sonuc.stdout + sonuc.stderr).strip() or 'rc=%d' % sonuc.returncode))
+    veri = json.loads(taban.read_text(encoding='utf-8'))
+    if not veri.get('temiz_agac_imzasi'):
+        raise RuntimeError('FRZ-08 imza hazirlanamadi: imza alani yok')
+    return None
+
+
+def _frz08_imza(k):
+    """Imzali tabanin icerigini sonradan degistir; eski imza uyusmaz."""
+    return _json_duzenle(k, '_KOSU/gate/BASELINE.json',
+                         lambda v: v.__setitem__('imza_kurcalama', True))
 
 
 def _frz01_kayip(k):
@@ -1215,6 +1248,12 @@ def vakalar():
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          _frz08,
          'FRZ-08', {'terminal': True, 'kur': _frz08_hazirla, 'env': _frz08_env()}),
+        ('FRZ-08-IMZA', 'KOD', 'imzali taban icerigi kurcalanamaz',
+         'KOD_SABLONLAR/scripts/freeze_check.py',
+         lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
+         _frz08_imza,
+         'FRZ-08', {'terminal': True, 'kur': _frz08_imza_hazirla, 'env': _frz08_env(),
+                    'taban_bilgi': 'FRZ-08'}),
         ('DEP-01', 'KOD', 'manifest varken kilit beyani zorunlu',
          'KOD_SABLONLAR/scripts/dep_audit.py',
          lambda k: [],
@@ -1684,7 +1723,8 @@ def main():
                     terminal=bool(opsiyon.get('terminal')),
                     env=opsiyon.get('env'),
                     kontrol=bool(opsiyon.get('kontrol')),
-                    yalniz=bool(opsiyon.get('yalniz')))
+                    yalniz=bool(opsiyon.get('yalniz')),
+                    taban_bilgi=opsiyon.get('taban_bilgi'))
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
 

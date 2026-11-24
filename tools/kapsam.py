@@ -235,8 +235,9 @@ RISK_NOT = {
                'beyan ile gercek degisiklik carpraz denetlenir.',
     'RECK-04': '2B kapisinin "KANITLI" dedigi her CHG diff\'te olmali; ikinci '
                'gozun iddiasi manifest ve diff ile dogrulanir.',
-    'FRZ-08': 'Temiz agac iddiasi imzayla baglanmali; imzasiz veya yanlis '
-               'anahtarli taban tamper ya da dusuk guven sayilir.',
+    'FRZ-08': 'Temiz agac iddiasi imzayla baglanmali; imzasiz, gecersiz imzali '
+               'veya imzalandiktan sonra icerigi degistirilmis taban terminal '
+               'tamper ya da dusuk guven sayilir.',
     'RECK-05': 'Hayalet CHG yok: olmayan REQ veya plansiz dosyaya baglanan '
                'degisiklik P0; manifest-diff bagini korur.',
     'RECK-07': 'Davranissal her REQ tabanda olmayan YENI bir test adina '
@@ -268,8 +269,8 @@ RISK_NOT = {
 # olusursa buraya risk sirasiyla yazilir ve markdown bolumu yeniden acilir.
 SONRAKI_DILIM = []
 SONRAKI_NOT = {
-    'FRZ-08': 'Temiz agac imzasi: imza ihlali terminal rc=2 uretir; rc=1 '
-              'diliminde degil, terminal sozlesmesiyle ayri ele alinacak.',
+    'FRZ-08': 'Temiz agac imzasi: gecersiz imza ve imzali taban iceriginin '
+              'sonradan kurcalanmasi iki ayri terminal rc=2 vakasiyla kapsanir.',
     'RECK-09': 'Plan yokken urun kodu degisimi; KFAZ1 yoklugu P1 urettigi '
                'icin ayri fikstur gerektirir.',
     'TST-10': 'Rapor kaynaktan eski olamaz; bayat kanit mevcut kodu '

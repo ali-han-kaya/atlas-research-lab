@@ -28,8 +28,8 @@ otomatik uygulanmaz.
 | Kural bildiren betik | 20 |
 | Bildirilen kural | 121 |
 | Kod icinde uretilen, envantere alinmayan kimlik | 41 |
-| Batarya vakasi (toplam) | 120 |
-| — kural ateslettiren | 102 |
+| Batarya vakasi (toplam) | 121 |
+| — kural ateslettiren | 103 |
 | — beklenen bulgu | 18 |
 | Mutasyon vakasi olan (TEST EDILDI) | 99 |
 | Gerekceli kapsam disi | 22 |
@@ -62,7 +62,7 @@ vaka aldi; durum sutunu guncel envanterden okunur.
 | 1 | TST-08 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Ham test raporu yok/okunamiyor — kanitsiz PASS P0; kapinin kanit temeli. |
 | 2 | RECK-06 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | Dondurulmus bolge diff'te — dogrudan tamper sinyali, P0. |
 | 3 | DEP-05 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI (bu tur) | Izinli lisans listesi disinda bagimlilik — tedarik/uyum P0. |
-| 4 | FRZ-08 | `freeze_check.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | Temiz agac iddiasi imzayla baglanmali; imzasiz veya yanlis anahtarli taban tamper ya da dusuk guven sayilir. |
+| 4 | FRZ-08 | `freeze_check.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | Temiz agac iddiasi imzayla baglanmali; imzasiz, gecersiz imzali veya imzalandiktan sonra icerigi degistirilmis taban terminal tamper ya da dusuk guven sayilir. |
 | 5 | RECK-01 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | KFAZ0 sozlesmesindeki her REQ plan/eslesmede karsilik bulmali; aksi halde kapsamsiz sozlesme sessizce yesil kalir. |
 | 6 | RECK-02 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | "UYGULANMIS" denilen her CHG'nin dosyasi git diff'te olmali; beyan ile gercek degisiklik carpraz denetlenir. |
 | 7 | RECK-08 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | Makine bloklarinin alan bicimi semaya uymali; sessizce dusen girdi RECK-01/07'yi devre disi birakir. |
@@ -348,7 +348,7 @@ tip ihlalidir; kopya degil, farkli hata dalidir.
 | `freeze_check.py` | FRZ-05 | FRZ-05 | TEST EDILDI | mutasyon vakasi: FRZ-05 |
 | `freeze_check.py` | FRZ-06 | FRZ-06 | TEST EDILDI | mutasyon vakasi: FRZ-06 |
 | `freeze_check.py` | FRZ-07 | FRZ-07 | TEST EDILDI | mutasyon vakasi: FRZ-07 |
-| `freeze_check.py` | FRZ-08 | FRZ-08 | TEST EDILDI | mutasyon vakasi: FRZ-08 |
+| `freeze_check.py` | FRZ-08 | FRZ-08, FRZ-08-IMZA | TEST EDILDI | mutasyon vakasi: FRZ-08, FRZ-08-IMZA |
 | `perm_lint.py` | PERM-01 | KOD-PERM-01 | TEST EDILDI | mutasyon vakasi: KOD-PERM-01 |
 | `perm_lint.py` | PERM-02 | PERM-02 | TEST EDILDI | mutasyon vakasi: PERM-02 |
 | `perm_lint.py` | PERM-03 | PERM-03 | TEST EDILDI | mutasyon vakasi: PERM-03 |
