@@ -4120,6 +4120,85 @@ def calis(tmp):
             rc == 0 and "SCOPE-PROFILE PASS" in o,
             f"rc={rc} {o.strip()[:120]}")
 
+    # ============ tools/yayinla.py (yayin plani / .opencode / git) ============
+    # Yayin plani iki sessiz hata uretebilir: `.opencode` calisma-zamani
+    # dosyalarini yayina katar ya da temiz agacta izlenen bir dosyayi atlar.
+    # Ikisi de ancak baska bir klonda drift olarak gorunur; burada kilitliyoruz.
+    _yayin_kok = SCRIPTS.parent.parent
+    _yayin_arac = _yayin_kok / "tools" / "yayinla.py"
+    if not _yayin_arac.is_file() or not (_yayin_kok / ".git").exists():
+        kontrol("YAYIN-1", "yayin plani .opencode calisma-zamanini dislar ve git ile tutarlidir",
+                True, "fikstir koku: tools/yayinla.py veya .git yok; kontrol atlandi")
+    else:
+        try:
+            import importlib.util
+            _yayin_spec = importlib.util.spec_from_file_location(
+                "atlas_yayinla_oztest", str(_yayin_arac))
+            _yayin = importlib.util.module_from_spec(_yayin_spec)
+            _yayin_spec.loader.exec_module(_yayin)
+
+            # (1) Calisma-zamani dosyalari plana giremez; gercek bir ajan dosyasi girer.
+            _runtime = [
+                ".opencode/package.json",
+                ".opencode/package-lock.json",
+                ".opencode/bun.lock",
+                ".opencode/.gitignore",
+            ]
+            _kaynak = T / "yayin-kaynak"
+            for _d in list(_yayin.KOKLER) + list(_yayin.TOOLKIT_KOKLER):
+                (_kaynak / _d).mkdir(parents=True, exist_ok=True)
+            for _rel in _runtime:
+                _p = _kaynak / _rel
+                _p.parent.mkdir(parents=True, exist_ok=True)
+                _p.write_text("calisma-zamani\n", encoding="utf-8")
+            _ajan = ".opencode/agent/yayin-oztest.md"
+            _ajan_yolu = _kaynak / _ajan
+            _ajan_yolu.parent.mkdir(parents=True, exist_ok=True)
+            _ajan_yolu.write_text("# ajan\n", encoding="utf-8")
+            _planli = set(_yayin.topla(str(_kaynak)))
+            _runtime_disarida = not (set(_runtime) & _planli)
+            _ajan_icerde = _ajan in _planli
+
+            # (2) Gercek public agac: plan yollari izlenen dosyalarda olmali;
+            # temiz agacta plan disi fazlalik ve drift bulunmamali.
+            _istenen = _yayin.topla(str(_yayin_kok))
+            _yeni, _degisen, _ayni = _yayin.plan(_istenen)
+            _silinecek = _yayin.fazlalik(_istenen)
+            _git_ls = subprocess.run(
+                ["git", "-C", str(_yayin_kok), "ls-files", "-z"],
+                capture_output=True, text=True, timeout=60)
+            if _git_ls.returncode != 0:
+                raise RuntimeError("git ls-files rc=%d: %s" % (
+                    _git_ls.returncode, (_git_ls.stderr or "").strip()[:120]))
+            _izlenen = {x for x in _git_ls.stdout.split("\0") if x}
+            _git_durum = subprocess.run(
+                ["git", "-C", str(_yayin_kok), "status", "--porcelain",
+                 "--untracked-files=all"],
+                capture_output=True, text=True, timeout=60)
+            if _git_durum.returncode != 0:
+                raise RuntimeError("git status rc=%d" % _git_durum.returncode)
+            # Negatif OLG-1 kontrolu yalniz attestation'i bozar; o dosya yayin
+            # planinin parcasi degildir, temizlik olcutune girmez.
+            _kirli = [s for s in _git_durum.stdout.splitlines()
+                      if s.strip() and not s.rstrip().endswith("attestation.json")]
+            _plan_temiz = (not _yeni and not _degisen and not _silinecek
+                           and len(_ayni) == len(_istenen))
+            _izlenen_tutarli = set(_istenen) <= _izlenen
+            _gecti = (_runtime_disarida and _ajan_icerde and _plan_temiz
+                      and _izlenen_tutarli and not _kirli)
+            _ayrinti = (
+                "runtime_disarida=%s ajan_icerde=%s plan_temiz=%s "
+                "izlenen_tutarli=%s kirli=%d planda=%d"
+                % (_runtime_disarida, _ajan_icerde, _plan_temiz,
+                   _izlenen_tutarli, len(_kirli), len(_istenen)))
+            if _kirli:
+                _ayrinti += " kirli_ilk=%r" % (_kirli[:2],)
+            kontrol("YAYIN-1", "yayin plani .opencode calisma-zamanini dislar ve git ile tutarlidir",
+                    _gecti, _ayrinti)
+        except Exception as _e:
+            kontrol("YAYIN-1", "yayin plani .opencode calisma-zamanini dislar ve git ile tutarlidir",
+                    False, "%s: %s" % (type(_e).__name__, _e))
+
 
 tmp = tempfile.mkdtemp(prefix="atlas_selftest_")
 hata = False

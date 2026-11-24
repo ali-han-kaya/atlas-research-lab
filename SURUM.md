@@ -22,7 +22,7 @@ skill_lint_kontrol: 95
 skill_kapi_sayisi: 95
 SKILL_md_satir: 500
 kapi_taban_kimlik: 90
-atlas_envanter: 145
+atlas_envanter: 146
 <!-- C15f:bitti -->
 
 **Makine bloğu neden var?** `atlas_envanter` değeri `ATLAS_SABLONLAR/scripts/OZTEST-TABAN.json`

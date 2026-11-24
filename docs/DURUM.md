@@ -9,15 +9,15 @@
 
 | Kalem | Sonuç | Komut |
 |---|---|---|
-| ATLAS öz-testi | 145/145 | `python3 ATLAS_SABLONLAR/scripts/atlas_selftest.py --sessiz` |
+| ATLAS öz-testi | 146/146 | `python3 ATLAS_SABLONLAR/scripts/atlas_selftest.py --sessiz` |
 | KOD öz-testi | 174/174 | `python3 KOD_SABLONLAR/scripts/kod_selftest.py` |
 
 ## Envanter
 
 | Kalem | Değer | Kaynak |
 |---|---|---|
-| ATLAS pinli test envanteri | 145 | `ATLAS_SABLONLAR/scripts/OZTEST-TABAN.json` (`sayi`) |
-| ATLAS envanter kimlik hash'i | `sha256:bc2286bf172241b6cde56bf23742e1c70b1a7d396094188bdd39e5c77046bb10` | `ATLAS_SABLONLAR/scripts/OZTEST-TABAN.json` (`kimlik_hash`) |
+| ATLAS pinli test envanteri | 146 | `ATLAS_SABLONLAR/scripts/OZTEST-TABAN.json` (`sayi`) |
+| ATLAS envanter kimlik hash'i | `sha256:03acd842a198ba5cdf9ff0a3ec902693cc471bf070226fff387020038a30327c` | `ATLAS_SABLONLAR/scripts/OZTEST-TABAN.json` (`kimlik_hash`) |
 | Python dosya sayısı (H2) | 73 | `make dogrula` H2 taraması |
 | Kapı lint kontrolü | 95 | `SURUM.md` C15f (`skill_lint_kontrol`) |
 | Kapı envanteri | 95 | `SURUM.md` C15f (`skill_kapi_sayisi`) |
@@ -26,7 +26,7 @@
 
 ## Çapraz kontrol
 
-- ATLAS: canlı 145/145 = pinli envanter 145 = OLGULAR 145 = SURUM 145
+- ATLAS: canlı 146/146 = pinli envanter 146 = OLGULAR 146 = SURUM 146
 - KOD: canlı 174/174 = OLGULAR 174
 
 Bu üç eşitlikten biri bozulursa `make durum-kontrol` kırmızı olur;

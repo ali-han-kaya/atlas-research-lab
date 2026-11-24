@@ -269,8 +269,8 @@ olarak kurar. Temiz kök `tools/demo.py` ve `scripts/check_integrity.sh --full`
 
 | Komut | Süre | Ölçüm |
 |---|---|---|
-| `make dogrula` | 52 s | macOS 27.2 · arm64 · Python 3.9.6 · 2026-11-19 |
-| `make mutasyon` | 66 s | aynı makine ve oturum |
+| `make dogrula` | 196 s | macOS 27.2 · arm64 · Python 3.9.6 · 2026-11-24 · taze /tmp klonu |
+| `make mutasyon` | 169 s | aynı makine, aynı /tmp klonu |
 | `./demo` | < 1 s | aynı makine ve oturum |
 
 Bu satırlar tarihli yerel ölçümlerdir; taze bir `/tmp` klonunda Python 3.9 alt

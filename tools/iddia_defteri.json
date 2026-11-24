@@ -164,11 +164,11 @@
     },
     {
       "id": "IDD-03",
-      "iddia": "ATLAS oz-testi 145/145",
+      "iddia": "ATLAS oz-testi 146/146",
       "kaynaklar": [
         {
           "dosya": "docs/DURUM.md",
-          "alinti": "| ATLAS öz-testi | 145/145 |"
+          "alinti": "| ATLAS öz-testi | 146/146 |"
         }
       ],
       "durum": "OLCULDU",
@@ -178,7 +178,7 @@
       ],
       "ham_grup": true,
       "ayikla": "ATLAS oz-testi\\s+PASS\\s+OZ-TEST:\\s*(\\d+/\\d+) gecti",
-      "beklenen": "145/145",
+      "beklenen": "146/146",
       "rc_beklenen": 0
     },
     {
@@ -724,27 +724,27 @@
     },
     {
       "id": "IDD-27",
-      "iddia": "make dogrula suresi 52 s",
+      "iddia": "make dogrula suresi 196 s",
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "| `make dogrula` | 52 s | macOS 27.2 · arm64 · Python 3.9.6 · 2026-11-19 |"
+          "alinti": "| `make dogrula` | 196 s | macOS 27.2 · arm64 · Python 3.9.6 · 2026-11-24 · taze /tmp klonu |"
         }
       ],
       "durum": "BEYAN",
-      "gerekce": "2026-11-19 macOS 27.2 arm64 Python 3.9.6 olcumu; makineye bagli, kapida yeniden kosulmaz"
+      "gerekce": "2026-11-24 macOS 27.2 arm64 Python 3.9.6 taze /tmp klonu olcumu; makineye bagli, kapida yeniden kosulmaz"
     },
     {
       "id": "IDD-28",
-      "iddia": "make mutasyon suresi 66 s",
+      "iddia": "make mutasyon suresi 169 s",
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "| `make mutasyon` | 66 s | aynı makine ve oturum |"
+          "alinti": "| `make mutasyon` | 169 s | aynı makine, aynı /tmp klonu |"
         }
       ],
       "durum": "BEYAN",
-      "gerekce": "ayni makine ve oturumda 2026-11-19 olcumu; makineye bagli"
+      "gerekce": "ayni makine ve /tmp klonunda 2026-11-24 olcumu; makineye bagli"
     },
     {
       "id": "IDD-29",
@@ -1048,27 +1048,19 @@
     },
     {
       "id": "IDD-46",
-      "iddia": "QUICKSTART yaklasik sureleri: dogrula ~90/91/95 s, mutasyon ~15/70/14/68 s",
+      "iddia": "QUICKSTART yaklasik sureleri: dogrula 196 s, mutasyon 169 s",
       "kaynaklar": [
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "**Approximate duration:** ~90 s on a warm local checkout (macOS, Python 3.11) —"
+          "alinti": "**Approximate duration:** 196 s on a fresh `/tmp` clone (macOS 27.2, Python 3.9.6;"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "91 s in `/tmp`, 95 s on an iCloud-synced checkout. Timings move with filesystem"
-        },
-        {
-          "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "**Approximate duration:** ~15 s on a clean local checkout, up to ~70 s when the"
-        },
-        {
-          "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "tree sits on a synced filesystem (measured 14 s in `/tmp`, 68 s on iCloud"
+          "alinti": "**Approximate duration:** 169 s on the same fresh `/tmp` clone (macOS 27.2,"
         }
       ],
       "durum": "BEYAN",
-      "gerekce": "21 Kasim 2026 yerel makine olcumleri; dosya sistemi ve donanima bagli, kapida yeniden kosulmaz"
+      "gerekce": "2026-11-24 macOS 27.2 arm64 Python 3.9.6 taze /tmp klonu olcumu; dosya sistemi ve donanima bagli, kapida yeniden kosulmaz"
     },
     {
       "id": "IDD-48",

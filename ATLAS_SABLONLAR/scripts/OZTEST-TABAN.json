@@ -1,6 +1,6 @@
 {
   "sema": "OZTEST-TABAN/v1",
-  "sayi": 145,
+  "sayi": 146,
   "kimlikler": [
     "AI-1",
     "BG-1",
@@ -146,7 +146,8 @@
     "VD-4",
     "VD-5",
     "VD-6",
-    "VD-7"
+    "VD-7",
+    "YAYIN-1"
   ],
-  "kimlik_hash": "sha256:bc2286bf172241b6cde56bf23742e1c70b1a7d396094188bdd39e5c77046bb10"
+  "kimlik_hash": "sha256:03acd842a198ba5cdf9ff0a3ec902693cc471bf070226fff387020038a30327c"
 }

@@ -11,7 +11,7 @@ yardim:
 	@echo "make kanit-dogrula  attestation.json'i gercek commit/agac ile dogrula"
 	@echo "make kanit-negatif  KANIT-00..06 kodlarinin her birini gercek bozulmayla sinar"
 	@echo "make kanit-paket-dogrula  kanit-paketi/ icindeki sema, attestation, manifest ve ham kayitlari dogrula"
-	@echo "make olgu-negatif  OLG-1 negatif kontrol: eksik/bozuk attestation ve 144/145 sinamasi"
+	@echo "make olgu-negatif  OLG-1 negatif kontrol: eksik/bozuk attestation ve 145/146 sinamasi"
 	@echo "make durum-yaz  tek uretilmis DURUM sayfasini yenile (docs/DURUM.md)"
 	@echo "make durum-kontrol  DURUM sayfasi kaynaklara gore bayat mi (CI)"
 	@echo "make durum-selftest  DURUM bayatlik kapisinin negatif testleri (gecici kok)"

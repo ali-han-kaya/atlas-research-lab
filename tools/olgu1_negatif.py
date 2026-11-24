@@ -10,12 +10,12 @@ siralar:
      basar; tarihsel commit fallback'ine dusmez,
   3. `attestation.json` commit alani var olmayan bir SHA'ya bozulur; `olgu_lint`
      rc=1 ve `FAIL OLGU-04 KANIT_GECERSIZ ... COMMIT_YOK` basar,
-  4. `atlas_selftest --sessiz` rc=1, `OZ-TEST: 144/145 gecti` ve kalan tek
+  4. `atlas_selftest --sessiz` rc=1, `OZ-TEST: 145/146 gecti` ve kalan tek
      kimlik `OLG-1` olur,
   5. ana agacin git durumu, HEAD'i ve attestation hash'i degismez.
 
 Klonda `atlas_selftest`in butun kalemleri kosar; boylece kontrol yalniz
-`olgu_lint`in kirmizisini degil, genis paketin 144/145 verdigini de olcer.
+`olgu_lint`in kirmizisini degil, genis paketin 145/146 verdigini de olcer.
 Temiz taban kiriksa negatif kontrole gecilmez: bozuk kopyada alinan kirmizi
 kanit sayilmaz.
 
@@ -114,7 +114,7 @@ def senaryo(gecici, head, bekle):
             raise RuntimeError("klonda arac/katalog yok: %s" % yol)
     # `make dogrula` T1 de ayni sabit katalogu enjekte eder. Enjekte edilmezse
     # runner'da ~/.cache/opencode/models.json yok diye MOD-1/MOD-2 de duser ve
-    # 144/145 yerine 142/145 olur; bu, OLG-1 negatif kontrolunu bozar.
+    # 145/146 yerine 143/146 olur; bu, OLG-1 negatif kontrolunu bozar.
     ortam = dict(os.environ, ATLAS_MODEL_KATALOG=str(katalog))
 
     sonuc, hata = kos([sys.executable, str(lint)], klon, 180)
@@ -179,9 +179,9 @@ def senaryo(gecici, head, bekle):
     ozet = (int(ozetler[-1][0]), int(ozetler[-1][1])) if ozetler else None
     kalan = sorted(set(KALDI_RE.findall(atlas_cikti)))
     bekle(
-        "atlas_selftest rc=1 · OZ-TEST: 144/145 gecti · kalan yalniz OLG-1",
+        "atlas_selftest rc=1 · OZ-TEST: 145/146 gecti · kalan yalniz OLG-1",
         sonuc is not None and sonuc.returncode == 1
-        and ozet == (144, 145) and kalan == ["OLG-1"],
+        and ozet == (145, 146) and kalan == ["OLG-1"],
         "%s\nrc=%s ozet=%s kalan=%s\n%s" % (
             hata or "", None if sonuc is None else sonuc.returncode,
             ozet, kalan, atlas_cikti,
