@@ -40,10 +40,10 @@ otomatik uygulanmaz.
 | — envanter disi: olu kimlik (bildirilir, basilMAZ) | 4 |
 | — envanter disi: dis referans | 1 |
 | Kod icinde uretilen, envantere alinmayan kimlik | 41 |
-| Batarya vakasi (toplam) | 141 |
-| — atesleyen (HATA + TERMINAL) | 114 |
+| Batarya vakasi (toplam) | 140 |
+| — atesleyen (HATA + TERMINAL) | 113 |
 | — HATA (rc=1) | 105 |
-| — TERMINAL (rc=2) | 9 |
+| — TERMINAL (rc=2) | 8 |
 | — beklenen bulgu | 27 |
 | Atesleyen vakayla test edilen kural (TEST EDILDI) | 93 |
 | Yalniz beklenen-bulgu ile dogrulanan kural (BEKLENEN BULGU) | 24 |
@@ -374,7 +374,7 @@ tip ihlalidir; kopya degil, farkli hata dalidir.
 | `dep_audit.py` | DEP-04 | DEP-04 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: DEP-04 |
 | `dep_audit.py` | DEP-05 | DEP-05 | TEST EDILDI | atesleyen mutasyon vakasi: DEP-05 |
 | `dep_audit.py` | DEP-06 | DEP-06 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: DEP-06 |
-| `freeze_check.py` | FRZ-01 | FRZ-01, FRZ-01-KAYIP, FRZ-01T, FRZ-01-02 | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-01, FRZ-01-KAYIP, FRZ-01T, FRZ-01-02 |
+| `freeze_check.py` | FRZ-01 | FRZ-01, FRZ-01-KAYIP, FRZ-01-02 | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-01, FRZ-01-KAYIP, FRZ-01-02 |
 | `freeze_check.py` | FRZ-02 | FRZ-01-02, FRZ-02, FRZ-02-KAYIP | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-01-02, FRZ-02, FRZ-02-KAYIP |
 | `freeze_check.py` | FRZ-03 | FRZ-03 | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-03 |
 | `freeze_check.py` | FRZ-04 | FRZ-04 | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-04 |
