@@ -169,15 +169,21 @@ def sha256_metin(metin):
 # gercek ciktisindan secilir.
 VERDICT_SATIRI = re.compile(
     r"\b(?:HUKUM|KAPSAM|SONUC|PASS|FAIL|ERROR|ZAMAN ASIMI)\b")
+ONCELIK_SATIRI = re.compile(r"\b(?:HUKUM|KAPSAM|SONUC)\b")
 
 
 def ham_satir(out, err):
-    """Komutun son hukum/ozet satirini, yoksa son dolu satirini dondur."""
+    """Komutun son hukum/ozet satirini, yoksa son dolu satirini dondur.
+
+    Once HUKUM/KAPSAM/SONUC tasiyan satir aranir; boylece "PASS degil" gibi
+    bir uyari satiri, gercek hukum satirinin onune gecmez.
+    """
     for metin in (out, err):
         satirlar = [s.rstrip() for s in (metin or "").splitlines() if s.strip()]
-        for satir in reversed(satirlar):
-            if VERDICT_SATIRI.search(satir):
-                return satir
+        for kalip in (ONCELIK_SATIRI, VERDICT_SATIRI):
+            for satir in reversed(satirlar):
+                if kalip.search(satir):
+                    return satir
         if satirlar:
             return satirlar[-1]
     return ""

@@ -264,7 +264,7 @@ birbirine bağlar:
 Başarılı doğrulama şu iki satırı basar:
 
 ```text
-PASS PAKET commit=<paket commit> komut=3 dosya=8
+PASS PAKET commit=<paket commit> komut=3 dosya=9
 PAKET: TEMIZ — sonuc semasi, attestation, manifest ve ham komut kayitlari tutuyor.
 ```
 
