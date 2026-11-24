@@ -28,8 +28,8 @@ otomatik uygulanmaz.
 | Kural bildiren betik | 20 |
 | Bildirilen kural | 121 |
 | Kod icinde uretilen, envantere alinmayan kimlik | 41 |
-| Batarya vakasi (toplam) | 122 |
-| — kural ateslettiren | 103 |
+| Batarya vakasi (toplam) | 123 |
+| — kural ateslettiren | 104 |
 | — beklenen bulgu | 19 |
 | Mutasyon vakasi olan (TEST EDILDI) | 99 |
 | Gerekceli kapsam disi | 22 |
@@ -348,7 +348,7 @@ tip ihlalidir; kopya degil, farkli hata dalidir.
 | `freeze_check.py` | FRZ-05 | FRZ-05 | TEST EDILDI | mutasyon vakasi: FRZ-05 |
 | `freeze_check.py` | FRZ-06 | FRZ-06 | TEST EDILDI | mutasyon vakasi: FRZ-06 |
 | `freeze_check.py` | FRZ-07 | FRZ-07 | TEST EDILDI | mutasyon vakasi: FRZ-07 |
-| `freeze_check.py` | FRZ-08 | FRZ-08, FRZ-08-IMZA, FRZ-08-P1 | TEST EDILDI | mutasyon vakasi: FRZ-08, FRZ-08-IMZA, FRZ-08-P1 |
+| `freeze_check.py` | FRZ-08 | FRZ-08, FRZ-08-IMZA, FRZ-08-YANLIS-ANAHTAR, FRZ-08-P1 | TEST EDILDI | mutasyon vakasi: FRZ-08, FRZ-08-IMZA, FRZ-08-YANLIS-ANAHTAR, FRZ-08-P1 |
 | `perm_lint.py` | PERM-01 | KOD-PERM-01 | TEST EDILDI | mutasyon vakasi: KOD-PERM-01 |
 | `perm_lint.py` | PERM-02 | PERM-02 | TEST EDILDI | mutasyon vakasi: PERM-02 |
 | `perm_lint.py` | PERM-03 | PERM-03 | TEST EDILDI | mutasyon vakasi: PERM-03 |

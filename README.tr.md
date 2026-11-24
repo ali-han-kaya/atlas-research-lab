@@ -102,14 +102,14 @@ visible; evidence levels (`BIRINCIL`/`DIJITAL`/`BEYAN`/`OLCULMEDI`); fail-closed
 (unmeasured is never a pass); and tamper detection (`GATE_TAMPERED` → P0).
 - **How claims are verified.** `make dogrula` (hygiene, syntax, secret scan, secret-gate
 self-test, three self-test suites), `make mutasyon` (ninety-nine gate rules, exercised by
-122 battery cases: silent clean baseline + one violation + a red verdict or expected finding), and `tools/yayinla.py`
+123 battery cases: silent clean baseline + one violation + a red verdict or expected finding), and `tools/yayinla.py`
 (publish parity: 0 new / 0 changed / 0 deleted). The same commands run in CI on GitHub Actions.
 `make iddia` closes the remaining gap: it re-measures the numbers printed in this README.
 - **Reproduce it.** `./demo` prints the frozen 8-vs-2 failure with a **red verdict and
 exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin
 wrapper and cannot carry 1 vs 2, because GNU make always exits 2 on a failing recipe. `make dogrula` → **8 pass / 0 fail / 0 not run** (T1, `OLG-1`, now
 runs against this tree's `attestation.json`); current self-test and inventory values are generated in
-[`docs/DURUM.md`](docs/DURUM.md). Mutation battery **103/103 cases red + 19/19 expected findings** over 99 rules. Mutation-tested vs untested gate rules are measured
+[`docs/DURUM.md`](docs/DURUM.md). Mutation battery **104/104 cases red + 19/19 expected findings** over 99 rules. Mutation-tested vs untested gate rules are measured
 in [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md); dependent-package findings in
 [`docs/GUVENLIK.md`](docs/GUVENLIK.md); CI green. Non-Turkish readers:
 [`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md).
@@ -292,8 +292,8 @@ tek bir ihlal üretilir ve kapının **kırmızıya döndüğü**
 (`rc=1`, yalnız hedef FAIL) doğrulanır. Beklenen-bulgu vakasında kapı `rc=0`
 kalabilir, ama ihlal sonrası beklenen uyarı/işaret çıktıda **bulunmalıdır**. Her
 iki modda da temiz tabanda bulgunun yokluğu ortak ön koşuldur; taban kirliyse
-veya ihlal sonrası beklenen iz yoksa vaka geçmez. Katalog 122 vakadır:
-103 hata + 19 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,
+veya ihlal sonrası beklenen iz yoksa vaka geçmez. Katalog 123 vakadır:
+104 hata + 19 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,
 `quote_ratio.py` içindeki dengesiz düz tırnak uyarısını ayrı bir vaka olarak
 kilitler; böylece uyarı dalı runner tarafından atlanmaz. Model, ağ ve yerel
 katalog gerekmez.

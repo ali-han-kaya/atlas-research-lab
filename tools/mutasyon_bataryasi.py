@@ -24,6 +24,7 @@ CIKIS
   1  : en az bir vaka ateslemedi / taban kirlendi / mutasyon uygulanamadi
 """
 import hashlib
+import hmac
 import json
 import os
 import re
@@ -378,6 +379,23 @@ def _frz08_imza(k):
     """Imzali tabanin icerigini sonradan degistir; eski imza uyusmaz."""
     return _json_duzenle(k, '_KOSU/gate/BASELINE.json',
                          lambda v: v.__setitem__('imza_kurcalama', True))
+
+
+def _frz08_yanlis_anahtar(k):
+    """Tek ihlal: gecerli taban imzasini FARKLI bir anahtarla yeniden hesapla.
+
+    Bozuk bir imza dizesinden farkli olarak bu imza bicimsel olarak gecerlidir;
+    yalniz anahtar uyusmaz. Boylece kapi, imzayi yalniz uzunluk/karakter
+    kontrolunden gecirmekle yetinmedigini de kanitlar.
+    """
+    taban = k / '_KOSU' / 'gate' / 'BASELINE.json'
+    veri = json.loads(taban.read_text(encoding='utf-8'))
+    kanonik = json.dumps({a: b for a, b in veri.items() if a != 'temiz_agac_imzasi'},
+                         sort_keys=True, ensure_ascii=False,
+                         separators=(',', ':')).encode('utf-8')
+    imza = hmac.new(bytes.fromhex('b' * 64), kanonik, hashlib.sha256).hexdigest()
+    return _json_duzenle(k, '_KOSU/gate/BASELINE.json',
+                         lambda v: v.__setitem__('temiz_agac_imzasi', imza))
 
 
 def _frz08_p1(k):
@@ -1258,6 +1276,12 @@ def vakalar():
          'KOD_SABLONLAR/scripts/freeze_check.py',
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          _frz08_imza,
+         'FRZ-08', {'terminal': True, 'kur': _frz08_imza_hazirla, 'env': _frz08_env(),
+                    'taban_bilgi': 'FRZ-08'}),
+        ('FRZ-08-YANLIS-ANAHTAR', 'KOD', 'baska anahtarla imzali taban terminal',
+         'KOD_SABLONLAR/scripts/freeze_check.py',
+         lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
+         _frz08_yanlis_anahtar,
          'FRZ-08', {'terminal': True, 'kur': _frz08_imza_hazirla, 'env': _frz08_env(),
                     'taban_bilgi': 'FRZ-08'}),
         ('FRZ-08-P1', 'KOD', 'imzasiz temiz taban dusuk guven',
