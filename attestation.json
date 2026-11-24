@@ -1,6 +1,6 @@
 {
-  "commit": "bdf411a4c3c3ac33b9690f4fa47ec15302e0e210",
-  "file_count": 275,
+  "commit": "2b0e0dae5bb9d3a29ce360c56dd418bfa21d1329",
+  "file_count": 276,
   "files": [
     {
       "mode": "100755",
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "e126e8bcbc81787e4082afafde6f859e07d49bb68af8a0f097df0a274f2f6e4e",
-      "size": 7920
+      "sha256": "333f369eecfb37280d79ff2393eaf64ca6e16c6dde29b873cfe7c824b459a671",
+      "size": 8643
     },
     {
       "mode": "100644",
@@ -1228,6 +1228,12 @@
     },
     {
       "mode": "100644",
+      "path": "SECURITY.md",
+      "sha256": "99c5545caa5fa514199a240b5ead6fb70e7e80aeed1e0763e54f379118543a59",
+      "size": 2518
+    },
+    {
+      "mode": "100644",
       "path": "SURUM.md",
       "sha256": "5ae4ab3aa941f09e689c36c82ddd15336575e4f2fd243866068f6c869f0ffdac",
       "size": 587813
@@ -1487,7 +1493,7 @@
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "538efb48473019299236cf4b3e7c2d222b782db50916e7852c3ac86dd55861af",
+      "sha256": "e967a9807e8435a12339c237f3e4fbad628684ca2b5662bde911e8972c5fd2cb",
       "size": 8103
     },
     {
@@ -1643,17 +1649,17 @@
     {
       "mode": "100644",
       "path": "tools/yayin_manifest.json",
-      "sha256": "9f7eedd603a90a8211a0df8d3dea366e3b22163a4f480f1f99034a6f8c44376c",
-      "size": 12618
+      "sha256": "8d932b7f5eddf887756e18ce2dc8a3d7dca48b0192dc396ec51301fdd6a0700b",
+      "size": 12637
     },
     {
       "mode": "100644",
       "path": "tools/yayinla.py",
-      "sha256": "b42513202a75d1a648f740204572ac9937f6baf212b4b8dc291b8808c31fb26c",
-      "size": 14571
+      "sha256": "8af62c1ea98528d1bf56936f4ff0a6fbeb28d37ffd370b81f7c14b7740c0c929",
+      "size": 14586
     }
   ],
-  "generated_at": "2026-11-23T22:35:21Z",
+  "generated_at": "2026-11-24T00:58:28Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1668,6 +1674,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "c97016b790efc97c40572f5c1fcadc246441d95a",
-  "tree_sha256": "9d05d2494dcfdece19c045ef361dd41bef067e9af5707a9d2a5023c600faf499"
+  "tree": "751f06a60ddad124cd5ad499cd32a320000ae37d",
+  "tree_sha256": "05ea7706298962cf53ba9745b633592bef84be0fb5059aca18915a5c824331e0"
 }
