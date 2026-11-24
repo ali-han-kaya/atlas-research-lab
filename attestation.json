@@ -1,5 +1,5 @@
 {
-  "commit": "d909c384b30f585a8e01bdff67c2be3dd453bf82",
+  "commit": "061721796057b88bd8a4d6fa20b458933d422657",
   "file_count": 284,
   "files": [
     {
@@ -1505,8 +1505,8 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "073f44a34896fcbc5d8839a30c891ed6d66551a3f0e996358ec18ce7238cbf9c",
-      "size": 37292
+      "sha256": "5de0d9dce6d9d1cc97f89b2db0306fb37f1ee332c039d0061b6cf1df4a3fa9c9",
+      "size": 37432
     },
     {
       "mode": "100644",
@@ -1707,7 +1707,7 @@
       "size": 14681
     }
   ],
-  "generated_at": "2026-11-24T18:06:40Z",
+  "generated_at": "2026-11-24T18:56:35Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1722,6 +1722,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "43f44bbab5313addecb5442196e77c1e421cbcda",
-  "tree_sha256": "a7c2df6a118940eaf3b973594c132b38a43abee966441233f6e1d499e03d2f05"
+  "tree": "5de760e907a8c9eb46fbee63ae6c4903f78c98c8",
+  "tree_sha256": "7b4149787a14762dab7e188450f5c1d74d7b0b1d613c893caabaf493da0ecdb5"
 }
