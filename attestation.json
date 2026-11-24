@@ -1,6 +1,6 @@
 {
-  "commit": "52d724785c368f1c007030f36f7cead2405f507c",
-  "file_count": 277,
+  "commit": "6169f01c7a917aaf77c992530a44666aa5ced53a",
+  "file_count": 278,
   "files": [
     {
       "mode": "100755",
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "3f27383ec34c5507ff64d167212a1290b895ac6abda0f8c9378ce987e3bf5e49",
-      "size": 9111
+      "sha256": "edcb0c293bf8b26d297d8a6130dab8e740d48a1ddb6051362de89a6939b28dab",
+      "size": 9335
     },
     {
       "mode": "100644",
@@ -1163,8 +1163,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "7c55f780c2127aa43393560be03e5cf814949816849ae8b15ad232faa53ce454",
-      "size": 6012
+      "sha256": "10fc181ad0b11a923fe2d06bc9809e79e211e3132f1c51ed7582c1e9166116c4",
+      "size": 6216
     },
     {
       "mode": "100644",
@@ -1211,8 +1211,8 @@
     {
       "mode": "100644",
       "path": "README.en.md",
-      "sha256": "c46ed0b64ab2c8ec0ea7ab2963caca77fd1dfe8453b6f020e79b3652d3b44a68",
-      "size": 5823
+      "sha256": "3740f9a1f248473aa808d6055a75468e37efcc45add6715ede90d70c07d60417",
+      "size": 6027
     },
     {
       "mode": "100644",
@@ -1223,8 +1223,8 @@
     {
       "mode": "100644",
       "path": "README.tr.md",
-      "sha256": "552d0b2062f110ad88a4e19f6269bafe8d26057b46b10b50bf179e2124f171b4",
-      "size": 35693
+      "sha256": "df5dbbec757f4c997d0b1f62bfed163f9acac5da6738be907ec34aa2ded8a7d1",
+      "size": 36043
     },
     {
       "mode": "100644",
@@ -1391,8 +1391,8 @@
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "3abcc252db11a9c80f5531b26cb9d542c1077c210419535f8e6cf02608beab46",
-      "size": 31280
+      "sha256": "0cefc6b8ce1484488d6fb530880f43b60084b442dbf68243558bef2cf0196bbc",
+      "size": 31677
     },
     {
       "mode": "100644",
@@ -1429,6 +1429,12 @@
       "path": "schemas/atlas-dogrulama-sonuc.schema.json",
       "sha256": "86407685a64899b9c91b3cb6640afce27b9462d771709bf84fe5da8387061c1f",
       "size": 4941
+    },
+    {
+      "mode": "100644",
+      "path": "schemas/atlas-makbuz.schema.json",
+      "sha256": "6a1eea25012d78abcc90b022938968263f3fc019d960e7f1dd0599fc26d0454f",
+      "size": 2690
     },
     {
       "mode": "100755",
@@ -1487,13 +1493,13 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "b932f89c99201419c4bbb05e871d57bf11bf6f3cdab68774fe7ca0944fe69160",
+      "sha256": "a13b5786ee5525d0c8e858de85cfeccbea56b3d22652b8cc0bef9dd2f06cccd5",
       "size": 36947
     },
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "011f7d2e3970a7ba42008d2aa4fca34e21fdd879a16da06a7be4f302973ad14f",
+      "sha256": "954aed7fffec42be90c64b5489da6b9f1c8d87bce8211f1c2b084af081849f81",
       "size": 8496
     },
     {
@@ -1511,8 +1517,8 @@
     {
       "mode": "100644",
       "path": "tools/kanit.py",
-      "sha256": "823490e72063b1522acf1263cf9122d8084c412bb2e3c99bcba658d134bff2cd",
-      "size": 14160
+      "sha256": "e39793c1e7599f6249bb46f3108db163b9638475433998045eaab72228a1946c",
+      "size": 16674
     },
     {
       "mode": "100644",
@@ -1529,8 +1535,8 @@
     {
       "mode": "100644",
       "path": "tools/kanit_paketi_dogrula.py",
-      "sha256": "08545ab3564c5317d44563e71eef04cb1ae54486955091b8e3f0143fb56b9452",
-      "size": 11636
+      "sha256": "ade675e114c4f3502dc42b741dc534bfeeaf66b4536ff9f7e5bbfeae87915b69",
+      "size": 17622
     },
     {
       "mode": "100644",
@@ -1655,8 +1661,8 @@
     {
       "mode": "100644",
       "path": "tools/yayin_manifest.json",
-      "sha256": "720b5a7bc62be4df0d1aed6559d7bd19e9126a78f0fbf3f19fcd0c7846a14257",
-      "size": 12663
+      "sha256": "2b84b9cefdbc0c2d0b94ad75f29db9ab36e1792c9a0787b87fe9e1c89be542a5",
+      "size": 12703
     },
     {
       "mode": "100644",
@@ -1665,7 +1671,7 @@
       "size": 14586
     }
   ],
-  "generated_at": "2026-11-24T06:37:46Z",
+  "generated_at": "2026-11-24T07:04:44Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1680,6 +1686,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "7faafd56e5ec0d8d5497d5c948f35ca73e190170",
-  "tree_sha256": "2fe715c1f5d3c88735670dfd94a69ddba0567be1ae19a0a0de4aac22dfe5ed9f"
+  "tree": "e4d54efa56fbb8b3daa5acc84a4d79f9bc183313",
+  "tree_sha256": "9aedaeedd1d6fe3d7275b72bcd1ea72d8030a8b9b0b8a19164fda7c3668387b1"
 }
