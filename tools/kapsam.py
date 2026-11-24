@@ -403,6 +403,67 @@ def kod_ici_oztest():
     kod_ici_sinifla('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI-00')
 
 
+def tarama_oztest():
+    """Tarama sinirinin iki gercek olgusunu olcer (sentetik fikstur yok).
+
+    (1) 100. satirdan sonraki kural bulunur: `FRZ-08` bolum basligi
+        `KOD_SABLONLAR/scripts/freeze_check.py` icinde 100'den sonra duruyor.
+        Eski 100 satirlik sinir onu envanterden tamamen kaciriyordu.
+    (2) Dis referans kural sayilmaz: `DEC-027` `ATLAS_SABLONLAR/scripts/
+        verify_doi.py` icinde bolum basligi gibi gorunur; `REFERANS` kaydi
+        olmasa envantere kural olarak girerdi.
+    (3) `REFERANS` yol kapsamlidir: ayni kimlik baska betikte kural sayilir.
+    """
+    def _bolum_satiri(yol, kimlik):
+        metin = (KOK / yol).read_text(encoding='utf-8').splitlines()
+        for no, satir in enumerate(metin, 1):
+            m = BOLUM.match(satir)
+            if m and m.group(1) == kimlik:
+                return no
+        return None
+
+    yol = 'KOD_SABLONLAR/scripts/freeze_check.py'
+    no = _bolum_satiri(yol, 'FRZ-08')
+    if no is None:
+        raise SystemExit('TARAMA OZTEST: FAIL — FRZ-08 bolum basligi bulunamadi')
+    if no <= 100:
+        raise SystemExit(
+            'TARAMA OZTEST: FAIL — FRZ-08 %d. satirda; testin amaci 100. '
+            'satirdan sonrasini olcmek (fikstur kaydi)' % no)
+    baslik, bolum = _kimlikler(KOK / yol)
+    if 'FRZ-08' not in (baslik | bolum):
+        raise SystemExit('TARAMA OZTEST: FAIL — FRZ-08 envanterde yok')
+
+    ref_yol = 'ATLAS_SABLONLAR/scripts/verify_doi.py'
+    if _bolum_satiri(ref_yol, 'DEC-027') is None:
+        raise SystemExit('TARAMA OZTEST: FAIL — DEC-027 basligi dosyada yok; '
+                         'test kendi varsayimini kaybetti')
+    if (ref_yol, 'DEC-027') not in REFERANS:
+        raise SystemExit('TARAMA OZTEST: FAIL — REFERANS kaydi yok')
+    r_baslik, r_bolum = _kimlikler(KOK / ref_yol)
+    if 'DEC-027' in (r_baslik | r_bolum):
+        raise SystemExit('TARAMA OZTEST: FAIL — DEC-027 kural sayildi '
+                         '(REFERANS uygulanmadi)')
+    if any('DEC-027' in kimlikler for kimlikler in envanter().values()):
+        raise SystemExit('TARAMA OZTEST: FAIL — DEC-027 envanterde gorunuyor')
+
+    # Ayiklama regex'in isi degil: ham tarama DEC-027'yi YAKALAR, sonra
+    # REFERANS dusurur. Ikisi birlikte olculmezse "sayilmadi" sessiz kalirdi.
+    ham = set()
+    for satir in (KOK / ref_yol).read_text(encoding='utf-8').splitlines():
+        m = KURAL.match(satir) or BOLUM.match(satir)
+        if m:
+            ham.add(m.group(1))
+    if 'DEC-027' not in ham:
+        raise SystemExit('TARAMA OZTEST: FAIL — ham tarama DEC-027 yakalamiyor; '
+                         'REFERANS testi bosa dusmus')
+
+    # Satir ortasindaki atif ("... (DEC-027) kapsaminda") hic eslesmez.
+    orta = '# bkz. (DEC-027) kapsaminda degerlendirilir'
+    if KURAL.match(orta) or BOLUM.match(orta):
+        raise SystemExit('TARAMA OZTEST: FAIL — satir ortasi atif kural sayildi')
+
+
 def kod_ici_kimlikler():
     """Baslikta bildirilmeyen, kodda string literal olarak uretilen kimlikler.
 
@@ -856,6 +917,7 @@ def json_rapor():
             kod_ici_oztest()
             sozlesme_oztest()
             ratchet_oztest()
+            tarama_oztest()
     except SystemExit:
         oztest_gecti = False
     satirlar, envan, (test, disi, bosluk, oz_anilan, beklenen) = olc()
@@ -919,6 +981,14 @@ def main(argv):
                 hata='kapsam hesaplanamadi')
         sys.stdout.write(kapi_cikti.yaz(rapor))
         return 0 if rapor['hukum'] == 'PASS' else 1
+    if '--oztest' in argv:
+        kod_ici_oztest()
+        sozlesme_oztest()
+        ratchet_oztest()
+        tarama_oztest()
+        print('KAPSAM OZTEST: PASS — kimlik fail-closed · sozlesme ayrik · '
+              'ratchet iki yonlu · FRZ-08 >100 · DEC-027 referans')
+        return 0
     if '--kontrol' in argv or '--yaz' in argv:
         kod_ici_oztest()
         print('KOD-ICI OZTEST: PASS — bilinmeyen kimlik fail-closed')
@@ -927,6 +997,8 @@ def main(argv):
         ratchet_oztest()
         print('KAPSAM RATCHET OZTEST: PASS — test=%d, bosluk=%d'
               % (TABAN_TEST_EDILEN, TABAN_BOSLUK_SAYISI))
+        tarama_oztest()
+        print('TARAMA OZTEST: PASS — >100 kural bulunur · dis referans sayilmaz')
     satirlar, _envan, (test, _disi, bosluk, _ozanilan, _beklenen_test) = olc()
     yeni, geri, test_eksik, bosluk_fazla = ratchet(satirlar)
     if '--kontrol' in argv or '--yaz' in argv:
