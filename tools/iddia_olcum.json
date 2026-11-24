@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-24T14:50:01Z",
+  "zaman": "2026-11-24T18:06:18Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -67,8 +67,8 @@
         "--json"
       ],
       "rc": 0,
-      "ham": "bildirilen=121",
-      "deger": "121"
+      "ham": "bildirilen=117",
+      "deger": "117"
     },
     "IDD-08": {
       "komut": [
@@ -77,7 +77,7 @@
         "--json"
       ],
       "rc": 0,
-      "ham": "kapsam_disi=4",
+      "ham": "olu_kimlik=4",
       "deger": "4"
     },
     "IDD-09": {
@@ -377,6 +377,16 @@
       "rc": 0,
       "ham": "toplam_dogrulanan=117",
       "deger": "117"
+    },
+    "IDD-54": {
+      "komut": [
+        "{py}",
+        "tools/kapsam.py",
+        "--json"
+      ],
+      "rc": 0,
+      "ham": "referans=1",
+      "deger": "1"
     }
   }
 }
