@@ -1,5 +1,5 @@
 {
-  "_aciklama": "Public sayisal iddia defteri. Her satir: iddia metni + gectigi dosyadaki birebir alinti + ureten komut + beklenen olcum. tools/iddia.py bu defteri denetler; alinti dosyada yoksa defter bozuktur. Tarihli kayitlar ve mekanizma sabitleri kapsam disidir (kapsam blogu). `olcum_dosyasi` ham kanit dosyasini adlandirir; tools/iddia.py bu yolu dogrular.",
+  "_aciklama": "Public sayisal iddia defteri. Her satir: iddia metni + gectigi dosyadaki birebir alinti + ureten komut + beklenen olcum. tools/iddia.py bu defteri denetler; kapı satırları `kapi.kontrol` ile sürümlü ATLAS-KAPI-CIKTI/v1 zarfından okunur; alinti dosyada yoksa defter bozuktur. Tarihli kayitlar ve mekanizma sabitleri kapsam disidir (kapsam blogu). `olcum_dosyasi` ham kanit dosyasini adlandirir; tools/iddia.py bu yolu dogrular.",
   "olcum_dosyasi": "tools/iddia_olcum.json",
   "kapsam": {
     "dahil": [
@@ -136,10 +136,13 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
-      "ayikla": "HUKUM:\\s*PASS\\s*—?\\s*(\\d+/\\d+)",
-      "beklenen": "8/8"
+      "beklenen": "8/8",
+      "kapi": {
+        "kontrol": "RAPOR"
+      }
     },
     {
       "id": "IDD-02",
@@ -157,10 +160,13 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
-      "ayikla": "KOD OZ-TEST:\\s*(\\d+/\\d+)",
-      "beklenen": "174/174"
+      "beklenen": "174/174",
+      "kapi": {
+        "kontrol": "T2"
+      }
     },
     {
       "id": "IDD-03",
@@ -174,12 +180,15 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
       "ham_grup": true,
-      "ayikla": "ATLAS oz-testi\\s+PASS\\s+OZ-TEST:\\s*(\\d+/\\d+) gecti",
       "beklenen": "146/146",
-      "rc_beklenen": 0
+      "rc_beklenen": 0,
+      "kapi": {
+        "kontrol": "T1"
+      }
     },
     {
       "id": "IDD-04",
@@ -267,10 +276,13 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/kapsam.py"
+        "tools/kapsam.py",
+        "--json"
       ],
-      "ayikla": "\\|\\s*Atesleyen vakayla test edilen kural \\(TEST EDILDI\\)\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "93"
+      "beklenen": "93",
+      "kapi": {
+        "kontrol": "KAPSAM.test_edilen"
+      }
     },
     {
       "id": "IDD-07",
@@ -284,10 +296,13 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/kapsam.py"
+        "tools/kapsam.py",
+        "--json"
       ],
-      "ayikla": "\\|\\s*Bildirilen kural\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "121"
+      "beklenen": "121",
+      "kapi": {
+        "kontrol": "KAPSAM.bildirilen"
+      }
     },
     {
       "id": "IDD-08",
@@ -305,10 +320,13 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/kapsam.py"
+        "tools/kapsam.py",
+        "--json"
       ],
-      "ayikla": "\\|\\s*Gerekceli kapsam disi\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "4"
+      "beklenen": "4",
+      "kapi": {
+        "kontrol": "KAPSAM.kapsam_disi"
+      }
     },
     {
       "id": "IDD-09",
@@ -326,10 +344,13 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/kapsam.py"
+        "tools/kapsam.py",
+        "--json"
       ],
-      "ayikla": "\\|\\s*Bosluk \\(gerekce yok\\)\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "0"
+      "beklenen": "0",
+      "kapi": {
+        "kontrol": "KAPSAM.bosluk"
+      }
     },
     {
       "id": "IDD-10",
@@ -347,10 +368,13 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/kapsam.py"
+        "tools/kapsam.py",
+        "--json"
       ],
-      "ayikla": "bunlardan yalniz oz-testte anilan\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "0"
+      "beklenen": "0",
+      "kapi": {
+        "kontrol": "KAPSAM.oz_anilan"
+      }
     },
     {
       "id": "IDD-11",
@@ -368,10 +392,13 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/kapsam.py"
+        "tools/kapsam.py",
+        "--json"
       ],
-      "ayikla": "hicbir testte gecmeyen\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "0"
+      "beklenen": "0",
+      "kapi": {
+        "kontrol": "KAPSAM.testte_gecmeyen"
+      }
     },
     {
       "id": "IDD-12",
@@ -389,10 +416,13 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
-      "ayikla": "kalem=(\\d+)",
-      "beklenen": "8"
+      "beklenen": "8",
+      "kapi": {
+        "kontrol": "RAPOR_TOPLAM"
+      }
     },
     {
       "id": "IDD-13",
@@ -406,10 +436,13 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
-      "ayikla": "kalem=\\d+ · gecen=(\\d+) · kalan=(\\d+) · calistirilmadi=(\\d+)",
-      "beklenen": "8/0/0"
+      "beklenen": "8/0/0",
+      "kapi": {
+        "kontrol": "RAPOR_SAYIM"
+      }
     },
     {
       "id": "IDD-14",
@@ -423,27 +456,33 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
-      "ayikla": "H1\\s+depo hijyeni\\s+PASS\\s+(\\d+) bulgu",
-      "beklenen": "0"
+      "beklenen": "0",
+      "kapi": {
+        "kontrol": "H1"
+      }
     },
     {
       "id": "IDD-15",
-      "iddia": "H2 python sozdizimi dosya sayisi 75",
+      "iddia": "H2 python sozdizimi dosya sayisi 77",
       "kaynaklar": [
         {
           "dosya": "docs/DURUM.md",
-          "alinti": "| Python dosya sayısı (H2) | 75 |"
+          "alinti": "| Python dosya sayısı (H2) | 77 |"
         }
       ],
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
-      "ayikla": "H2\\s+python sozdizimi\\s+PASS\\s+(\\d+) dosya",
-      "beklenen": "75"
+      "beklenen": "77",
+      "kapi": {
+        "kontrol": "H2"
+      }
     },
     {
       "id": "IDD-16",
@@ -457,10 +496,13 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
-      "ayikla": "H3\\s+kabuk sozdizimi\\s+PASS\\s+(\\d+) dosya",
-      "beklenen": "8"
+      "beklenen": "8",
+      "kapi": {
+        "kontrol": "H3"
+      }
     },
     {
       "id": "IDD-17",
@@ -474,10 +516,13 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
-      "ayikla": "H4\\s+sir taramasi\\s+PASS\\s+(\\d+) bulgu",
-      "beklenen": "0"
+      "beklenen": "0",
+      "kapi": {
+        "kontrol": "H4"
+      }
     },
     {
       "id": "IDD-18",
@@ -491,10 +536,13 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
-      "ayikla": "SIR KAPISI OZ-TEST:\\s*(\\d+/\\d+)",
-      "beklenen": "19/19"
+      "beklenen": "19/19",
+      "kapi": {
+        "kontrol": "H5"
+      }
     },
     {
       "id": "IDD-19",
@@ -1163,10 +1211,13 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/kapsam.py"
+        "tools/kapsam.py",
+        "--json"
       ],
-      "ayikla": "\\|\\s*Toplam dogrulanan kural\\s*\\|\\s*(\\d+)\\s*\\|",
-      "beklenen": "117"
+      "beklenen": "117",
+      "kapi": {
+        "kontrol": "KAPSAM.toplam_dogrulanan"
+      }
     }
   ]
 }

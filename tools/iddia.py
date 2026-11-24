@@ -64,6 +64,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import kapi_cikti
+
 KOK = Path(__file__).resolve().parents[1]
 DEFTER = KOK / 'tools' / 'iddia_defteri.json'
 OLCUM = KOK / 'tools' / 'iddia_olcum.json'
@@ -223,16 +225,26 @@ def denetle(defter):
             if not (isinstance(komut, list) and komut
                     and all(isinstance(a, str) for a in komut)):
                 raise DefterHatasi('%s (%s): komut listesi yok' % (yer, eid))
-            desen = kayit.get('ayikla')
-            if not isinstance(desen, str) or not desen:
-                raise DefterHatasi('%s (%s): ayikla deseni yok' % (yer, eid))
-            try:
-                rx = re.compile(desen, re.MULTILINE)
-            except re.error as e:
-                raise DefterHatasi('%s (%s): desen bozuk: %s' % (yer, eid, e))
-            if rx.groups < 1:
-                raise DefterHatasi('%s (%s): desende yakalama grubu yok'
-                                   % (yer, eid))
+            kapi = kayit.get('kapi')
+            if kapi is not None:
+                # Kapı çıktısı sürümlü JSON zarfından okunur; serbest metin
+                # deseni kabul edilmez. `alan` varsayılan olarak `deger`dir.
+                if not isinstance(kapi, dict) or not isinstance(kapi.get('kontrol'), str) \
+                        or not kapi['kontrol']:
+                    raise DefterHatasi('%s (%s): kapi.kontrol yok' % (yer, eid))
+                if kapi.get('alan') is not None and not isinstance(kapi['alan'], str):
+                    raise DefterHatasi('%s (%s): kapi.alan dize degil' % (yer, eid))
+            else:
+                desen = kayit.get('ayikla')
+                if not isinstance(desen, str) or not desen:
+                    raise DefterHatasi('%s (%s): ayikla deseni yok' % (yer, eid))
+                try:
+                    rx = re.compile(desen, re.MULTILINE)
+                except re.error as e:
+                    raise DefterHatasi('%s (%s): desen bozuk: %s' % (yer, eid, e))
+                if rx.groups < 1:
+                    raise DefterHatasi('%s (%s): desende yakalama grubu yok'
+                                       % (yer, eid))
             if not isinstance(kayit.get('beklenen'), str):
                 raise DefterHatasi('%s (%s): beklenen deger yok' % (yer, eid))
         elif not kayit.get('gerekce'):
@@ -518,8 +530,40 @@ def _paralel_olc(komutlar, onbellek):
             onbellek[anahtar] = gelecek.result()
 
 
+def _taze_kapi(kayit, onbellek):
+    """Sürümlü kapı zarfından tek kontrol değeri seç."""
+    rc, cikti = komut_kos(kayit['komut'], onbellek)
+    try:
+        veri = kapi_cikti.oku(cikti)
+        kid = kayit['kapi']['kontrol']
+        alan = kayit['kapi'].get('alan') or 'deger'
+        deger = str(kapi_cikti.sec(veri, kid, alan))
+        kontrol = next(k for k in veri['kontroller'] if k['id'] == kid)
+    except (kapi_cikti.SozlesmeHatasi, StopIteration) as e:
+        son = cikti.strip().splitlines()[-1] if cikti.strip() else ''
+        ayrinti = 'kapi sozlesmesi okunamadi (rc=%d): %s' % (rc, e)
+        if son:
+            ayrinti += ' · ' + son[:160]
+        return False, '-', ayrinti, '', rc
+    ham = kontrol.get('ham')
+    if not isinstance(ham, str) or not ham.strip():
+        return False, deger, 'kapi kontrolunde ham kanit yok', '', rc
+    beklenen_rc = int(kayit.get('rc_beklenen', 0))
+    if rc != beklenen_rc:
+        return False, deger, 'rc=%d (beklenen %d)' % (rc, beklenen_rc), ham, rc
+    if kontrol.get('durum') != 'PASS':
+        return False, deger, ('kapi kontrol durumu %s'
+                              % kontrol.get('durum')), ham, rc
+    if deger != kayit['beklenen']:
+        return False, deger, ('beyan %s, olcum %s'
+                              % (kayit['beklenen'], deger)), ham, rc
+    return True, deger, '', ham, rc
+
+
 def taze(kayit, onbellek):
-    """(gecti, deger, ayrinti, ham_satir, rc) — komut + desen + beklenen."""
+    """(gecti, deger, ayrinti, ham_satir, rc) — komut + desen/zarf + beklenen."""
+    if kayit.get('kapi'):
+        return _taze_kapi(kayit, onbellek)
     rc, cikti = komut_kos(kayit['komut'], onbellek)
     eslesme = re.search(kayit['ayikla'], cikti)
     if not eslesme:
@@ -557,6 +601,11 @@ def olc(kayit, onbellek, kanit):
     if kanit['deger'] != kayit['beklenen']:
         return False, deger, ('ham kanit degeri %s, beyan %s'
                               % (kanit['deger'], kayit['beklenen']))
+    if kayit.get('kapi'):
+        if kanit['ham'] != satir:
+            return False, deger, ('ham kanit guncel zarf degeriyle ayni degil — '
+                                  'make iddia-yaz')
+        return True, deger, ''
     eslesme = re.search(kayit['ayikla'], kanit['ham'])
     if not eslesme:
         return False, deger, 'ham kanit kendi desenine uymuyor'

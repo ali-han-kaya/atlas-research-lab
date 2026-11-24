@@ -1,32 +1,35 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-24T09:18:13Z",
+  "zaman": "2026-11-24T11:23:25Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
       "rc": 0,
-      "ham": "  HUKUM: PASS — 8/8 kalem gecti",
+      "ham": "dogrula kalem=8 · gecen=8 · kalan=0 · calistirilmadi=0",
       "deger": "8/8"
     },
     "IDD-02": {
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
       "rc": 0,
-      "ham": "  T2  KOD oz-testi             PASS    KOD OZ-TEST: 174/174 gecti",
+      "ham": "dogrula T2 PASS 174/174",
       "deger": "174/174"
     },
     "IDD-03": {
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
       "rc": 0,
-      "ham": "ATLAS oz-testi           PASS    OZ-TEST: 146/146 gecti",
+      "ham": "dogrula T1 PASS 146/146",
       "deger": "146/146"
     },
     "IDD-04": {
@@ -50,118 +53,131 @@
     "IDD-06": {
       "komut": [
         "{py}",
-        "tools/kapsam.py"
+        "tools/kapsam.py",
+        "--json"
       ],
       "rc": 0,
-      "ham": "| Atesleyen vakayla test edilen kural (TEST EDILDI) | 93 |",
+      "ham": "test_edilen=93",
       "deger": "93"
     },
     "IDD-07": {
       "komut": [
         "{py}",
-        "tools/kapsam.py"
+        "tools/kapsam.py",
+        "--json"
       ],
       "rc": 0,
-      "ham": "| Bildirilen kural | 121 |",
+      "ham": "bildirilen=121",
       "deger": "121"
     },
     "IDD-08": {
       "komut": [
         "{py}",
-        "tools/kapsam.py"
+        "tools/kapsam.py",
+        "--json"
       ],
       "rc": 0,
-      "ham": "| Gerekceli kapsam disi | 4 |",
+      "ham": "kapsam_disi=4",
       "deger": "4"
     },
     "IDD-09": {
       "komut": [
         "{py}",
-        "tools/kapsam.py"
+        "tools/kapsam.py",
+        "--json"
       ],
       "rc": 0,
-      "ham": "| Bosluk (gerekce yok) | 0 |",
+      "ham": "bosluk=0",
       "deger": "0"
     },
     "IDD-10": {
       "komut": [
         "{py}",
-        "tools/kapsam.py"
+        "tools/kapsam.py",
+        "--json"
       ],
       "rc": 0,
-      "ham": "| — bunlardan yalniz oz-testte anilan | 0 |",
+      "ham": "oz_anilan=0",
       "deger": "0"
     },
     "IDD-11": {
       "komut": [
         "{py}",
-        "tools/kapsam.py"
+        "tools/kapsam.py",
+        "--json"
       ],
       "rc": 0,
-      "ham": "| — hicbir testte gecmeyen | 0 |",
+      "ham": "testte_gecmeyen=0",
       "deger": "0"
     },
     "IDD-12": {
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
       "rc": 0,
-      "ham": "  kalem=8 · gecen=8 · kalan=0 · calistirilmadi=0",
+      "ham": "kalem=8",
       "deger": "8"
     },
     "IDD-13": {
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
       "rc": 0,
-      "ham": "  kalem=8 · gecen=8 · kalan=0 · calistirilmadi=0",
+      "ham": "gecen=8 kalan=0 calistirilmadi=0",
       "deger": "8/0/0"
     },
     "IDD-14": {
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
       "rc": 0,
-      "ham": "  H1  depo hijyeni             PASS    0 bulgu",
+      "ham": "dogrula H1 PASS 0",
       "deger": "0"
     },
     "IDD-15": {
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
       "rc": 0,
-      "ham": "  H2  python sozdizimi         PASS    75 dosya",
-      "deger": "75"
+      "ham": "dogrula H2 PASS 77",
+      "deger": "77"
     },
     "IDD-16": {
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
       "rc": 0,
-      "ham": "  H3  kabuk sozdizimi          PASS    8 dosya",
+      "ham": "dogrula H3 PASS 8",
       "deger": "8"
     },
     "IDD-17": {
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
       "rc": 0,
-      "ham": "  H4  sir taramasi             PASS    0 bulgu",
+      "ham": "dogrula H4 PASS 0",
       "deger": "0"
     },
     "IDD-18": {
       "komut": [
         "{py}",
-        "tools/dogrula.py"
+        "tools/dogrula.py",
+        "--json"
       ],
       "rc": 0,
-      "ham": "  H5  sir kapisi oz-testi      PASS    SIR KAPISI OZ-TEST: 19/19 gecti",
+      "ham": "dogrula H5 PASS 19/19",
       "deger": "19/19"
     },
     "IDD-19": {
@@ -320,7 +336,7 @@
         "--kontrol"
       ],
       "rc": 0,
-      "ham": "MODEL KIMLIK: PASS — 1 emekli kimlik · aday=281 dosya · taranan=281 dosya · incelenmedi=0 dosya · onay=1 kayit · aktif=0",
+      "ham": "MODEL KIMLIK: PASS — 1 emekli kimlik · aday=284 dosya · taranan=284 dosya · incelenmedi=0 dosya · onay=1 kayit · aktif=0",
       "deger": "0/1"
     },
     "IDD-48": {
@@ -355,10 +371,11 @@
     "IDD-53": {
       "komut": [
         "{py}",
-        "tools/kapsam.py"
+        "tools/kapsam.py",
+        "--json"
       ],
       "rc": 0,
-      "ham": "| Toplam dogrulanan kural | 117 |",
+      "ham": "toplam_dogrulanan=117",
       "deger": "117"
     }
   }
