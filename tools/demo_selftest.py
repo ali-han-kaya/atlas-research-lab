@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""demo_selftest.py — demo'nun 0/2 sozlesmesini gecici fiksturlerle sinar.
+"""demo_selftest.py — demo'nun 0/1/2 sozlesmesini gecici fiksturlerle sinar.
 
 NEDEN VAR
-  ./demo'nun 0 (yesil) ve 2 (bozuk) cikis kodlari yalniz elle olculmustu.
-  Bu betik iki gecici fikstur kurar ve gercek demo betigini --kok ile kosar:
+  ./demo'nun 0 (yesil), 1 (kirmizi) ve 2 (bozuk) cikis kodlari yalniz
+  parcali olculmustu. Bu betik uc gecici fikstur kurar ve gercek demo betigini
+  --kok ile kosar:
     yesil  : DENEME/'nin kopyasi, MASTER'da eksik FIX-ID'ler tamamlanir -> rc=0
-    bozuk  : ayni kopya, FINAL-GATE dosyasi silinir                     -> rc=2
+    kirmizi: DENEME/'nin degismemis kopyasi; iddia > kanit, kapi PASS   -> rc=1
+    bozuk  : yesil kopyasindan FINAL-GATE dosyasi silinir               -> rc=2
 
   Kaynak DENEME/ DEGISTIRILMEZ; butun yazma islemi tempfile altinda olur.
-  CIKIS: 0 = iki senaryo da beklendigi gibi · 1 = en az bir sapma/kurulum hatasi
+  CIKIS: 0 = uc senaryo da beklendigi gibi · 1 = en az bir sapma/kurulum hatasi
 """
 import re
 import shutil
@@ -76,9 +78,11 @@ def main():
     with tempfile.TemporaryDirectory(prefix='atlas-demo-oztest-') as tmp:
         gecici = Path(tmp)
         yesil = gecici / 'yesil'
+        kirmizi = gecici / 'kirmizi'
         bozuk = gecici / 'bozuk'
         try:
             yesil_kur(yesil)
+            shutil.copytree(DENEME, kirmizi)
             shutil.copytree(yesil, bozuk)
             (bozuk / GATE).unlink()
         except OSError as e:
@@ -87,15 +91,16 @@ def main():
 
         sonuclar = [
             senaryo('yesil', yesil, 0, ('YESIL', 'HUKUM: PASS')),
+            senaryo('kirmizi', kirmizi, 1, ('HUKUM: FAIL', 'BEKLENEN KIRMIZI')),
             senaryo('bozuk', bozuk, 2, ('FIKSTUR DEGISTI', 'DEMO KIRIK')),
         ]
 
     gecen = sum(1 for s in sonuclar if s)
-    print('SONUC: %d/2 senaryo gecti' % gecen)
-    if gecen == 2:
-        print('HUKUM: PASS — demo 0/2 sozlesmesi gecici fiksturlerle dogrulandi.')
+    print('SONUC: %d/%d senaryo gecti' % (gecen, len(sonuclar)))
+    if gecen == len(sonuclar):
+        print('HUKUM: PASS — demo 0/1/2 sozlesmesi gecici fiksturlerle dogrulandi.')
         return 0
-    print('HUKUM: FAIL — demo 0/2 sozlesmesi beklenen kodlari vermedi.')
+    print('HUKUM: FAIL — demo 0/1/2 sozlesmesi beklenen kodlari vermedi.')
     return 1
 
 

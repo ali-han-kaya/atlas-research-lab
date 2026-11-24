@@ -121,9 +121,10 @@ jobs:
       - name: Guvenlik raporu guncel mi
         run: git diff --exit-code docs/GUVENLIK.md
 
-      # Demo 0/2: gecici fiksturlerle yesil (rc=0) ve bozuk (rc=2) sozlesmesini
-      # ayri ayri dogrula. DENEME/ degismez; kaynak yalnizca gecici kopyada okunur.
-      - name: Demo 0/2 öz-testi
+      # Demo 0/1/2: gecici fiksturlerle yesil (rc=0), kirmizi (rc=1) ve bozuk
+      # (rc=2) sozlesmesini ayri ayri dogrula. DENEME/ degismez; kaynak yalnizca
+      # gecici kopyada okunur.
+      - name: Demo 0/1/2 öz-testi
         run: make demo-selftest
 
       # DENEME/ yalnız kırmızı yolu gösterir. Makale metni taşımayan sentetik

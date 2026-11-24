@@ -19,7 +19,7 @@ yardim:
 	@echo "make mutasyon-kisa  6 vakalik hizli duman seti (HATA/TERMINAL/BEKLENEN_BULGU)"
 	@echo "make sir-mutasyon  dort sir kapisi kenarinin FAIL->PASS mutasyon kanitini dogrula"
 	@echo "make demo      ince sarmalayici: ./demo (kod ayrimi icin ./demo; make her hatada 2 doner)"
-	@echo "make demo-selftest  demo 0/2 sozlesmesini gecici fiksturlerle sinar"
+	@echo "make demo-selftest  demo 0/1/2 sozlesmesini gecici fiksturlerle sinar"
 	@echo "make temiz-teslim  sentetik temiz teslimi ve 5 kenar fiksturunu uctan uca sinar"
 	@echo "make taze-klon  temiz klonda venv kur; demo, dogrula ve kisa mutasyon setini kos"
 	@echo "make fresh-clone  taze-klon icin Ingilizce alias"

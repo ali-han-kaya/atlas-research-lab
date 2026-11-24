@@ -217,7 +217,7 @@ def kapi_oztesti():
 
 
 def demo_oztesti():
-    """demo'nun 0/2 sozlesmesini gecici fiksturlerle on kontrol olarak kosar.
+    """demo'nun 0/1/2 sozlesmesini gecici fiksturlerle on kontrol olarak kosar.
 
     Sayilan sekiz kaleme dahil degildir; parite gibi bir on kosuldur. Yine de
     basarisizsa dogrula yesil donmez.
@@ -664,13 +664,13 @@ def main():
         print()
 
     demo_gecti, demo_ozet, demo_detay = demo_oztesti()
-    print('  %-24s %-7s %s' % ('demo 0/2 oz-testi',
+    print('  %-24s %-7s %s' % ('demo 0/1/2 oz-testi',
                                 'PASS' if demo_gecti else 'FAIL', demo_ozet))
     for satir in demo_detay:
         print('        | %s' % satir[:400])
     if not demo_gecti:
         print()
-        print('  HUKUM: FAIL — DEMO 0/2 OZ-TESTI')
+        print('  HUKUM: FAIL — DEMO 0/1/2 OZ-TESTI')
         return 1
     print()
 

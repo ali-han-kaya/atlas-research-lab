@@ -207,7 +207,7 @@ make temiz-teslim  # sentetik temiz kök rc=0 + 5 kenar fikstürü
 
 `make dogrula` tek giriştir; **sekiz kalemi** sırayla koşar ve **ham çıktılarını** yazar:
 depo hijyeni, Python sözdizimi, kabuk sözdizimi, sır taraması, sır kapısı öz-testi ve üç
-öz-test paketi (ATLAS · KOD · Toolkit). Her koşuda ayrıca demo 0/2 öz-testi geçici
+öz-test paketi (ATLAS · KOD · Toolkit). Her koşuda ayrıca demo 0/1/2 öz-testi geçici
 fikstürlerle ön kontrol olarak çalışır; sayılan sekiz kaleme dahil değildir. Sayıları
 README'ye elle yazmayız — betikler kendileri basar. Model çağrısı yoktur: yerel batarya **$0**. İngilizce hızlı başlangıç: [`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md).
 
@@ -258,7 +258,7 @@ Fikstür kökü varsayılan olarak `DENEME/`'dir. Başka bir ağaçtaki aynı do
 okumak için `./demo --kok <dizin>` (veya `python3 tools/demo.py --kok <dizin>`) koşulur;
 `--kok` yalnız fikstür kökünü değiştirir, çıkış sözleşmesi aynı kalır. `make demo`
 argüman taşımadığı için `--kok` doğrudan `./demo` ile verilmelidir. `make dogrula`
-demo 0/2 öz-testini geçici kopyalarla koşar; kaynak `DENEME/` bu sırada değişmez.
+demo 0/1/2 öz-testini geçici kopyalarla koşar; kaynak `DENEME/` bu sırada değişmez.
 
 `DENEME/` yalnız kırmızı yolu gösterdiği için `make temiz-teslim` ayrı bir kanıt
 üretir: makale metni taşımayan sentetik bir temiz kök ile beş kenar kökü geçici
