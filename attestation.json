@@ -1,5 +1,5 @@
 {
-  "commit": "d4f6ef1f3f1c5f9db69e6078ac1477ee5a158ef3",
+  "commit": "9eac416c20eaaf53940581093f41f1624f6c778a",
   "file_count": 277,
   "files": [
     {
@@ -1655,8 +1655,8 @@
     {
       "mode": "100644",
       "path": "tools/yayin_manifest.json",
-      "sha256": "8d932b7f5eddf887756e18ce2dc8a3d7dca48b0192dc396ec51301fdd6a0700b",
-      "size": 12637
+      "sha256": "720b5a7bc62be4df0d1aed6559d7bd19e9126a78f0fbf3f19fcd0c7846a14257",
+      "size": 12663
     },
     {
       "mode": "100644",
@@ -1665,7 +1665,7 @@
       "size": 14586
     }
   ],
-  "generated_at": "2026-11-24T05:07:11Z",
+  "generated_at": "2026-11-24T05:08:48Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1680,6 +1680,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "c8f3a741010a9223647c92b6051f6d4857f78d59",
-  "tree_sha256": "8acf12701fd06e39d82aa1888d155d2ee3670acc3de63d52259aaaf52ea48649"
+  "tree": "d6015a262a1d84cca8b8e08775e14311153839a5",
+  "tree_sha256": "0b217a783de995e65e2a4c4ae902ad75c07ac0e1e9e6dda6181d056ef392477a"
 }
