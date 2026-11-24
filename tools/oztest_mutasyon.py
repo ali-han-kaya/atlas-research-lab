@@ -310,12 +310,28 @@ def _mutasyon_uygula(repo, vakalar):
         yol.write_text(metin.replace(vaka["eski"], vaka["yeni"], 1), encoding="utf-8")
 
 
+def _ortam():
+    """ATLAS tabanini makineye bagli birakma: katalog yoksa depo sabitini ver.
+
+    MOD-1/MOD-2, `~/.cache/opencode/models.json` olmayan makinede daima duser.
+    Taban bu yuzden CI'da 144/146 cikiyor ve mutasyon olcumu ortamin eksigini
+    "kirmizi" sanıyordu. Depo sabiti (`tools/model_katalog.json`) zaten ayni
+    katalogu dondurur; env acikca verilmisse ona dokunulmaz.
+    """
+    ortam = dict(os.environ)
+    sabit = KOK / "tools" / "model_katalog.json"
+    if sabit.is_file() and not ortam.get("ATLAS_MODEL_KATALOG"):
+        ortam["ATLAS_MODEL_KATALOG"] = str(sabit)
+    return ortam
+
+
 def _kos_selftest(repo, paket, timeout=1200):
     rel = ATLAS_SELFTEST if paket == "ATLAS" else KOD_SELFTEST
     komut = [sys.executable, str(repo / rel)]
     if paket == "ATLAS":
         komut.append("--sessiz")
-    r = subprocess.run(komut, cwd=str(repo), capture_output=True, text=True, timeout=timeout)
+    r = subprocess.run(komut, cwd=str(repo), capture_output=True, text=True,
+                       timeout=timeout, env=_ortam())
     return r.returncode, (r.stdout or "") + (r.stderr or "")
 
 
