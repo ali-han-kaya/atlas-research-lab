@@ -280,6 +280,22 @@ def yayin_kapisi():
     return rc == 0, son[:150], ([] if rc == 0 else satirlar[-12:])
 
 
+def kapsam_oztesti():
+    """Kapsam taramasinin kendi sinirlarini olctugunu dogrula.
+
+    Sayilan sekiz kaleme dahil degildir; kamu temizligi gibi bir on kosuldur.
+    Olctugu iki sey: 100. satirdan sonraki kural (FRZ-08) envanterde, dis
+    referans (DEC-027) envanterde degil. `make kapsam` bu testi zaten kosar;
+    burada erken ve ayri bir kapi olarak baglanir.
+    """
+    rc, cikti, _ = kos([sys.executable,
+                        os.path.join(KOK, 'tools', 'kapsam.py'), '--oztest'])
+    satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
+    baslik = [s for s in satirlar if s.startswith('KAPSAM OZTEST:')]
+    son = (baslik[-1] if baslik else (satirlar[-1] if satirlar else '(bos cikti)'))
+    return rc == 0, son[:150], ([] if rc == 0 else satirlar[-8:])
+
+
 KOMUTLAR = [
     ('T1', 'ATLAS oz-testi',
      [sys.executable, 'ATLAS_SABLONLAR/scripts/atlas_selftest.py', '--sessiz']),
@@ -801,6 +817,20 @@ def main():
                         'yayin kapisi FAIL')
         print()
         print('  HUKUM: FAIL — YAYIN KAPISI (manifest/makale/sir/ozel yol)')
+        return 1
+    print()
+
+    kapsam_gecti, kapsam_ozet, kapsam_detay = kapsam_oztesti()
+    print('  %-24s %-7s %s' % ('kapsam oz-testi',
+                                'PASS' if kapsam_gecti else 'FAIL', kapsam_ozet))
+    for satir in kapsam_detay:
+        print('        | %s' % satir[:400])
+    if not kapsam_gecti:
+        if JSON:
+            _json_erken('ONKOSUL.KAPSAM', 'kapsam oz-testi', kapsam_ozet,
+                        'kapsam oz-testi FAIL')
+        print()
+        print('  HUKUM: FAIL — KAPSAM OZ-TESTI (>100 kural / dis referans)')
         return 1
     print()
 
