@@ -471,6 +471,177 @@ def parite_kontrolu():
                    (satirlar[-1] if satirlar else 'rc=%d' % r.returncode))
 
 
+MUTASYON_HUKUM = ('HUKUM: PASS — her vaka temiz tabanda sessiz, '
+                  'ihlalde kirmizi/beklenen bulgu.')
+
+
+def _make_hedefleri():
+    """Makefile'daki hedef adlarini dondur."""
+    try:
+        with open(os.path.join(KOK, 'Makefile'), encoding='utf-8') as f:
+            satirlar = f.readlines()
+    except OSError:
+        return set()
+    hedefler = set()
+    for satir in satirlar:
+        m = re.match(r'^([A-Za-z0-9_.%/-]+)\s*:(?!=)', satir)
+        if m:
+            hedefler.add(m.group(1))
+    return hedefler
+
+
+def _make_referanslari(metin):
+    """Yalniz kod span'i ve fenced bloklardaki make cagrilarini topla."""
+    parcalar = []
+    for m in re.finditer(r'`([^`\n]+)`', metin):
+        parcalar.append((m.group(1), metin.count('\n', 0, m.start()) + 1))
+    ic = False
+    for no, satir in enumerate(metin.splitlines(), 1):
+        if satir.strip().startswith('```'):
+            ic = not ic
+            continue
+        if ic:
+            parcalar.append((satir, no))
+    refs = []
+    for parca, no in parcalar:
+        for m in re.finditer(r'(?<![\w./-])make\s+([A-Za-z0-9_.-]+)', parca):
+            refs.append((m.group(1), no))
+    return refs
+
+
+def _text_bloklari(metin):
+    """Dokumandaki ```text bloklarini sirayla dondur."""
+    bloklar = []
+    ic = False
+    dil = ''
+    satirlar = []
+    for satir in metin.splitlines():
+        if satir.strip().startswith('```'):
+            if not ic:
+                ic = True
+                dil = satir.strip()[3:].strip()
+                satirlar = []
+            else:
+                ic = False
+                if dil == 'text':
+                    bloklar.append(satirlar)
+            continue
+        if ic:
+            satirlar.append(satir)
+    return bloklar
+
+
+def _cikti_satirlari(stdout, stderr):
+    return {s.strip() for s in ((stdout or '') + (stderr or '')).splitlines()
+            if s.strip()}
+
+
+def _mutasyon_hukum_uretiliyor():
+    """HUKUM satirinin mutasyon aracinin print'i oldugunu denetle."""
+    try:
+        with open(os.path.join(KOK, 'tools', 'mutasyon_bataryasi.py'),
+                  encoding='utf-8') as f:
+            kaynak = f.read()
+    except OSError:
+        return False
+    kalip = r"print\((['\"])%s\1\)" % re.escape(MUTASYON_HUKUM)
+    return re.search(kalip, kaynak) is not None
+
+
+def quickstart_kontrolu():
+    """QUICKSTART komutlarini ve ornek ciktilarini gercek araclarla karsilastir.
+
+    Makinece uretilen satirlar `iddia_olcum.json`, yayinla ve demo ciktisiyla;
+    HUKUM satiri da onu basan aracin kaynagiyla dogrulanir. Ozet/detay donusu
+    `main` icin (gecti, ozet, detay) seklindedir.
+    """
+    hatalar = []
+    yol = os.path.join(KOK, 'docs', 'EN', 'QUICKSTART.md')
+    try:
+        with open(yol, encoding='utf-8') as f:
+            metin = f.read()
+    except OSError as e:
+        return False, 'okunamadi', [str(e)]
+
+    hedefler = _make_hedefleri()
+    if not hedefler:
+        hatalar.append('Makefile hedefleri okunamadi')
+    refs = _make_referanslari(metin)
+    for hedef, no in refs:
+        if hedef not in hedefler:
+            hatalar.append('satir %d: make %s hedefi yok' % (no, hedef))
+
+    bloklar = _text_bloklari(metin)
+    if len(bloklar) != 4:
+        hatalar.append('text blok sayisi 4 degil: %d' % len(bloklar))
+        return False, '%d sorun' % len(hatalar), hatalar
+
+    ham = set()
+    try:
+        with open(os.path.join(KOK, 'tools', 'iddia_olcum.json'),
+                  encoding='utf-8') as f:
+            veri = json.load(f)
+        ham = {str(v.get('ham', '')).strip()
+               for v in veri.get('olcumler', {}).values()
+               if str(v.get('ham', '')).strip()}
+    except (OSError, ValueError) as e:
+        hatalar.append('iddia_olcum okunamadi: %s' % e)
+
+    try:
+        yayin = subprocess.run(
+            [sys.executable, os.path.join(KOK, 'tools', 'yayinla.py'),
+             '--lab', '.'], cwd=KOK, capture_output=True, text=True,
+            timeout=180)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        hatalar.append('yayinla kosulamadi: %s' % e)
+        yayin = None
+    if yayin is not None and yayin.returncode != 0:
+        hatalar.append('yayinla rc=%d' % yayin.returncode)
+
+    try:
+        demo = subprocess.run(
+            [os.path.join(KOK, 'demo')], cwd=KOK, capture_output=True,
+            text=True, timeout=60)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        hatalar.append('demo kosulamadi: %s' % e)
+        demo = None
+    if demo is not None and demo.returncode != 1:
+        hatalar.append('demo rc=%d (beklenen 1)' % demo.returncode)
+
+    yayin_satirlari = (_cikti_satirlari(yayin.stdout, yayin.stderr)
+                       if yayin is not None else set())
+    demo_satirlari = (_cikti_satirlari(demo.stdout, demo.stderr)
+                      if demo is not None else set())
+    hukum_kaynakta = _mutasyon_hukum_uretiliyor()
+    rol = ('dogrula', 'mutasyon', 'yayinla', 'demo')
+    sayi = 0
+    for ad, satirlar in zip(rol, bloklar):
+        for satir in satirlar:
+            s = satir.strip()
+            if not s or '...' in s or '<' in s or '>' in s:
+                continue
+            sayi += 1
+            if ad == 'dogrula':
+                if s not in ham:
+                    hatalar.append('dogrula ornegi yok: %s' % s)
+            elif ad == 'mutasyon':
+                if s.startswith('HUKUM: PASS'):
+                    if s != MUTASYON_HUKUM or not hukum_kaynakta:
+                        hatalar.append('mutasyon HUKUM ornegi drift: %s' % s)
+                elif s not in ham:
+                    hatalar.append('mutasyon ornegi yok: %s' % s)
+            elif ad == 'yayinla':
+                if s not in yayin_satirlari:
+                    hatalar.append('yayinla ornegi yok: %s' % s)
+            elif s not in demo_satirlari:
+                hatalar.append('demo ornegi yok: %s' % s)
+
+    if hatalar:
+        return False, '%d sorun' % len(hatalar), hatalar
+    return (True, '%d hedef · %d blok · %d satir'
+            % (len(set(h for h, _ in refs)), len(bloklar), sayi), [])
+
+
 def main():
     kip = 'CI' if CI else ('HIZLI' if HIZLI else 'TAM')
     print('ATLAS — tek giris dogrulama · %s' % kip)
@@ -533,6 +704,17 @@ def main():
     if not yayin_gecti:
         print()
         print('  HUKUM: FAIL — YAYIN KAPISI (manifest/makale/sir/ozel yol)')
+        return 1
+    print()
+
+    qs_gecti, qs_ozet, qs_detay = quickstart_kontrolu()
+    print('  %-24s %-7s %s' % ('quickstart docs',
+                                'PASS' if qs_gecti else 'FAIL', qs_ozet))
+    for satir in qs_detay:
+        print('        | %s' % satir[:400])
+    if not qs_gecti:
+        print()
+        print('  HUKUM: FAIL — QUICKSTART (make hedefi/ornek cikti)')
         return 1
     print()
 
