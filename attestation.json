@@ -1,5 +1,5 @@
 {
-  "commit": "9eac416c20eaaf53940581093f41f1624f6c778a",
+  "commit": "7894fbb0991dae2f9432c8c0f2c56a705e799d52",
   "file_count": 277,
   "files": [
     {
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "7455b33dc3a6ec5711c0d84181cd5f63c1fb0ab3b8cc60f9eabe3f1bdf525676",
-      "size": 9083
+      "sha256": "3f27383ec34c5507ff64d167212a1290b895ac6abda0f8c9378ce987e3bf5e49",
+      "size": 9111
     },
     {
       "mode": "100644",
@@ -1163,8 +1163,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "ab940262e6c95a64af8ed79b66bd16e2317aeb5b866440d6fb9caac73597ea17",
-      "size": 6010
+      "sha256": "7c55f780c2127aa43393560be03e5cf814949816849ae8b15ad232faa53ce454",
+      "size": 6012
     },
     {
       "mode": "100644",
@@ -1223,8 +1223,8 @@
     {
       "mode": "100644",
       "path": "README.tr.md",
-      "sha256": "e434dc6784364bd1abfa877eb85a36b7d8443909314e019506723cbc4283bd42",
-      "size": 35689
+      "sha256": "552d0b2062f110ad88a4e19f6269bafe8d26057b46b10b50bf179e2124f171b4",
+      "size": 35693
     },
     {
       "mode": "100644",
@@ -1451,14 +1451,14 @@
     {
       "mode": "100644",
       "path": "tools/demo_selftest.py",
-      "sha256": "6ea05528ebd71ac731411caaa2f7ab2bb332271d0d11822f0b608d2bb3a29861",
-      "size": 3539
+      "sha256": "7e47030a72a5371784dd6aba93ca6328e243f3d66df69e6e8cc3f66c071f31f0",
+      "size": 3834
     },
     {
       "mode": "100644",
       "path": "tools/dogrula.py",
-      "sha256": "4ccce506872db9f8fc58ab934527548edfb9097e5694ad587b9f06b9f1bf0ed3",
-      "size": 31709
+      "sha256": "c29e9d6ee1cd741ad5581aee25aa7a5a76d855d520ce64119c3c7086a556e935",
+      "size": 31715
     },
     {
       "mode": "100644",
@@ -1487,13 +1487,13 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "5cb8d32dd017948ff733625b691e2f1abc33371df9a21e860e78fdbe185a952a",
-      "size": 36968
+      "sha256": "bfa400d219397c2aef9cb731c7377539e26cc9da7ef19ee2aa1eb5fbb9f8ca64",
+      "size": 36972
     },
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "d03af494491436a38865f70235e582a9981cda663657ba50eeba50c27e65cda8",
+      "sha256": "1a8076355269d842692fdcd7d61b624045c85c5b1306e50658727f1c19c8a79d",
       "size": 8525
     },
     {
@@ -1665,7 +1665,7 @@
       "size": 14586
     }
   ],
-  "generated_at": "2026-11-24T05:08:48Z",
+  "generated_at": "2026-11-24T05:16:09Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1680,6 +1680,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "d6015a262a1d84cca8b8e08775e14311153839a5",
-  "tree_sha256": "0b217a783de995e65e2a4c4ae902ad75c07ac0e1e9e6dda6181d056ef392477a"
+  "tree": "44930fdfdab93e6e1610b14b997f818b66bd838b",
+  "tree_sha256": "0beb1256fd62fe216ffe01c2ce573724415b2630a8842d26ef49e75ffa01ed74"
 }
