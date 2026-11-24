@@ -1,6 +1,6 @@
 {
-  "commit": "2e777b2ed893f04ef9ac8e38781e02b730c91b3f",
-  "file_count": 278,
+  "commit": "d22660c42fbca06941554e2f780af832b5e356ac",
+  "file_count": 280,
   "files": [
     {
       "mode": "100755",
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "203b6a6f2e664e83dac1b97338773b83fc49045448e716de8910fc34c7a6dfbe",
-      "size": 9476
+      "sha256": "b21ea26cd7c56a1634ca9eb174a7c98d5607212f6bc25cb5030ca3daf11547a8",
+      "size": 9817
     },
     {
       "mode": "100644",
@@ -1163,8 +1163,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "10fc181ad0b11a923fe2d06bc9809e79e211e3132f1c51ed7582c1e9166116c4",
-      "size": 6216
+      "sha256": "6182a79a097c71aa9e598480ff524446500d0f6225fcb2dc318383be915a89bf",
+      "size": 6494
     },
     {
       "mode": "100644",
@@ -1289,7 +1289,7 @@
     {
       "mode": "100644",
       "path": "docs/DURUM.md",
-      "sha256": "0c6d50216b5ba895f0eb6a192ab567519f6078e612e6c5985008d3e494d8cfd2",
+      "sha256": "9cf2ab57afd8141b2169bce3480d019d4d8de1f8d79a5042aac6b77d43f4be79",
       "size": 1489
     },
     {
@@ -1493,13 +1493,13 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "66124a1193651b5b8aa67a71b3494faf53825fd0695bfea89c60cc55f34586a7",
+      "sha256": "cf308661f93bc551cdeb3ede79c3381f4f956d81267e1df26c67092a0f509465",
       "size": 36952
     },
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "b331658123ffad016e043518a99d54ba5afc74372a16a2c9d8e35a6777e660ff",
+      "sha256": "e14875d3f8c70c99175b6b9352e3a553e0e9cc383b2099c594e7c392d5d9d266",
       "size": 8500
     },
     {
@@ -1606,6 +1606,18 @@
     },
     {
       "mode": "100644",
+      "path": "tools/oztest_mutasyon.py",
+      "sha256": "9d421fbf1e2d6c0e7cb7a87fd1a115fdbd43ac221124b668c9180cc9ea6b1d2f",
+      "size": 18815
+    },
+    {
+      "mode": "100644",
+      "path": "tools/oztest_mutasyon_kaniti.json",
+      "sha256": "8a320c36c54f71510beb10c0b8671e2c15b59db78528ec912aefb8f7f352f97b",
+      "size": 4246
+    },
+    {
+      "mode": "100644",
       "path": "tools/secret_fixtures.json",
       "sha256": "06fba89b77a0df090d8347f5dc564311effcd8e6756069c72097be131fd2c021",
       "size": 2800
@@ -1661,8 +1673,8 @@
     {
       "mode": "100644",
       "path": "tools/yayin_manifest.json",
-      "sha256": "2b84b9cefdbc0c2d0b94ad75f29db9ab36e1792c9a0787b87fe9e1c89be542a5",
-      "size": 12703
+      "sha256": "2170fda6f1c0479bac8951182cef8011ec45d668b0fe5081d474a086c6eca408",
+      "size": 12776
     },
     {
       "mode": "100644",
@@ -1671,7 +1683,7 @@
       "size": 14586
     }
   ],
-  "generated_at": "2026-11-24T07:58:56Z",
+  "generated_at": "2026-11-24T09:20:22Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1686,6 +1698,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "4dc81bca5c995a4939388813083ed51e02e2459e",
-  "tree_sha256": "ee73a47b0440d954debb60d762532f9daa5434a30347e1936019c8ab45a48dfe"
+  "tree": "8c20c68dcbe7f4e653f26fcba8e694d8cfe133b1",
+  "tree_sha256": "f363d7da8dbf9c14f6eda1f9d2be64dd859509a2b4debd73ca5d7109b6d912da"
 }
