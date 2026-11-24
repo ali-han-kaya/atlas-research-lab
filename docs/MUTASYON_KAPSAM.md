@@ -370,7 +370,7 @@ tip ihlalidir; kopya degil, farkli hata dalidir.
 | `freeze_check.py` | FRZ-05 | FRZ-05 | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-05 |
 | `freeze_check.py` | FRZ-06 | FRZ-06 | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-06 |
 | `freeze_check.py` | FRZ-07 | FRZ-07 | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-07 |
-| `freeze_check.py` | FRZ-08 | FRZ-08, FRZ-08-IMZA, FRZ-08-YANLIS-ANAHTAR, FRZ-08-P1 | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-08, FRZ-08-IMZA, FRZ-08-YANLIS-ANAHTAR, FRZ-08-P1 |
+| `freeze_check.py` | FRZ-08 | FRZ-08, FRZ-08-IMZA, FRZ-08-GECERSIZ-IMZA, FRZ-08-P1 | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-08, FRZ-08-IMZA, FRZ-08-GECERSIZ-IMZA, FRZ-08-P1 |
 | `perm_lint.py` | PERM-01 | KOD-PERM-01 | TEST EDILDI | atesleyen mutasyon vakasi: KOD-PERM-01 |
 | `perm_lint.py` | PERM-02 | PERM-02 | TEST EDILDI | atesleyen mutasyon vakasi: PERM-02 |
 | `perm_lint.py` | PERM-03 | PERM-03 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: PERM-03 |

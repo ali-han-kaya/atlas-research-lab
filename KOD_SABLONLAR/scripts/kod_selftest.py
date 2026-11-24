@@ -1498,15 +1498,38 @@ with tempfile.TemporaryDirectory() as d:
 with tempfile.TemporaryDirectory() as d:
     dp = pathlib.Path(d); _frz_kur(dp, [])
     _tb = dp / "_KOSU/gate/BASELINE.json"
-    _tj = json.loads(_tb.read_text()); _tj["temiz_agac"] = True; _tj["temiz_agac_imzasi"] = "deadbeef"*8
+    _tj = json.loads(_tb.read_text()); _tj["temiz_agac"] = True
     yaz(_tb, _tj)
-    os.environ["LAB_IMZA_ANAHTARI"] = "a"*64
+    # Gercek fikstur: temiz tabani B anahtariyla imzala, A anahtariyla dogrula.
+    # Sabit bir cop dize yerine bicimsel olarak gecerli HMAC kullanilir; boylece
+    # kapi yalniz "imza var mi" degil, "imza bu anahtarla tutuyor mu" test edilir.
+    _eski_anahtar = os.environ.get("LAB_IMZA_ANAHTARI")
     try:
+        os.environ["LAB_IMZA_ANAHTARI"] = "b" * 64
+        _ri, _oi = kos("imzala.py", "--taban", str(_tb), cwd=d)
+    finally:
+        if _eski_anahtar is None:
+            os.environ.pop("LAB_IMZA_ANAHTARI", None)
+        else:
+            os.environ["LAB_IMZA_ANAHTARI"] = _eski_anahtar
+    _sj = json.loads(_tb.read_text())
+    _imza = str(_sj.get("temiz_agac_imzasi") or "")
+    _imza_bicim = (len(_imza) == 64
+                   and all(c in "0123456789abcdefABCDEF" for c in _imza))
+    try:
+        os.environ["LAB_IMZA_ANAHTARI"] = "a" * 64
         rc, out = kos("freeze_check.py", cwd=d)
     finally:
-        del os.environ["LAB_IMZA_ANAHTARI"]
-    sina("O3-04e temiz:true gecersiz imza -> FRZ-08 TAMPERED P0 (terminal)",
-         rc != 0 and "FRZ-08" in out and "TAMPERED" in out, out.strip()[-220:])
+        if _eski_anahtar is None:
+            os.environ.pop("LAB_IMZA_ANAHTARI", None)
+        else:
+            os.environ["LAB_IMZA_ANAHTARI"] = _eski_anahtar
+    sina("O3-04e temiz:true gecersiz imza -> FRZ-08 TAMPERED P0 (terminal rc=2)",
+         _ri == 0 and _imza_bicim and rc == 2
+         and "P0 FRZ-08 TAMPERED" in out
+         and "FREEZE-CHECK TERMINAL FAIL" in out,
+         (_oi + "\n" + out).strip()[-300:])
+
 if shutil.which("git"):
     with tempfile.TemporaryDirectory() as d:                 # NEGATIF FIKSTUR
         dp = pathlib.Path(d); (dp / "depo").mkdir()
