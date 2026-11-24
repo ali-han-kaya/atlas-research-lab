@@ -1,5 +1,5 @@
 {
-  "commit": "67f269d1d4ea63ed21108399229ca9ce3b99faba",
+  "commit": "96e8c06f34a40b0561352b8f896f75ca8c697886",
   "file_count": 283,
   "files": [
     {
@@ -1559,8 +1559,8 @@
     {
       "mode": "100644",
       "path": "tools/kapsam.py",
-      "sha256": "246b2974156b18cfbb9f0e303c4268569b3f437d1f51ec55c1840429a7c544a3",
-      "size": 49621
+      "sha256": "56dc0fa46f233f50fbe23bd193f0c664cfce20d47391ccfbb1c6d942c83dcdae",
+      "size": 50348
     },
     {
       "mode": "100644",
@@ -1701,7 +1701,7 @@
       "size": 14586
     }
   ],
-  "generated_at": "2026-11-24T11:30:02Z",
+  "generated_at": "2026-11-24T11:41:52Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1716,6 +1716,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "52e428d0c775349213bfd8458dedcba8a15d8b6b",
-  "tree_sha256": "9e4e9ba78c8d361cda63ddf991313c3e432b4697d3b4e5dd215310e683ae7337"
+  "tree": "7f779e2ca75296d8fa0da666299c0a10781384dd",
+  "tree_sha256": "9fac67be7de5087ed0bb58ad805822e7a0a5c34b065231667a1719f835d61753"
 }
