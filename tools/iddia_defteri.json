@@ -878,9 +878,9 @@
       "durum": "OLCULDU",
       "komut": [
         "{py}",
-        "tools/temiz_teslim_selftest.py"
+        "tools/demo_selftest.py"
       ],
-      "ayikla": "HUKUM: PASS — temiz teslim rc=(\\d+);",
+      "ayikla": "GECTI yesil: rc=(\\d+)",
       "beklenen": "0"
     },
     {

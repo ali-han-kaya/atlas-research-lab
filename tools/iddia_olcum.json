@@ -261,10 +261,10 @@
     "IDD-37": {
       "komut": [
         "{py}",
-        "tools/temiz_teslim_selftest.py"
+        "tools/demo_selftest.py"
       ],
       "rc": 0,
-      "ham": "HUKUM: PASS — temiz teslim rc=0; bes kenar beklenen rc'yi verdi.",
+      "ham": "GECTI yesil: rc=0 · izler=YESIL, HUKUM: PASS",
       "deger": "0"
     },
     "IDD-39": {
