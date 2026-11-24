@@ -54,65 +54,65 @@ Kapanmis bir taban kuralinin yeniden bosluga dusmesi de kirmizi olur.
 
 19.11.2026 envanterinde 51 kural vardi; `DEC-027` bir karar
 referansi olarak ayiklandi, kalan 50 kural risk sirasinda. Siralama
-saglamlik/etki sirasina gore sabittir. Kapatilan her kural bu turda
-vaka aldi; durum sutunu guncel envanterden okunur.
+saglamlik/etki sirasina gore sabittir. Kapatilan her kural
+24.11.2026 itibariyla vaka aldi; durum sutunu guncel envanterden okunur.
 
 | # | Kural | Betik | Grup | Durum | Gerekce |
 |---|---|---|---|---|---|
-| 1 | TST-08 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Ham test raporu yok/okunamiyor — kanitsiz PASS P0; kapinin kanit temeli. |
-| 2 | RECK-06 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | Dondurulmus bolge diff'te — dogrudan tamper sinyali, P0. |
-| 3 | DEP-05 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI (bu tur) | Izinli lisans listesi disinda bagimlilik — tedarik/uyum P0. |
-| 4 | FRZ-08 | `freeze_check.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | Temiz agac iddiasi imzayla baglanmali; imzasiz, gecersiz imzali veya imzalandiktan sonra icerigi degistirilmis taban terminal tamper ya da dusuk guven sayilir. |
-| 5 | RECK-01 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | KFAZ0 sozlesmesindeki her REQ plan/eslesmede karsilik bulmali; aksi halde kapsamsiz sozlesme sessizce yesil kalir. |
-| 6 | RECK-02 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | "UYGULANMIS" denilen her CHG'nin dosyasi git diff'te olmali; beyan ile gercek degisiklik carpraz denetlenir. |
-| 7 | RECK-08 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | Makine bloklarinin alan bicimi semaya uymali; sessizce dusen girdi RECK-01/07'yi devre disi birakir. |
-| 8 | RECK-09 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | Plan yokken urun kodu degismemeli; KFAZ0 oncesi degisiklik kapsamsiz ve denetimsiz kalir. |
-| 9 | RECK-04 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | 2B kapisinin "KANITLI" dedigi her CHG diff'te olmali; ikinci gozun iddiasi manifest ve diff ile dogrulanir. |
-| 10 | RECK-05 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | Hayalet CHG yok: olmayan REQ veya plansiz dosyaya baglanan degisiklik P0; manifest-diff bagini korur. |
-| 11 | RECK-07 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (bu tur) | Davranissal her REQ tabanda olmayan YENI bir test adina eslenmeli; eski testi gostermek bedava yesildir. |
-| 12 | TST-07 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Kanit beyani ham JUnit ile celisemez; kapi kendi beyanina guvenmez. |
-| 13 | TST-10 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Rapor kaynaktan eski olamaz; bayat kanit mevcut kodu olcmemis olabilir. |
-| 14 | TST-11 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Kanittaki komut kod_profil ile ayni olmali; baska komutun kaniti sayilmaz. |
-| 15 | TST-12 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Kanittaki rapor yolu kod_profil ile ayni olmali; baska rapor gosterilemez. |
-| 16 | TST-09 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Test komutunun cikis kodu kayitli olmali; kosup kosmadigi bilinmeyen test yesil sayilmaz. |
-| 17 | TST-01 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Basarisiz test sayisi sifir olmali; kirmizi testle PASS verilemez. |
-| 18 | TST-02 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Hatali test sayisi sifir olmali; altyapi hatasi yesil sayilmaz. |
-| 19 | TST-03 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | En az bir test kosmali; sifir test temiz degildir. |
-| 20 | TST-05 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Atlanan test tabandan fazla olamaz; test atlayarak yesil olunmaz. |
-| 21 | TST-06 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (bu tur) | Kapsam tabanin bir altina kadar korunmali; sessiz kapsam kaybi P1. |
-| 22 | DEP-01 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
-| 23 | DEP-02 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
-| 24 | DEP-06 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
-| 25 | DEP-03 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
-| 26 | DEP-04 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
-| 27 | TSL-03 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
-| 28 | TSL-04 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
-| 29 | TSL-06 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
-| 30 | TSL-01 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
-| 31 | TSL-02 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
-| 32 | TSL-05 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
-| 33 | API-02 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
-| 34 | API-03 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
-| 35 | API-01 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
-| 36 | API-05 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
-| 37 | API-04 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Tedarik, teslim ve disa acik yuzey — P0/P1 |
-| 38 | OZT-01 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
-| 39 | OZT-02 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
-| 40 | OZT-03 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
-| 41 | OZT-04 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
-| 42 | OZT-05 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
-| 43 | OZT-06 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
-| 44 | OLGU-04 | `olgu_lint.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
-| 45 | OLGU-05 | `olgu_lint.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
-| 46 | OLGU-06 | `olgu_lint.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Test envanteri, olcum ve provenance — P0/P1 |
-| 47 | CHK-01 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI (bu tur) | Her zorunlu SCOPE-ID MASTER icinde markdown basligi olarak bulunmali; metinde gecmesi yetmez. |
-| 48 | CHK-02 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI (bu tur) | Her zorunlu ID PROVENANCE tablosunda kapsiyor durumunda olmali. |
-| 49 | CHK-05 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI (bu tur) | Basliklar benzersiz olmali; tekrar eden baslik izlenebilirligi bozar. |
-| 50 | SEC-04 | `secret_scan.py` | Bilgi seviyesi / olu kimlik — P1 | KAPSAM DISI | Bilgi seviyesi / olu kimlik — P1 |
+| 1 | TST-08 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (24.11.2026) | Ham test raporu yok/okunamiyor — kanitsiz PASS P0; kapinin kanit temeli. |
+| 2 | RECK-06 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (24.11.2026) | Dondurulmus bolge diff'te — dogrudan tamper sinyali, P0. |
+| 3 | DEP-05 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI (24.11.2026) | Izinli lisans listesi disinda bagimlilik — tedarik/uyum P0. |
+| 4 | FRZ-08 | `freeze_check.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (24.11.2026) | Temiz agac iddiasi imzayla baglanmali; imzasiz, gecersiz imzali veya imzalandiktan sonra icerigi degistirilmis taban terminal tamper ya da dusuk guven sayilir. |
+| 5 | RECK-01 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (24.11.2026) | KFAZ0 sozlesmesindeki her REQ plan/eslesmede karsilik bulmali; aksi halde kapsamsiz sozlesme sessizce yesil kalir. |
+| 6 | RECK-02 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (24.11.2026) | "UYGULANMIS" denilen her CHG'nin dosyasi git diff'te olmali; beyan ile gercek degisiklik carpraz denetlenir. |
+| 7 | RECK-08 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (24.11.2026) | Makine bloklarinin alan bicimi semaya uymali; sessizce dusen girdi RECK-01/07'yi devre disi birakir. |
+| 8 | RECK-09 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (24.11.2026) | Plan yokken urun kodu degismemeli; KFAZ0 oncesi degisiklik kapsamsiz ve denetimsiz kalir. |
+| 9 | RECK-04 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (24.11.2026) | 2B kapisinin "KANITLI" dedigi her CHG diff'te olmali; ikinci gozun iddiasi manifest ve diff ile dogrulanir. |
+| 10 | RECK-05 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (24.11.2026) | Hayalet CHG yok: olmayan REQ veya plansiz dosyaya baglanan degisiklik P0; manifest-diff bagini korur. |
+| 11 | RECK-07 | `chg_reconcile.py` | Kapsam/degisiklik butunlugu — P0 | TEST EDILDI (24.11.2026) | Davranissal her REQ tabanda olmayan YENI bir test adina eslenmeli; eski testi gostermek bedava yesildir. |
+| 12 | TST-07 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (24.11.2026) | Kanit beyani ham JUnit ile celisemez; kapi kendi beyanina guvenmez. |
+| 13 | TST-10 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (24.11.2026) | Rapor kaynaktan eski olamaz; bayat kanit mevcut kodu olcmemis olabilir. |
+| 14 | TST-11 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (24.11.2026) | Kanittaki komut kod_profil ile ayni olmali; baska komutun kaniti sayilmaz. |
+| 15 | TST-12 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (24.11.2026) | Kanittaki rapor yolu kod_profil ile ayni olmali; baska rapor gosterilemez. |
+| 16 | TST-09 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (24.11.2026) | Test komutunun cikis kodu kayitli olmali; kosup kosmadigi bilinmeyen test yesil sayilmaz. |
+| 17 | TST-01 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (24.11.2026) | Basarisiz test sayisi sifir olmali; kirmizi testle PASS verilemez. |
+| 18 | TST-02 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (24.11.2026) | Hatali test sayisi sifir olmali; altyapi hatasi yesil sayilmaz. |
+| 19 | TST-03 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (24.11.2026) | En az bir test kosmali; sifir test temiz degildir. |
+| 20 | TST-05 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (24.11.2026) | Atlanan test tabandan fazla olamaz; test atlayarak yesil olunmaz. |
+| 21 | TST-06 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (24.11.2026) | Kapsam tabanin bir altina kadar korunmali; sessiz kapsam kaybi P1. |
+| 22 | DEP-01 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | Manifest varken kilit anahtari yok, bos ya da kilit dosyasi eksikse bagimlilik surumleri denetimsiz kalir; kapi P0 verir. |
+| 23 | DEP-02 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Manifestteki bir paket kilit dosyasinda yoksa kilit bayattir ve kurulan surum beyanla celisir; P0. |
+| 24 | DEP-06 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Profilde bagimlilik_manifesti bos birakilirsa bagimlilik yuzeyi hic denetlenmez; kapi CALISTIRILMADI/P1 verir. |
+| 25 | DEP-03 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Surum sabitlenmezse (*, latest, bos ya da kilitsiz ^/~) ayni manifest farkli paket surumleri kurabilir; P1. |
+| 26 | DEP-04 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Kilit dosyasi diffte degisirken manifest guncellenmezse beyan edilen bagimlilik ile kilit ayrisir; P1. |
+| 27 | TSL-03 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | Teslim dosyasinin sha256 degeri manifestten farkliysa artefakt yolda degistirilmistir; P0 tahrifat. |
+| 28 | TSL-04 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | Teslim imzasi gecersizse manifest baska anahtarla imzalanmis veya sonradan degistirilmis olabilir; P0. |
+| 29 | TSL-06 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | Zorunlu teslim artefakti manifestte hic yoksa imza eksik kumeyi dogrular; kapsam boslugu P0. |
+| 30 | TSL-01 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Teslim manifesti yok veya bozuksa imza dogrulanamaz; kapi fail-closed P0 verir. |
+| 31 | TSL-02 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Manifestte listelenen dosya diskte yoksa teslim kumesi eksiktir; imza eksik artefakti kurtarmaz, P0. |
+| 32 | TSL-05 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Teslim imzasi yoksa butunluk yalniz dusuk guvenle kabul edilir; P1 uyari kapiyi kapatmaz. |
+| 33 | API-02 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | KFAZ0 envanterindeki disa acik imza kaybolursa mevcut cagiranlar sessizce kirilir; P0. |
+| 34 | API-03 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Disa acik imzanin parametre veya donusu degisirse cagiranlarin sozlesmesi bozulur; P0. |
+| 35 | API-01 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | KFAZ0 API envanteri yoksa disa acik yuzey karsilastirilamaz; kapi CALISTIRILMADI/P1 verir. |
+| 36 | API-05 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | API kademelerinden hicbiri kosmazsa disa acik yuzey denetimi tamamen korlesir; CALISTIRILMADI/P1. |
+| 37 | API-04 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Regex taramasi bir adayi kacirirsa disa acik yuzey eksik sayilir; DUSUK_GUVEN/P1. |
+| 38 | OZT-01 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Oz-test taban dosyasi yok veya bozuksa onceki test envanteriyle karsilastirma yapilamaz; fail-closed P0. |
+| 39 | OZT-02 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Tabandaki bir test kimligi bu kosuda yoksa test sessizce silinmistir; P0 kapsam kaybi. |
+| 40 | OZT-03 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Kosuda hic test yoksa sifir test yesil sayilmamali; fail-closed P0. |
+| 41 | OZT-04 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | OZT-04 kaldirilmis bir sayac kuralidir; kimlik sayisi dususu zaten OZT-02 tarafindan yakalandigi icin ayri vaka uretmez. |
+| 42 | OZT-05 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Tabanda olmayan yeni bir test kimligi gorulurse pin guncellenmelidir; aksi halde envanter gercek kosuyu yansitmaz, P1. |
+| 43 | OZT-06 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Taban kimlik hash degeri kendi listesiyle uyusmazsa taban elle kurcalanmistir; test envanteri guvenilmez olur, P0. |
+| 44 | OLGU-04 | `olgu_lint.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Kamu attestation kaydi yok veya bozuksa kamu iddialari gercek commit ve agac kanitiyla baglanamaz; FAIL. |
+| 45 | OLGU-05 | `olgu_lint.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | ATLAS, attest ve KOD ciktilarindaki sayilar kanonik kayda uymazsa yayimlanan olcum yanlis olur; FAIL. |
+| 46 | OLGU-06 | `olgu_lint.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | Son DEVIR sonrasi mekanizma commit hash degerleri DERSLER kaydinda yok veya cozulmuyorsa degisiklik izi kopar; FAIL. |
+| 47 | CHK-01 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI (24.11.2026) | Her zorunlu SCOPE-ID MASTER icinde markdown basligi olarak bulunmali; metinde gecmesi yetmez. |
+| 48 | CHK-02 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI (24.11.2026) | Her zorunlu ID PROVENANCE tablosunda kapsiyor durumunda olmali. |
+| 49 | CHK-05 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI (24.11.2026) | Basliklar benzersiz olmali; tekrar eden baslik izlenebilirligi bozar. |
+| 50 | SEC-04 | `secret_scan.py` | Bilgi seviyesi / olu kimlik — P1 | KAPSAM DISI | Ikili veya kilit dosyasi taranmadan atlanirsa icine gomulmus bir sir gorunmez; atlama yalniz BILGI olarak raporlanir. |
 
 ## Sonraki dilim
 
-Bu turda kapatilmayan bosluk yok (0). Dokuz eski boslugun her biri
+24.11.2026 itibariyla kapatilmayan bosluk yok (0). Dokuz eski boslugun her biri
 gercek bir mutasyon vakasiyla kapatildi; 18 beklenen-bulgu vakasi
 uyari modunda, digerleri kirmizi hukumle dogrulandi.
 

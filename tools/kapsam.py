@@ -191,6 +191,10 @@ del _sc
 # Siralama ilkesi: once sahte yesil/tamper (P0), sonra tedarik/teslim/yuzey,
 # sonra test envanteri/olcum/provenance; bilgi seviyesindeki olu kimlik sonda.
 # Liste sabittir: vakalar eklense de siralama degismez, durum sutunu guncellenir.
+# Tablodaki kapanis durumu takvim gunune baglidir; kalici olmayan ifade
+# yerine tarih tek yerde tutulur.
+KAPSAM_TARIHI = '24.11.2026'
+
 RISK_GRUPLARI = {
     'KANIT': 'Kanit/yesil butunlugu — P0',
     'KAPSAM': 'Kapsam/degisiklik butunlugu — P0',
@@ -265,7 +269,38 @@ RISK_NOT = {
     'CHK-05': 'Basliklar benzersiz olmali; tekrar eden baslik izlenebilirligi bozar.',
 }
 
-# Bu turda kapatilamayan bosluk kalmadi; liste bos. Yeni bir bosluk
+# Risk tablosunda grup etiketi tek basina gerekce degildir. Asagidaki kayitlar
+# her kuralin somut riskini tek cumlede tutar; yeni kural icin kayit zorunludur.
+RISK_NOT.update({
+    'DEP-01': 'Manifest varken kilit anahtari yok, bos ya da kilit dosyasi eksikse bagimlilik surumleri denetimsiz kalir; kapi P0 verir.',
+    'DEP-02': 'Manifestteki bir paket kilit dosyasinda yoksa kilit bayattir ve kurulan surum beyanla celisir; P0.',
+    'DEP-06': 'Profilde bagimlilik_manifesti bos birakilirsa bagimlilik yuzeyi hic denetlenmez; kapi CALISTIRILMADI/P1 verir.',
+    'DEP-03': 'Surum sabitlenmezse (*, latest, bos ya da kilitsiz ^/~) ayni manifest farkli paket surumleri kurabilir; P1.',
+    'DEP-04': 'Kilit dosyasi diffte degisirken manifest guncellenmezse beyan edilen bagimlilik ile kilit ayrisir; P1.',
+    'TSL-01': 'Teslim manifesti yok veya bozuksa imza dogrulanamaz; kapi fail-closed P0 verir.',
+    'TSL-02': 'Manifestte listelenen dosya diskte yoksa teslim kumesi eksiktir; imza eksik artefakti kurtarmaz, P0.',
+    'TSL-03': 'Teslim dosyasinin sha256 degeri manifestten farkliysa artefakt yolda degistirilmistir; P0 tahrifat.',
+    'TSL-04': 'Teslim imzasi gecersizse manifest baska anahtarla imzalanmis veya sonradan degistirilmis olabilir; P0.',
+    'TSL-05': 'Teslim imzasi yoksa butunluk yalniz dusuk guvenle kabul edilir; P1 uyari kapiyi kapatmaz.',
+    'TSL-06': 'Zorunlu teslim artefakti manifestte hic yoksa imza eksik kumeyi dogrular; kapsam boslugu P0.',
+    'API-01': 'KFAZ0 API envanteri yoksa disa acik yuzey karsilastirilamaz; kapi CALISTIRILMADI/P1 verir.',
+    'API-02': 'KFAZ0 envanterindeki disa acik imza kaybolursa mevcut cagiranlar sessizce kirilir; P0.',
+    'API-03': 'Disa acik imzanin parametre veya donusu degisirse cagiranlarin sozlesmesi bozulur; P0.',
+    'API-04': 'Regex taramasi bir adayi kacirirsa disa acik yuzey eksik sayilir; DUSUK_GUVEN/P1.',
+    'API-05': 'API kademelerinden hicbiri kosmazsa disa acik yuzey denetimi tamamen korlesir; CALISTIRILMADI/P1.',
+    'OZT-01': 'Oz-test taban dosyasi yok veya bozuksa onceki test envanteriyle karsilastirma yapilamaz; fail-closed P0.',
+    'OZT-02': 'Tabandaki bir test kimligi bu kosuda yoksa test sessizce silinmistir; P0 kapsam kaybi.',
+    'OZT-03': 'Kosuda hic test yoksa sifir test yesil sayilmamali; fail-closed P0.',
+    'OZT-04': 'OZT-04 kaldirilmis bir sayac kuralidir; kimlik sayisi dususu zaten OZT-02 tarafindan yakalandigi icin ayri vaka uretmez.',
+    'OZT-05': 'Tabanda olmayan yeni bir test kimligi gorulurse pin guncellenmelidir; aksi halde envanter gercek kosuyu yansitmaz, P1.',
+    'OZT-06': 'Taban kimlik hash degeri kendi listesiyle uyusmazsa taban elle kurcalanmistir; test envanteri guvenilmez olur, P0.',
+    'OLGU-04': 'Kamu attestation kaydi yok veya bozuksa kamu iddialari gercek commit ve agac kanitiyla baglanamaz; FAIL.',
+    'OLGU-05': 'ATLAS, attest ve KOD ciktilarindaki sayilar kanonik kayda uymazsa yayimlanan olcum yanlis olur; FAIL.',
+    'OLGU-06': 'Son DEVIR sonrasi mekanizma commit hash degerleri DERSLER kaydinda yok veya cozulmuyorsa degisiklik izi kopar; FAIL.',
+    'SEC-04': 'Ikili veya kilit dosyasi taranmadan atlanirsa icine gomulmus bir sir gorunmez; atlama yalniz BILGI olarak raporlanir.',
+})
+
+# 24.11.2026 itibariyla kapatilamayan bosluk kalmadi; liste bos. Yeni bir bosluk
 # olusursa buraya risk sirasiyla yazilir ve markdown bolumu yeniden acilir.
 SONRAKI_DILIM = []
 SONRAKI_NOT = {
@@ -290,12 +325,14 @@ def risk_tablosu(satirlar):
     for i, (kural, grup) in enumerate(RISK_SIRASI, 1):
         _durum = durum[kural]
         if _durum == 'TEST EDILDI' and kural in RISK_EKLENEN:
-            _durum = 'TEST EDILDI (bu tur)'
+            _durum = 'TEST EDILDI (%s)' % KAPSAM_TARIHI
         elif _durum == 'BOSLUK':
             # Gizli sayi dusumu yok: kalan her bosluk acikca bir sonraki
             # dilimin kaydidir; kapsam disi gibi etiketlenmez.
             _durum = 'BOSLUK (sonraki dilim)'
-        gerekce = RISK_NOT.get(kural, RISK_GRUPLARI[grup])
+        if kural not in RISK_NOT:
+            raise SystemExit('RISK_NOT eksik: %s' % kural)
+        gerekce = RISK_NOT[kural]
         out.append('| %d | %s | `%s` | %s | %s | %s |' % (
             i, kural, betik[kural], RISK_GRUPLARI[grup], _durum, gerekce))
     return out
@@ -638,12 +675,14 @@ def markdown():
            '## Risk sirasi (50 kural)', '',
            '19.11.2026 envanterinde 51 kural vardi; `DEC-027` bir karar',
            'referansi olarak ayiklandi, kalan 50 kural risk sirasinda. Siralama',
-           'saglamlik/etki sirasina gore sabittir. Kapatilan her kural bu turda',
-           'vaka aldi; durum sutunu guncel envanterden okunur.', '']
+           'saglamlik/etki sirasina gore sabittir. Kapatilan her kural',
+           '%s itibariyla vaka aldi; durum sutunu guncel envanterden okunur.'
+           % KAPSAM_TARIHI, '']
     out += risk_tablosu(satirlar)
     if bosluk:
         out += ['', '## Sonraki dilim', '',
-                'Asagidaki kural(lar) bu turda kapatilmadi; kalan %d boslugun risk' % bosluk,
+                'Asagidaki kural(lar) %s itibariyla kapatilmadi; kalan %d boslugun risk'
+                % (KAPSAM_TARIHI, bosluk),
                 'sirasindaki ilk %d tanesidir. Bir sonraki dilimde gercek vakayla' % len(SONRAKI_DILIM),
                 'kapatilacak; sessizce sayidan dusulmedi.', '',
                 '| Kural | Betik | Neden test edilemedi / neyi korur |',
@@ -659,7 +698,8 @@ def markdown():
                     'icin bu dilimde sayiya eklenmedi, P1 kaydi olarak ayri tutulur.']
     else:
         out += ['', '## Sonraki dilim', '',
-                'Bu turda kapatilmayan bosluk yok (0). Dokuz eski boslugun her biri',
+                '%s itibariyla kapatilmayan bosluk yok (0). Dokuz eski boslugun her biri'
+                % KAPSAM_TARIHI,
                 'gercek bir mutasyon vakasiyla kapatildi; %d beklenen-bulgu vakasi' % beklenen_bulgu,
                 'uyari modunda, digerleri kirmizi hukumle dogrulandi.', '']
     out += ['', '## Kapsam disi siniflari', '',
