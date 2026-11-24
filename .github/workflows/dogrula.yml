@@ -16,7 +16,9 @@ jobs:
   dogrula:
     name: tek giris dogrulama
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # 141 vakalik mutasyon bataryasi ve iki tam dogrulama kosusu 20 dk'yi
+    # asabiliyor; taze klon + kanit paketi ayni is icinde kosuyor.
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
