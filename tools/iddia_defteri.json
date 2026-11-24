@@ -740,7 +740,7 @@
     },
     {
       "id": "IDD-26",
-      "iddia": "yayin plani 218 dosya; parite 0 yeni / 0 degisen / 0 silinen",
+      "iddia": "yayin plani 219 dosya; parite 0 yeni / 0 degisen / 0 silinen",
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
@@ -748,7 +748,7 @@
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "planda=218 · yeni=0 · degisen=0 · ayni=218 · silinecek=0"
+          "alinti": "planda=219 · yeni=0 · degisen=0 · ayni=219 · silinecek=0"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
@@ -760,11 +760,11 @@
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "part of the plan, so the 218-file count is deterministic."
+          "alinti": "part of the plan, so the 219-file count is deterministic."
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "**Approximate duration:** under a second (218 files hashed, no subprocesses)."
+          "alinti": "**Approximate duration:** under a second (219 files hashed, no subprocesses)."
         }
       ],
       "durum": "OLCULMEDI",
