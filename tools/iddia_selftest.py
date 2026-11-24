@@ -24,6 +24,9 @@ import tempfile
 from pathlib import Path
 
 ARAC = Path(__file__).resolve().with_name("iddia.py")
+KOK = Path(__file__).resolve().parents[1]
+KAPI_MODUL = KOK / "tools" / "kapi_cikti.py"
+KAPI_SEMA = KOK / "schemas" / "atlas-kapi-cikti.schema.json"
 OZET = ("<!-- IDDIA-OZET:BASLA -->\n"
         "olculdu=3 · ag=0 · beyan=0 · olculmedi=0\n"
         "<!-- IDDIA-OZET:BITIR -->\n")
@@ -43,6 +46,18 @@ def _json_yaz(yol, veri):
 
 def _ozet_yaz(kok, icerik=OZET):
     _yaz(kok / "docs" / "IDDIA-OZET.md", icerik)
+
+
+def _kapi_modulu(kok):
+    """Gerçek kökteki sözleşme modülünü ve şemasını fikstüre taşı.
+
+    `iddia.py` kapı satırları için `kapi_cikti`yi içe aktarır; fikstür bu
+    modülü taşımazsa hızlı kip hiç çalışmaz ve test gerçek davranışı değil
+    kendi eksikliğini ölçer.
+    """
+    shutil.copy2(KAPI_MODUL, kok / "tools" / KAPI_MODUL.name)
+    (kok / "schemas").mkdir(parents=True, exist_ok=True)
+    shutil.copy2(KAPI_SEMA, kok / "schemas" / KAPI_SEMA.name)
 
 
 def _defter(kok):
@@ -118,6 +133,7 @@ def _kapsam_kok(gecici, ad, metin, istisna=None, dahil=None):
     kok = Path(gecici) / ad
     (kok / "tools").mkdir(parents=True)
     shutil.copy2(ARAC, kok / "tools" / "iddia.py")
+    _kapi_modulu(kok)
     _yaz(kok / "README.md", metin)
     _ozet_yaz(kok)
     defter = _defter(kok)
@@ -133,6 +149,7 @@ def _kapsam_kok(gecici, ad, metin, istisna=None, dahil=None):
 def _hazirla(kok):
     (kok / "tools").mkdir(parents=True)
     shutil.copy2(ARAC, kok / "tools" / "iddia.py")
+    _kapi_modulu(kok)
     _yaz(kok / "README.md", "HIZLI 7/7\nAGIR 3/3\n")
     _ozet_yaz(kok)
     _json_yaz(kok / "tools" / "iddia_defteri.json", _defter(kok))
