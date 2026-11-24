@@ -36,7 +36,9 @@ otomatik uygulanmaz.
 |---|---|
 | Taranan betik | 31 |
 | Kural bildiren betik | 20 |
-| Bildirilen kural | 121 |
+| Bildirilen kural (envanter) | 117 |
+| — envanter disi: olu kimlik (bildirilir, basilMAZ) | 4 |
+| — envanter disi: dis referans | 1 |
 | Kod icinde uretilen, envantere alinmayan kimlik | 41 |
 | Batarya vakasi (toplam) | 141 |
 | — atesleyen (HATA + TERMINAL) | 114 |
@@ -46,7 +48,7 @@ otomatik uygulanmaz.
 | Atesleyen vakayla test edilen kural (TEST EDILDI) | 93 |
 | Yalniz beklenen-bulgu ile dogrulanan kural (BEKLENEN BULGU) | 24 |
 | Toplam dogrulanan kural | 117 |
-| Gerekceli kapsam disi | 4 |
+| Gerekceli kapsam disi | 0 |
 | Bosluk (gerekce yok) | 0 |
 | — bunlardan yalniz oz-testte anilan | 0 |
 | — hicbir testte gecmeyen | 0 |
@@ -103,7 +105,7 @@ saglamlik/etki sirasina gore sabittir. Kapatilan her kural
 | 20 | TST-05 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (24.11.2026) | Atlanan test tabandan fazla olamaz; test atlayarak yesil olunmaz. |
 | 21 | TST-06 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BEKLENEN BULGU (24.11.2026) | Kapsam tabanin bir altina kadar korunmali; sessiz kapsam kaybi P1. |
 | 22 | DEP-01 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | Manifest varken kilit anahtari yok, bos ya da kilit dosyasi eksikse bagimlilik surumleri denetimsiz kalir; kapi P0 verir. |
-| 23 | DEP-02 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Baslikta bildirilir; dep_audit kodunda kilit paketlerini manifestle karsilastiran dal yok, bu yuzden kimlik olu. Uygulanirsa kilit bayatligi P0 olur. |
+| 23 | DEP-02 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | ENVANTER DISI (olu kimlik) | Baslikta "Manifestteki paket kilitte yok [P0]" diye bildirilir ama dep_audit kodunda kilit paketlerini manifestle karsilastiran dal yok; yalniz DEP-01/03/04/05/06 dallari uygulanir. |
 | 24 | DEP-06 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | Profilde bagimlilik_manifesti bos birakilirsa bagimlilik yuzeyi hic denetlenmez; kapi CALISTIRILMADI/P1 verir. |
 | 25 | DEP-03 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | Surum sabitlenmezse (*, latest, bos ya da kilitsiz ^/~) ayni manifest farkli paket surumleri kurabilir; P1. |
 | 26 | DEP-04 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | Kilit dosyasi diffte degisirken manifest guncellenmezse beyan edilen bagimlilik ile kilit ayrisir; P1. |
@@ -114,14 +116,14 @@ saglamlik/etki sirasina gore sabittir. Kapatilan her kural
 | 31 | TSL-02 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | Manifestte listelenen dosya diskte yoksa teslim kumesi eksiktir; imza eksik artefakti kurtarmaz, P0. |
 | 32 | TSL-05 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | Teslim imzasi yoksa butunluk yalniz dusuk guvenle kabul edilir; P1 uyari kapiyi kapatmaz. |
 | 33 | API-02 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | KFAZ0 envanterindeki disa acik imza kaybolursa mevcut cagiranlar sessizce kirilir; P0. |
-| 34 | API-03 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | KAPSAM DISI | Baslikta bildirilir; api_surface yalniz kayip imza ve regex adayi dallarini uygular, imza degisimi karsilastirmasi kodda yok; P0 vaadi olu kimliktir. |
+| 34 | API-03 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | ENVANTER DISI (olu kimlik) | Baslikta "imza degismis (parametre/donus) [P0]" diye bildirilir ama api_surface yalniz kayip imza (API-02) ve regex adayi (API-04) dallarini uygular; imza degisimi karsilastirmasi kodda yok. |
 | 35 | API-01 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | KFAZ0 API envanteri yoksa disa acik yuzey karsilastirilamaz; kapi CALISTIRILMADI/P1 verir. |
 | 36 | API-05 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | API kademelerinden hicbiri kosmazsa disa acik yuzey denetimi tamamen korlesir; CALISTIRILMADI/P1. |
 | 37 | API-04 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | Regex taramasi bir adayi kacirirsa disa acik yuzey eksik sayilir; DUSUK_GUVEN/P1. |
 | 38 | OZT-01 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI | Oz-test taban dosyasi yok veya bozuksa onceki test envanteriyle karsilastirma yapilamaz; fail-closed P0. |
 | 39 | OZT-02 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI | Tabandaki bir test kimligi bu kosuda yoksa test sessizce silinmistir; P0 kapsam kaybi. |
 | 40 | OZT-03 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI | Kosuda hic test yoksa sifir test yesil sayilmamali; fail-closed P0. |
-| 41 | OZT-04 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | KAPSAM DISI | OZT-04 kaldirilmis bir sayac kuralidir; kimlik sayisi dususu zaten OZT-02 tarafindan yakalandigi icin ayri vaka uretmez. |
+| 41 | OZT-04 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | ENVANTER DISI (olu kimlik) | Kaldirilmis sayac kurali. Baslikta yalniz "OZT-04 NICIN YOK" aciklamasi olarak gecer; kodda bu kimligi basan dal yok. Kimlik sayisi dususu zaten OZT-02 ile yakalanir. |
 | 42 | OZT-05 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | BEKLENEN BULGU | Tabanda olmayan yeni bir test kimligi gorulurse pin guncellenmelidir; aksi halde envanter gercek kosuyu yansitmaz, P1. |
 | 43 | OZT-06 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI | Taban kimlik hash degeri kendi listesiyle uyusmazsa taban elle kurcalanmistir; test envanteri guvenilmez olur, P0. |
 | 44 | OLGU-04 | `olgu_lint.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI | Kamu attestation kaydi yok veya bozuksa kamu iddialari gercek commit ve agac kanitiyla baglanamaz; FAIL. |
@@ -130,7 +132,7 @@ saglamlik/etki sirasina gore sabittir. Kapatilan her kural
 | 47 | CHK-01 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI (24.11.2026) | Her zorunlu SCOPE-ID MASTER icinde markdown basligi olarak bulunmali; metinde gecmesi yetmez. |
 | 48 | CHK-02 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI (24.11.2026) | Her zorunlu ID PROVENANCE tablosunda kapsiyor durumunda olmali. |
 | 49 | CHK-05 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | BEKLENEN BULGU (24.11.2026) | Basliklar benzersiz olmali; tekrar eden baslik izlenebilirligi bozar. |
-| 50 | SEC-04 | `secret_scan.py` | Bilgi seviyesi / olu kimlik — P1 | KAPSAM DISI | Ikili veya kilit dosyasi taranmadan atlanirsa icine gomulmus bir sir gorunmez; atlama yalniz BILGI olarak raporlanir. |
+| 50 | SEC-04 | `secret_scan.py` | Bilgi seviyesi / olu kimlik — P1 | ENVANTER DISI (olu kimlik) | Baslikta "Ikili/kilit dosyasi atlandi [bilgi]" diye bildirilir ama hiçbir dal bu kimligi basmiyor; atlanan dosyalar yalniz sayilir, kimlikli BILGI satiri uretilmez. |
 
 ## Sonraki dilim
 
@@ -139,14 +141,30 @@ gercek bir mutasyon vakasiyla kapatildi; 27 beklenen-bulgu vakasi
 uyari modunda, digerleri kirmizi/terminal hukumle dogrulandi.
 
 
-## Kapsam disi siniflari
+## Envanter disi kimlikler
 
-Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir
-(asagida betik adiyla birlikte yazili).
+Asagidaki kimlikler satir basinda veya `# --- KIMLIK` bolum basliginda **bildirilir** ama betigin hicbir kod dalinda **basilmaz**. Bir hukum uretmedikleri icin kural degildirler: mutasyonla ateslenemezler ve envantere katilirlarsa "kapsanan kural" sayisini sisirirler. Bu yuzden sayilmazlar; gerekceleri asagida satir satir durur.
 
-| Sinif | Gerekce (betikte olculen bagimlilik) | Betik | Kural |
+Olcum yontemi: her kapi betigi AST ile gezilir; kimlik docstring DISINDA bir string sabiti olarak kodda akiyorsa basilabilir sayilir. Yeni bir olu kimlik gerekcesiz belirirse ya da bir dal eklenip kimlik basilirsa `make kapsam` fail-closed durur.
+
+| Betik | Kimlik | Olcum | Gerekce |
 |---|---|---|---|
-| olu-kimlik | OZT-04 kaldirilmis sayac kuralidir; kodda bu kimligi basan dal yok, kimlik sayisi dususu OZT-02 ile yakalanir | api_surface.py, dep_audit.py, oztest_attest.py, secret_scan.py | 4 |
+| `oztest_attest.py` | OZT-04 | kodda basilmiyor | Kaldirilmis sayac kurali. Baslikta yalniz "OZT-04 NICIN YOK" aciklamasi olarak gecer; kodda bu kimligi basan dal yok. Kimlik sayisi dususu zaten OZT-02 ile yakalanir. |
+| `api_surface.py` | API-03 | kodda basilmiyor | Baslikta "imza degismis (parametre/donus) [P0]" diye bildirilir ama api_surface yalniz kayip imza (API-02) ve regex adayi (API-04) dallarini uygular; imza degisimi karsilastirmasi kodda yok. |
+| `dep_audit.py` | DEP-02 | kodda basilmiyor | Baslikta "Manifestteki paket kilitte yok [P0]" diye bildirilir ama dep_audit kodunda kilit paketlerini manifestle karsilastiran dal yok; yalniz DEP-01/03/04/05/06 dallari uygulanir. |
+| `secret_scan.py` | SEC-04 | kodda basilmiyor | Baslikta "Ikili/kilit dosyasi atlandi [bilgi]" diye bildirilir ama hiçbir dal bu kimligi basmiyor; atlanan dosyalar yalniz sayilir, kimlikli BILGI satiri uretilmez. |
+
+Toplam envanter disi kimlik: **4**; her biri için ölçüm `tools/kapsam.py --oztest` ile her koşuda yeniden alinir.
+
+## Envanter disi dis referanslar
+
+Baska bir kurala/karara yapilan atiflar kural sayilmaz; her biri gerekceli ve iki yonlu dogrulanir.
+
+| Betik | Kimlik | Gerekce |
+|---|---|---|
+| `verify_doi.py` | DEC-027 | DEC karar kimligi; verify_doi bu kurali uygulamaz, DEC-027 bolum-farkindaligi politikasina atif yapar |
+
+Toplam envanter disi dis referans: **1**.
 
 ## Kod icinde uretilen kimlikler
 
@@ -214,7 +232,7 @@ sessizce yok sayilmaz.
 | `gate_2c.py` | 0 | 0 | 0 | 0 |
 | `gate_merge.py` | 0 | 0 | 0 | 0 |
 | `olgu_lint.py` | 3 | 0 | 0 | 3 |
-| `oztest_attest.py` | 6 | 0 | 0 | 6 |
+| `oztest_attest.py` | 5 | 0 | 0 | 5 |
 | `prompt_lint.py` | 12 | 0 | 0 | 12 |
 | `provenance_check.py` | 0 | 3 | 3 | 3 |
 | `quote_ratio.py` | 2 | 1 | 0 | 2 |
@@ -224,19 +242,19 @@ sessizce yok sayilmaz.
 | `teslim_imza.py` | 6 | 0 | 0 | 6 |
 | `translit_check.py` | 2 | 2 | 0 | 2 |
 | `verify_doi.py` | 0 | 0 | 0 | 0 |
-| `api_surface.py` | 5 | 0 | 0 | 5 |
+| `api_surface.py` | 4 | 0 | 0 | 4 |
 | `apply_routing.py` | 0 | 0 | 0 | 0 |
 | `budget_guard.py` | 0 | 0 | 0 | 0 |
 | `chg_reconcile.py` | 9 | 0 | 0 | 9 |
-| `dep_audit.py` | 6 | 0 | 0 | 6 |
+| `dep_audit.py` | 5 | 0 | 0 | 5 |
 | `freeze_check.py` | 7 | 3 | 1 | 8 |
 | `imzala.py` | 0 | 0 | 0 | 0 |
 | `kod_gate_merge.py` | 0 | 0 | 0 | 0 |
 | `perm_lint.py` | 8 | 0 | 0 | 8 |
-| `secret_scan.py` | 5 | 0 | 0 | 5 |
+| `secret_scan.py` | 4 | 0 | 0 | 4 |
 | `test_attest.py` | 12 | 1 | 0 | 12 |
 
-Toplam: 31 betik · 121 tekil kural; her satirda Envanter = Baslikta ∪ Bolum basligi.
+Toplam: 31 betik · 117 tekil kural; her satirda Envanter = Baslikta ∪ Bolum basligi.
 
 ## Referans olarak ayiklanan kimlikler
 
@@ -301,7 +319,6 @@ tip ihlalidir; kopya degil, farkli hata dalidir.
 | `oztest_attest.py` | OZT-01 | OZT-01 | TEST EDILDI | atesleyen mutasyon vakasi: OZT-01 |
 | `oztest_attest.py` | OZT-02 | OZT-02 | TEST EDILDI | atesleyen mutasyon vakasi: OZT-02 |
 | `oztest_attest.py` | OZT-03 | OZT-03 | TEST EDILDI | atesleyen mutasyon vakasi: OZT-03 |
-| `oztest_attest.py` | OZT-04 | — | KAPSAM DISI | olu-kimlik: OZT-04 kaldirilmis sayac kuralidir; kodda bu kimligi basan dal yok, kimlik sayisi dususu OZT-02 ile yakalanir |
 | `oztest_attest.py` | OZT-05 | OZT-05 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: OZT-05 |
 | `oztest_attest.py` | OZT-06 | OZT-06 | TEST EDILDI | atesleyen mutasyon vakasi: OZT-06 |
 | `prompt_lint.py` | PL-01 | PL-01 | TEST EDILDI | atesleyen mutasyon vakasi: PL-01 |
@@ -341,7 +358,6 @@ tip ihlalidir; kopya degil, farkli hata dalidir.
 | `translit_check.py` | TR-02 | TR-02 | TEST EDILDI | atesleyen mutasyon vakasi: TR-02 |
 | `api_surface.py` | API-01 | API-01 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: API-01 |
 | `api_surface.py` | API-02 | API-02 | TEST EDILDI | atesleyen mutasyon vakasi: API-02 |
-| `api_surface.py` | API-03 | — | KAPSAM DISI | olu-kimlik: API-03 baslikta bildirilir ama api_surface yalniz kayip imza (API-02) ve regex adayi (API-04) dallarini uygular; imza degisimi karsilastirmasi kodda yok |
 | `api_surface.py` | API-04 | API-04 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: API-04 |
 | `api_surface.py` | API-05 | API-05 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: API-05 |
 | `chg_reconcile.py` | RECK-01 | RECK-01 | TEST EDILDI | atesleyen mutasyon vakasi: RECK-01 |
@@ -354,7 +370,6 @@ tip ihlalidir; kopya degil, farkli hata dalidir.
 | `chg_reconcile.py` | RECK-08 | RECK-08 | TEST EDILDI | atesleyen mutasyon vakasi: RECK-08 |
 | `chg_reconcile.py` | RECK-09 | RECK-09 | TEST EDILDI | atesleyen mutasyon vakasi: RECK-09 |
 | `dep_audit.py` | DEP-01 | DEP-01 | TEST EDILDI | atesleyen mutasyon vakasi: DEP-01 |
-| `dep_audit.py` | DEP-02 | — | KAPSAM DISI | olu-kimlik: DEP-02 baslikta bildirilir ama dep_audit kodunda kilit paketlerini manifestle karsilastiran dal yok; yalniz DEP-01/03/04/05/06 dallari uygulanir |
 | `dep_audit.py` | DEP-03 | DEP-03 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: DEP-03 |
 | `dep_audit.py` | DEP-04 | DEP-04 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: DEP-04 |
 | `dep_audit.py` | DEP-05 | DEP-05 | TEST EDILDI | atesleyen mutasyon vakasi: DEP-05 |
@@ -378,7 +393,6 @@ tip ihlalidir; kopya degil, farkli hata dalidir.
 | `secret_scan.py` | SEC-01 | SEC-01 | TEST EDILDI | atesleyen mutasyon vakasi: SEC-01 |
 | `secret_scan.py` | SEC-02 | KOD-SEC-02 | TEST EDILDI | atesleyen mutasyon vakasi: KOD-SEC-02 |
 | `secret_scan.py` | SEC-03 | SEC-03 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: SEC-03 |
-| `secret_scan.py` | SEC-04 | — | KAPSAM DISI | olu-kimlik: SEC-04 yalniz baslikta bildirilir; hicbir kod dali bu kimligi basmiyor (atlanan dosyalar yalniz sayilir) |
 | `secret_scan.py` | SEC-05 | SEC-05 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: SEC-05 |
 | `test_attest.py` | TST-01 | TST-01 | TEST EDILDI | atesleyen mutasyon vakasi: TST-01 |
 | `test_attest.py` | TST-02 | TST-02 | TEST EDILDI | atesleyen mutasyon vakasi: TST-02 |

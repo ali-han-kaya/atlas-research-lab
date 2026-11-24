@@ -65,37 +65,42 @@ TABAN_BOSLUK_SAYISI = 0
 #   oztest_attest: butun agacin selftest hash tabanini + ham kosu ciktisini ister
 #   teslim_imza  : HMAC anahtari (LAB_IMZA_ANAHTARI veya ~/.config/lab_imza.key)
 #   verify_doi   : kural kimligi bildirmiyor; DEC-027 bir karar referansi
-KAPSAM_DISI = {
-    # OLCULDU: bu dort kimlik yalniz baslikta/riski kaydinda bildirilir; betikte
-    # bu kimligi basan bir dal yoktur. Bu yuzden mutasyonla ateslenemezler.
-    'ATLAS_SABLONLAR/scripts/oztest_attest.py':
-        ('olu-kimlik', 'OZT-04 kaldirilmis sayac kuralidir; kodda bu kimligi '
-                       'basan dal yok, kimlik sayisi dususu OZT-02 ile yakalanir'),
-    'KOD_SABLONLAR/scripts/api_surface.py':
-        ('olu-kimlik', 'API-03 baslikta bildirilir ama api_surface yalniz kayip '
-                       'imza (API-02) ve regex adayi (API-04) dallarini uygular; '
-                       'imza degisimi karsilastirmasi kodda yok'),
-    'KOD_SABLONLAR/scripts/dep_audit.py':
-        ('olu-kimlik', 'DEP-02 baslikta bildirilir ama dep_audit kodunda kilit '
-                       'paketlerini manifestle karsilastiran dal yok; yalniz '
-                       'DEP-01/03/04/05/06 dallari uygulanir'),
-    # OLCULDU (19.11.2026): SEC-04 baslikta bildirilir ama secret_scan'in
-    # hicbir dalinda bu kimlikle bulgu BASILMAZ; atlanan dosyalar yalniz sayilir.
-    # Kural kimligi olu oldugu icin mutasyonla ateslenemez; gercek bulgu uretmez.
-    'KOD_SABLONLAR/scripts/secret_scan.py':
-        ('olu-kimlik', 'SEC-04 yalniz baslikta bildirilir; hicbir kod dali bu '
-                       'kimligi basmiyor (atlanan dosyalar yalniz sayilir)'),
+# OLU KIMLIK — satir basinda/bolum basliginda BILDIRILIR ama betigin hicbir
+# kod dalinda BASILMAZ. Yani bir hukum uretmezler: mutasyonla ateslenemezler ve
+# envantere katildiklarinda "kapsanan kural" sayisini sisirirler.
+#
+# OLCUM (`tools/kapsam.py --oztest`, AST): her kapi betigi gezilir; kimlik
+# docstring DISINDA bir string sabiti olarak kodda akiyorsa basilabilir sayilir.
+# Bu dort kimlikte akmaz. Envanter onlari SAYMAZ (`bildirilen` 121 -> 117);
+# gerekce burada ve `docs/MUTASYON_KAPSAM.md` tablosunda gorunur.
+# Iki yonlu fail-closed: (a) olculen her olu kimlik burada gerekceli olmali,
+# (b) buradaki her kayit hala olculen bir olu kimlik olmali. Dal eklenip kimlik
+# basilirsa kayit bayatlar ve `make kapsam` kirmizi olur.
+OLU_KIMLIK = {
+    ('ATLAS_SABLONLAR/scripts/oztest_attest.py', 'OZT-04'):
+        'Kaldirilmis sayac kurali. Baslikta yalniz "OZT-04 NICIN YOK" '
+        'aciklamasi olarak gecer; kodda bu kimligi basan dal yok. Kimlik '
+        'sayisi dususu zaten OZT-02 ile yakalanir.',
+    ('KOD_SABLONLAR/scripts/api_surface.py', 'API-03'):
+        'Baslikta "imza degismis (parametre/donus) [P0]" diye bildirilir '
+        'ama api_surface yalniz kayip imza (API-02) ve regex adayi (API-04) '
+        'dallarini uygular; imza degisimi karsilastirmasi kodda yok.',
+    ('KOD_SABLONLAR/scripts/dep_audit.py', 'DEP-02'):
+        'Baslikta "Manifestteki paket kilitte yok [P0]" diye bildirilir ama '
+        'dep_audit kodunda kilit paketlerini manifestle karsilastiran dal yok; '
+        'yalniz DEP-01/03/04/05/06 dallari uygulanir.',
+    ('KOD_SABLONLAR/scripts/secret_scan.py', 'SEC-04'):
+        'Baslikta "Ikili/kilit dosyasi atlandi [bilgi]" diye bildirilir ama '
+        'hiçbir dal bu kimligi basmiyor; atlanan dosyalar yalniz sayilir, '
+        'kimlikli BILGI satiri uretilmez.',
 }
+# Kolaylik: kimlik -> (betik, gerekce). RISK tablosu kimlikle arar.
+OLU_KIMLIKLER = {k: (b, g) for (b, k), g in OLU_KIMLIK.items()}
 
-# Bu betiklerdeki mevcut kapsam-disi kurallar tabandir. Ayni betige YENI bir
-# kural eklenirse script gerekcesi otomatik olarak ona da uygulanmaz; yeni
-# kural ya mutasyon vakasi ya asagidaki KAPSAM_ISTISNA kaydi ister.
-TABAN_KAPSAM_DISI = frozenset({
-    ('ATLAS_SABLONLAR/scripts/oztest_attest.py', 'OZT-04'),
-    ('KOD_SABLONLAR/scripts/api_surface.py', 'API-03'),
-    ('KOD_SABLONLAR/scripts/dep_audit.py', 'DEP-02'),
-    ('KOD_SABLONLAR/scripts/secret_scan.py', 'SEC-04'),
-})
+# Betik duzeyinde kapsam-disi gerekce. OLCULDU: bos — dort kapsam-disi kaydin
+# hepsi OLU_KIMLIK sinifina tasindi cunku hicbiri kodda basilmiyor.
+KAPSAM_DISI = {}
+TABAN_KAPSAM_DISI = frozenset()
 
 # Yeni bir kural gercekten test edilemiyorsa gerekcesi buraya ACIKCA yazilir:
 #   ('KOD_SABLONLAR/scripts/ornek.py', 'ORN-07'): 'olculmus gerekce',
@@ -309,11 +314,20 @@ def risk_tablosu(satirlar):
     betik = {k: b.split('/')[-1] for b, k, _v, _d, _g in satirlar}
     if len(RISK_SIRASI) != 50 or len({r for r, _g in RISK_SIRASI}) != 50:
         raise SystemExit('RISK_SIRASI 50 tekil kural icermeli')
-    eksik = [r for r, _g in RISK_SIRASI if r not in durum]
+    # Envanter disi olan (olu kimlik) risk satirlari da tabloda kalir: risk
+    # listesi envanter degildir, "bu kural uygulanmiyor" bilgisi kaybolmasin.
+    eksik = [r for r, _g in RISK_SIRASI
+             if r not in durum and r not in OLU_KIMLIKLER]
     if eksik:
         raise SystemExit('RISK_SIRASI envanterde yok: %s' % ', '.join(eksik))
     out = ['| # | Kural | Betik | Grup | Durum | Gerekce |', '|---|---|---|---|---|---|']
     for i, (kural, grup) in enumerate(RISK_SIRASI, 1):
+        if kural in OLU_KIMLIKLER:
+            _betik, _gerekce = OLU_KIMLIKLER[kural]
+            out.append('| %d | %s | `%s` | %s | ENVANTER DISI (olu kimlik) | %s |'
+                       % (i, kural, _betik.split('/')[-1],
+                          RISK_GRUPLARI[grup], _gerekce))
+            continue
         _durum = durum[kural]
         if _durum == 'TEST EDILDI' and kural in RISK_EKLENEN:
             _durum = 'TEST EDILDI (%s)' % KAPSAM_TARIHI
@@ -338,12 +352,11 @@ def kapi_betikleri():
                 yield p
 
 
-def _kimlikler(p):
-    """(satir basi bildirimleri, bolum basligi kimlikleri) — TUM dosya.
+def _ham_kimlikler(p):
+    """Dosyadaki TUM satir basi/bolum bildirimleri — hicbir filtre yok.
 
     Eski surum yalniz ilk 100 satiri okuyordu; FRZ-08 114. satirdaki bolum
-    basliginda kaldigi icin envanterde hic gorunmuyordu. Artik sinir yok.
-    Baska kurala/karara yapilan atiflar `REFERANS` ile ayiklanir; ornek DEC-027.
+    basliginda kaldigi icin envanterde hic gorunmiyordu. Artik sinir yok.
     """
     baslik, bolum = set(), set()
     for satir in p.read_text(encoding='utf-8').splitlines():
@@ -353,12 +366,133 @@ def _kimlikler(p):
         m = BOLUM.match(satir)
         if m and m.group(1).split('-')[0] not in YOKSAY_PREFIX:
             bolum.add(m.group(1))
+    return baslik, bolum
+
+
+def _kimlikler(p):
+    """ENVANTERE GIREN kimlikler: ham bildirimler eksi REFERANS ve OLU_KIMLIK.
+
+    Baska kurala/karara yapilan atiflar (`REFERANS`, or. DEC-027) ve hicbir kod
+    dalinda basılmayan bildirimler (`OLU_KIMLIK`) kural sayilmaz.
+    """
+    baslik, bolum = _ham_kimlikler(p)
     yol = str(p.relative_to(KOK))
     for (ref_yol, ref_kimlik) in REFERANS:
         if ref_yol == yol:
             baslik.discard(ref_kimlik)
             bolum.discard(ref_kimlik)
+    for (olu_yol, olu_kimlik) in OLU_KIMLIK:
+        if olu_yol == yol:
+            baslik.discard(olu_kimlik)
+            bolum.discard(olu_kimlik)
     return baslik, bolum
+
+
+def _kod_sabitleri(metin):
+    """Docstring DISINDAKI string sabitleri (sirayla)."""
+    import ast
+    agac = ast.parse(metin)
+    docstringler = set()
+    for dugum in ast.walk(agac):
+        if isinstance(dugum, (ast.Module, ast.FunctionDef,
+                              ast.AsyncFunctionDef, ast.ClassDef)):
+            govde = dugum.body
+            if (govde and isinstance(govde[0], ast.Expr)
+                    and isinstance(govde[0].value, ast.Constant)
+                    and isinstance(govde[0].value.value, str)):
+                docstringler.add(id(govde[0].value))
+    return [d.value for d in ast.walk(agac)
+            if isinstance(d, ast.Constant) and isinstance(d.value, str)
+            and id(d) not in docstringler]
+
+
+def kodda_akan_kimlikler(p):
+    """Kimliklerin kodda STRING SABITI olarak aktigi kume (docstring haric).
+
+    "Basılıyor" olcutu budur: docstring'de anlatilan bir kimlik de, yalniz
+    yorumda gecen bir kimlik de hicbir dala bagli degildir; cikti uretemez.
+    Kod icinde `"kural": "DEP-02"` ya da `f"FAIL SEC-00: ..."` gibi bir sabit
+    varsa kimlik en az bir dalda basilabilir demektir.
+    """
+    kume = set()
+    for sabit in _kod_sabitleri(p.read_text(encoding='utf-8')):
+        kume.update(KURAL_ARAMA.findall(sabit))
+    return kume
+
+
+def bulgu_etiketi_mi(sabit, kimlik):
+    """Sabit, kimligi BULGU/hukum etiketi olarak mi tasiyor?
+
+    Bir kapi kurali bulgu sozlugunde (`"kural": "FRZ-08"`) ya da satir basinda
+    siddetle (`FAIL X-01 ...`, `BILGI SEC-05 ...`) basilir. Yalniz `[DEC-027]
+    muaf bolum sayisi` gibi bilgi etiketi olarak gecen kimlik kural degildir.
+    """
+    if kimlik not in sabit:
+        return False
+    if '"kural"' in sabit or "'kural'" in sabit:
+        return True
+    return bool(re.match(r'\s*(?:FAIL|KALDI|BILGI|UYARI|P0|P1)\b', sabit))
+
+
+def olu_kimlik_olc():
+    """Tum kapi betikleri: bildirilen ama kodda basilmayan kimlikler.
+
+    REFERANS kayitlari burada da disarida tutulur: DEC-027 bir karar kimligidir,
+    "olu kural" degildir; iki sinif ayri raporlanir.
+    """
+    sonuc = {}
+    for p in kapi_betikleri():
+        yol = str(p.relative_to(KOK))
+        baslik, bolum = _ham_kimlikler(p)
+        akan = kodda_akan_kimlikler(p)
+        for kimlik in sorted((baslik | bolum) - akan):
+            if (yol, kimlik) in REFERANS:
+                continue
+            sonuc[(yol, kimlik)] = 'bildirim var, kodda string sabiti yok'
+    return sonuc
+
+
+def olu_kimlik_dogrula():
+    """Iki yonlu fail-closed: gerekcesiz olu kimlik ve bayat gerekce yok."""
+    olculen = olu_kimlik_olc()
+    gerekcesiz = sorted(set(olculen) - set(OLU_KIMLIK))
+    if gerekcesiz:
+        raise SystemExit(
+            'OLU KIMLIK: gerekcesiz kayit %s; OLU_KIMLIK sozlugune (betik, '
+            'kimlik) ve gerekce ekleyin'
+            % ', '.join('%s·%s' % (b.split('/')[-1], k) for b, k in gerekcesiz))
+    bayat = sorted(set(OLU_KIMLIK) - set(olculen))
+    if bayat:
+        raise SystemExit(
+            'OLU KIMLIK: gerekce bayat %s; ya dal eklendi (kaydi silin, kural '
+            'envantere doner) ya da kimlik artik bildirilmiyor'
+            % ', '.join('%s·%s' % (b.split('/')[-1], k) for b, k in bayat))
+    for (betik, kimlik), gerekce in sorted(OLU_KIMLIK.items()):
+        if not isinstance(gerekce, str) or len(gerekce.strip()) < 40:
+            raise SystemExit(
+                'OLU KIMLIK: gerekce cok kisa: %s·%s' % (betik, kimlik))
+    # Dis referanslar da iki yonlu: her REFERANS hala ham bildirimde olmali.
+    ham = {}
+    for p in kapi_betikleri():
+        b, bl = _ham_kimlikler(p)
+        ham[str(p.relative_to(KOK))] = b | bl
+    for (betik, kimlik) in sorted(REFERANS):
+        if kimlik not in ham.get(betik, set()):
+            raise SystemExit(
+                'REFERANS: bayat kayit %s·%s; betikte bu kimlik artik yok'
+                % (betik.split('/')[-1], kimlik))
+        # Referans, uygulanan kurala donusmemis olmali: bulgu etiketi olarak
+        # basiliyorsa artik kuraldir ve envantere girmelidir.
+        for sabit in _kod_sabitleri((KOK / betik).read_text(encoding='utf-8')):
+            if bulgu_etiketi_mi(sabit, kimlik):
+                raise SystemExit(
+                    'REFERANS: %s artik bulgu etiketi olarak basiliyor '
+                    '(%s); kaydi silin, kural envantere girmeli'
+                    % (kimlik, sabit.strip()[:80]))
+        if not isinstance(REFERANS[(betik, kimlik)], str) \
+                or len(REFERANS[(betik, kimlik)].strip()) < 40:
+            raise SystemExit(
+                'REFERANS: gerekce cok kisa: %s·%s' % (betik, kimlik))
 
 
 def kod_ici_sinifla(yol, kimlik):
@@ -462,6 +596,72 @@ def tarama_oztest():
     orta = '# bkz. (DEC-027) kapsaminda degerlendirilir'
     if KURAL.match(orta) or BOLUM.match(orta):
         raise SystemExit('TARAMA OZTEST: FAIL — satir ortasi atif kural sayildi')
+
+
+def olu_kimlik_oztest():
+    """Olcum mekanizmasinin kendisini sentetik kaynakla sınar.
+
+    Uc olcum: (a) docstring'deki kimlik "basılıyor" saymaz, (b) yorumdaki
+    kimlik saymaz, (c) bulgu sozlugundeki kimlik basılıyor sayar. Ayrica iki
+    yonlu fail-closed: gerekcesiz olu kimlik ve bayat gerekce kirmizi olur.
+    """
+    kaynak = (
+        '"""Fikstur.\n\nKURALLAR\n  ORN-01  docstring' + 'te anlatilan kural\n"""\n'
+        '# ORN-02 yalniz yorumda gecer\n'
+        'def f():\n'
+        '    """ORN-03 fonksiyon docstring' + 'i"""\n'
+        '    bulgular = [{"kural": "ORN-04", "siddet": "P0"}]\n'
+        '    return bulgular\n')
+    akan = set()
+    for sabit in _kod_sabitleri(kaynak):
+        akan.update(KURAL_ARAMA.findall(sabit))
+    if 'ORN-01' in akan or 'ORN-03' in akan:
+        raise SystemExit('OLU KIMLIK OZTEST: docstring kimligi basilmiş sayildi')
+    if 'ORN-02' in akan:
+        raise SystemExit('OLU KIMLIK OZTEST: yorum kimligi basilmiş sayildi')
+    if 'ORN-04' not in akan:
+        raise SystemExit('OLU KIMLIK OZTEST: bulgu sozlugu kimligi gorulmedi')
+
+    # Referans sinifi: bilgi etiketi kural degil, bulgu etiketi kuraldir.
+    if bulgu_etiketi_mi('[DEC-027] muaf bolum sayisi: 1', 'DEC-027'):
+        raise SystemExit('OLU KIMLIK OZTEST: bilgi etiketi kural sayildi')
+    if not bulgu_etiketi_mi('{"kural": "DEC-027", "siddet": "P0"}', 'DEC-027'):
+        raise SystemExit('OLU KIMLIK OZTEST: bulgu etiketi kural sayilmadi')
+
+    # Iki yonlu fail-closed: gercek listeyi gecici bozarak olc.
+    yedek = dict(OLU_KIMLIK)
+    try:
+        anahtar = sorted(OLU_KIMLIK)[0]
+        OLU_KIMLIK.pop(anahtar)
+        OLU_KIMLIKLER.pop(anahtar[1], None)
+        try:
+            olu_kimlik_dogrula()
+        except SystemExit as exc:
+            if 'gerekcesiz kayit' not in str(exc):
+                raise
+        else:
+            raise SystemExit('OLU KIMLIK OZTEST: gerekcesiz olu kimlik gecTI')
+    finally:
+        OLU_KIMLIK.clear()
+        OLU_KIMLIK.update(yedek)
+        OLU_KIMLIKLER.clear()
+        OLU_KIMLIKLER.update({k: (b, g) for (b, k), g in yedek.items()})
+
+    yedek = dict(OLU_KIMLIK)
+    try:
+        OLU_KIMLIK[('KOD_SABLONLAR/scripts/secret_scan.py', 'SEC-99')] = (
+            'uydurma kayit; olcumde boyle bir bildirim yok, bayat gerekce '
+            'fail-closed yakalamali')
+        try:
+            olu_kimlik_dogrula()
+        except SystemExit as exc:
+            if 'gerekce bayat' not in str(exc):
+                raise
+        else:
+            raise SystemExit('OLU KIMLIK OZTEST: bayat gerekce gecTI')
+    finally:
+        OLU_KIMLIK.clear()
+        OLU_KIMLIK.update(yedek)
 
 
 def kod_ici_kimlikler():
@@ -695,6 +895,31 @@ def ratchet_oztest():
         raise SystemExit('KAPSAM RATCHET OZTEST: bosluk artisi yakalanmadi')
 
 
+def olu_kimlik_tablosu():
+    """Envanter disi kimlikler: her satir olculmus gerekce tasir."""
+    olculen = olu_kimlik_olc()
+    out = ['| Betik | Kimlik | Olcum | Gerekce |', '|---|---|---|---|']
+    for (betik, kimlik) in sorted(OLU_KIMLIK):
+        durum = ('kodda basilmiyor' if (betik, kimlik) in olculen
+                 else 'OLCULMEDI')
+        out.append('| `%s` | %s | %s | %s |'
+                   % (betik.split('/')[-1], kimlik, durum,
+                      OLU_KIMLIK[(betik, kimlik)]))
+    out += ['', 'Toplam envanter disi kimlik: **%d**; her biri i\u00e7in ölçüm '
+            '`tools/kapsam.py --oztest` ile her ko\u015fuda yeniden alinir.'
+            % len(OLU_KIMLIK)]
+    if REFERANS:
+        out += ['', '## Envanter disi dis referanslar', '',
+                'Baska bir kurala/karara yapilan atiflar kural sayilmaz; her biri '
+                'gerekceli ve iki yonlu dogrulanir.', '',
+                '| Betik | Kimlik | Gerekce |', '|---|---|---|']
+        for (betik, kimlik) in sorted(REFERANS):
+            out.append('| `%s` | %s | %s |'
+                       % (betik.split('/')[-1], kimlik, REFERANS[(betik, kimlik)]))
+        out += ['', 'Toplam envanter disi dis referans: **%d**.' % len(REFERANS)]
+    return out
+
+
 def sinif_tablosu(satirlar):
     siniflar = {}
     for betik, k, _v, durum, gerekce in satirlar:
@@ -784,7 +1009,10 @@ def markdown():
            '| Olcum | Deger |', '|---|---|',
            '| Taranan betik | %d |' % len(envan),
            '| Kural bildiren betik | %d |' % sum(1 for v in envan.values() if v),
-           '| Bildirilen kural | %d |' % len(satirlar),
+           '| Bildirilen kural (envanter) | %d |' % len(satirlar),
+           '| — envanter disi: olu kimlik (bildirilir, basilMAZ) | %d |'
+           % len(OLU_KIMLIK),
+           '| — envanter disi: dis referans | %d |' % len(REFERANS),
            '| Kod icinde uretilen, envantere alinmayan kimlik | %d |' % len(kod_ici),
            '| Batarya vakasi (toplam) | %d |' % toplam_vaka,
            '| — atesleyen (HATA + TERMINAL) | %d |' % atesleyen_vaka,
@@ -853,10 +1081,23 @@ def markdown():
                 % KAPSAM_TARIHI,
                 'gercek bir mutasyon vakasiyla kapatildi; %d beklenen-bulgu vakasi' % beklenen_bulgu,
                 'uyari modunda, digerleri kirmizi/terminal hukumle dogrulandi.', '']
-    out += ['', '## Kapsam disi siniflari', '',
-            'Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir',
-            '(asagida betik adiyla birlikte yazili).', '']
-    out += sinif_tablosu(satirlar)
+    out += ['', '## Envanter disi kimlikler', '',
+            'Asagidaki kimlikler satir basinda veya `# --- KIMLIK` bolum '
+            'basliginda **bildirilir** ama betigin hicbir kod dalinda '
+            '**basilmaz**. Bir hukum uretmedikleri icin kural degildirler: '
+            'mutasyonla ateslenemezler ve envantere katilirlarsa "kapsanan '
+            'kural" sayisini sisirirler. Bu yuzden sayilmazlar; gerekceleri '
+            'asagida satir satir durur.', '',
+            'Olcum yontemi: her kapi betigi AST ile gezilir; kimlik docstring '
+            'DISINDA bir string sabiti olarak kodda akiyorsa basilabilir '
+            'sayilir. Yeni bir olu kimlik gerekcesiz belirirse ya da bir dal '
+            'eklenip kimlik basilirsa `make kapsam` fail-closed durur.', '']
+    out += olu_kimlik_tablosu()
+    if disi:
+        out += ['', '## Kapsam disi siniflari', '',
+                'Gerekceler tahmin degil; her satir betigin kodundaki '
+                'bagimliliga dayanir (asagida betik adiyla birlikte yazili).', '']
+        out += sinif_tablosu(satirlar)
     out += ['', '## Kod icinde uretilen kimlikler', '',
             'Asagidaki kimlikler `KURALLAR` basliginda veya `# --- KIMLIK`',
             'bolum basliginda bildirilmez; betik kodu tarafindan string literal',
@@ -918,6 +1159,8 @@ def json_rapor():
             sozlesme_oztest()
             ratchet_oztest()
             tarama_oztest()
+            olu_kimlik_oztest()
+            olu_kimlik_dogrula()
     except SystemExit:
         oztest_gecti = False
     satirlar, envan, (test, disi, bosluk, oz_anilan, beklenen) = olc()
@@ -947,6 +1190,12 @@ def json_rapor():
         kapi_cikti.kontrol('KAPSAM.bildirilen', 'bildirilen kural',
                            'PASS', deger=str(bildirilen),
                            ham='bildirilen=%d' % bildirilen),
+        kapi_cikti.kontrol('KAPSAM.olu_kimlik', 'envanter disi olu kimlik',
+                           'PASS', deger=str(len(OLU_KIMLIK)),
+                           ham='olu_kimlik=%d' % len(OLU_KIMLIK)),
+        kapi_cikti.kontrol('KAPSAM.referans', 'envanter disi dis referans',
+                           'PASS', deger=str(len(REFERANS)),
+                           ham='referans=%d' % len(REFERANS)),
         kapi_cikti.kontrol('KAPSAM.kapsam_disi', 'gerekceli kapsam disi',
                            'PASS', deger=str(disi),
                            ham='kapsam_disi=%d' % disi),
@@ -986,8 +1235,11 @@ def main(argv):
         sozlesme_oztest()
         ratchet_oztest()
         tarama_oztest()
+        olu_kimlik_oztest()
+        olu_kimlik_dogrula()
         print('KAPSAM OZTEST: PASS — kimlik fail-closed · sozlesme ayrik · '
-              'ratchet iki yonlu · FRZ-08 >100 · DEC-027 referans')
+              'ratchet iki yonlu · FRZ-08 >100 · DEC-027 referans · '
+              'olu kimlik %d gerekceli' % len(OLU_KIMLIK))
         return 0
     if '--kontrol' in argv or '--yaz' in argv:
         kod_ici_oztest()
@@ -999,6 +1251,10 @@ def main(argv):
               % (TABAN_TEST_EDILEN, TABAN_BOSLUK_SAYISI))
         tarama_oztest()
         print('TARAMA OZTEST: PASS — >100 kural bulunur · dis referans sayilmaz')
+        olu_kimlik_oztest()
+        olu_kimlik_dogrula()
+        print('OLU KIMLIK: PASS — %d envanter disi kimlik · hepsi olculen ve '
+              'gerekceli · %d dis referans' % (len(OLU_KIMLIK), len(REFERANS)))
     satirlar, _envan, (test, _disi, bosluk, _ozanilan, _beklenen_test) = olc()
     yeni, geri, test_eksik, bosluk_fazla = ratchet(satirlar)
     if '--kontrol' in argv or '--yaz' in argv:
