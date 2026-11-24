@@ -197,3 +197,23 @@ jobs:
       # yayilanamaz. FAIL satiri hangi beyanin hangi kaynakla uyusmadigini basar.
       - name: make iddia
         run: make iddia
+
+  # Haftalik public parite: public klonda ozel lab yoktur; ayni agac
+  # kendisiyle karsilastirilir. `yayinla.py` kuru kosusu sifir fark
+  # vermezse (rc=1) adim kirmizi olur. Manifest denetimi `dogrula`
+  # isinde ayrica kosar; bu is yalniz yayin kapsami/aktarim listesi
+  # uyusmazligini haftalik olarak olcer.
+  yayin-parite:
+    name: yayin paritesi (haftalik)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Public = mekanizma (kuru kosu)
+        run: python3 tools/yayinla.py --lab .
