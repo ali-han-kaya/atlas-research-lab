@@ -71,7 +71,7 @@
       },
       {
         "desen": "planda=218 · yeni=0 · degisen=0 · ayni=218 · silinecek=0",
-        "neden": "ozel lab calisma kopyasiyla tarihli parite olcumu (2026-11-23); public agacta yeniden olculemez, kaynagi tools/yayinla.py --liste"
+        "neden": "TARIHILI kayit (2026-11-23, commit bdf411a): o gun plan 218 dosyaydi; I6 geregi tarihsel sayi degistirilmez. Bugunku plan bu istisnadan BAGIMSIZ olarak olculur (docs/EN/QUICKSTART.md alintisi, `tools/yayinla.py --lab .` ile planda=219) — istisna guncel plani affetmez"
       },
       {
         "desen": "43 dosyada attestation",
