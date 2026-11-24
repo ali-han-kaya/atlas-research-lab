@@ -1,5 +1,5 @@
 {
-  "commit": "81f2333431b06eef49a2d20b6ff114519904a959",
+  "commit": "2e777b2ed893f04ef9ac8e38781e02b730c91b3f",
   "file_count": 278,
   "files": [
     {
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "edcb0c293bf8b26d297d8a6130dab8e740d48a1ddb6051362de89a6939b28dab",
-      "size": 9335
+      "sha256": "203b6a6f2e664e83dac1b97338773b83fc49045448e716de8910fc34c7a6dfbe",
+      "size": 9476
     },
     {
       "mode": "100644",
@@ -1671,7 +1671,7 @@
       "size": 14586
     }
   ],
-  "generated_at": "2026-11-24T07:48:22Z",
+  "generated_at": "2026-11-24T07:58:56Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1686,6 +1686,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "9a094de804bea28d4dcde4ec6ea39240470f355c",
-  "tree_sha256": "d49b861aa9b69256e052804e38126281e442fe98c950403a182f9a8fc4185fb1"
+  "tree": "4dc81bca5c995a4939388813083ed51e02e2459e",
+  "tree_sha256": "ee73a47b0440d954debb60d762532f9daa5434a30347e1936019c8ab45a48dfe"
 }
