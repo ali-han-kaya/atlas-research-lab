@@ -1,6 +1,6 @@
 {
-  "commit": "ff321aaaa1fa77cd228621f3260cadb6b25dd014",
-  "file_count": 276,
+  "commit": "d4f6ef1f3f1c5f9db69e6078ac1477ee5a158ef3",
+  "file_count": 277,
   "files": [
     {
       "mode": "100755",
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "ed6bb37cce755b079e68c38602c616ac4e61a2586075896bd7059ac44a41a35e",
-      "size": 8809
+      "sha256": "7455b33dc3a6ec5711c0d84181cd5f63c1fb0ab3b8cc60f9eabe3f1bdf525676",
+      "size": 9083
     },
     {
       "mode": "100644",
@@ -1163,8 +1163,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "da86646a84b11237c5ad30e30bf60ca2ba9572f972e05fb980d560c663e4f019",
-      "size": 5617
+      "sha256": "ab940262e6c95a64af8ed79b66bd16e2317aeb5b866440d6fb9caac73597ea17",
+      "size": 6010
     },
     {
       "mode": "100644",
@@ -1583,8 +1583,8 @@
     {
       "mode": "100644",
       "path": "tools/mutasyon_bataryasi.py",
-      "sha256": "3e2340041991092d27460720acc20a25186c39c9613fa0f456807c8258d68f27",
-      "size": 90177
+      "sha256": "a158d9bd81297841428c5ce7637c796db2aabd1f04bddec098d6082e3f108b62",
+      "size": 90974
     },
     {
       "mode": "100644",
@@ -1636,6 +1636,12 @@
     },
     {
       "mode": "100644",
+      "path": "tools/taze_klon.py",
+      "sha256": "aaa8f9042a3e353d03411c093f62d8901f59d234745a87f2f4d492b68872f618",
+      "size": 7678
+    },
+    {
+      "mode": "100644",
       "path": "tools/temiz_teslim_selftest.py",
       "sha256": "80853a7d638d12fe07c167de73c75dd27d4c7a71f59a2dcdbe44f7cdac963a93",
       "size": 9048
@@ -1659,7 +1665,7 @@
       "size": 14586
     }
   ],
-  "generated_at": "2026-11-24T04:57:51Z",
+  "generated_at": "2026-11-24T05:07:11Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1674,6 +1680,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "184a999291a9035d06aa6043b9ef0204db25cf10",
-  "tree_sha256": "b88a758f986378267bbc78b8cc57ca177c014bcd82d09e88820bb2ebc5a6fd47"
+  "tree": "c8f3a741010a9223647c92b6051f6d4857f78d59",
+  "tree_sha256": "8acf12701fd06e39d82aa1888d155d2ee3670acc3de63d52259aaaf52ea48649"
 }
