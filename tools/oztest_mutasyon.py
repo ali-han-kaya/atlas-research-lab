@@ -44,6 +44,7 @@ KANIT = KOK / "tools" / "oztest_mutasyon_kaniti.json"
 SEMA = "OZTEST-MUTASYON/v1"
 ATLAS_SELFTEST = "ATLAS_SABLONLAR/scripts/atlas_selftest.py"
 KOD_SELFTEST = "KOD_SABLONLAR/scripts/kod_selftest.py"
+V4_SELFTEST = "KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_selftest.py"
 
 # Her vaka: hedef kapi, hedef test kimligi ve kaynakta TEK kez gecen mutasyon.
 # `eski`/`yeni` gercek kaynak metnidir; biri bir kez bulunmazsa arac durur.
@@ -123,7 +124,7 @@ VAKALAR = [
     },
 ]
 
-TEST_CAGRI = {"kontrol": (0, 2, 3), "sina": (0, 1, 2)}
+TEST_CAGRI = {"kontrol": (0, 2, 3), "sina": (0, 1, 2), "check": (0, 2, 3)}
 ATLAMA_IZI = ("atlandi", "atlanmis", "calistirilmadi", "skip")
 TEST_DOSYA = re.compile(r"(?:selftest|_test)\.py$", re.I)
 
@@ -194,9 +195,12 @@ def bos_govde_tara(metin, ad="<bellek>"):
             if adi not in TEST_CAGRI:
                 continue
             id_sira, kosul_sira, detay_sira = TEST_CAGRI[adi]
-            kimlik = _arg(dugum, id_sira, "kod" if adi == "kontrol" else "ad")
-            kosul = _arg(dugum, kosul_sira, "gecti" if adi == "kontrol" else "kosul")
-            detay = _arg(dugum, detay_sira, "detay" if adi == "kontrol" else "ayrinti")
+            kimlik = _arg(dugum, id_sira,
+                          {"kontrol": "kod", "sina": "ad", "check": "tid"}[adi])
+            kosul = _arg(dugum, kosul_sira,
+                         {"kontrol": "gecti", "sina": "kosul", "check": "ok"}[adi])
+            detay = _arg(dugum, detay_sira,
+                         {"kontrol": "detay", "sina": "ayrinti", "check": "detail"}[adi])
             sabit, deger = _sabit_deger(kosul)
             if not sabit or not bool(deger):
                 continue
@@ -228,7 +232,7 @@ def bos_govde_tara(metin, ad="<bellek>"):
 
 
 def _selftest_dosyalari():
-    yollar = [KOK / ATLAS_SELFTEST, KOK / KOD_SELFTEST]
+    yollar = [KOK / ATLAS_SELFTEST, KOK / KOD_SELFTEST, KOK / V4_SELFTEST]
     yollar += sorted((KOK / "tools").glob("*selftest*.py"))
     return [p for p in yollar if p.is_file()]
 
@@ -272,7 +276,7 @@ def _git(*args):
 
 def _temiz_kaynak():
     """Test edilen dosyalar HEAD ile ayni mi? Taban kirliligi YAYIN-1'i yakardi."""
-    yollar = [ATLAS_SELFTEST, KOD_SELFTEST] + sorted({v["kapi"] for v in VAKALAR})
+    yollar = [ATLAS_SELFTEST, KOD_SELFTEST, V4_SELFTEST] + sorted({v["kapi"] for v in VAKALAR})
     r = _git("status", "--porcelain", "--", *yollar)
     if r.returncode != 0:
         raise RuntimeError("git status: %s" % (r.stderr or r.stdout).strip()[:200])
@@ -406,7 +410,7 @@ def olc():
             ", ".join(v["test"] for v in vakalar)))
 
     kaynak = {}
-    for rel in [ATLAS_SELFTEST, KOD_SELFTEST] + sorted({v["kapi"] for v in VAKALAR}):
+    for rel in [ATLAS_SELFTEST, KOD_SELFTEST, V4_SELFTEST] + sorted({v["kapi"] for v in VAKALAR}):
         kaynak[rel] = _sha(KOK / rel)
     return {
         "sema": SEMA,

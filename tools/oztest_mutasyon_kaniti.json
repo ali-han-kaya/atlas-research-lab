@@ -3,6 +3,7 @@
   "kaynak": {
     "ATLAS_SABLONLAR/scripts/atlas_selftest.py": "a570e1cd4768dc776a9007762897c75c8cc3ac8b316635a53c6517286c2f9cc0",
     "KOD_SABLONLAR/scripts/kod_selftest.py": "73a5217b0688ef2d58e15c55d3fc730d7eb1d26b83e67ac811332e2a8889bda1",
+    "KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_selftest.py": "fb4bd36090041ba381504df0f2749e358f967503ac35f9e2b69fb5d9991d7125",
     "ATLAS_SABLONLAR/scripts/budget_guard.py": "75fa54f2345eaa5795ea7e80a4e95c24a59deabb3ba9a8f9034375dd37dc5d2e",
     "ATLAS_SABLONLAR/scripts/check_models.py": "5553264f3a45d52699e5dd67cabfdf052d3f0d827d8aad76afb9a1979eab6ce6",
     "ATLAS_SABLONLAR/scripts/prompt_lint.py": "ab383499e79573771bea321dcac62e45d278fb88a0a0e3ed9d8d0032d2f5c542",
@@ -91,8 +92,8 @@
     }
   ],
   "bos_govde": {
-    "taranan_dosya": 9,
-    "test_kaydi": 313,
+    "taranan_dosya": 10,
+    "test_kaydi": 358,
     "ihlal": 0,
     "bulgular": []
   },
