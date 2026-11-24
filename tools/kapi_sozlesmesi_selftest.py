@@ -72,16 +72,19 @@ def main():
     kontrol("uretilen zarf semayi gecer", gecerli, "" if gecerli else hata)
 
     def reddet(ad, mutasyon):
+        """Bozuk zarf Sözleşme hatasıyla reddedilmeli; başka tip kabul değil."""
         x = _gecerli()
         mutasyon(x)
+        reddedildi = False
+        ayrinti = "bozuk zarf kabul edildi"
         try:
             kapi_cikti.dogrula(x)
         except kapi_cikti.SozlesmeHatasi:
-            kontrol(ad, True)
+            reddedildi = True
+            ayrinti = ""
         except Exception as e:  # pragma: no cover - beklenmeyen tip
-            kontrol(ad, False, "%s: %s" % (type(e).__name__, e))
-        else:
-            kontrol(ad, False, "bozuk zarf kabul edildi")
+            ayrinti = "beklenmeyen tip %s: %s" % (type(e).__name__, e)
+        kontrol(ad, reddedildi, ayrinti)
 
     reddet("surum uyusmazligi reddedilir", lambda x: x.update(surum="2.0.0"))
     reddet("zorunlu kontroller alani reddedilir", lambda x: x.pop("kontroller"))
