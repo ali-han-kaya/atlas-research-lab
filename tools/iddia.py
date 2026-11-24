@@ -253,7 +253,7 @@ def denetle(defter):
 
 
 def _anlamli_desen(desen):
-    """Istisna deseni en az uc harf tasimali: `.*` ve `\d+` gibi genel
+    r"""Istisna deseni en az uc harf tasimali: `.*` ve `\d+` gibi genel
     desenler kapsami sessizce acamaz."""
     sade = re.sub(r'\\.', '', desen)
     sade = re.sub(r'\[[^\]]*\]', '', sade)
@@ -480,15 +480,22 @@ def denetle_olcum(defter, olcum, hizli=False):
 
 
 def _komut_calistir(argv):
+    """(rc, birlesik_metin, stdout) — kapı zarfı YALNIZ stdout'tan okunur.
+
+    Birlesik metin eski `ayikla` desenleri icin korunur; serbest metin
+    ayrıştırması uyari satirlarini da gorurdu. JSON zarfi ise stderr'e karisan
+    herhangi bir uyariyla bozulmamalidir (CI'da Python 3.12 bunu gosterdi).
+    """
     gercek = [sys.executable if a == '{py}' else a for a in argv]
     try:
         sonuc = subprocess.run(gercek, cwd=str(KOK), capture_output=True,
                                text=True, timeout=ZAMAN_ASIMI)
-        return (sonuc.returncode, (sonuc.stdout or '') + (sonuc.stderr or ''))
+        stdout = sonuc.stdout or ''
+        return (sonuc.returncode, stdout + (sonuc.stderr or ''), stdout)
     except subprocess.TimeoutExpired:
-        return (124, 'ZAMAN ASIMI (%d s)' % ZAMAN_ASIMI)
+        return (124, 'ZAMAN ASIMI (%d s)' % ZAMAN_ASIMI, '')
     except OSError as e:
-        return (125, 'KOSULAMADI: %s' % e)
+        return (125, 'KOSULAMADI: %s' % e, '')
 
 
 def komut_kos(argv, onbellek):
@@ -532,7 +539,7 @@ def _paralel_olc(komutlar, onbellek):
 
 def _taze_kapi(kayit, onbellek):
     """Sürümlü kapı zarfından tek kontrol değeri seç."""
-    rc, cikti = komut_kos(kayit['komut'], onbellek)
+    rc, _birlesik, cikti = komut_kos(kayit['komut'], onbellek)
     try:
         veri = kapi_cikti.oku(cikti)
         kid = kayit['kapi']['kontrol']
@@ -564,7 +571,7 @@ def taze(kayit, onbellek):
     """(gecti, deger, ayrinti, ham_satir, rc) — komut + desen/zarf + beklenen."""
     if kayit.get('kapi'):
         return _taze_kapi(kayit, onbellek)
-    rc, cikti = komut_kos(kayit['komut'], onbellek)
+    rc, cikti, _stdout = komut_kos(kayit['komut'], onbellek)
     eslesme = re.search(kayit['ayikla'], cikti)
     if not eslesme:
         son = cikti.strip().splitlines()[-1] if cikti.strip() else ''
