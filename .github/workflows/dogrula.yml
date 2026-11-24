@@ -100,7 +100,9 @@ jobs:
         run: make sir-mutasyon
 
       # Tablo elle yazilmaz; kapi envanteri degisip tablo bayatlarsa kirmizi.
-      - name: Mutasyon kapsami guncel mi
+      # Kapsam regresyon ratchet'i de bu adimdadir: test edilen kural 83'un
+      # altina duserse veya bosluk 0'in ustune cikarsa make kapsam rc=1 doner.
+      - name: Mutasyon kapsami ve regresyon ratchet
         run: make kapsam
 
       # Bulgular gizlenmez: her biri docs/GUVENLIK.md icinde adiyla listelenir;

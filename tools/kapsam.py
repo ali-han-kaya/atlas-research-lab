@@ -48,6 +48,11 @@ TABAN_BOSLUKLAR = frozenset({
     'TST-07', 'TST-08', 'TST-09', 'TST-10', 'TST-11', 'TST-12',
 })
 GUNCEL_IZINLI_BOSLUKLAR = frozenset()
+# Regresyon ratchet tabani: mevcut tabloda 83 kural atesleyen vakayla test
+# edilmis, bosluk 0'dir. Bu sayilar yalniz ARTABILIR; test edilen kural azalirsa
+# (or. bir kural yalniz beklenen-bulguya donerse) veya bosluk artarsa kirmizi.
+TABAN_TEST_EDILEN = 83
+TABAN_BOSLUK_SAYISI = 0
 
 # Kapsam disi gerekceleri BETIKLERIN GERCEK BAGIMLILIKLARINA dayanir:
 #   api_surface  : _KOSU/gate/BASELINE.json (KFAZ0 imza envanteri) yoksa CALISTIRILMADI
@@ -603,18 +608,44 @@ def olc():
 
 
 def ratchet(satirlar):
-    """(yeni bosluklar, taban boslugu geri donenler).
+    """(yeni bosluklar, geri donen taban bosluklari, test kaybi, bosluk artisi).
 
     23 tarihsel bosluk `3a6d09a` tabanidir; `4ebb2e9` ile hepsi kapatildi.
     Guncel izinli bosluk 0'dir: ne yeni kural ne de kapanmis bir taban kurali
-    test/istisna olmadan bosluga donebilir.
+    test/istisna olmadan bosluga donebilir. Ayrica test edilen kural sayisi
+    `TABAN_TEST_EDILEN`in altina, bosluk sayisi `TABAN_BOSLUK_SAYISI`nin
+    ustune cikamaz; test artisi ve bosluk azalisi serbesttir.
     """
     if len(TABAN_BOSLUKLAR) != 23:
         raise SystemExit('TABAN_BOSLUKLAR 23 tekil kural icermeli')
     bosluklar = [(b, k, g) for b, k, _v, d, g in satirlar if d == 'BOSLUK']
     yeni = [x for x in bosluklar if x[1] not in TABAN_BOSLUKLAR]
     geri = [x for x in bosluklar if x[1] in TABAN_BOSLUKLAR]
-    return yeni, geri
+    test = sum(1 for _b, _k, _v, d, _g in satirlar if d == 'TEST EDILDI')
+    test_eksik = max(0, TABAN_TEST_EDILEN - test)
+    bosluk_fazla = max(0, len(bosluklar) - TABAN_BOSLUK_SAYISI)
+    return yeni, geri, test_eksik, bosluk_fazla
+
+
+def ratchet_oztest():
+    """Taban sayilarinin iki yonde de gercekten kirmizi oldugunu sınar."""
+    temel = [('x.py', 'K-%03d' % i, 'v', 'TEST EDILDI', '')
+             for i in range(TABAN_TEST_EDILEN)]
+    yeni, geri, test_eksik, bosluk_fazla = ratchet(temel)
+    if yeni or geri or test_eksik or bosluk_fazla:
+        raise SystemExit('KAPSAM RATCHET OZTEST: temel taban temiz degil')
+    _y, _g, test_eksik, _b = ratchet(temel[:-1])
+    if test_eksik != 1:
+        raise SystemExit('KAPSAM RATCHET OZTEST: test kaybi yakalanmadi')
+    beklenen = temel[:-1] + [('x.py', 'K-%03d' % (TABAN_TEST_EDILEN - 1),
+                              'v', 'BEKLENEN BULGU', 'hedef bulgu')]
+    _y, _g, test_eksik, _b = ratchet(beklenen)
+    if test_eksik != 1:
+        raise SystemExit('KAPSAM RATCHET OZTEST: beklenen-bulguya donus yakalanmadi')
+    fazla = temel + [('x.py', 'YENI-BOSLUK', 'v', 'BOSLUK', 'yok')]
+    _y, _g, _t, bosluk_fazla = ratchet(fazla)
+    if bosluk_fazla != 1:
+        raise SystemExit('KAPSAM RATCHET OZTEST: bosluk artisi yakalanmadi')
 
 
 def sinif_tablosu(satirlar):
@@ -667,7 +698,7 @@ def rec_tablosu(vakalar):
 
 def markdown():
     satirlar, envan, (test, disi, bosluk, oz_anilan, beklenen_test) = olc()
-    yeni, geri = ratchet(satirlar)
+    yeni, geri, test_eksik, bosluk_fazla = ratchet(satirlar)
     kod_ici = kod_ici_kimlikler()
     mod = batarya_modu()
     vakalar = mod.vakalar()
@@ -722,6 +753,13 @@ def markdown():
            '| — hicbir testte gecmeyen | %d |' % (bosluk - oz_anilan),
            '| Kapsam ratchet tarihsel tabani | 23 |',
            '| Kapsam ratchet guncel tabani | %d |' % len(GUNCEL_IZINLI_BOSLUKLAR),
+           '| Test edilen kural tabani | %d |' % TABAN_TEST_EDILEN,
+           '| Test edilen kural (guncel) | %d |' % test,
+           '| Test edilen kural kaybi | %d |' % test_eksik,
+           '| Bosluk tabani | %d |' % TABAN_BOSLUK_SAYISI,
+           '| Bosluk artisi | %d |' % bosluk_fazla,
+           '| Kapsam regresyon ratchet | %s |' % (
+               'PASS' if not test_eksik and not bosluk_fazla else 'FAIL'),
            '| Yeni bosluk (test/istisna yok) | %d |' % len(yeni),
            '| Taban boslugu geri dondu | %d |' % len(geri),
            '| Kapsam ratchet | %s |' % ('PASS' if not yeni and not geri else 'FAIL'),
@@ -733,7 +771,11 @@ def markdown():
            'guncel izinli bosluk **%d**. Yeni bir kural icin test veya'
            % len(GUNCEL_IZINLI_BOSLUKLAR),
            '`KAPSAM_ISTISNA` gerekcesi yoksa `make kapsam` ve CI kirmizi olur.',
-           'Kapanmis bir taban kuralinin yeniden bosluga dusmesi de kirmizi olur.', '',
+           'Kapanmis bir taban kuralinin yeniden bosluga dusmesi de kirmizi olur.',
+           'Ayrica test edilen kural sayisi **%d** tabaninin altina veya bosluk'
+           % TABAN_TEST_EDILEN,
+           'sayisi **%d** tabaninin ustune cikarsa regresyon ratchet kirmizi olur.'
+           % TABAN_BOSLUK_SAYISI, '',
            '## Risk sirasi (50 kural)', '',
            '19.11.2026 envanterinde 51 kural vardi; `DEC-027` bir karar',
            'referansi olarak ayiklandi, kalan 50 kural risk sirasinda. Siralama',
@@ -826,12 +868,17 @@ def main(argv):
         print('KOD-ICI OZTEST: PASS — bilinmeyen kimlik fail-closed')
         sozlesme_oztest()
         print('SOZLESME OZTEST: PASS — HATA/TERMINAL/BEKLENEN_BULGU ayrik')
-    satirlar, _envan, _ozet = olc()
-    yeni, geri = ratchet(satirlar)
+        ratchet_oztest()
+        print('KAPSAM RATCHET OZTEST: PASS — test=%d, bosluk=%d'
+              % (TABAN_TEST_EDILEN, TABAN_BOSLUK_SAYISI))
+    satirlar, _envan, (test, _disi, bosluk, _ozanilan, _beklenen_test) = olc()
+    yeni, geri, test_eksik, bosluk_fazla = ratchet(satirlar)
     if '--kontrol' in argv or '--yaz' in argv:
-        if yeni or geri:
-            print('KAPSAM: FAIL — kapsam ratchet ihlali '
-                  '(yeni=%d, taban gerilemesi=%d)' % (len(yeni), len(geri)))
+        if yeni or geri or test_eksik or bosluk_fazla:
+            print('KAPSAM: FAIL — kapsam regresyon ratchet ihlali '
+                  '(yeni=%d, taban gerilemesi=%d, test kaybi=%d, '
+                  'bosluk artisi=%d)'
+                  % (len(yeni), len(geri), test_eksik, bosluk_fazla))
             for betik, kural, gerekce in yeni:
                 print('  YENI %s · %s — %s' % (kural, betik, gerekce))
             for betik, kural, gerekce in geri:
@@ -850,14 +897,18 @@ def main(argv):
             print('KAPSAM: docs/MUTASYON_KAPSAM.md guncel degil — `make kapsam-yaz`')
             return 1
         print('KAPSAM: guncel (%d satir) · ratchet PASS '
-              '(tarihsel taban=%d, guncel izinli=%d)'
-              % (len(metin.splitlines()), len(TABAN_BOSLUKLAR),
+              '(test=%d/%d, bosluk=%d/%d, tarihsel taban=%d, guncel izinli=%d)'
+              % (len(metin.splitlines()), test, TABAN_TEST_EDILEN,
+                 bosluk, TABAN_BOSLUK_SAYISI, len(TABAN_BOSLUKLAR),
                  len(GUNCEL_IZINLI_BOSLUKLAR)))
         return 0
     if '--yaz' in argv:
         HEDEF.parent.mkdir(parents=True, exist_ok=True)
         HEDEF.write_text(metin, encoding='utf-8')
-        print('KAPSAM: yazildi · %s · ratchet PASS' % HEDEF.relative_to(KOK))
+        print('KAPSAM: yazildi · %s · ratchet PASS '
+              '(test=%d/%d, bosluk=%d/%d)'
+              % (HEDEF.relative_to(KOK), test, TABAN_TEST_EDILEN,
+                 bosluk, TABAN_BOSLUK_SAYISI))
         return 0
     print(metin)
     return 0

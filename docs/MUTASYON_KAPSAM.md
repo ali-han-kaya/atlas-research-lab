@@ -52,6 +52,12 @@ otomatik uygulanmaz.
 | — hicbir testte gecmeyen | 0 |
 | Kapsam ratchet tarihsel tabani | 23 |
 | Kapsam ratchet guncel tabani | 0 |
+| Test edilen kural tabani | 83 |
+| Test edilen kural (guncel) | 83 |
+| Test edilen kural kaybi | 0 |
+| Bosluk tabani | 0 |
+| Bosluk artisi | 0 |
+| Kapsam regresyon ratchet | PASS |
 | Yeni bosluk (test/istisna yok) | 0 |
 | Taban boslugu geri dondu | 0 |
 | Kapsam ratchet | PASS |
@@ -63,6 +69,8 @@ ile bu 23 boslugun tamami gercek mutasyon vakasiyla kapatildi;
 guncel izinli bosluk **0**. Yeni bir kural icin test veya
 `KAPSAM_ISTISNA` gerekcesi yoksa `make kapsam` ve CI kirmizi olur.
 Kapanmis bir taban kuralinin yeniden bosluga dusmesi de kirmizi olur.
+Ayrica test edilen kural sayisi **83** tabaninin altina veya bosluk
+sayisi **0** tabaninin ustune cikarsa regresyon ratchet kirmizi olur.
 
 ## Risk sirasi (50 kural)
 
