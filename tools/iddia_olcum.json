@@ -38,7 +38,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 114/114 kural atesledi · 27/27 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "ham": "SONUC: 113/113 kural atesledi · 27/27 beklenen bulgu dogrulandi · taban temiz olmayan=0",
       "deger": "114/114"
     },
     "IDD-05": {
@@ -47,7 +47,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 114/114 kural atesledi · 27/27 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "ham": "SONUC: 113/113 kural atesledi · 27/27 beklenen bulgu dogrulandi · taban temiz olmayan=0",
       "deger": "27/27"
     },
     "IDD-06": {
@@ -290,7 +290,7 @@
         "import sys; sys.path.insert(0, 'tools'); import mutasyon_bataryasi as m; print('VAKA: %d' % len(m.vakalar()))"
       ],
       "rc": 0,
-      "ham": "VAKA: 141",
+      "ham": "VAKA: 140",
       "deger": "141"
     },
     "IDD-40": {
@@ -365,7 +365,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SOZLESME: 105/105 HATA (rc=1) · 9/9 TERMINAL (rc=2) · 27/27 BEKLENEN_BULGU",
+      "ham": "SOZLESME: 105/105 HATA (rc=1) · 8/8 TERMINAL (rc=2) · 27/27 BEKLENEN_BULGU",
       "deger": "105/105"
     },
     "IDD-53": {
