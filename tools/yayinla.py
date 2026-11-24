@@ -75,7 +75,7 @@ def opencode_artefakti(rel):
     return '.opencode' in parcalar[:-1] and parcalar[-1] in OPENCODE_ATLA
 
 # --- BU DEPONUN KENDI KATMANI (aktarimla silinmez/uzerine yazilmaz) ----------
-KORUNAN = {'README.md', 'LICENSE', 'Makefile', '.gitignore', 'docs/README.md',
+KORUNAN = {'SECURITY.md', 'README.md', 'LICENSE', 'Makefile', '.gitignore', 'docs/README.md',
            'docs/DURUM.md', 'docs/IDDIA-OZET.md',
            'docs/ATLAS-KISA-TUR.md', 'docs/YAYIN-SOZLESMESI.md',
            'docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl',
