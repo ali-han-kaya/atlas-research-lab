@@ -1,6 +1,6 @@
 {
-  "commit": "061721796057b88bd8a4d6fa20b458933d422657",
-  "file_count": 284,
+  "commit": "99cc5a3874592ce5cbef335cee5a3fcb50d2e694",
+  "file_count": 285,
   "files": [
     {
       "mode": "100755",
@@ -1264,6 +1264,12 @@
     },
     {
       "mode": "100644",
+      "path": "docs/DENETIM-2026-11-24-KAPSAM-DISI.md",
+      "sha256": "972e5274bb988b536e44193f98fb9d448f2ce82fe07ece5aaa94337788754fd6",
+      "size": 9718
+    },
+    {
+      "mode": "100644",
       "path": "docs/DENETIM_RAPORU_2026-08-30_v3_SIFIR_GOZLE.md",
       "sha256": "398f3e10b6e15089e055c70cbb134880bd8014e5e33126eff32dc5d0ee5054dc",
       "size": 21922
@@ -1697,8 +1703,8 @@
     {
       "mode": "100644",
       "path": "tools/yayin_manifest.json",
-      "sha256": "08e70209cfb6482ac34a46505999646cac5d3ccb3540191ac365f317da38bb96",
-      "size": 12925
+      "sha256": "70d888a69069309fb22a8824d9f77ea91dbff911ad0cf7117987533548ce5a54",
+      "size": 12971
     },
     {
       "mode": "100644",
@@ -1707,7 +1713,7 @@
       "size": 14681
     }
   ],
-  "generated_at": "2026-11-24T18:56:35Z",
+  "generated_at": "2026-11-24T19:37:29Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1722,6 +1728,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "5de760e907a8c9eb46fbee63ae6c4903f78c98c8",
-  "tree_sha256": "7b4149787a14762dab7e188450f5c1d74d7b0b1d613c893caabaf493da0ecdb5"
+  "tree": "a8b2e651858bcc140906ce37be824917e9e03afd",
+  "tree_sha256": "34eb84b470a2a098577cc0646752e052a1e768dade2486989909653d667a7325"
 }
