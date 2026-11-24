@@ -105,6 +105,12 @@ jobs:
       - name: Mutasyon kapsami ve regresyon ratchet
         run: make kapsam
 
+      # Gelistirme agacindaki .venv veya izlenmeyen bir dosya temiz klonda
+      # yoktur. Temiz klonda venv kurulur; demo rc=2, dogrula 8/8 ve kisa
+      # mutasyon seti PASS olmadan bu adim yesil donmez.
+      - name: Taze klon yeniden uretim
+        run: make taze-klon
+
       # Bulgular gizlenmez: her biri docs/GUVENLIK.md icinde adiyla listelenir;
       # listede olmayan yeni bulgu cikarsa adim kirmizi doner.
       - name: Bagimlilik denetimi (pip-audit)

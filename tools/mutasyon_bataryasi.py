@@ -16,7 +16,11 @@ NE OLCMEZ
   betiginin kendi kararidir; kapsam disi olan sey raporda yazilidir.
 
 KULLANIM
-  python3 tools/mutasyon_bataryasi.py [--ayrintili]
+  python3 tools/mutasyon_bataryasi.py [--ayrintili] [--kisa]
+
+  --kisa : tum batarya degil, HATA/TERMINAL/BEKLENEN_BULGU sozlesmelerini
+           temsil eden sabit 6 vakalik hizli duman setini kosar. Bu set tam
+           batarya yerine gecmez; taze-klon kurulum kontrolu icindir.
 
 CIKIS
   0  : butun vakalar sozlesmesini sagladi (taban sessiz; hata rc!=0 veya
@@ -38,6 +42,9 @@ KOK = Path(__file__).resolve().parents[1]
 # check_models sabit katalogu kullanir (ag/canli models.dev gerekmez).
 os.environ.setdefault('ATLAS_MODEL_KATALOG', str(KOK / 'tools' / 'mutasyon_katalog.json'))
 AYRINTILI = '--ayrintili' in sys.argv
+KISA = '--kisa' in sys.argv
+KISA_VAKALAR = ('KOD-SEC-02', 'ATLAS-PL-10', 'FRZ-08', 'FRZ-08-IMZA',
+                 'TST-06', 'PL-12')
 ATLA = shutil.ignore_patterns('.git', '__pycache__', 'node_modules', '.pytest_cache',
                               '.ruff_cache', '.mypy_cache', '.tox', '.venv', 'venv',
                               'build', 'dist', '.DS_Store')
@@ -1807,6 +1814,16 @@ def main():
     gecen_bulgu = 0
     satirlar = []
     tum = vakalar()
+    if KISA:
+        secili = [v for v in tum if v[0] in KISA_VAKALAR]
+        bulunan = {v[0] for v in secili}
+        eksik = [k for k in KISA_VAKALAR if k not in bulunan]
+        if eksik:
+            print('HUKUM: FAIL — kisa sette eksik vaka: %s' % ', '.join(eksik))
+            return 1
+        tum = secili
+        print('KISA SET: %d/%d vaka — %s' % (
+            len(tum), len(vakalar()), ', '.join(v[0] for v in tum)))
     sozlesmeler = [vaka_sozlesmesi(v)[0] for v in tum]
     hata_top = sozlesmeler.count(SOZLESME_HATA)
     terminal_top = sozlesmeler.count(SOZLESME_TERMINAL)
