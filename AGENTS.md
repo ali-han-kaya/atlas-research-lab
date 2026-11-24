@@ -60,6 +60,11 @@ başarısız/eksik test veya önceki koşuya göre sayı düşüşü kabul edilm
 
 ## 4. COMMIT DİSİPLİNİ — labın en pahalı hatası buydu
 Her mantıksal adım **ayrı commit** (I5). Pencere sonunda **ağaç temiz** bırakılır.
+Ağaç temizliği tek başına yetmez: `git status -sb` **`## main...origin/main`** göstermeli,
+yani commit'lenmiş iş **itilmiş** olmalı. 24.11.2026'da 42 commit bu yüzden GitHub'da
+hiç görünmedi; CI yalnız `push`ta koştuğu için o aralık hiç denetlenmedi ve kırmızı
+bir sözleşme hatası ancak itme sonrası ortaya çıktı. İtme sonrası `gh run list` ile
+son koşunun **success** olduğu doğrulanır; kırmızı koşu bitmiş sayılmaz.
 Commit'siz bırakılan iş, "kayıt gerçeğin gerisinde kalıyor" örüntüsünü yeniden başlatır — bu örüntünün
 gerçek zararı, yanlış bir Fatḥ al-Bārī sayfa numarasının dergiye gitmesiydi.
 Git kimliği yapılandırılmamış olabilir; global ayarı **değiştirme** (emanet), commit'te geç:
