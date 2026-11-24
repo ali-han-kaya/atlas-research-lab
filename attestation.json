@@ -1,5 +1,5 @@
 {
-  "commit": "8a8f34ded7dec846f0b2e9ad2445a30d026637cc",
+  "commit": "ff321aaaa1fa77cd228621f3260cadb6b25dd014",
   "file_count": 276,
   "files": [
     {
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "333f369eecfb37280d79ff2393eaf64ca6e16c6dde29b873cfe7c824b459a671",
-      "size": 8643
+      "sha256": "ed6bb37cce755b079e68c38602c616ac4e61a2586075896bd7059ac44a41a35e",
+      "size": 8809
     },
     {
       "mode": "100644",
@@ -1325,8 +1325,8 @@
     {
       "mode": "100644",
       "path": "docs/MUTASYON_KAPSAM.md",
-      "sha256": "2381467f925835fb704c7b07b643ea9b90d061f6f953185e76278a3cfc4e5b02",
-      "size": 32911
+      "sha256": "b123086597434c71ac1310a8eb85d7feda61838874e33903ff7543390aed6919",
+      "size": 33231
     },
     {
       "mode": "100644",
@@ -1535,8 +1535,8 @@
     {
       "mode": "100644",
       "path": "tools/kapsam.py",
-      "sha256": "923904f3ce7f34f082e627432b2cdfbac319b1ae1da437eaf6e710eec40fe399",
-      "size": 44423
+      "sha256": "d8bb53dbb9716ce3269b6d856347d7d63a5ccccc7de0ab47a714192b351af2ff",
+      "size": 47433
     },
     {
       "mode": "100644",
@@ -1659,7 +1659,7 @@
       "size": 14586
     }
   ],
-  "generated_at": "2026-11-24T04:45:10Z",
+  "generated_at": "2026-11-24T04:57:51Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1674,6 +1674,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "a7c8fd56a5b6eb6a8989a225f096c0337308c396",
-  "tree_sha256": "2069967daed2838fb9e87a6d0744c8c4b0b37e46d6ff2d1ab9e33e1ba857ad4e"
+  "tree": "184a999291a9035d06aa6043b9ef0204db25cf10",
+  "tree_sha256": "b88a758f986378267bbc78b8cc57ca177c014bcd82d09e88820bb2ebc5a6fd47"
 }
