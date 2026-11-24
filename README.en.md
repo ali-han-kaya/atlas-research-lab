@@ -21,7 +21,7 @@ BEKLENEN KIRMIZI — bu komut bilerek rc=1 doner.
 
 **8/8** gate checks · prior mutation baseline · **174/174** KOD self-tests.
 
-The mutation baseline above is historical. The current battery is **114/114** firing cases plus **27/27** expected findings over **117** verified rules: **93 firing-tested** and **24 expected-finding-only**; `make dogrula` reports **8/8**.
+The mutation baseline above is historical. The current battery is **113/113** firing cases plus **27/27** expected findings over **117** verified rules: **93 firing-tested** and **24 expected-finding-only**; `make dogrula` reports **8/8**.
 
 ATLAS ships the production mechanism itself — the academic audit and code pipelines, agents, templates, executable gates, self-tests and a mutation battery — and deliberately excludes the papers, corpora and session handoffs it produces. Its sharpest evidence is a frozen defective run (`DENEME/`): the fix manifest declared every fix applied while only a fraction reached the master text, and the gate of that day still said `PASS`; `./demo` reproduces that false `PASS` and returns a red verdict by design.
 

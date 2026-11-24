@@ -80,7 +80,7 @@ kopyasında çalışır ve iki sözleşmeden birini ölçer:
    mutasyon sonrası çıktıda görünmelidir.
 
 Temiz taban veya sözleşme eksikse vaka `ATESLEMEDI` / `TABAN_KIRIK` olarak raporlanır
-ve betik `rc=1` ile çıkar. Güncel katalog **141 vaka = 114 ateşleyen (105 HATA + 9 TERMINAL)
+ve betik `rc=1` ile çıkar. Güncel katalog **140 vaka = 113 ateşleyen (105 HATA + 8 TERMINAL)
 + 27 beklenen-bulgu**; 117 doğrulanan kuralın 93'ü ateşleyen vakayla, 24'ü yalnız
 beklenen-bulgu sözleşmesiyle kapsanır. Ölçülen kurallar ve katmanları çıktıda ada basmadır.
 

@@ -60,8 +60,8 @@ after-mutation contract holds. A green baseline alone is not enough; a marker
 in the baseline fails the case before the mutation is even evaluated.
 
 ```text
-SONUC: 114/114 kural atesledi · 27/27 beklenen bulgu dogrulandi · taban temiz olmayan=0
-SOZLESME: 105/105 HATA (rc=1) · 9/9 TERMINAL (rc=2) · 27/27 BEKLENEN_BULGU
+SONUC: 113/113 kural atesledi · 27/27 beklenen bulgu dogrulandi · taban temiz olmayan=0
+SOZLESME: 105/105 HATA (rc=1) · 8/8 TERMINAL (rc=2) · 27/27 BEKLENEN_BULGU
 HUKUM: PASS — her vaka temiz tabanda sessiz, ihlalde kirmizi/beklenen bulgu.
 ```
 
