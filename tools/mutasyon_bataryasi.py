@@ -380,6 +380,12 @@ def _frz08_imza(k):
                          lambda v: v.__setitem__('imza_kurcalama', True))
 
 
+def _frz08_p1(k):
+    """Tek ihlal: temiz_agac:true, imza YOK; P1 DUSUK_GUVEN."""
+    return _json_duzenle(k, '_KOSU/gate/BASELINE.json',
+                         lambda v: v.__setitem__('temiz_agac', True))
+
+
 def _frz01_kayip(k):
     """FRZ-01 kayip dali: profil dosyasi silinir; terminal GATE_TAMPERED."""
     (k / 'kod_profil.json').unlink()
@@ -1254,6 +1260,11 @@ def vakalar():
          _frz08_imza,
          'FRZ-08', {'terminal': True, 'kur': _frz08_imza_hazirla, 'env': _frz08_env(),
                     'taban_bilgi': 'FRZ-08'}),
+        ('FRZ-08-P1', 'KOD', 'imzasiz temiz taban dusuk guven',
+         'KOD_SABLONLAR/scripts/freeze_check.py',
+         lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
+         _frz08_p1,
+         'FRZ-08 DUSUK_GUVEN', 'BULGU', {'kur': _frz08_hazirla}),
         ('DEP-01', 'KOD', 'manifest varken kilit beyani zorunlu',
          'KOD_SABLONLAR/scripts/dep_audit.py',
          lambda k: [],
