@@ -115,6 +115,24 @@ def main():
         yok_red = True
     kontrol("sec() bilinmeyen kimlikte fail-closed", yok_red)
 
+    # Zarf stdout'ta oldugu surece stderr gurultusu okumayi bozmamali. CI'da
+    # Python 3.12 bir SyntaxWarning'i stderr'e yazdi ve birlesik metin okununca
+    # "Extra data" hatasi verdi; tuketici yalniz stdout'u gormeli.
+    import iddia
+    zarf = kapi_cikti.yaz(_gecerli())
+    gercek_kos = iddia.komut_kos
+    iddia.komut_kos = lambda argv, onbellek: (
+        0, zarf + "WARNING: gurultu\n", zarf)
+    try:
+        kayit = {"komut": ["sahte"], "beklenen": "7/7",
+                 "kapi": {"kontrol": "K-1"}}
+        gecti, deger, _ayrinti, _ham, _rc = iddia._taze_kapi(kayit, {})
+        gurultu_ok = bool(gecti) and deger == "7/7"
+        gurultu_hata = "" if gurultu_ok else "%r/%r" % (gecti, deger)
+    finally:
+        iddia.komut_kos = gercek_kos
+    kontrol("stderr gurultusu zarfi bozmaz", gurultu_ok, gurultu_hata)
+
     kapsam = subprocess.run(
         [sys.executable, str(KOK / "tools" / "kapsam.py"), "--json"],
         cwd=str(KOK), capture_output=True, text=True, timeout=120)
