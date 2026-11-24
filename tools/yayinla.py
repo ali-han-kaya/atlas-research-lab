@@ -56,6 +56,8 @@ DOCS_DOSYALARI = [
     'DEVIR-2026-11-22-1923.md',
     # Kapı çıktısı sözleşmesi penceresinin kamu kaydı.
     'DEVIR-2026-11-24-1507.md',
+    # Kapsam disi denetiminin kamu kaydi.
+    'DENETIM-2026-11-24-KAPSAM-DISI.md',
     'GUVENLIK.md', 'MUTASYON_KAPSAM.md',
     'YEDEK.md',
     'KOD_BEDAVA_MODEL_POLITIKASI.md',
