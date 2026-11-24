@@ -275,6 +275,7 @@
     "tools/sir_kapisi_mutasyon_kaniti.json",
     "tools/sir_kapisi_selftest.py",
     "tools/src01_kaynak_siniflandirma_fiksturu.md",
+    "tools/taze_klon.py",
     "tools/temiz_teslim_selftest.py",
     "tools/yayin_kapisi.py",
     "tools/yayin_manifest.json",
