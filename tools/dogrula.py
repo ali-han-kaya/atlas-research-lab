@@ -49,16 +49,22 @@ CIKIS: 0 = hukme giren kalemlerin hepsi gecti (CALISTIRILMADI varsa bile) ·
 OLG-1'in kaniti `attestation.json`'dir; yoksa/bozuksa FAIL'dir, CALISTIRILMADI
 degil. Sahte canak (commit, tarihce) uretilmez.
 """
+import contextlib
 import hashlib
+import io
 import json
 import os
 import re
 import subprocess
 import sys
 
+import kapi_cikti
+
 KOK = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HIZLI = '--hizli' in sys.argv
 CI = '--ci' in sys.argv
+JSON = '--json' in sys.argv
+JSON_RAPOR = None
 
 ATLA_DIZIN = {'.git', '__pycache__', 'node_modules', '.pytest_cache',
               '.ruff_cache', '.venv', '.venv-token', 'kanit-paketi'}
@@ -282,6 +288,43 @@ KOMUTLAR = [
     ('T3', 'Toolkit oz-testi', [sys.executable, 'v4_selftest.py'],
      os.path.join(KOK, 'KOMUT_TOOLKIT_v4', 'ARACLAR', 'betikler')),
 ]
+
+
+def _json_kontrol(kid, ad, durum, deger=None, ayrinti=None, ham=None):
+    return kapi_cikti.kontrol(kid, ad, durum, deger=deger,
+                              ayrinti=ayrinti, ham=ham)
+
+
+def _json_yaz(kontroller, rc, hata=None):
+    """JSON kipinin tek çıkışı; normal metin çıktısıyla karışmaz."""
+    global JSON_RAPOR
+    JSON_RAPOR = kapi_cikti.uret('dogrula', list(kontroller), rc=rc, hata=hata)
+
+
+def _json_erken(kid, ad, ozet, hata):
+    global JSON_RAPOR
+    JSON_RAPOR = kapi_cikti.uret(
+        'dogrula', [_json_kontrol(kid, ad, 'FAIL', deger=ozet,
+                                  ayrinti=hata, ham=ozet)],
+        rc=1, hukum='FAIL', hata=hata)
+
+
+def _oran(ozet):
+    """Özet metninden ilk n/n sayısını ayıkla; düzenli ifade kullanma."""
+    for parca in str(ozet or '').replace(':', ' ').split():
+        if parca.count('/') == 1:
+            a, b = parca.split('/', 1)
+            if a.isdigit() and b.isdigit():
+                return parca
+    return None
+
+
+def _sayi(ozet):
+    """İlk sayıyı döndür; yoksa özetin kendisini döndür."""
+    for parca in str(ozet or '').split():
+        if parca.isdigit():
+            return parca
+    return str(ozet or '')
 
 
 def kos(komut, cwd=None):
@@ -536,6 +579,45 @@ def _cikti_satirlari(stdout, stderr):
             if s.strip()}
 
 
+def _kapi_ornek(satir, ham):
+    """QUICKSTART metin ornegini surumlu zarfin ham kanitiyla eslestir.
+
+    Ornekler kullanicinin gordugu normal ciktidir; kanit ise `dogrula --json`
+    zarfidir. Karsilastirma yine deger uzerinden yapilir: ornekteki H1/H3/H4
+    sayisi veya H5 orani zarftaki PASS degeriyle ayni olmalidir.
+    """
+    if satir in ham:
+        return True
+    parca = satir.split()
+    if not parca:
+        return False
+    kid = parca[0]
+    if kid in ('H1', 'H3', 'H4'):
+        try:
+            i = parca.index('PASS')
+            deger = parca[i + 1]
+        except (ValueError, IndexError):
+            return False
+        return ('dogrula %s PASS %s' % (kid, deger)) in ham
+    if kid == 'H5':
+        oran = _oran(satir)
+        return bool(oran) and ('dogrula H5 PASS %s' % oran) in ham
+    if satir.startswith('kalem='):
+        return ('dogrula ' + satir) in ham
+    if satir.startswith('HUKUM: PASS'):
+        # 8/8 kalem ornegini RAPOR zarfindaki gecen/kalan ile karsilastir.
+        for adet in str(satir).split():
+            if adet.count('/') == 1:
+                gecen, toplam = adet.split('/', 1)
+                if gecen.isdigit() and toplam.isdigit():
+                    return any(
+                        h.startswith('dogrula kalem=%s' % toplam)
+                        and 'gecen=%s' % gecen in h and 'kalan=0' in h
+                        for h in ham)
+        return False
+    return False
+
+
 def _mutasyon_hukum_uretiliyor():
     """HUKUM satirinin mutasyon aracinin print'i oldugunu denetle."""
     try:
@@ -622,7 +704,7 @@ def quickstart_kontrolu():
                 continue
             sayi += 1
             if ad == 'dogrula':
-                if s not in ham:
+                if not _kapi_ornek(s, ham):
                     hatalar.append('dogrula ornegi yok: %s' % s)
             elif ad == 'mutasyon':
                 if s.startswith('HUKUM: PASS'):
@@ -658,6 +740,9 @@ def main():
     if parite is not None:
         print('  %-24s %s' % ('parite (yayinla)', parite_not))
         if not parite:
+            if JSON:
+                _json_erken('ONKOSUL.PARITE', 'parite (yayinla)', parite_not,
+                            'parite FAIL')
             print()
             print('  HUKUM: FAIL — PARITE (yayinla kuru kosusu)')
             return 1
@@ -669,6 +754,9 @@ def main():
     for satir in demo_detay:
         print('        | %s' % satir[:400])
     if not demo_gecti:
+        if JSON:
+            _json_erken('ONKOSUL.DEMO', 'demo 0/1/2 oz-testi', demo_ozet,
+                        'demo 0/1/2 oz-testi FAIL')
         print()
         print('  HUKUM: FAIL — DEMO 0/1/2 OZ-TESTI')
         return 1
@@ -680,6 +768,9 @@ def main():
     for satir in model_detay:
         print('        | %s' % satir[:400])
     if not model_gecti:
+        if JSON:
+            _json_erken('ONKOSUL.MODEL', 'model kimligi', model_ozet,
+                        'model kimligi FAIL')
         print()
         print('  HUKUM: FAIL — MODEL KIMLIK (aktif atif veya bayat istisna)')
         return 1
@@ -691,6 +782,9 @@ def main():
     for satir in kamu_detay:
         print('        | %s' % satir[:400])
     if not kamu_gecti:
+        if JSON:
+            _json_erken('ONKOSUL.KAMU', 'kamu temizligi', kamu_ozet,
+                        'kamu temizligi FAIL')
         print()
         print('  HUKUM: FAIL — KAMU TEMIZLIGI (ozel yol/eski alan/sahte hash)')
         return 1
@@ -702,6 +796,9 @@ def main():
     for satir in yayin_detay:
         print('        | %s' % satir[:400])
     if not yayin_gecti:
+        if JSON:
+            _json_erken('ONKOSUL.YAYIN', 'yayin kapisi', yayin_ozet,
+                        'yayin kapisi FAIL')
         print()
         print('  HUKUM: FAIL — YAYIN KAPISI (manifest/makale/sir/ozel yol)')
         return 1
@@ -713,6 +810,9 @@ def main():
     for satir in qs_detay:
         print('        | %s' % satir[:400])
     if not qs_gecti:
+        if JSON:
+            _json_erken('ONKOSUL.QUICKSTART', 'quickstart docs', qs_ozet,
+                        'quickstart docs FAIL')
         print()
         print('  HUKUM: FAIL — QUICKSTART (make hedefi/ornek cikti)')
         return 1
@@ -769,6 +869,48 @@ def main():
         kalan = _kalan_satirlari(stdout, satirlar)
         kalemler.append((kid, ad, False, son, kalan or satirlar[-6:], ''))
 
+    kalan = [k for k in kalemler if k[2] is False]
+    atlanan = [k for k in kalemler if k[2] is None]
+
+    # Sürümlü kapı çıktısı: serbest metin özeti yerine kimlikli kontroller.
+    kontroller = []
+    for kid, ad, durum, ozet, _detay, not_metni in kalemler:
+        kdurum = 'OLCULMEDI' if durum is None else ('PASS' if durum else 'FAIL')
+        if kid in ('T1', 'T2', 'T3'):
+            deger = _oran(ozet)
+        elif kid == 'H5':
+            deger = (ozet.split(':')[-1].strip().split() or [ozet])[0]
+        elif kid in ('H1', 'H2', 'H3', 'H4'):
+            deger = _sayi(ozet)
+        else:
+            deger = ozet
+        kontroller.append(_json_kontrol(
+            kid, ad, kdurum, deger=deger, ayrinti=not_metni,
+            ham='dogrula %s %s %s' % (kid, kdurum, deger or '')))
+
+    gecen = len(kalemler) - len(kalan) - len(atlanan)
+    kontroller.append(_json_kontrol(
+        'RAPOR', 'dogrula rapor sayaclari',
+        'PASS' if not kalan else 'FAIL',
+        deger='%d/%d' % (gecen, len(kalemler)),
+        ham='dogrula kalem=%d · gecen=%d · kalan=%d · calistirilmadi=%d'
+            % (len(kalemler), gecen, len(kalan), len(atlanan))))
+    kontroller.append(_json_kontrol(
+        'RAPOR_TOPLAM', 'kalem toplami', 'PASS',
+        deger=str(len(kalemler)), ham='kalem=%d' % len(kalemler)))
+    kontroller.append(_json_kontrol(
+        'RAPOR_OZET', 'gecen/toplam', 'PASS' if not kalan else 'FAIL',
+        deger='%d/%d' % (gecen, len(kalemler)),
+        ham='gecen=%d toplam=%d' % (gecen, len(kalemler))))
+    kontroller.append(_json_kontrol(
+        'RAPOR_SAYIM', 'gecen/kalan/calistirilmadi',
+        'PASS' if not kalan else 'FAIL',
+        deger='%d/%d/%d' % (gecen, len(kalan), len(atlanan)),
+        ham='gecen=%d kalan=%d calistirilmadi=%d'
+            % (gecen, len(kalan), len(atlanan))))
+    _json_yaz(kontroller, 0 if not kalan else 1,
+              None if not kalan else 'dogrula FAIL')
+
     for kid, ad, durum, ozet, detay, not_metni in kalemler:
         etiket = 'CALISTIRILMADI' if durum is None else ('PASS' if durum else 'FAIL')
         print('  %-3s %-24s %-7s %s' % (kid, ad, etiket, ozet))
@@ -777,8 +919,6 @@ def main():
         for satir in detay:
             print('        | %s' % satir[:400])
 
-    kalan = [k for k in kalemler if k[2] is False]
-    atlanan = [k for k in kalemler if k[2] is None]
     print()
     print('  kalem=%d · gecen=%d · kalan=%d · calistirilmadi=%d'
           % (len(kalemler), len(kalemler) - len(kalan) - len(atlanan),
@@ -803,4 +943,13 @@ def main():
 
 
 if __name__ == '__main__':
+    if JSON:
+        with contextlib.redirect_stdout(io.StringIO()):
+            rc = main()
+        if JSON_RAPOR is None:
+            JSON_RAPOR = kapi_cikti.uret(
+                'dogrula', [], rc=rc, hukum='FAIL',
+                hata='dogrula JSON raporu uretemedi')
+        sys.stdout.write(kapi_cikti.yaz(JSON_RAPOR))
+        sys.exit(rc)
     sys.exit(main())

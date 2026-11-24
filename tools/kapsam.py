@@ -19,6 +19,8 @@ import re
 import sys
 from pathlib import Path
 
+import kapi_cikti
+
 KOK = Path(__file__).resolve().parents[1]
 HEDEF = KOK / 'docs' / 'MUTASYON_KAPSAM.md'
 DIZINLER = ('ATLAS_SABLONLAR/scripts', 'KOD_SABLONLAR/scripts')
@@ -844,7 +846,61 @@ def markdown():
     return '\n'.join(out)
 
 
+def json_rapor():
+    """Kapı çıktısını sürümlü zarfla üret; serbest metin ayrıştırması yok."""
+    satirlar, envan, (test, disi, bosluk, oz_anilan, beklenen) = olc()
+    yeni, geri, test_eksik, bosluk_fazla = ratchet(satirlar)
+    testte_gecmeyen = max(0, bosluk - oz_anilan)
+    bildirilen = sum(len(v) for v in envan.values())
+    toplam_dogrulanan = test + beklenen
+    ratchet_gecti = not (yeni or geri or test_eksik or bosluk_fazla)
+    kontroller = [
+        kapi_cikti.kontrol('KAPSAM.ratchet', 'kapsam regresyon ratchet',
+                           'PASS' if ratchet_gecti else 'FAIL',
+                           deger='PASS' if ratchet_gecti else 'FAIL',
+                           ayrinti=('yeni=%d, taban gerilemesi=%d, test kaybi=%d, '
+                                    'bosluk artisi=%d'
+                                    % (len(yeni), len(geri), test_eksik,
+                                       bosluk_fazla)),
+                           ham='KAPSAM ratchet %s' % (
+                               'PASS' if ratchet_gecti else 'FAIL')),
+        kapi_cikti.kontrol('KAPSAM.test_edilen', 'atesleyen vakayla test edilen kural',
+                           'PASS', deger=str(test),
+                           ham='test_edilen=%d' % test),
+        kapi_cikti.kontrol('KAPSAM.bildirilen', 'bildirilen kural',
+                           'PASS', deger=str(bildirilen),
+                           ham='bildirilen=%d' % bildirilen),
+        kapi_cikti.kontrol('KAPSAM.kapsam_disi', 'gerekceli kapsam disi',
+                           'PASS', deger=str(disi),
+                           ham='kapsam_disi=%d' % disi),
+        kapi_cikti.kontrol('KAPSAM.bosluk', 'gerekce yok',
+                           'PASS', deger=str(bosluk),
+                           ham='bosluk=%d' % bosluk),
+        kapi_cikti.kontrol('KAPSAM.oz_anilan', 'yalniz oz-testte anilan',
+                           'PASS', deger=str(oz_anilan),
+                           ham='oz_anilan=%d' % oz_anilan),
+        kapi_cikti.kontrol('KAPSAM.testte_gecmeyen', 'hicbir testte gecmeyen',
+                           'PASS', deger=str(testte_gecmeyen),
+                           ham='testte_gecmeyen=%d' % testte_gecmeyen),
+        kapi_cikti.kontrol('KAPSAM.toplam_dogrulanan', 'toplam dogrulanan kural',
+                           'PASS', deger=str(toplam_dogrulanan),
+                           ham='toplam_dogrulanan=%d' % toplam_dogrulanan),
+    ]
+    return kapi_cikti.uret('kapsam', kontroller,
+                           rc=0 if ratchet_gecti else 1,
+                           hata=None if ratchet_gecti else 'ratchet ihlali')
+
+
 def main(argv):
+    if '--json' in argv:
+        try:
+            rapor = json_rapor()
+        except SystemExit as e:
+            rapor = kapi_cikti.uret(
+                'kapsam', [], rc=int(e.code or 1), hukum='FAIL',
+                hata='kapsam hesaplanamadi')
+        sys.stdout.write(kapi_cikti.yaz(rapor))
+        return 0 if rapor['hukum'] == 'PASS' else 1
     if '--kontrol' in argv or '--yaz' in argv:
         kod_ici_oztest()
         print('KOD-ICI OZTEST: PASS — bilinmeyen kimlik fail-closed')

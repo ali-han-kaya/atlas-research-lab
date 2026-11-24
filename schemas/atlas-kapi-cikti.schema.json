@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atlas.local/schemas/atlas-kapi-cikti.schema.json",
+  "title": "ATLAS kapı çıktısı",
+  "description": "ATLAS kapılarının makine-okunur çıktısı. Sürüm alanı sözleşmenin kendisini bağlar; tüketiciler serbest metin veya düzenli ifade yerine bu zarftaki kontrolleri okur.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "surum",
+    "kapi",
+    "hukum",
+    "rc",
+    "uretildi",
+    "kontroller",
+    "sayilar"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ATLAS-KAPI-CIKTI/v1"
+    },
+    "surum": {
+      "const": "1.0.0"
+    },
+    "kapi": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z][a-z0-9_.-]*$"
+    },
+    "hukum": {
+      "enum": ["PASS", "FAIL", "KOSULLU", "OLCULMEDI"]
+    },
+    "rc": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 125
+    },
+    "uretildi": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "kontroller": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/kontrol"
+      }
+    },
+    "sayilar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["toplam", "gecti", "kalan", "olculmedi", "atlandi"],
+      "properties": {
+        "toplam": {"type": "integer", "minimum": 0},
+        "gecti": {"type": "integer", "minimum": 0},
+        "kalan": {"type": "integer", "minimum": 0},
+        "olculmedi": {"type": "integer", "minimum": 0},
+        "atlandi": {"type": "integer", "minimum": 0}
+      }
+    },
+    "hata": {
+      "type": ["string", "null"],
+      "maxLength": 2000
+    }
+  },
+  "$defs": {
+    "kontrol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "ad", "durum", "deger", "ayrinti", "ham"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "pattern": "^[A-Za-z0-9_.-]+$"
+        },
+        "ad": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "durum": {
+          "enum": ["PASS", "FAIL", "OLCULMEDI", "ATLANDI"]
+        },
+        "deger": {
+          "type": ["string", "null"],
+          "maxLength": 200
+        },
+        "beklenen": {
+          "type": ["string", "null"],
+          "maxLength": 200
+        },
+        "ayrinti": {
+          "type": ["string", "null"],
+          "maxLength": 2000
+        },
+        "ham": {
+          "type": ["string", "null"],
+          "maxLength": 4000
+        },
+        "kaynak": {
+          "type": ["string", "null"],
+          "maxLength": 500
+        }
+      }
+    }
+  }
+}
