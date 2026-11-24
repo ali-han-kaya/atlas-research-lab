@@ -167,6 +167,11 @@ jobs:
       - name: Kanit paketi dogrula
         run: make kanit-paket-dogrula
 
+      # Makbuz, her komutun argv'sini, cikis kodunu ve ham satirini ayni
+      # paketteki sonuc.json, attestation ve komut loglariyla birlestirir.
+      - name: Dogrulama makbuzunu denetle
+        run: make makbuz-dogrula
+
       # Paket uretimi izlenen agacta degisiklik birakmamali.
       - name: Kanit paketi commit'i kirletmedi
         run: test -z "$(git status --porcelain --untracked-files=no)"

@@ -12,9 +12,14 @@ icindeki kanitlari birbirine baglayarak dogrular:
   PAKET-04  attestation.json gecersiz veya commit/agacla uyusmuyor
   PAKET-05  komut log hash'i, cikis kodu veya bulgu kimligi tutmuyor
   PAKET-06  sonuc.json ic tutarliligi (commit/tree/manifest/findings) bozuk
+  PAKET-07  makbuz.json yok/sema disi veya commit/agac bagi tutmuyor
+  PAKET-08  makbuz kalemi sonuc.json komutuyla uyusmuyor
+  PAKET-09  ham satir logda birebir yok veya hash tutmuyor
+  PAKET-10  makbuz manifestte yok/hash tutmuyor
 
 Kullanim:
   python3 tools/kanit_paketi_dogrula.py
+  python3 tools/kanit_paketi_dogrula.py --makbuz
   python3 tools/kanit_paketi_dogrula.py --paket kanit-paketi
   python3 tools/kanit_paketi_dogrula.py --paket /tmp/atlas-kanit-paketi
 
@@ -39,13 +44,16 @@ except ImportError:  # pragma: no cover - CI kurulumu bunu saglar
     Draft202012Validator = None
     FormatChecker = None
 
-from tools.kanit import bulgu_kimlikleri  # noqa: E402
+from tools.kanit import bulgu_kimlikleri, ham_satir  # noqa: E402
 
 SEMA_DOSYASI = KOK / "schemas" / "atlas-dogrulama-sonuc.schema.json"
+SEMA_MAKBUZ_DOSYASI = KOK / "schemas" / "atlas-makbuz.schema.json"
 SEMA_SONUC = "ATLAS-DOGRULAMA/v1"
+SEMA_MAKBUZ = "ATLAS-MAKBUZ/v1"
 SONUC = "sonuc.json"
 ATTESTATION = "attestation.json"
 MANIFEST = "manifest.sha256"
+MAKBUZ = "makbuz.json"
 LOG_DIZINI = "komutlar"
 SHA = re.compile(r"^[0-9a-f]{64}$")
 
@@ -102,12 +110,130 @@ def manifest_oku(yol):
     return kayitlar
 
 
+def _metin_sha256(metin):
+    return hashlib.sha256(metin.encode("utf-8")).hexdigest()
+
+
+def makbuz_dogrula(paket, sonuc, at, manifest):
+    """makbuz.json'u sonuc/attestation/manifest ve ham loglarla capraz dogrula.
+
+    Makbuzun tek basina dogru olmasi yetmez: her kalemin argv'si, cikis kodu
+    ve ham satiri ayni paketteki sonuc.json ve komut loglariyla birebir
+    tutmali; commit/tree/attestation hash'i de agac kanitina bagli olmali.
+    """
+    yol = paket / MAKBUZ
+    if not yol.is_file():
+        hata("PAKET-07", "MAKBUZ_YOK — %s" % yol)
+        return False
+    if MAKBUZ not in manifest:
+        hata("PAKET-10", "MANIFEST — makbuz.json kapsamda degil")
+        return False
+    if manifest.get(MAKBUZ) != sha256(yol):
+        hata("PAKET-10", "MANIFEST_HASH — makbuz.json")
+        return False
+    try:
+        sema = json.loads(SEMA_MAKBUZ_DOSYASI.read_text(encoding="utf-8"))
+        veri = json.loads(yol.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as e:
+        hata("PAKET-07", "MAKBUZ_OKUNAMADI — %s" % type(e).__name__)
+        return False
+    try:
+        Draft202012Validator.check_schema(sema)
+        Draft202012Validator(sema, format_checker=FormatChecker()).validate(veri)
+    except Exception as e:
+        hata("PAKET-07", "MAKBUZ_SEMA — %s" % str(e).splitlines()[0][:240])
+        return False
+    if veri.get("schema") != SEMA_MAKBUZ:
+        hata("PAKET-07", "MAKBUZ_SEMA — schema=%r" % veri.get("schema"))
+        return False
+    if (veri.get("commit"), veri.get("tree")) != (at.get("commit"),
+                                                   at.get("tree")):
+        hata("PAKET-07", "MAKBUZ_BAG — commit/tree attestation ile uyusmuyor")
+        return False
+    if veri.get("tree_sha256") != at.get("tree_sha256") or \
+            veri.get("tree_sha256") != sonuc.get("manifest", {}).get("root_sha256"):
+        hata("PAKET-07", "MAKBUZ_BAG — tree_sha256 uyusmuyor")
+        return False
+    if veri.get("attestation_sha256") != sonuc.get("attestation_sha256") or \
+            veri.get("attestation_sha256") != sha256(paket / ATTESTATION):
+        hata("PAKET-07", "MAKBUZ_BAG — attestation_sha256 uyusmuyor")
+        return False
+
+    kalemler = veri.get("items")
+    komutlar = sonuc.get("commands")
+    if not isinstance(kalemler, list) or not kalemler or \
+            not isinstance(komutlar, list):
+        hata("PAKET-08", "MAKBUZ_KALEM — items/commands liste degil veya bos")
+        return False
+    if veri.get("command_count") != len(kalemler) or \
+            len(kalemler) != len(komutlar):
+        hata("PAKET-08", "MAKBUZ_KALEM — command_count=%r items=%d commands=%d"
+             % (veri.get("command_count"), len(kalemler), len(komutlar)))
+        return False
+
+    for sira, (kalem, komut) in enumerate(zip(kalemler, komutlar), 1):
+        if not isinstance(kalem, dict):
+            hata("PAKET-08", "MAKBUZ_KALEM[%d] — nesne degil" % sira)
+            return False
+        for alan in ("id", "argv", "exit_code", "status"):
+            if kalem.get(alan) != komut.get(alan):
+                hata("PAKET-08", "MAKBUZ_KALEM[%d].%s — sonuc.json ile "
+                     "uyusmuyor" % (sira, alan))
+                return False
+        kid = komut["id"]
+        beklenen = {
+            "stdout": "%s/%02d-%s.stdout.txt" % (LOG_DIZINI, sira, kid),
+            "stderr": "%s/%02d-%s.stderr.txt" % (LOG_DIZINI, sira, kid),
+        }
+        for alan, rel in beklenen.items():
+            if kalem.get(alan) != rel:
+                hata("PAKET-08", "MAKBUZ_KALEM[%d].%s — beklenen=%s bulunan=%r"
+                     % (sira, alan, rel, kalem.get(alan)))
+                return False
+        if kalem.get("stdout_sha256") != komut.get("stdout_sha256") or \
+                kalem.get("stderr_sha256") != komut.get("stderr_sha256"):
+            hata("PAKET-08", "MAKBUZ_KALEM[%d] — log hash'i sonuc.json ile "
+                 "uyusmuyor" % sira)
+            return False
+
+        raw = kalem.get("raw_line")
+        if not isinstance(raw, str) or not raw or "\n" in raw or "\r" in raw:
+            hata("PAKET-09", "MAKBUZ_KALEM[%d].raw_line — tek dolu satir degil"
+                 % sira)
+            return False
+        if kalem.get("raw_line_sha256") != _metin_sha256(raw):
+            hata("PAKET-09", "MAKBUZ_KALEM[%d].raw_line_sha256 — tutmuyor" % sira)
+            return False
+        try:
+            stdout = (paket / beklenen["stdout"]).read_text(encoding="utf-8")
+            stderr = (paket / beklenen["stderr"]).read_text(encoding="utf-8")
+        except OSError as e:
+            hata("PAKET-09", "MAKBUZ_LOG — %s" % type(e).__name__)
+            return False
+        if ham_satir(stdout, stderr) != raw:
+            hata("PAKET-09", "MAKBUZ_KALEM[%d].raw_line — logun ham satiriyla "
+                 "birebir ayni degil" % sira)
+            return False
+        if not any(s.rstrip() == raw
+                   for s in (stdout + "\n" + stderr).splitlines()):
+            hata("PAKET-09", "MAKBUZ_KALEM[%d].raw_line — logda satir yok" % sira)
+            return False
+
+    print("PASS MAKBUZ commit=%s kalem=%d"
+          % (veri["commit"], len(kalemler)))
+    print("MAKBUZ: TEMIZ — her kalemin komutu, cikis kodu ve ham satiri "
+          "commit/agac kanitina bagli.")
+    return True
+
+
 def main():
     ap = argparse.ArgumentParser(description="ATLAS kanit paketini dogrula")
     ap.add_argument("--paket", default=str(KOK / "kanit-paketi"),
                     help="paket dizini")
     ap.add_argument("--sema", default=str(SEMA_DOSYASI),
                     help="ATLAS-DOGRULAMA/v1 JSON Schema yolu")
+    ap.add_argument("--makbuz", action="store_true",
+                    help="makbuz.json'daki komut/rc/ham satir bagini da denetle")
     a = ap.parse_args()
 
     if Draft202012Validator is None:
@@ -290,6 +416,9 @@ def main():
         if not SHA.fullmatch(h) or sha256(paket / rel) != h:
             hata("PAKET-03", "MANIFEST_HASH — %s" % rel)
             return 1
+
+    if a.makbuz and not makbuz_dogrula(paket, sonuc, at, manifest):
+        return 1
 
     print("PASS PAKET commit=%s komut=%d dosya=%d"
           % (sonuc["commit"], len(komutlar), len(manifest)))

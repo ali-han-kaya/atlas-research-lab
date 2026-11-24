@@ -222,6 +222,7 @@ kodlarını `kanit-paketi/` dizinine kaydeder:
 | `sonuc.json` | `ATLAS-DOGRULAMA/v1`: commit, ağaç, komut çıkış kodları, bulgu kimlikleri, dosya manifesti |
 | `attestation.json` | Aynı üretimde yazılan ağaç kanıtının kopyası |
 | `manifest.sha256` | Paketteki dosyaların SHA-256 listesi (`sha256  yol`) |
+| `makbuz.json` | `ATLAS-MAKBUZ/v1`: her komutun argv'si, çıkış kodu, ham çıktı satırı ve log SHA-256'sı |
 | `komutlar/` | Her komutun ham stdout/stderr kaydı; adları sıra ve komut kimliğini taşır |
 
 Şema `schemas/atlas-dogrulama-sonuc.schema.json` dosyasındadır. `sonuc.json`
@@ -230,7 +231,10 @@ stdout/stderr özet hash'leri ve süre taşır; üst düzeyde toplu `exit_code`,
 `verdict`, `findings[]` ve izlenen dosyaların SHA-256 manifesti bulunur.
 Paket git'e eklenmez (`.gitignore`); taşımak için dizini kopyalamak yeterlidir.
 `manifest.sha256` paket dosyalarını doğrular; attestation'ın kendisi ayrıca
-`make kanit-dogrula` ile commit ve ağaca bağlanır.
+`make kanit-dogrula` ile commit ve ağaca bağlanır. `makbuz.json`, aynı üretimde
+koşan her komutun argv'sini, çıkış kodunu ve ham çıktı satırını commit/ağaç
+kanıtına bağlar; `make makbuz-dogrula` bu bağı `sonuc.json`, attestation ve
+`komutlar/` loglarıyla çapraz denetler (`PAKET-07..10`).
 
 Bir komut başarısız olursa paket yine yazılır, `verdict` `FAIL` olur ve
 `make kanit` sıfır olmayan kodla çıkar. Yalnız attestation üretmek için eski
@@ -241,6 +245,7 @@ komut kümesini de değiştirmek için `--komut` yinelenebilir.
 
 ```bash
 make kanit-paket-dogrula
+make makbuz-dogrula
 ```
 
 Bu komut `kanit-paketi/` dizinini tek başına okumaz; dört kanıt katmanını

@@ -11,6 +11,7 @@ dosyasini kapsamaz; boylece commit/hash dongusu olusmaz.
   kanit-paketi/sonuc.json       ATLAS-DOGRULAMA/v1
   kanit-paketi/attestation.json  agac kanitinin kopyasi
   kanit-paketi/manifest.sha256  paket dosyalarinin SHA-256 manifesti
+  kanit-paketi/makbuz.json      ATLAS-MAKBUZ/v1: komut/rc/ham satir baglantisi
   kanit-paketi/komutlar/        komut stdout/stderr kayitlari
 
 Paket, attestation yazildiktan SONRA dogrulama komutlarini kosar. Boylece T1
@@ -48,6 +49,9 @@ SEMA_SONUC = "ATLAS-DOGRULAMA/v1"
 ATTESTATION = "attestation.json"
 SONUC = "sonuc.json"
 MANIFEST = "manifest.sha256"
+MAKBUZ = "makbuz.json"
+SEMA_MAKBUZ = "ATLAS-MAKBUZ/v1"
+LOG_DIZINI = "komutlar"
 VARSAYILAN_PAKET = "kanit-paketi"
 VARSAYILAN_KOMUTLAR = [
     ("dogrula", ["make", "dogrula"]),
@@ -160,6 +164,25 @@ def sha256_metin(metin):
     return hashlib.sha256(metin.encode("utf-8")).hexdigest()
 
 
+# Makbuzda komutun "ham cikti satiri" olarak hukum/ozet satiri saklanir;
+# yoksa son anlamli satir kullanilir. Boylece satir keyfi degil, komutun
+# gercek ciktisindan secilir.
+VERDICT_SATIRI = re.compile(
+    r"\b(?:HUKUM|KAPSAM|SONUC|PASS|FAIL|ERROR|ZAMAN ASIMI)\b")
+
+
+def ham_satir(out, err):
+    """Komutun son hukum/ozet satirini, yoksa son dolu satirini dondur."""
+    for metin in (out, err):
+        satirlar = [s.rstrip() for s in (metin or "").splitlines() if s.strip()]
+        for satir in reversed(satirlar):
+            if VERDICT_SATIRI.search(satir):
+                return satir
+        if satirlar:
+            return satirlar[-1]
+    return ""
+
+
 def bulgu_kimlikleri(metin):
     """Yalniz satir basindaki FAIL/KALDI/BULGU/HATA kimliklerini toplar.
 
@@ -240,14 +263,14 @@ def paket_yaz(paket, attestation_metni, attestation_verisi_, komutlar):
         raise ValueError("paket dizini depo koku olamaz")
     if paket.exists():
         shutil.rmtree(paket)
-    (paket / "komutlar").mkdir(parents=True)
+    (paket / LOG_DIZINI).mkdir(parents=True)
 
     (paket / ATTESTATION).write_text(attestation_metni, encoding="utf-8")
     at_sha = sha256_metin(attestation_metni)
 
     kayitlar = []
     for sira, (kimlik, argv, rc, out, err, sure, hata) in enumerate(komutlar, 1):
-        ad = "komutlar/%02d-%s" % (sira, kimlik)
+        ad = "%s/%02d-%s" % (LOG_DIZINI, sira, kimlik)
         (paket / (ad + ".stdout.txt")).write_text(out, encoding="utf-8")
         (paket / (ad + ".stderr.txt")).write_text(err, encoding="utf-8")
         birlesik = out + "\n" + err
@@ -304,6 +327,39 @@ def paket_yaz(paket, attestation_metni, attestation_verisi_, komutlar):
     sonuc_metni = json.dumps(sonuc, ensure_ascii=False, indent=2,
                              sort_keys=True) + "\n"
     (paket / SONUC).write_text(sonuc_metni, encoding="utf-8")
+
+    makbuz_kalemleri = []
+    for sira, ((kimlik, argv, rc, out, err, _sure, _hata), kayit) in enumerate(
+            zip(komutlar, kayitlar), 1):
+        satir = ham_satir(out, err)
+        if not satir:
+            raise ValueError("komut %s bos cikti verdi; makbuz satiri yok"
+                             % kimlik)
+        makbuz_kalemleri.append({
+            "id": kimlik,
+            "argv": argv,
+            "exit_code": rc,
+            "status": kayit["status"],
+            "raw_line": satir,
+            "raw_line_sha256": sha256_metin(satir),
+            "stdout": "%s/%02d-%s.stdout.txt" % (LOG_DIZINI, sira, kimlik),
+            "stderr": "%s/%02d-%s.stderr.txt" % (LOG_DIZINI, sira, kimlik),
+            "stdout_sha256": kayit["stdout_sha256"],
+            "stderr_sha256": kayit["stderr_sha256"],
+        })
+    makbuz = {
+        "schema": SEMA_MAKBUZ,
+        "generated_at": sonuc["generated_at"],
+        "commit": sonuc["commit"],
+        "tree": sonuc["tree"],
+        "tree_sha256": sonuc["manifest"]["root_sha256"],
+        "attestation_sha256": sonuc["attestation_sha256"],
+        "command_count": len(makbuz_kalemleri),
+        "items": makbuz_kalemleri,
+    }
+    (paket / MAKBUZ).write_text(
+        json.dumps(makbuz, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8")
 
     satirlar = []
     for yol in sorted(paket.rglob("*")):
@@ -379,6 +435,8 @@ def main():
         print("  hüküm=%s · komut=%d · bulgu=%d · manifest=%s"
               % (sonuc["verdict"], sonuc["command_count"],
                  len(sonuc["findings"]), manifest))
+        print("  makbuz=%s · kalem=%d"
+              % (paket / MAKBUZ, sonuc["command_count"]))
         return 0 if sonuc["verdict"] == "PASS" else 1
     except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as e:
         print("FAIL KANIT-01 URETILEMEDI — %s" % e)

@@ -531,6 +531,7 @@ paketi** de oluşturur. Paket `kanit-paketi/` altındadır ve git'e eklenmez:
 | `sonuc.json` | `ATLAS-DOGRULAMA/v1`; commit, ağaç, komut çıkış kodları, bulgu kimlikleri, dosya manifesti |
 | `attestation.json` | Aynı üretimde yazılan ağaç kanıtının kopyası |
 | `manifest.sha256` | Paketteki dosyaların SHA-256 listesi |
+| `makbuz.json` | `ATLAS-MAKBUZ/v1`; her komutun argv'si, çıkış kodu, ham çıktı satırı ve log SHA-256'sı |
 | `komutlar/` | Her doğrulama komutunun ham stdout/stderr kaydı |
 
 Şema: [`schemas/atlas-dogrulama-sonuc.schema.json`](schemas/atlas-dogrulama-sonuc.schema.json).
@@ -540,6 +541,7 @@ paketi** de oluşturur. Paket `kanit-paketi/` altındadır ve git'e eklenmez:
 python3 -m pip install -r requirements-dev.txt
 make kanit
 make kanit-paket-dogrula
+make makbuz-dogrula
 make kanit-dogrula
 ```
 
@@ -547,7 +549,9 @@ make kanit-dogrula
 `kanit-paketi/` dizinini ve `attestation.json` dosyasını üretir. Yalnız attestation
 üretmek için `python3 tools/kanit.py --paketsiz` kullanılır. `make kanit` attestation'ı
 izlenen ağaçta yenilediği için, onu commit etmeyecekseniz incelemeden sonra
-geri alabilirsiniz.
+geri alabilirsiniz. `make makbuz-dogrula`, `kanit-paketi/makbuz.json` içindeki her
+kalemi `sonuc.json`, attestation ve `komutlar/` loglarıyla birebir karşılaştırır;
+commit/ağaç bağı tutmazsa sıfır olmayan kodla çıkar.
 
 CI, aynı paketi `--cikti "$RUNNER_TEMP/atlas-attestation.json"` ile üretir; böylece
 izlenen `attestation.json` kirlenmez. Paket, `make kanit-paket-dogrula` geçmeden ve
