@@ -1,5 +1,5 @@
 {
-  "commit": "96e8c06f34a40b0561352b8f896f75ca8c697886",
+  "commit": "f4e601c5572fb1eb593c3a3d7c86682516bdcdb9",
   "file_count": 283,
   "files": [
     {
@@ -1511,8 +1511,8 @@
     {
       "mode": "100644",
       "path": "tools/iddia_selftest.py",
-      "sha256": "ba774cf24c7215642a1ed92cba355952bfcf715c3e34ad492ef666d2cf2ba6d9",
-      "size": 12279
+      "sha256": "7a9b9ae8bf47f760b28c2d6bf1970319c714a595df566fc0c3fd0815de21c660",
+      "size": 12969
     },
     {
       "mode": "100644",
@@ -1553,8 +1553,8 @@
     {
       "mode": "100644",
       "path": "tools/kapi_sozlesmesi_selftest.py",
-      "sha256": "ea4c07d0fb5db5f91de3c93ee7db4de5621fb3b70aa45ef58eb87bd6cb5ac92c",
-      "size": 4544
+      "sha256": "475018bd4be819029ab87e6f78640552c8b9a948f433d3f0c0c36e4b7cb106de",
+      "size": 4701
     },
     {
       "mode": "100644",
@@ -1701,7 +1701,7 @@
       "size": 14586
     }
   ],
-  "generated_at": "2026-11-24T11:41:52Z",
+  "generated_at": "2026-11-24T12:15:01Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1716,6 +1716,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "7f779e2ca75296d8fa0da666299c0a10781384dd",
-  "tree_sha256": "9fac67be7de5087ed0bb58ad805822e7a0a5c34b065231667a1719f835d61753"
+  "tree": "35b89d4ea76c0857944a24b43aba367876f687cb",
+  "tree_sha256": "6bbce188ed63119f55374f498e901b60919b7f9657acf261c03436f2494bda17"
 }
