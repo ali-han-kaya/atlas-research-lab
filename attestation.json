@@ -1,5 +1,5 @@
 {
-  "commit": "eb6fb0f4cf068ea353930c91f21a44fdbd09e0da",
+  "commit": "ce7db6006fc0e2ca83000c973c6e8f2487bbfb3a",
   "file_count": 285,
   "files": [
     {
@@ -1277,8 +1277,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "f1bb8b8d07e1593d1135892ed42d240a55845afd2ed9f90a3c201adb7e06c72f",
-      "size": 494951
+      "sha256": "e493ca7d144d8e5c29da56e8eaaeea01f254abe51faa12d9a0d78e6d41553a21",
+      "size": 496529
     },
     {
       "mode": "100644",
@@ -1619,8 +1619,8 @@
     {
       "mode": "100644",
       "path": "tools/mutasyon_bataryasi.py",
-      "sha256": "971be8d37374afcd2a221b5ecc1fd03d5adae499b2e38715d55c665cb22f8b2f",
-      "size": 102470
+      "sha256": "69a77f33458c557c035e4ae05cdb7e69a5798cc4b5667c2b88bade7a3ec96833",
+      "size": 106178
     },
     {
       "mode": "100644",
@@ -1713,7 +1713,7 @@
       "size": 14764
     }
   ],
-  "generated_at": "2026-11-24T20:51:45Z",
+  "generated_at": "2026-11-24T23:29:50Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1728,6 +1728,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "02ee30233fdf5c63a5b6a0d9efebcf5ea077aef8",
-  "tree_sha256": "4c7a557cc60e0c55a983a04c144d8c4f5c6b9d818634d18ae4869c0215741351"
+  "tree": "3d3e9f46d6c32c1e8b1edadc294ef268700908e4",
+  "tree_sha256": "241da082e13b8195ce923950315b23d46f2ec0799ee450f9001c61a8c39adb6b"
 }
