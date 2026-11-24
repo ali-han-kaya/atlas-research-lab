@@ -270,6 +270,8 @@
     "tools/mutasyon_bataryasi.py",
     "tools/mutasyon_katalog.json",
     "tools/olgu1_negatif.py",
+    "tools/oztest_mutasyon.py",
+    "tools/oztest_mutasyon_kaniti.json",
     "tools/secret_fixtures.json",
     "tools/sir_kapisi.py",
     "tools/sir_kapisi_mutasyon.py",
