@@ -1,6 +1,6 @@
 {
-  "commit": "894a6099a65aed27d21e3fcdfb26be18f16e1026",
-  "file_count": 280,
+  "commit": "67f269d1d4ea63ed21108399229ca9ce3b99faba",
+  "file_count": 283,
   "files": [
     {
       "mode": "100755",
@@ -1163,8 +1163,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "6182a79a097c71aa9e598480ff524446500d0f6225fcb2dc318383be915a89bf",
-      "size": 6494
+      "sha256": "24013ef6cf3842d43b5419a7bf62a8d3ba52c04a10c43bd778c36a1f81f443df",
+      "size": 6656
     },
     {
       "mode": "100644",
@@ -1289,7 +1289,7 @@
     {
       "mode": "100644",
       "path": "docs/DURUM.md",
-      "sha256": "9cf2ab57afd8141b2169bce3480d019d4d8de1f8d79a5042aac6b77d43f4be79",
+      "sha256": "19354794c91ce34be201367fc60d00c484d5160112d8ec54ec8a78741db06300",
       "size": 1489
     },
     {
@@ -1432,6 +1432,12 @@
     },
     {
       "mode": "100644",
+      "path": "schemas/atlas-kapi-cikti.schema.json",
+      "sha256": "cc8f6170a31e3228a8f8a46ae30d79a07014fce6654209eb9894f03046e1f2d1",
+      "size": 2717
+    },
+    {
+      "mode": "100644",
       "path": "schemas/atlas-makbuz.schema.json",
       "sha256": "6a1eea25012d78abcc90b022938968263f3fc019d960e7f1dd0599fc26d0454f",
       "size": 2690
@@ -1463,8 +1469,8 @@
     {
       "mode": "100644",
       "path": "tools/dogrula.py",
-      "sha256": "c29e9d6ee1cd741ad5581aee25aa7a5a76d855d520ce64119c3c7086a556e935",
-      "size": 31715
+      "sha256": "bdbb4029335e9ec52759268faf25eea6707f609b4b8c7f8fa085dea7655cd1f4",
+      "size": 37456
     },
     {
       "mode": "100644",
@@ -1487,20 +1493,20 @@
     {
       "mode": "100644",
       "path": "tools/iddia.py",
-      "sha256": "fe5dadcf0625c6f0c48998e7bd9960e8bde39150b06ecc0b14bc65c7d4114342",
-      "size": 35021
+      "sha256": "ded5b62ee9987382f12d37d1ae9c17b22f5d559826f91c282adbcac2876db28d",
+      "size": 37393
     },
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "cf308661f93bc551cdeb3ede79c3381f4f956d81267e1df26c67092a0f509465",
-      "size": 36952
+      "sha256": "521e174380a02581a4df0dd3fff82380f22b43b5dea44e4e51b6e7d349ea2ff8",
+      "size": 37172
     },
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "e14875d3f8c70c99175b6b9352e3a553e0e9cc383b2099c594e7c392d5d9d266",
-      "size": 8500
+      "sha256": "ed194bc61d4c57972d56f22ae5244f15c6cfca1e7fcaf0c79d74c2be51370faf",
+      "size": 8373
     },
     {
       "mode": "100644",
@@ -1540,9 +1546,21 @@
     },
     {
       "mode": "100644",
+      "path": "tools/kapi_cikti.py",
+      "sha256": "3a12da495f68193419b64e48d6109a6392f42dd14f4c7a25936bf6bf47fae5c8",
+      "size": 6453
+    },
+    {
+      "mode": "100644",
+      "path": "tools/kapi_sozlesmesi_selftest.py",
+      "sha256": "ea4c07d0fb5db5f91de3c93ee7db4de5621fb3b70aa45ef58eb87bd6cb5ac92c",
+      "size": 4544
+    },
+    {
+      "mode": "100644",
       "path": "tools/kapsam.py",
-      "sha256": "f93d35708727f3952acdfd11cf147949fe00006b844aa1316139443e75157d8e",
-      "size": 46627
+      "sha256": "246b2974156b18cfbb9f0e303c4268569b3f437d1f51ec55c1840429a7c544a3",
+      "size": 49621
     },
     {
       "mode": "100644",
@@ -1673,8 +1691,8 @@
     {
       "mode": "100644",
       "path": "tools/yayin_manifest.json",
-      "sha256": "2170fda6f1c0479bac8951182cef8011ec45d668b0fe5081d474a086c6eca408",
-      "size": 12776
+      "sha256": "3ff6106fc5348839e572dd0baa1d6dfa1c29c4d623717c2350c838dea52289b1",
+      "size": 12888
     },
     {
       "mode": "100644",
@@ -1683,7 +1701,7 @@
       "size": 14586
     }
   ],
-  "generated_at": "2026-11-24T09:40:57Z",
+  "generated_at": "2026-11-24T11:30:02Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1698,6 +1716,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "63dcc433ac1f548741e65a3d65bfe5c71e6f263c",
-  "tree_sha256": "2f1cd0c65bbbaa58f4962f5257ca4c9170f717e31834a475602ed301326e8c9e"
+  "tree": "52e428d0c775349213bfd8458dedcba8a15d8b6b",
+  "tree_sha256": "9e4e9ba78c8d361cda63ddf991313c3e432b4697d3b4e5dd215310e683ae7337"
 }
