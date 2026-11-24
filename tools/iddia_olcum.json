@@ -35,8 +35,8 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 104/104 kural atesledi · 19/19 beklenen bulgu dogrulandi · taban temiz olmayan=0",
-      "deger": "104/104"
+      "ham": "SONUC: 114/114 kural atesledi · 27/27 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "deger": "114/114"
     },
     "IDD-05": {
       "komut": [
@@ -44,8 +44,8 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 104/104 kural atesledi · 19/19 beklenen bulgu dogrulandi · taban temiz olmayan=0",
-      "deger": "19/19"
+      "ham": "SONUC: 114/114 kural atesledi · 27/27 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "deger": "27/27"
     },
     "IDD-06": {
       "komut": [
@@ -53,8 +53,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Atesleyen vakayla test edilen kural (TEST EDILDI) | 83 |",
-      "deger": "83"
+      "ham": "| Atesleyen vakayla test edilen kural (TEST EDILDI) | 93 |",
+      "deger": "93"
     },
     "IDD-07": {
       "komut": [
@@ -71,8 +71,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Gerekceli kapsam disi | 22 |",
-      "deger": "22"
+      "ham": "| Gerekceli kapsam disi | 4 |",
+      "deger": "4"
     },
     "IDD-09": {
       "komut": [
@@ -274,8 +274,8 @@
         "import sys; sys.path.insert(0, 'tools'); import mutasyon_bataryasi as m; print('VAKA: %d' % len(m.vakalar()))"
       ],
       "rc": 0,
-      "ham": "VAKA: 123",
-      "deger": "123"
+      "ham": "VAKA: 141",
+      "deger": "141"
     },
     "IDD-40": {
       "komut": [
@@ -349,8 +349,8 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SOZLESME: 95/95 HATA (rc=1) · 9/9 TERMINAL (rc=2) · 19/19 BEKLENEN_BULGU",
-      "deger": "95/95"
+      "ham": "SOZLESME: 105/105 HATA (rc=1) · 9/9 TERMINAL (rc=2) · 27/27 BEKLENEN_BULGU",
+      "deger": "105/105"
     },
     "IDD-53": {
       "komut": [
@@ -358,8 +358,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Toplam dogrulanan kural | 99 |",
-      "deger": "99"
+      "ham": "| Toplam dogrulanan kural | 117 |",
+      "deger": "117"
     }
   }
 }
