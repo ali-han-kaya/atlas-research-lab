@@ -1,0 +1,111 @@
+{
+  "sema": "OZTEST-MUTASYON/v1",
+  "kaynak": {
+    "ATLAS_SABLONLAR/scripts/atlas_selftest.py": "a570e1cd4768dc776a9007762897c75c8cc3ac8b316635a53c6517286c2f9cc0",
+    "KOD_SABLONLAR/scripts/kod_selftest.py": "73a5217b0688ef2d58e15c55d3fc730d7eb1d26b83e67ac811332e2a8889bda1",
+    "ATLAS_SABLONLAR/scripts/budget_guard.py": "75fa54f2345eaa5795ea7e80a4e95c24a59deabb3ba9a8f9034375dd37dc5d2e",
+    "ATLAS_SABLONLAR/scripts/check_models.py": "5553264f3a45d52699e5dd67cabfdf052d3f0d827d8aad76afb9a1979eab6ce6",
+    "ATLAS_SABLONLAR/scripts/prompt_lint.py": "ab383499e79573771bea321dcac62e45d278fb88a0a0e3ed9d8d0032d2f5c542",
+    "KOD_SABLONLAR/scripts/dep_audit.py": "cfee2f43098dec1f8081780df0f97052784d129470de06348d06684eea5bf56b",
+    "KOD_SABLONLAR/scripts/freeze_check.py": "64c5b0fd60a0993ea7ae5e09dd5275abfdb4680ab3e4bd87ec4f1c094a36a99b",
+    "KOD_SABLONLAR/scripts/test_attest.py": "29ee64a8d6f6f09566a6ad2458182c57cf922f211a4437fb62c8951516f0cb3e"
+  },
+  "vakalar": [
+    {
+      "id": "OZM-01",
+      "paket": "ATLAS",
+      "kapi": "ATLAS_SABLONLAR/scripts/check_models.py",
+      "test": "MOD-2",
+      "test_adi": "check_models: katalogda olmayan model FAIL",
+      "mutasyon": "MOD-03 katalog-yok bulgusu kaldirildi",
+      "baseline": "PASS",
+      "mutant": "FAIL",
+      "fail_satiri": "KALDI MOD-2: check_models: katalogda olmayan model FAIL :: rc=0",
+      "baseline_ozet": "OZ-TEST: 146/146 gecti",
+      "mutant_ozet": "OZ-TEST: 141/146 gecti"
+    },
+    {
+      "id": "OZM-02",
+      "paket": "ATLAS",
+      "kapi": "ATLAS_SABLONLAR/scripts/budget_guard.py",
+      "test": "BG-3",
+      "test_adi": "budget_guard: bilinmeyen faz preflight FAIL",
+      "mutasyon": "bilinmeyen faz dali rc=1 yerine rc=0 donduruyor",
+      "baseline": "PASS",
+      "mutant": "FAIL",
+      "fail_satiri": "KALDI BG-3: budget_guard: bilinmeyen faz preflight FAIL :: rc=0",
+      "baseline_ozet": "OZ-TEST: 146/146 gecti",
+      "mutant_ozet": "OZ-TEST: 141/146 gecti"
+    },
+    {
+      "id": "OZM-03",
+      "paket": "ATLAS",
+      "kapi": "ATLAS_SABLONLAR/scripts/prompt_lint.py",
+      "test": "PL-3",
+      "test_adi": "prompt_lint: 'kanit GEREKMEZ' vacuous-PASS deligi yakalanir",
+      "mutasyon": "PL-10 vacuous-PASS kontrolu devre disi",
+      "baseline": "PASS",
+      "mutant": "FAIL",
+      "fail_satiri": "KALDI PL-3: prompt_lint: 'kanit GEREKMEZ' vacuous-PASS deligi yakalanir :: rc=1",
+      "baseline_ozet": "OZ-TEST: 146/146 gecti",
+      "mutant_ozet": "OZ-TEST: 141/146 gecti"
+    },
+    {
+      "id": "OZM-04",
+      "paket": "KOD",
+      "kapi": "KOD_SABLONLAR/scripts/dep_audit.py",
+      "test": "DEP-1",
+      "test_adi": "DEP-1 manifest var, kilit ANAHTARI yok -> P0",
+      "mutasyon": "kilit anahtari yok bulgusu P0 yerine P1",
+      "baseline": "PASS",
+      "mutant": "FAIL",
+      "fail_satiri": "FAIL DEP-1 manifest var, kilit ANAHTARI yok -> P0",
+      "baseline_ozet": "KOD OZ-TEST: 174/174 gecti",
+      "mutant_ozet": "KOD OZ-TEST: 165/174 gecti"
+    },
+    {
+      "id": "OZM-05",
+      "paket": "KOD",
+      "kapi": "KOD_SABLONLAR/scripts/freeze_check.py",
+      "test": "FRZ-2",
+      "test_adi": "FRZ-2 profil ele gecirilmis -> GATE_TAMPERED, exit=2 TERMINAL",
+      "mutasyon": "profil SHA256 degisim dali atlandi",
+      "baseline": "PASS",
+      "mutant": "FAIL",
+      "fail_satiri": "FAIL FRZ-2 profil ele gecirilmis -> GATE_TAMPERED, exit=2 TERMINAL",
+      "baseline_ozet": "KOD OZ-TEST: 174/174 gecti",
+      "mutant_ozet": "KOD OZ-TEST: 165/174 gecti"
+    },
+    {
+      "id": "OZM-06",
+      "paket": "KOD",
+      "kapi": "KOD_SABLONLAR/scripts/test_attest.py",
+      "test": "TST-1",
+      "test_adi": "TST-1 temiz kanit PASS",
+      "mutasyon": "temiz kanitta da rc=1 donduren cikis",
+      "baseline": "PASS",
+      "mutant": "FAIL",
+      "fail_satiri": "FAIL TST-1 temiz kanit PASS",
+      "baseline_ozet": "KOD OZ-TEST: 174/174 gecti",
+      "mutant_ozet": "KOD OZ-TEST: 165/174 gecti"
+    }
+  ],
+  "bos_govde": {
+    "taranan_dosya": 9,
+    "test_kaydi": 313,
+    "ihlal": 0,
+    "bulgular": []
+  },
+  "oztest": {
+    "fikstur_bulgu": 3,
+    "fikstur_tipleri": [
+      "BOS_GOVDE",
+      "KOSULSUZ_TRUE"
+    ]
+  },
+  "sayim": {
+    "vaka": 6,
+    "gecen": 6,
+    "bos_govde_ihlal": 0
+  }
+}

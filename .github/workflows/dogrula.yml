@@ -16,9 +16,10 @@ jobs:
   dogrula:
     name: tek giris dogrulama
     runs-on: ubuntu-latest
-    # 141 vakalik mutasyon bataryasi ve iki tam dogrulama kosusu 20 dk'yi
-    # asabiliyor; taze klon + kanit paketi ayni is icinde kosuyor.
-    timeout-minutes: 35
+    # 141 vakalik batarya, ikinci katman oz-test mutasyonu ve iki tam
+    # dogrulama kosusu 35 dk'yi asabiliyor; taze klon + kanit paketi ayni is
+    # icinde kosuyor.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -84,7 +85,7 @@ jobs:
 
       # OLG-1 negatif kontrolu: ana agac degismeden gecici bir klonda
       # attestation commit'i bozulur. `olgu_lint` KANIT_GECERSIZ ile rc=1
-      # vermeli; `atlas_selftest` 144/145 ile kalmali. Kapi zayiflarsa veya
+      # vermeli; `atlas_selftest` 145/146 ile kalmali. Kapi zayiflarsa veya
       # negatif kontrol sessizce kosmazsa bu adim kirmizi olur.
       - name: OLG-1 negatif kontrolu
         run: make olgu-negatif
@@ -101,8 +102,14 @@ jobs:
       - name: Sir kapisi mutasyon kaniti
         run: make sir-mutasyon
 
+      # Ikinci katman: hedef kapiyi bozunca ilgili oz-test kimligi PASS->FAIL
+      # gecmeli. Ayni adim kosulsuz True gecen ve bos govdeli testleri de AST
+      # ile tarar; sentetik fiksturle dedektorun atesledigini ayrica sinar.
+      - name: Oz-test ikinci katman mutasyonu
+        run: make oztest-mutasyon
+
       # Tablo elle yazilmaz; kapi envanteri degisip tablo bayatlarsa kirmizi.
-      # Kapsam regresyon ratchet'i de bu adimdadir: test edilen kural 83'un
+      # Kapsam regresyon ratchet'i de bu adimdadir: test edilen kural 93'un
       # altina duserse veya bosluk 0'in ustune cikarsa make kapsam rc=1 doner.
       - name: Mutasyon kapsami ve regresyon ratchet
         run: make kapsam

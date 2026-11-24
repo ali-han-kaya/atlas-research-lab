@@ -2,7 +2,7 @@ PY ?= python3
 # pip-audit yalniz gelistirme aracidir; varsa yerel sanal ortam kullanilir.
 PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(PY))
 
-.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula makbuz-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon mutasyon-kisa sir-mutasyon oztest demo demo-selftest temiz-teslim taze-klon fresh-clone kapsam kapsam-yaz model-kimlik kamu-lint kamu-selftest kamu-arama kamu-arama-selftest yayin-kapisi katalog-kontrol katalog-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
+.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula makbuz-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon mutasyon-kisa sir-mutasyon oztest-mutasyon oztest-mutasyon-yaz oztest demo demo-selftest temiz-teslim taze-klon fresh-clone kapsam kapsam-yaz model-kimlik kamu-lint kamu-selftest kamu-arama kamu-arama-selftest yayin-kapisi katalog-kontrol katalog-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giris: hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
@@ -19,6 +19,7 @@ yardim:
 	@echo "make mutasyon  kapi sozlesmeleri: temiz taban + ihlal; hata rc!=0, beklenen-bulgu isaretli"
 	@echo "make mutasyon-kisa  6 vakalik hizli duman seti (HATA/TERMINAL/BEKLENEN_BULGU)"
 	@echo "make sir-mutasyon  dort sir kapisi kenarinin FAIL->PASS mutasyon kanitini dogrula"
+	@echo "make oztest-mutasyon  hedef kapi bozulunca ilgili oz-testin PASS->FAIL oldugunu olc; bos govdeli testleri tara"
 	@echo "make demo      ince sarmalayici: ./demo (kod ayrimi icin ./demo; make her hatada 2 doner)"
 	@echo "make demo-selftest  demo 0/1/2 sozlesmesini gecici fiksturlerle sinar"
 	@echo "make temiz-teslim  sentetik temiz teslimi ve 5 kenar fiksturunu uctan uca sinar"
@@ -86,6 +87,12 @@ mutasyon-kisa:
 
 sir-mutasyon:
 	@$(PY) tools/sir_kapisi_mutasyon.py --kontrol
+
+oztest-mutasyon:
+	@$(PY) tools/oztest_mutasyon.py --kontrol
+
+oztest-mutasyon-yaz:
+	@$(PY) tools/oztest_mutasyon.py --yaz
 
 demo:
 	@./demo
