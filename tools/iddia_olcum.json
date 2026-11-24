@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-24T19:52:38Z",
+  "zaman": "2026-11-24T20:51:22Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -39,7 +39,7 @@
       ],
       "rc": 0,
       "ham": "SONUC: 113/113 kural atesledi · 27/27 beklenen bulgu dogrulandi · taban temiz olmayan=0",
-      "deger": "114/114"
+      "deger": "113/113"
     },
     "IDD-05": {
       "komut": [
@@ -291,7 +291,7 @@
       ],
       "rc": 0,
       "ham": "VAKA: 140",
-      "deger": "141"
+      "deger": "140"
     },
     "IDD-40": {
       "komut": [
