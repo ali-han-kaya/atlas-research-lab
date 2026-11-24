@@ -53,8 +53,8 @@
         "tools/kapsam.py"
       ],
       "rc": 0,
-      "ham": "| Mutasyon vakasi olan (TEST EDILDI) | 99 |",
-      "deger": "99"
+      "ham": "| Atesleyen vakayla test edilen kural (TEST EDILDI) | 83 |",
+      "deger": "83"
     },
     "IDD-07": {
       "komut": [
@@ -342,6 +342,24 @@
       "rc": 0,
       "ham": "SCOPE: 22",
       "deger": "22"
+    },
+    "IDD-52": {
+      "komut": [
+        "{py}",
+        "tools/mutasyon_bataryasi.py"
+      ],
+      "rc": 0,
+      "ham": "SOZLESME: 95/95 HATA (rc=1) · 9/9 TERMINAL (rc=2) · 19/19 BEKLENEN_BULGU",
+      "deger": "95/95"
+    },
+    "IDD-53": {
+      "komut": [
+        "{py}",
+        "tools/kapsam.py"
+      ],
+      "rc": 0,
+      "ham": "| Toplam dogrulanan kural | 99 |",
+      "deger": "99"
     }
   }
 }

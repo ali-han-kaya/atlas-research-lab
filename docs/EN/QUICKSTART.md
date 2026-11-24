@@ -61,14 +61,16 @@ in the baseline fails the case before the mutation is even evaluated.
 
 ```text
 SONUC: 104/104 kural atesledi · 19/19 beklenen bulgu dogrulandi · taban temiz olmayan=0
+SOZLESME: 95/95 HATA (rc=1) · 9/9 TERMINAL (rc=2) · 19/19 BEKLENEN_BULGU
 HUKUM: PASS — her vaka temiz tabanda sessiz, ihlalde kirmizi/beklenen bulgu.
 ```
 
 Exit code 0. Every published gate rule is listed in
-[`../MUTASYON_KAPSAM.md`](../MUTASYON_KAPSAM.md): of 121 rules, **99** are
-mutation-tested, **22** are out of scope with a measured reason
-(secret key, commit history, run state, repo state, or a rule id no
-code branch emits), and **0** are explicit gaps — 0 mentioned only in
+[`../MUTASYON_KAPSAM.md`](../MUTASYON_KAPSAM.md): of 121 rules, **83** are
+firing-tested (HATA or TERMINAL), **16** are verified only by an expected
+finding (P1; not added to the coverage count), **22** are out of scope with a
+measured reason (secret key, commit history, run state, repo state, or a rule
+id no code branch emits), and **0** are explicit gaps — 0 mentioned only in
 self-tests, 0 in no test at all. All nine previous gaps now have mutation
 cases; the 19 expected-finding cases (including TST-06, CHK-05 and the
 dedicated `QR-02-DENGE` case for the unbalanced-quote warning) are verified by

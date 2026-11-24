@@ -326,6 +326,8 @@ def risk_tablosu(satirlar):
         _durum = durum[kural]
         if _durum == 'TEST EDILDI' and kural in RISK_EKLENEN:
             _durum = 'TEST EDILDI (%s)' % KAPSAM_TARIHI
+        elif _durum == 'BEKLENEN BULGU' and kural in RISK_EKLENEN:
+            _durum = 'BEKLENEN BULGU (%s)' % KAPSAM_TARIHI
         elif _durum == 'BOSLUK':
             # Gizli sayi dusumu yok: kalan her bosluk acikca bir sonraki
             # dilimin kaydidir; kapsam disi gibi etiketlenmez.
@@ -464,12 +466,41 @@ def tarama():
     return sonuc
 
 
-def batarya():
+def batarya_modu():
     yol = KOK / 'tools' / 'mutasyon_bataryasi.py'
     spec = importlib.util.spec_from_file_location('mb', str(yol))
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    return mod.vakalar()
+    return mod
+
+
+def batarya():
+    return batarya_modu().vakalar()
+
+
+def sozlesme_oztest():
+    """Ayrik sozlesmelerin siniflandigini ve celiskiyi reddettigini sinar."""
+    mod = batarya_modu()
+    taban = ('X-01', 'KOD', 'test', 'x.py', lambda k: [], lambda k: None, 'X-01')
+    if mod.vaka_sozlesmesi(taban)[0] != mod.SOZLESME_HATA:
+        raise SystemExit('SOZLESME OZTEST: etiketsiz vaka HATA degil')
+    bulgu = taban + ('BULGU', {})
+    if mod.vaka_sozlesmesi(bulgu)[0] != mod.SOZLESME_BULGU:
+        raise SystemExit('SOZLESME OZTEST: BULGU etiketi beklenen-bulgu degil')
+    terminal = taban[:-1] + (taban[6], {'sozlesme': mod.SOZLESME_TERMINAL})
+    if mod.vaka_sozlesmesi(terminal)[0] != mod.SOZLESME_TERMINAL:
+        raise SystemExit('SOZLESME OZTEST: terminal sozlesmesi taninmadi')
+    try:
+        mod.vaka_sozlesmesi(taban + ('BULGU', {'sozlesme': mod.SOZLESME_TERMINAL}))
+    except SystemExit:
+        pass
+    else:
+        raise SystemExit('SOZLESME OZTEST: celiskili etiket kabul edildi')
+    gercek = {v[0]: v for v in mod.vakalar()}
+    if mod.vaka_sozlesmesi(gercek['TST-06'])[0] != mod.SOZLESME_BULGU:
+        raise SystemExit('SOZLESME OZTEST: TST-06 beklenen-bulgu degil')
+    if mod.vaka_sozlesmesi(gercek['FRZ-08'])[0] != mod.SOZLESME_TERMINAL:
+        raise SystemExit('SOZLESME OZTEST: FRZ-08 terminal degil')
 
 
 def normalize(kimlik):
@@ -518,25 +549,39 @@ def oz_testler():
 
 
 def olc():
-    """[(betik, kural, vaka|None, durum, gerekce)] + ozet sayilari."""
+    """[(betik, kural, vaka|None, durum, gerekce)] + ozet sayilari.
+
+    Kapsam sayaci yalniz ATESLEYEN sozlesmeleri (HATA/TERMINAL) artirir.
+    BEKLENEN_BULGU ayri sayilir; boylece P1 uyarisini rc=1 gibi gostermeyiz.
+    """
+    mod = batarya_modu()
     envan = envanter()
     testler = {}
-    for vaka in batarya():
+    kontratlar = {}
+    for vaka in mod.vakalar():
         betik = vaka[3]
+        sozlesme = mod.vaka_sozlesmesi(vaka)[0]
         for anahtar in vaka_anahtarlari(vaka):
             testler.setdefault(betik, {}).setdefault(anahtar, []).append(vaka[0])
+            kontratlar.setdefault(betik, {}).setdefault(anahtar, set()).add(sozlesme)
     oz = oz_testler()
 
     satirlar = []
-    test = disi = bosluk = oz_anilan = 0
+    test = beklenen = disi = bosluk = oz_anilan = 0
     for betik, kurallar in envan.items():
         for k in kurallar:
             vakalar = testler.get(betik, {}).get(k)
             if vakalar:
-                test += 1
+                turler = kontratlar.get(betik, {}).get(k, set())
                 etiket = ', '.join(vakalar)
-                satirlar.append((betik, k, etiket, 'TEST EDILDI',
-                                 'mutasyon vakasi: %s' % etiket))
+                if turler & {mod.SOZLESME_HATA, mod.SOZLESME_TERMINAL}:
+                    test += 1
+                    satirlar.append((betik, k, etiket, 'TEST EDILDI',
+                                     'atesleyen mutasyon vakasi: %s' % etiket))
+                else:
+                    beklenen += 1
+                    satirlar.append((betik, k, etiket, 'BEKLENEN BULGU',
+                                     'yalniz beklenen-bulgu sozlesmesi: %s' % etiket))
             elif (betik, k) in KAPSAM_ISTISNA:
                 disi += 1
                 satirlar.append((betik, k, None, 'KAPSAM DISI',
@@ -554,7 +599,7 @@ def olc():
                 else:
                     gerekce = 'BOSLUK — hicbir testte gecmiyor'
                 satirlar.append((betik, k, None, 'BOSLUK', gerekce))
-    return satirlar, envan, (test, disi, bosluk, oz_anilan)
+    return satirlar, envan, (test, disi, bosluk, oz_anilan, beklenen)
 
 
 def ratchet(satirlar):
@@ -621,12 +666,17 @@ def rec_tablosu(vakalar):
 
 
 def markdown():
-    satirlar, envan, (test, disi, bosluk, oz_anilan) = olc()
+    satirlar, envan, (test, disi, bosluk, oz_anilan, beklenen_test) = olc()
     yeni, geri = ratchet(satirlar)
     kod_ici = kod_ici_kimlikler()
-    vakalar = batarya()
+    mod = batarya_modu()
+    vakalar = mod.vakalar()
     toplam_vaka = len(vakalar)
-    beklenen_bulgu = sum(1 for v in vakalar if len(v) >= 8 and v[7] == 'BULGU')
+    sozlesmeler = [mod.vaka_sozlesmesi(v)[0] for v in vakalar]
+    hata_vaka = sozlesmeler.count(mod.SOZLESME_HATA)
+    terminal_vaka = sozlesmeler.count(mod.SOZLESME_TERMINAL)
+    beklenen_bulgu = sozlesmeler.count(mod.SOZLESME_BULGU)
+    atesleyen_vaka = hata_vaka + terminal_vaka
     out = ['# Mutasyon kapsami — tam kural envanteri', '',
            'Kaynak: `tools/kapsam.py` (uretilmis dosya; elle duzenlenmez).',
            'Envanter, ATLAS ve KOD kapi betiklerinin satir basi kural bildirimlerinden',
@@ -637,9 +687,17 @@ def markdown():
            'gerekcesiyle gorunur. Listede olmayan yeni bir kimlik `make kapsam`i',
            'fail-closed durdurur.', '',
            'Her kural icin tek soru sorulur: **mutasyon bataryasinda onu ateslettiren',
-           'bir vaka var mi?** Yoksa iki durumdan biri yazilir: gerekcesi olculmus',
+           'bir HATA veya TERMINAL vakasi var mi?** Yalniz beklenen-bulgu vakasi',
+           'olan kural **BEKLENEN BULGU** olarak ayri sayilir; kapsam sayisini',
+           'artirmaz. Yoksa iki durumdan biri yazilir: gerekcesi olculmus',
            '**KAPSAM DISI** ya da **BOSLUK**. Bosluk gizlenmez. Tarama dosyanin',
            'TAMAMINI gezer; baska kurala/karara yapilan atiflar kural sayilmaz.', '',
+           '## Sozlesme turleri', '',
+           '| Sozlesme | Temiz taban | Ihlalde beklenen | Kapsam |',
+           '|---|---|---|---|',
+           '| HATA | sessiz, rc=0 | rc=1 + hedef iz | TEST EDILDI |',
+           '| TERMINAL | terminal/FAIL izi yok | rc=2 + GATE_TAMPERED + TERMINAL FAIL | TEST EDILDI |',
+           '| BEKLENEN BULGU | hedef iz yok | hedef iz var (rc=0 veya 1) | BEKLENEN BULGU; kapsam sayisina eklenmez |', '',
            'Yeni bir kural icin gecerli iki yol vardir: mutasyon bataryasinda gercek',
            'bir vaka eklemek ya da `KAPSAM_ISTISNA`ya betik+kural anahtariyla',
            'olculmus gerekce yazmak. Betik adina dayanan eski gerekce yeni kurala',
@@ -651,9 +709,13 @@ def markdown():
            '| Bildirilen kural | %d |' % len(satirlar),
            '| Kod icinde uretilen, envantere alinmayan kimlik | %d |' % len(kod_ici),
            '| Batarya vakasi (toplam) | %d |' % toplam_vaka,
-           '| — kural ateslettiren | %d |' % (toplam_vaka - beklenen_bulgu),
+           '| — atesleyen (HATA + TERMINAL) | %d |' % atesleyen_vaka,
+           '| — HATA (rc=1) | %d |' % hata_vaka,
+           '| — TERMINAL (rc=2) | %d |' % terminal_vaka,
            '| — beklenen bulgu | %d |' % beklenen_bulgu,
-           '| Mutasyon vakasi olan (TEST EDILDI) | %d |' % test,
+           '| Atesleyen vakayla test edilen kural (TEST EDILDI) | %d |' % test,
+           '| Yalniz beklenen-bulgu ile dogrulanan kural (BEKLENEN BULGU) | %d |' % beklenen_test,
+           '| Toplam dogrulanan kural | %d |' % (test + beklenen_test),
            '| Gerekceli kapsam disi | %d |' % disi,
            '| Bosluk (gerekce yok) | %d |' % bosluk,
            '| — bunlardan yalniz oz-testte anilan | %d |' % oz_anilan,
@@ -701,7 +763,7 @@ def markdown():
                 '%s itibariyla kapatilmayan bosluk yok (0). Dokuz eski boslugun her biri'
                 % KAPSAM_TARIHI,
                 'gercek bir mutasyon vakasiyla kapatildi; %d beklenen-bulgu vakasi' % beklenen_bulgu,
-                'uyari modunda, digerleri kirmizi hukumle dogrulandi.', '']
+                'uyari modunda, digerleri kirmizi/terminal hukumle dogrulandi.', '']
     out += ['', '## Kapsam disi siniflari', '',
             'Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir',
             '(asagida betik adiyla birlikte yazili).', '']
@@ -762,6 +824,8 @@ def main(argv):
     if '--kontrol' in argv or '--yaz' in argv:
         kod_ici_oztest()
         print('KOD-ICI OZTEST: PASS — bilinmeyen kimlik fail-closed')
+        sozlesme_oztest()
+        print('SOZLESME OZTEST: PASS — HATA/TERMINAL/BEKLENEN_BULGU ayrik')
     satirlar, _envan, _ozet = olc()
     yeni, geri = ratchet(satirlar)
     if '--kontrol' in argv or '--yaz' in argv:

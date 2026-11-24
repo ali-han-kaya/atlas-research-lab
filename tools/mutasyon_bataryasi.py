@@ -39,7 +39,17 @@ KOK = Path(__file__).resolve().parents[1]
 os.environ.setdefault('ATLAS_MODEL_KATALOG', str(KOK / 'tools' / 'mutasyon_katalog.json'))
 AYRINTILI = '--ayrintili' in sys.argv
 ATLA = shutil.ignore_patterns('.git', '__pycache__', 'node_modules', '.pytest_cache',
-                              '.ruff_cache', '.DS_Store')
+                              '.ruff_cache', '.mypy_cache', '.tox', '.venv', 'venv',
+                              'build', 'dist', '.DS_Store')
+
+# Ayrik sozlesmeler: her vaka tek bir sozlesmeye baglidir. HATA rc=1 ister;
+# TERMINAL rc=2 + GATE_TAMPERED/TERMINAL FAIL ister; BEKLENEN_BULGU yalniz
+# hedef bulgu isaretini ister (rc=0 veya rc=1 olabilir). Beklenen bulgu,
+# kirmizi ates sayisina dahil edilmez.
+SOZLESME_HATA = 'HATA'
+SOZLESME_TERMINAL = 'TERMINAL'
+SOZLESME_BULGU = 'BEKLENEN_BULGU'
+SOZLESMELER = frozenset({SOZLESME_HATA, SOZLESME_TERMINAL, SOZLESME_BULGU})
 
 # Anahtar PARCALI yazilir: bu dosya depoda durur ve sir tarayicisi (H4) bitisik
 # deseni yakalar. Parcali literal tarayiciyi yaniltmak icin degil, gercek bir
@@ -215,6 +225,62 @@ def qr_govde(uzun_mu):
             '"%s" %s\n\n## Kaynakca\n\nKaya, A. (2020). Deneme.\n' % (alinti, atif))
 
 
+def _sozlesme_etiketi(deger):
+    """Bir vaka etiketini/opsiyonunu sabit sozlesme adina cevir."""
+    if not isinstance(deger, str):
+        raise SystemExit('SOZLESME: etiket metin olmali: %r' % (deger,))
+    anahtar = deger.strip().upper().replace('-', '_').replace(' ', '_')
+    takma = {
+        'HATA': SOZLESME_HATA,
+        'TERMINAL': SOZLESME_TERMINAL,
+        'BULGU': SOZLESME_BULGU,
+        'BEKLENEN_BULGU': SOZLESME_BULGU,
+        'BEKLENEN': SOZLESME_BULGU,
+    }
+    if anahtar not in takma:
+        raise SystemExit('SOZLESME: bilinmeyen etiket %r (gecerli: %s)'
+                         % (deger, ', '.join(sorted(SOZLESMELER))))
+    return takma[anahtar]
+
+
+def vaka_sozlesmesi(vaka):
+    """(sozlesme, opsiyon) dondur; eski BULGU/terminal kayitlari da okunur.
+
+    Yeni kayitlar `{'sozlesme': SOZLESME_*}` ile acikca etiketlenebilir. Eski
+    `BULGU` konumu ve `terminal=True` alanlari geriye donuk uyumluluk icin
+    ayni sabitlere cevrilir; ayni vakada celiskili iki etiket kabul edilmez.
+    """
+    if not isinstance(vaka, (tuple, list)) or len(vaka) < 7:
+        raise SystemExit('SOZLESME: eksik vaka kaydi: %r' % (vaka,))
+    etiket = None
+    opsiyon = {}
+    if len(vaka) > 7:
+        if isinstance(vaka[7], str):
+            etiket = _sozlesme_etiketi(vaka[7])
+            if len(vaka) > 8:
+                if not isinstance(vaka[8], dict):
+                    raise SystemExit('SOZLESME: opsiyon sozluk olmali: %r' % (vaka,))
+                opsiyon = vaka[8]
+        elif isinstance(vaka[7], dict):
+            opsiyon = vaka[7]
+            if len(vaka) > 8:
+                raise SystemExit('SOZLESME: fazla vaka alani: %r' % (vaka,))
+        else:
+            raise SystemExit('SOZLESME: gecersiz vaka etiketi: %r' % (vaka,))
+    acik = opsiyon.get('sozlesme')
+    if acik is not None:
+        acik = _sozlesme_etiketi(acik)
+        if etiket is not None and etiket != acik:
+            raise SystemExit('SOZLESME: celiskili etiketler: %s / %s'
+                             % (etiket, acik))
+        etiket = acik
+    if etiket is None:
+        etiket = SOZLESME_TERMINAL if opsiyon.get('terminal') else SOZLESME_HATA
+    if opsiyon.get('terminal') and etiket != SOZLESME_TERMINAL:
+        raise SystemExit('SOZLESME: terminal=True ile %s birlikte olamaz' % etiket)
+    return etiket, opsiyon
+
+
 def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None,
                       terminal=False, env=None, kontrol=False, yalniz=False,
                       taban_bilgi=None):
@@ -306,14 +372,22 @@ def taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz, taban_rc=0, cwd=None,
             return 'KONTROL_KIRMIZI', 'kontrol ciktisinda terminal izi var'
 
     if terminal:
-        return 'GECTI', ('taban rc=0 · FAIL iz yok · mutasyon rc=2 · '
-                         'GATE_TAMPERED+TERMINAL · FAIL iz=%s (yalniz) · '
-                         'kontrol rc=0 · FAIL iz yok' % '+'.join(izler))
+        return 'GECTI-TERMINAL', (
+            'taban rc=0 · FAIL iz yok · mutasyon rc=2 · '
+            'GATE_TAMPERED+TERMINAL · FAIL iz=%s (yalniz) · '
+            'kontrol rc=0 · FAIL iz yok' % '+'.join(izler))
     if kontrol:
         return 'GECTI', ('taban rc=0 · FAIL iz yok · mutasyon rc=%d · '
                          'FAIL iz=%s (yalniz) · kontrol rc=0 · FAIL iz yok' % (
                              rc1, '+'.join(izler)))
     return 'GECTI', 'taban rc=0 · mutasyon rc=%d · iz=%s' % (rc1, '+'.join(izler))
+
+
+def taban_ve_terminal(kok, kapi, argumanlar, mutasyon, iz, **kwargs):
+    """Ayrik terminal sozlesmesi: rc=2 ve iki terminal izi birlikte aranir."""
+    kwargs.pop('terminal', None)
+    return taban_ve_mutasyon(kok, kapi, argumanlar, mutasyon, iz,
+                             terminal=True, **kwargs)
 
 
 def _sha(p):
@@ -967,7 +1041,11 @@ def taban_ve_bulgu(kok, kapi, argumanlar, mutasyon, iz, cwd=None, env=None):
 
 
 def vakalar():
-    """Her vaka: (kimlik, katman, kural, kapi, argumanlar, mutasyon, iz[, 'BULGU'])."""
+    """Her vaka: (kimlik, katman, kural, kapi, argumanlar, mutasyon, iz[, etiket[, opsiyon]]).
+
+    Etiket `BULGU` ya da `TERMINAL` olabilir; yeni kayitlarda `opsiyon` icine
+    `sozlesme` yazmak tercih edilir. Etiketsiz/opsiyonsuz vaka HATA'dir.
+    """
     return [
         ('KOD-SEC-02', 'KOD', 'gercek sir kalibi P0', 'KOD_SABLONLAR/scripts/secret_scan.py',
          lambda k: ['--tum', '--dizin', str(k / 'sandbox')],
@@ -1271,24 +1349,26 @@ def vakalar():
         ('FRZ-08', 'KOD', 'temiz agac imzasi dogrulanir', 'KOD_SABLONLAR/scripts/freeze_check.py',
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          _frz08,
-         'FRZ-08', {'terminal': True, 'kur': _frz08_hazirla, 'env': _frz08_env()}),
+         'FRZ-08', {'sozlesme': SOZLESME_TERMINAL, 'kur': _frz08_hazirla,
+                    'env': _frz08_env()}),
         ('FRZ-08-IMZA', 'KOD', 'imzali taban icerigi kurcalanamaz',
          'KOD_SABLONLAR/scripts/freeze_check.py',
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          _frz08_imza,
-         'FRZ-08', {'terminal': True, 'kur': _frz08_imza_hazirla, 'env': _frz08_env(),
-                    'taban_bilgi': 'FRZ-08'}),
+         'FRZ-08', {'sozlesme': SOZLESME_TERMINAL, 'kur': _frz08_imza_hazirla,
+                    'env': _frz08_env(), 'taban_bilgi': 'FRZ-08'}),
         ('FRZ-08-YANLIS-ANAHTAR', 'KOD', 'baska anahtarla imzali taban terminal',
          'KOD_SABLONLAR/scripts/freeze_check.py',
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          _frz08_yanlis_anahtar,
-         'FRZ-08', {'terminal': True, 'kur': _frz08_imza_hazirla, 'env': _frz08_env(),
-                    'taban_bilgi': 'FRZ-08'}),
+         'FRZ-08', {'sozlesme': SOZLESME_TERMINAL, 'kur': _frz08_imza_hazirla,
+                    'env': _frz08_env(), 'taban_bilgi': 'FRZ-08'}),
         ('FRZ-08-P1', 'KOD', 'imzasiz temiz taban dusuk guven',
          'KOD_SABLONLAR/scripts/freeze_check.py',
          lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
          _frz08_p1,
-         'FRZ-08 DUSUK_GUVEN', 'BULGU', {'kur': _frz08_hazirla}),
+         'FRZ-08 DUSUK_GUVEN', 'BULGU', {'sozlesme': SOZLESME_BULGU,
+                                          'kur': _frz08_hazirla}),
         ('DEP-01', 'KOD', 'manifest varken kilit beyani zorunlu',
          'KOD_SABLONLAR/scripts/dep_audit.py',
          lambda k: [],
@@ -1454,7 +1534,8 @@ def vakalar():
                     '--profil', str(k / 'kod_profil.json'),
                     '--kosu', str(k / 'sandbox_tst')],
          _tst06,
-         'TST-06', 'BULGU', {'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_hazirla}),
+         'TST-06', 'BULGU', {'sozlesme': SOZLESME_BULGU,
+                            'cwd': 'sandbox_tst/gitdepo', 'kur': _tst_hazirla}),
         ('TST-10', 'KOD', 'rapor kaynaktan eski olamaz',
          'KOD_SABLONLAR/scripts/test_attest.py',
          lambda k: ['--kanit', str(k / 'sandbox_tst' / '03-KFAZ-3-TEST-EVIDENCE.json'),
@@ -1722,40 +1803,42 @@ def main():
         return 1
 
     gecen = 0
+    gecen_terminal = 0
     gecen_bulgu = 0
     satirlar = []
     tum = vakalar()
+    sozlesmeler = [vaka_sozlesmesi(v)[0] for v in tum]
+    hata_top = sozlesmeler.count(SOZLESME_HATA)
+    terminal_top = sozlesmeler.count(SOZLESME_TERMINAL)
+    bulgu_top = sozlesmeler.count(SOZLESME_BULGU)
     kimlikler = [v[0] for v in tum]
     yinelenen = sorted({k for k in kimlikler if kimlikler.count(k) > 1})
     if yinelenen:
         print('HUKUM: FAIL — yinelenen vaka ID: %s' % ', '.join(yinelenen))
         return 1
     for vaka in tum:
-        opsiyon = {}
-        if len(vaka) >= 8 and vaka[7] == 'BULGU':
-            kimlik, katman, kural, kapi, argumanlar, mutasyon, iz = vaka[:7]
-            bulgu_modu = True
-            if len(vaka) >= 9 and isinstance(vaka[8], dict):
-                opsiyon = vaka[8]
-        else:
-            kimlik, katman, kural, kapi, argumanlar, mutasyon, iz = vaka[:7]
-            bulgu_modu = False
-            if len(vaka) == 8 and isinstance(vaka[7], dict):
-                opsiyon = vaka[7]
+        sozlesme, opsiyon = vaka_sozlesmesi(vaka)
+        kimlik, katman, kural, kapi, argumanlar, mutasyon, iz = vaka[:7]
         tmp = Path(tempfile.mkdtemp(prefix='atlas_mut_'))
         try:
             hedef = tmp / 'depo'
             shutil.copytree(KOK, hedef, symlinks=True, ignore=ATLA)
             hazirla(hedef, opsiyon)
             calisma = hedef / opsiyon['cwd'] if opsiyon.get('cwd') else hedef
-            if bulgu_modu:
+            if sozlesme == SOZLESME_BULGU:
                 durum, ayrinti = taban_ve_bulgu(
                     hedef, kapi, argumanlar, mutasyon, iz, cwd=calisma,
                     env=opsiyon.get('env'))
+            elif sozlesme == SOZLESME_TERMINAL:
+                durum, ayrinti = taban_ve_terminal(
+                    hedef, kapi, argumanlar, mutasyon, iz, cwd=calisma,
+                    env=opsiyon.get('env'),
+                    kontrol=bool(opsiyon.get('kontrol')),
+                    yalniz=bool(opsiyon.get('yalniz')),
+                    taban_bilgi=opsiyon.get('taban_bilgi'))
             else:
                 durum, ayrinti = taban_ve_mutasyon(
                     hedef, kapi, argumanlar, mutasyon, iz, cwd=calisma,
-                    terminal=bool(opsiyon.get('terminal')),
                     env=opsiyon.get('env'),
                     kontrol=bool(opsiyon.get('kontrol')),
                     yalniz=bool(opsiyon.get('yalniz')),
@@ -1765,6 +1848,8 @@ def main():
 
         if durum == 'GECTI':
             gecen += 1
+        elif durum == 'GECTI-TERMINAL':
+            gecen_terminal += 1
         elif durum == 'GECTI-BULGU':
             gecen_bulgu += 1
         satirlar.append((kimlik, katman, kural, durum, ayrinti))
@@ -1773,13 +1858,18 @@ def main():
         print('         %s' % ayrinti)
 
     print()
-    toplam_bulgu = sum(1 for v in tum if len(v) >= 8 and v[7] == 'BULGU')
     print('SONUC: %d/%d kural atesledi · %d/%d beklenen bulgu dogrulandi · '
           'taban temiz olmayan=%d' % (
-              gecen, len(tum) - toplam_bulgu, gecen_bulgu, toplam_bulgu,
-              sum(1 for s in satirlar if s[3] in ('TABAN_KIRIK', 'TABAN_KIRLI'))))
+              gecen + gecen_terminal, hata_top + terminal_top, gecen_bulgu,
+              bulgu_top, sum(1 for s in satirlar
+                             if s[3] in ('TABAN_KIRIK', 'TABAN_KIRLI'))))
+    print('SOZLESME: %d/%d HATA (rc=1) · %d/%d TERMINAL (rc=2) · '
+          '%d/%d BEKLENEN_BULGU' % (
+              gecen, hata_top, gecen_terminal, terminal_top,
+              gecen_bulgu, bulgu_top))
 
-    kirik = [s for s in satirlar if s[3] not in ('GECTI', 'GECTI-BULGU')]
+    kirik = [s for s in satirlar
+             if s[3] not in ('GECTI', 'GECTI-TERMINAL', 'GECTI-BULGU')]
     if kirik:
         print('HUKUM: FAIL — ateslemeyen vaka var; kapi kaniti eksik.')
         return 1

@@ -101,15 +101,16 @@ unknown label becomes `SCHEMA_INVALID` → P0; KEEP fingerprints so silent delet
 visible; evidence levels (`BIRINCIL`/`DIJITAL`/`BEYAN`/`OLCULMEDI`); fail-closed handling
 (unmeasured is never a pass); and tamper detection (`GATE_TAMPERED` → P0).
 - **How claims are verified.** `make dogrula` (hygiene, syntax, secret scan, secret-gate
-self-test, three self-test suites), `make mutasyon` (ninety-nine gate rules, exercised by
-123 battery cases: silent clean baseline + one violation + a red verdict or expected finding), and `tools/yayinla.py`
+self-test, three self-test suites), `make mutasyon` (eighty-three firing-tested gate rules,
+each exercised by a 123-case battery: silent clean baseline + one violation + a red/terminal
+verdict or expected finding), and `tools/yayinla.py`
 (publish parity: 0 new / 0 changed / 0 deleted). The same commands run in CI on GitHub Actions.
 `make iddia` closes the remaining gap: it re-measures the numbers printed in this README.
 - **Reproduce it.** `./demo` prints the frozen 8-vs-2 failure with a **red verdict and
 exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin
 wrapper and cannot carry 1 vs 2, because GNU make always exits 2 on a failing recipe. `make dogrula` → **8 pass / 0 fail / 0 not run** (T1, `OLG-1`, now
 runs against this tree's `attestation.json`); current self-test and inventory values are generated in
-[`docs/DURUM.md`](docs/DURUM.md). Mutation battery **104/104 cases red + 19/19 expected findings** over 99 rules. Mutation-tested vs untested gate rules are measured
+[`docs/DURUM.md`](docs/DURUM.md). Mutation battery **104/104 firing cases + 19/19 expected findings** over 99 verified rules: **83 firing-tested** and **16 expected-finding-only**. Mutation-tested vs untested gate rules are measured
 in [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md); dependent-package findings in
 [`docs/GUVENLIK.md`](docs/GUVENLIK.md); CI green. Non-Turkish readers:
 [`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md).
@@ -293,7 +294,7 @@ tek bir ihlal üretilir ve kapının **kırmızıya döndüğü**
 kalabilir, ama ihlal sonrası beklenen uyarı/işaret çıktıda **bulunmalıdır**. Her
 iki modda da temiz tabanda bulgunun yokluğu ortak ön koşuldur; taban kirliyse
 veya ihlal sonrası beklenen iz yoksa vaka geçmez. Katalog 123 vakadır:
-104 hata + 19 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,
+104 ateşleyen (95 HATA + 9 TERMINAL) + 19 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,
 `quote_ratio.py` içindeki dengesiz düz tırnak uyarısını ayrı bir vaka olarak
 kilitler; böylece uyarı dalı runner tarafından atlanmaz. Model, ağ ve yerel
 katalog gerekmez.
@@ -567,13 +568,16 @@ kapısı `KANIT-05` ile kırmızı olur. Ayrıntılı sınırlar ve negatif kont
 
 ## Mutasyon kapsamı
 
-`make mutasyon` yüz yirmi vakanın gerçekten ateşlediğini kanıtlar: hata vakalarında
-sessiz temiz taban → tek ihlal → kırmızı hüküm; beklenen-bulgu vakalarında sessiz
-temiz taban → tek ihlal → işaretli bulgu (`rc=0` olabilir). **Her kuralın** durumu ise
+`make mutasyon` 123 vakanın gerçekten ateşlediğini kanıtlar: HATA vakalarında
+sessiz temiz taban → tek ihlal → `rc=1`; TERMINAL vakalarında `rc=2` +
+`GATE_TAMPERED`/`TERMINAL FAIL`; beklenen-bulgu vakalarında sessiz temiz taban →
+tek ihlal → işaretli bulgu (`rc=0` olabilir). **Her kuralın** durumu ise
 [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md) içinde tek tek yazılıdır. Tablo
 `tools/kapsam.py` tarafından üretilir (elle yazılmaz) ve üç durum ayırır:
 
-- **TEST EDİLDİ** — 99 kural (mutasyon vakası adıyla)
+- **TEST EDİLDİ** — 83 kural (ateşleyen HATA/TERMINAL vakasıyla)
+- **BEKLENEN BULGU** — 16 kural (yalnız P1/beklenen-bulgu sözleşmesiyle;
+  kapsam sayısına eklenmez)
 - **KAPSAM DIŞI** — 22 kural, her biri ölçülmüş bir gerekçeyle: gizli anahtar
   (`teslim_imza`), tarihçe (`olgu_lint`), koşu durumu (`api_surface`,
   `oztest_attest`), depo durumu (`dep_audit`), ölü kural kimliği
