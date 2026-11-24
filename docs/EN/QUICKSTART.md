@@ -102,7 +102,7 @@ ATLAS_LAB=<LAB_KOKU> make yayinla
 
 ```text
 YAYIN PLANI · kaynak: <lab path>
-  planda=218 · yeni=0 · degisen=0 · ayni=218 · silinecek=0
+  planda=219 · yeni=0 · degisen=0 · ayni=219 · silinecek=0
 
 SIR TARAMASI: temiz (0 bulgu)
 

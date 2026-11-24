@@ -54,6 +54,8 @@ DOCS_DOSYALARI = [
     'DEVIR-2026-09-03-1945-AUD-06-07.md',
     # H5 penceresinin kamu kaydı; plan dışında kalırsa `fazlalik` onu silmek ister.
     'DEVIR-2026-11-22-1923.md',
+    # Kapı çıktısı sözleşmesi penceresinin kamu kaydı.
+    'DEVIR-2026-11-24-1507.md',
     'GUVENLIK.md', 'MUTASYON_KAPSAM.md',
     'YEDEK.md',
     'KOD_BEDAVA_MODEL_POLITIKASI.md',
