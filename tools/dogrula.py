@@ -43,6 +43,11 @@ siniri olmadan taranir; onay listesinde olmayan tek bir incelenemeyen dosya da
 FAIL uretir. Bu kontrol sayilan sekiz kaleme eklenmez; demo gibi bir on
 kosuldur ve `make dogrula`yi fail-closed durdurur.
 
+PAKET BUTUNLUGU: `KOMUT_TOOLKIT_v4/ARACLAR/SHA256SUMS.txt` her kosuda yeniden
+hesaplanir. Paket kendi `shasum -c` kaydini tasidigi icin tek bir bayat satir
+"dogrulanabilir paket" iddiasini sessizce bozar; bicim hatasi, paket disi yol,
+eksik dosya ve hash uyusmazligi fail-closed durdurur.
+
 CIKIS: 0 = hukme giren kalemlerin hepsi gecti (CALISTIRILMADI varsa bile) ·
        1 = en az bir kalem FAIL · 2 = kosulamadi
 
@@ -294,6 +299,58 @@ def fikstur_muafiyeti():
     baslik = [s for s in satirlar if s.startswith('HUKUM:')]
     son = (baslik[-1] if baslik else (satirlar[-1] if satirlar else '(bos cikti)'))
     return rc == 0, son[:150], ([] if rc == 0 else satirlar[-12:])
+
+
+PAKET_MANIFEST = os.path.join(KOK, 'KOMUT_TOOLKIT_v4', 'ARACLAR',
+                              'SHA256SUMS.txt')
+
+
+def paket_butunlugu():
+    """Toolkit'in kendi SHA256SUMS.txt manifestini yeniden hesaplayarak denetle.
+
+    Sayilan sekiz kaleme dahil degildir; kamu temizligi gibi bir on kosuldur.
+    Manifest, paketin `shasum -c` ile dogrulanabilirligini tasiyan tek kayittir;
+    bir satir bayatlarsa paket yanlis hash yayinlar ve dogrulama sessizce
+    korlesir. Her satir fail-closed denetlenir: bicim, paket disi yol, dosya
+    varligi ve hash uyusmazligi.
+    """
+    kok = os.path.dirname(os.path.dirname(PAKET_MANIFEST))
+    try:
+        with open(PAKET_MANIFEST, encoding='utf-8') as f:
+            satirlar = [s.rstrip('\r\n') for s in f if s.strip()]
+    except OSError as e:
+        return False, 'manifest okunamadi', ['%s: %s' % (PAKET_MANIFEST, e)]
+    if not satirlar:
+        return False, 'manifest bos', ['SHA256SUMS.txt: 0 satir']
+    sorunlar = []
+    eslesen = 0
+    for no, satir in enumerate(satirlar, 1):
+        m = re.match(r'^([0-9a-f]{64})  (\S.*)$', satir)
+        if not m:
+            sorunlar.append('satir %d: bicim gecersiz' % no)
+            continue
+        beklenen, goreli = m.group(1), m.group(2)
+        yol = os.path.normpath(os.path.join(kok, goreli))
+        if os.path.commonpath([kok, yol]) != kok:
+            sorunlar.append('satir %d: paket disi yol %s' % (no, goreli))
+            continue
+        try:
+            with open(yol, 'rb') as f:
+                gercek = hashlib.sha256(f.read()).hexdigest()
+        except OSError:
+            sorunlar.append('%s: dosya yok' % goreli)
+            continue
+        if gercek != beklenen:
+            sorunlar.append('%s: %s != %s'
+                            % (goreli, gercek[:12], beklenen[:12]))
+            continue
+        eslesen += 1
+    if sorunlar:
+        return (False,
+                '%d/%d OK · %d uyusmaz' % (eslesen, len(satirlar),
+                                           len(sorunlar)),
+                sorunlar[-12:])
+    return True, '%d/%d OK' % (eslesen, len(satirlar)), []
 
 
 def kapsam_oztesti():
@@ -847,6 +904,20 @@ def main():
                         'fikstur muafiyet testi FAIL')
         print()
         print('  HUKUM: FAIL — FIKSTUR MUAFIYETI (sessiz/P0/fail-closed)')
+        return 1
+    print()
+
+    paket_gecti, paket_ozet, paket_detay = paket_butunlugu()
+    print('  %-24s %-7s %s' % ('paket butunlugu',
+                                'PASS' if paket_gecti else 'FAIL', paket_ozet))
+    for satir in paket_detay:
+        print('        | %s' % satir[:400])
+    if not paket_gecti:
+        if JSON:
+            _json_erken('ONKOSUL.PAKET', 'paket butunlugu', paket_ozet,
+                        'paket butunlugu FAIL')
+        print()
+        print('  HUKUM: FAIL — PAKET BUTUNLUGU (SHA256SUMS bayat/bozuk)')
         return 1
     print()
 
