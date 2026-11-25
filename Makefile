@@ -109,6 +109,12 @@ taze-klon:
 
 fresh-clone: taze-klon
 
+katalog-kurallar:
+	@$(PY) tools/kural_katalogu.py --yaz
+
+katalog-kurallar-kontrol:
+	@$(PY) tools/kural_katalogu.py --kontrol
+
 kapsam:
 	@$(PY) tools/kapsam.py --kontrol
 

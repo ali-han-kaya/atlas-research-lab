@@ -23,6 +23,8 @@ BEKLENEN KIRMIZI — bu komut bilerek rc=1 doner.
 
 The mutation baseline above is historical. The current battery is **113/113** firing cases plus **27/27** expected findings over **117** verified rules: **93 firing-tested** and **24 expected-finding-only**; `make dogrula` reports **8/8**.
 
+Gate scripts declare **121** identifiers. **117** of them are rules — **93** proven by a case that turns the gate red and **24** that only emit an expected marker — and **4** are dead identities that no code branch ever prints, plus **1** external decision reference. Zero rules are out of scope with a measured reason, and zero are unexplained gaps. The full per-rule table is generated from code: [`docs/KURAL-KATALOGU.md`](docs/KURAL-KATALOGU.md).
+
 ATLAS ships the production mechanism itself — the academic audit and code pipelines, agents, templates, executable gates, self-tests and a mutation battery — and deliberately excludes the papers, corpora and session handoffs it produces. Its sharpest evidence is a frozen defective run (`DENEME/`): the fix manifest declared every fix applied while only a fraction reached the master text, and the gate of that day still said `PASS`; `./demo` reproduces that false `PASS` and returns a red verdict by design.
 
 **Turkish documentation:** [`README.tr.md`](README.tr.md). The English file is the default entry; the Turkish file remains the complete canonical description.
@@ -41,6 +43,36 @@ make dogrula
 ```
 
 `./demo` is the canonical demo entry point. Its exit code is exactly **1** for the expected red and **2** for a broken fixture; a consistent fixture exits cleanly. `make demo` is only a thin wrapper: GNU make reports every failing recipe as **2**, so it cannot carry the 1-versus-2 distinction. Use `./demo` when the code matters.
+
+## How a violation travels
+
+A rule is only worth what its gate can prove. Every violation therefore has to
+survive the same seven layers:
+
+```text
+1. gate scripts        ATLAS_SABLONLAR/scripts, KOD_SABLONLAR/scripts
+                       each rule lives in one script; rc=1 (error) or rc=2 (terminal)
+2. mutation battery    tools/mutasyon_bataryasi.py
+                       clean baseline, one violation, undo; leakage + green-again checks
+3. run evidence        tools/mutasyon_sonuc.json
+                       per-case outcome of the last real run
+4. scope               tools/kapsam.py
+                       inventory, severity, evidence; ratchet on tested/gap counts
+5. single entry gate   tools/dogrula.py
+                       H1..H5 hygiene/secrets + T1..T3 self-tests; 8 checks, raw output
+6. claim ledger        tools/iddia.py
+                       every number printed in the docs is re-measured by running it
+7. tree attestation    tools/kanit.py + attestation.json
+                       commit/tree SHA-256, recomputed by the entry gate
+```
+
+Two properties matter more than the layer count. First, **evidence is a run,
+not a definition**: coverage status is read from the last battery run, and the
+battery's freshness is bound to the source SHA-256 of the gates — so editing a
+gate invalidates the evidence instead of silently keeping it. Second, **every
+case is checked for leakage and for reversibility**: only its own label may
+fire, and undoing the violation must turn the gate green again. A case that
+turns red for the wrong reason fails the battery.
 
 ## What is measured
 
@@ -68,4 +100,5 @@ CI runs the runner form of the checks, the mutation battery, scope freshness, de
 - [`README.tr.md`](README.tr.md) — complete Turkish documentation.
 - [`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md) — longer English quickstart.
 - [`docs/README.md`](docs/README.md) — published scope and exclusions.
+- [`docs/KURAL-KATALOGU.md`](docs/KURAL-KATALOGU.md) — generated rule catalogue: every rule, its severity, what it checks, how it is proven, and the measured reason for each excluded identifier.
 - [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md) — which gate rules are mutation-tested, out of scope or still gaps.
