@@ -15,6 +15,9 @@ Kapsanan kodlar:
   KANIT-05  guncel HEAD agaci kayitli agactan farkli
   KANIT-06  izlenen agac kirli
 
+Ayrica `kanit.py`'nin paket hedefi korumasini sinar: var olan yabanci bir
+dizin reddedilmeli, icindeki dosyalar silinmemelidir; yeni yol kabul edilir.
+
 Kullanim: python3 tools/kanit_negatif.py
 CIKIS: 0 = butun vakalar beklendigi gibi kirmizi · 1 = sapma/kurulum hatasi
 """
@@ -244,6 +247,100 @@ def senaryo(klon, head, bekle):
     )
 
 
+def paket_guvenlik_testleri(bekle):
+    """kanit.py --paket: yabanci dizini silmeden reddetmeyi olcer."""
+    sys.path.insert(0, str(KOK / "tools"))
+    try:
+        import kanit
+    finally:
+        sys.path.pop(0)
+
+    with tempfile.TemporaryDirectory(prefix="kanit-paket-guvenlik-") as gecici:
+        kok = Path(gecici)
+        yanlis = kok / "yanlis"
+        yanlis.mkdir()
+        korunacak = yanlis / "KORUNACAK"
+        korunacak.write_text("dokunma\n", encoding="utf-8")
+        try:
+            kanit.paket_hedef_dogrula(yanlis)
+        except ValueError as exc:
+            bekle("yabanci paket dizini reddedildi",
+                  "ATLAS kanit paketi degil" in str(exc), str(exc))
+        else:
+            bekle("yabanci paket dizini reddedildi", False,
+                  "yabanci dizin kabul edildi")
+        bekle("yabanci dizin silinmedi",
+              korunacak.is_file() and korunacak.read_text(encoding="utf-8")
+              == "dokunma\n", "KORUNACAK dosyasi kayboldu")
+
+        yeni = kok / "yeni"
+        try:
+            coz = kanit.paket_hedef_dogrula(yeni)
+        except ValueError as exc:
+            bekle("yeni paket yolu kabul edildi", False, str(exc))
+        else:
+            bekle("yeni paket yolu kabul edildi", coz == yeni.resolve(),
+                  "cozulen yol=%r" % coz)
+
+        # Kendi urettigimiz gecerli paket kabul edilir ve yeniden yazilabilir.
+        paket = kok / "gecti"
+        att_metni = json.dumps({
+            "schema": "ATLAS-KANIT/v1",
+            "commit": "a" * 40,
+            "tree": "b" * 40,
+            "tree_sha256": "c" * 64,
+            "files": [],
+        }, ensure_ascii=False, indent=2) + "\n"
+        att_verisi = {
+            "commit": "a" * 40,
+            "tree": "b" * 40,
+            "tree_sha256": "c" * 64,
+            "files": [],
+        }
+        komutlar = [("selftest", ["true"], 0, "PASS selftest\n", "", 1, None)]
+        try:
+            kanit.paket_yaz(paket, att_metni, att_verisi, komutlar)
+            kanit.paket_hedef_dogrula(paket)
+        except (OSError, ValueError) as exc:
+            bekle("kendi paket hedefi kabul edildi", False, str(exc))
+        else:
+            bekle("kendi paket hedefi kabul edildi", True)
+
+        # Paket icine sonradan eklenen yabanci dosya sahipligi bozar.
+        ekstra = paket / "EKSTRA"
+        ekstra.write_text("dokunma\n", encoding="utf-8")
+        try:
+            kanit.paket_hedef_dogrula(paket)
+        except ValueError as exc:
+            bekle("paket icindeki yabanci dosya reddedildi",
+                  "manifest disi dosya" in str(exc), str(exc))
+        else:
+            bekle("paket icindeki yabanci dosya reddedildi", False,
+                  "yabanci dosya kabul edildi")
+        bekle("paket icindeki yabanci dosya silinmedi",
+              ekstra.is_file() and ekstra.read_text(encoding="utf-8")
+              == "dokunma\n", "EKSTRA dosyasi kayboldu")
+
+        dosya = kok / "dosya"
+        dosya.write_text("x", encoding="utf-8")
+        try:
+            kanit.paket_hedef_dogrula(dosya)
+        except ValueError as exc:
+            bekle("paket hedefi dosya reddedildi",
+                  "dizin degil" in str(exc), str(exc))
+        else:
+            bekle("paket hedefi dosya reddedildi", False,
+                  "dosya hedefi kabul edildi")
+
+        for ad, yol in (("depo koku", KOK), (".git", KOK / ".git")):
+            try:
+                kanit.paket_hedef_dogrula(yol)
+            except ValueError:
+                bekle("%s reddedildi" % ad, True)
+            else:
+                bekle("%s reddedildi" % ad, False, str(yol))
+
+
 def main():
     hatalar = []
     toplam = 0
@@ -259,6 +356,8 @@ def main():
             for satir in str(ayrinti).strip().splitlines()[-14:]:
                 print("  | " + satir)
         hatalar.append(ad)
+
+    paket_guvenlik_testleri(bekle)
 
     head_once = git(KOK, "rev-parse", "HEAD")
     durum_once = durum(KOK)

@@ -19,10 +19,16 @@ yeni agac kanitini kullanir; yalniz attestation.json degistigi icin
 `kanit_dogrula`nin agac temizligi kurali bunu dislar. Paket git'e eklenmez
 (`.gitignore`); tasimak icin dizini kopyalamak yeterlidir.
 
+Var olan bir `--paket` hedefi yalniz sonuc/makbuz/attestation semalari ve
+manifest hash'leri bu araç tarafindan uretilmis paketle tutarliysa temizlenir.
+Yabanci, bos, dosya, sembolik baglanti, depo koku/ustu ve `.git` altindaki
+yollar reddedilir; hicbiri silinmez.
+
 Kullanim:
   python3 tools/kanit.py                    # attestation + kanit-paketi
   python3 tools/kanit.py --cikti <yol>      # attestation'i baska yola yaz
-  python3 tools/kanit.py --paket <dizin>    # paket konumunu degistir
+  python3 tools/kanit.py --paket <dizin>    # paket konumunu degistir; mevcut
+                                             # yabanci dizinleri silmez
   python3 tools/kanit.py --komut "make kapsam"  # varsayilan komutlari degistir
   python3 tools/kanit.py --paketsiz         # yalniz attestation (eski davranis)
 
@@ -262,11 +268,141 @@ def attestation_verisi(commit, tree, dosyalar):
     }
 
 
+def paket_hedef_dogrula(paket):
+    """Paket hedefini coz ve yalniz kendi urettigimiz paketi kabul et.
+
+    Var olan bir dizin ancak sonuc/makbuz/attestation semalari ve manifest
+    hash'leri tutarliysa onceki paket sayilir. Bos, yabanci, dosya, sembolik
+    baglanti, depo koku/ustu ve .git altindaki yollar reddedilir; hicbiri
+    silinmez. Donen yol cozulmus (resolved) yoldur.
+    """
+    ham = Path(paket)
+    if ham.is_symlink():
+        raise ValueError("PAKET REDDEDILDI — sembolik baglanti: %s" % ham)
+    coz = ham.resolve()
+    kok = KOK.resolve()
+    if coz == kok or coz in kok.parents:
+        raise ValueError("PAKET REDDEDILDI — depo koku veya ustu: %s" % coz)
+    if coz.parent == Path("/"):
+        raise ValueError("PAKET REDDEDILDI — kok altindaki ust dizin: %s" % coz)
+    if coz == Path.home().resolve():
+        raise ValueError("PAKET REDDEDILDI — ev dizini: %s" % coz)
+    if any(par.name == ".git" for par in (coz, *coz.parents)):
+        raise ValueError("PAKET REDDEDILDI — .git icinde: %s" % coz)
+    if not coz.exists():
+        return coz
+    if not coz.is_dir():
+        raise ValueError(
+            "PAKET REDDEDILDI — mevcut hedef dizin degil; silinmedi: %s" % coz)
+    _paket_sahipligi_dogrula(coz)
+    return coz
+
+
+def _paket_sahipligi_dogrula(paket):
+    """Var olan dizinin bu araç tarafından uretilmis paket oldugunu kanitla."""
+    zorunlu = (SONUC, ATTESTATION, MANIFEST, MAKBUZ, LOG_DIZINI)
+    eksik = [ad for ad in zorunlu if not (paket / ad).exists()]
+    if eksik:
+        raise ValueError(
+            "PAKET REDDEDILDI — mevcut dizin ATLAS kanit paketi degil "
+            "(eksik: %s); silinmedi" % ", ".join(eksik))
+    if not (paket / LOG_DIZINI).is_dir():
+        raise ValueError(
+            "PAKET REDDEDILDI — komutlar dizini degil; silinmedi: %s" % paket)
+
+    def _json(ad):
+        try:
+            return json.loads((paket / ad).read_text(encoding="utf-8"))
+        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+            raise ValueError(
+                "PAKET REDDEDILDI — %s okunamadi (%s); silinmedi"
+                % (ad, type(exc).__name__))
+
+    sonuc = _json(SONUC)
+    makbuz = _json(MAKBUZ)
+    attestation = _json(ATTESTATION)
+    if not isinstance(sonuc, dict) or sonuc.get("schema") != SEMA_SONUC:
+        raise ValueError(
+            "PAKET REDDEDILDI — sonuc.json semasi ATLAS-DOGRULAMA/v1 degil; "
+            "silinmedi")
+    if not isinstance(makbuz, dict) or makbuz.get("schema") != SEMA_MAKBUZ:
+        raise ValueError(
+            "PAKET REDDEDILDI — makbuz.json semasi ATLAS-MAKBUZ/v1 degil; "
+            "silinmedi")
+    if not isinstance(attestation, dict) or attestation.get("schema") != SEMA:
+        raise ValueError(
+            "PAKET REDDEDILDI — attestation.json semasi ATLAS-KANIT/v1 degil; "
+            "silinmedi")
+    paket_bilgi = sonuc.get("package")
+    if not isinstance(paket_bilgi, dict) \
+            or paket_bilgi.get("format") != "directory" \
+            or paket_bilgi.get("manifest_file") != MANIFEST \
+            or paket_bilgi.get("attestation_file") != ATTESTATION \
+            or paket_bilgi.get("log_directory") != LOG_DIZINI:
+        raise ValueError(
+            "PAKET REDDEDILDI — sonuc.json paket imzasi eksik/bozuk; "
+            "silinmedi")
+
+    manifest_yolu = paket / MANIFEST
+    try:
+        manifest_metni = manifest_yolu.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        raise ValueError(
+            "PAKET REDDEDILDI — manifest okunamadi (%s); silinmedi"
+            % type(exc).__name__)
+    kayitli = {}
+    for satir in manifest_metni.splitlines():
+        if not satir.strip():
+            continue
+        parca = satir.split("  ", 1)
+        if len(parca) != 2:
+            raise ValueError(
+                "PAKET REDDEDILDI — manifest satiri bozuk; silinmedi: %r"
+                % satir[:120])
+        sha, rel = parca
+        if not re.fullmatch(r"[0-9a-f]{64}", sha):
+            raise ValueError(
+                "PAKET REDDEDILDI — manifest sha256 bicimi bozuk; silinmedi")
+        rel_yolu = Path(rel)
+        if not rel or rel_yolu.is_absolute() or ".." in rel_yolu.parts \
+                or rel in kayitli:
+            raise ValueError(
+                "PAKET REDDEDILDI — manifest yolu guvenli/benzersiz degil; "
+                "silinmedi: %s" % rel)
+        kayitli[rel] = sha
+
+    gercek = set()
+    for yol in paket.rglob("*"):
+        if yol.is_symlink():
+            raise ValueError(
+                "PAKET REDDEDILDI — paket icinde sembolik baglanti; silinmedi: %s"
+                % yol.relative_to(paket).as_posix())
+        if not yol.is_file() or yol == manifest_yolu:
+            continue
+        rel = yol.relative_to(paket).as_posix()
+        if rel not in kayitli:
+            raise ValueError(
+                "PAKET REDDEDILDI — manifest disi dosya; silinmedi: %s" % rel)
+        try:
+            gercek_sha = hashlib.sha256(yol.read_bytes()).hexdigest()
+        except OSError as exc:
+            raise ValueError(
+                "PAKET REDDEDILDI — paket dosyasi okunamadi (%s); silinmedi: %s"
+                % (type(exc).__name__, rel))
+        if gercek_sha != kayitli[rel]:
+            raise ValueError(
+                "PAKET REDDEDILDI — manifest hash'i tutmuyor; silinmedi: %s" % rel)
+        gercek.add(rel)
+    eksik_dosya = sorted(set(kayitli) - gercek)
+    if eksik_dosya:
+        raise ValueError(
+            "PAKET REDDEDILDI — manifestte olup dizinde olmayan dosya; "
+            "silinmedi: %s" % ", ".join(eksik_dosya))
+
+
 def paket_yaz(paket, attestation_metni, attestation_verisi_, komutlar):
     """Paketi yaz; (sonuc, manifest_yolu) dondur."""
-    paket = Path(paket)
-    if paket.resolve() == KOK.resolve():
-        raise ValueError("paket dizini depo koku olamaz")
+    paket = paket_hedef_dogrula(paket)
     if paket.exists():
         shutil.rmtree(paket)
     (paket / LOG_DIZINI).mkdir(parents=True)
@@ -384,7 +520,8 @@ def main():
     ap.add_argument("--cikti", default=str(KOK / ATTESTATION),
                     help="yazilacak attestation JSON yolu")
     ap.add_argument("--paket", default=str(KOK / VARSAYILAN_PAKET),
-                    help="tasinabilir kanit paketi dizini")
+                    help="tasinabilir kanit paketi dizini; yalniz kendi "
+                         "urettigimiz paket temizlenir")
     ap.add_argument("--komut", action="append", default=None,
                     help="varsayilan dogrulama komutunun yerine komut ekle")
     ap.add_argument("--paketsiz", action="store_true",
@@ -392,6 +529,13 @@ def main():
     a = ap.parse_args()
 
     try:
+        paket = Path(a.paket)
+        if not paket.is_absolute():
+            paket = KOK / paket
+        if not a.paketsiz:
+            # Yanlis --paket hedefini komutlardan/attestation yazimindan ONCE
+            # reddet; mevcut yabanci bir dizin hicbir zaman silinmez.
+            paket = paket_hedef_dogrula(paket)
         kirli = kirli_dosyalar()
         if kirli:
             print("FAIL KANIT-01 KIRLI_AGAC — once commit veya geri al:")
@@ -433,9 +577,6 @@ def main():
                 rc, sure, "PASS" if hata is None and rc == 0
                 else ("ERROR" if hata else "FAIL")))
 
-        paket = Path(a.paket)
-        if not paket.is_absolute():
-            paket = KOK / paket
         sonuc, manifest = paket_yaz(paket, at_metni, veri, sonuclar)
         print("KANIT: PAKET %s" % paket)
         print("  hüküm=%s · komut=%d · bulgu=%d · manifest=%s"
