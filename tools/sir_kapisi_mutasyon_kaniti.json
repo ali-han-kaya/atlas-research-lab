@@ -1,7 +1,7 @@
 {
   "schema": "ATLAS-SIR-MUTASYON/v1",
-  "surum": "v1.7.421",
-  "kod_commit": "8ae96a0d0ede18bf08875dd0831ef5fd43c22d07",
+  "surum": "v1.7.422",
+  "kod_commit": "20f5dfb1a11e8c3885d7f00c78878527b403dee1",
   "kaynak": "tools/sir_kapisi.py",
   "kaynak_sha256": "cae55f145ba5faf877b2c952ce22a84aaf527e66997b62615c3cc142576c9f1b",
   "selftest": "tools/sir_kapisi_selftest.py",
@@ -27,7 +27,7 @@
       "mutasyon": "git show komutundan --first-parent kaldirildi",
       "fail_rc": 1,
       "fail_test_sayisi": "18/19",
-      "fail_satiri": "merge commit canliyi yakalar FAIL rc=0 (beklenen 1) · SIR-KAPISI: aralik temiz (1403a85225379b441521988083a27c52bd3d9f98..HEAD)",
+      "fail_satiri": "merge commit canliyi yakalar FAIL rc=0 (beklenen 1) · SIR-KAPISI: aralik temiz (1158772a247fed92150d48340166b930b54ab1c7..HEAD)",
       "pass_rc": 0,
       "pass_test_sayisi": "19/19",
       "pass_satiri": "merge commit canliyi yakalar PASS rc=1 · canli-dsn"
