@@ -41,7 +41,7 @@ Makaleler, PDF'ler, konu korpusları ve ham araştırma çıktıları bu depoda
 |---|---|
 | `make dogrula` | Depo hijyeni, sözdizimi, sır taraması, kapı öz-testleri ve üç öz-test paketi |
 | `make iddia` | README ve kamu belgelerindeki sayısal iddiaları, onları üreten komutla yeniden ölçer |
-| `make mutasyon` | Kapı kurallarının gerçekten ateşlediğini: temiz taban + tek ihlal + kırmızı hüküm |
+| `make mutasyon` | Kapı kurallarının gerçekten ateşlediğini: temiz taban + tek ihlal; hata vakasında kırmızı hüküm, beklenen-bulgu vakasında işaretli bulgu |
 | `make kanit-dogrula` | `attestation.json` içindeki commit, ağaç ve dosya hash'lerini |
 | `make yayin-kapisi` | Yayın manifesti, listelenmemiş dosya, makale izi, sır ve kişisel mutlak yol |
 | `./demo` | Bilerek kusurlu `DENEME/` koşusunda beklenen kırmızı hükmü |
