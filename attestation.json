@@ -1,5 +1,5 @@
 {
-  "commit": "51a5776d9041bb2b26266743f0d57bbf6e08bc01",
+  "commit": "91b78b2aef856fe08a4c0175d381960671053ce9",
   "file_count": 291,
   "files": [
     {
@@ -1049,7 +1049,7 @@
     {
       "mode": "100644",
       "path": "KOMUT_TOOLKIT_v4/ARACLAR/SHA256SUMS.txt",
-      "sha256": "0253332689e8643629f685131175e062f037d45a27b334d8e5532098587319af",
+      "sha256": "21726aa966a006dd1fe096251ec4960fa1113077c29e009415eaad5b799e82a3",
       "size": 2902
     },
     {
@@ -1085,14 +1085,14 @@
     {
       "mode": "100644",
       "path": "KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_selftest.py",
-      "sha256": "7084a443131dd824a1d8e2fd7609e461d66fc223a6e978c157c1299a1adcdee8",
-      "size": 35262
+      "sha256": "365944286cdcfee457b0babbccb8ad122b566988178b774341ee7c43287f7d5a",
+      "size": 37615
     },
     {
       "mode": "100644",
       "path": "KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_verify.py",
-      "sha256": "4f480c203b439235299099be02c80635fb20fe00c50be680a1c523174fa2937e",
-      "size": 19963
+      "sha256": "99b3591da9f95dcc9423ceeb3b90c5be32de829d1d571f3e4ef642d36f29581c",
+      "size": 20962
     },
     {
       "mode": "100644",
@@ -1283,8 +1283,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "e5bddb68d99e3175559edfe32d08947356153a8784154c6f25c2d725a069cc69",
-      "size": 506944
+      "sha256": "1792bccaadab33977187ee364d19cb0b024c3bae5f917826c4e560bebb2f1bd3",
+      "size": 507930
     },
     {
       "mode": "100644",
@@ -1749,7 +1749,7 @@
       "size": 14827
     }
   ],
-  "generated_at": "2026-11-25T12:25:06Z",
+  "generated_at": "2026-11-25T12:51:24Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1764,6 +1764,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "1dc9b9995c735bb5168c2f94a10ce7d53eb3c2c0",
-  "tree_sha256": "1abacefc894a0d518a67438ad08a629dab4ba2a5c2d22c64501478997fce46f1"
+  "tree": "8d81ed3a35b06aeadd837b437292eff97f46ff1b",
+  "tree_sha256": "fa22beda92f80c7e2f1f3c1e290b6dcc5325f200dbea1bf8250569bcce79e696"
 }
