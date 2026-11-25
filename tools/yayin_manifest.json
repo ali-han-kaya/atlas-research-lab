@@ -266,6 +266,7 @@
     "tools/kanit_dogrula.py",
     "tools/kanit_negatif.py",
     "tools/kanit_paketi_dogrula.py",
+    "tools/kanit_paketi_selftest.py",
     "tools/kapi_cikti.py",
     "tools/kapi_sozlesmesi_selftest.py",
     "tools/kapsam.py",
