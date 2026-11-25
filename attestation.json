@@ -1,5 +1,5 @@
 {
-  "commit": "60ada7480d05a4dee508d8c79f8b3cafbfbc8546",
+  "commit": "4b7307f1a4cf3895a2bf72b1fc5186780086fa10",
   "file_count": 291,
   "files": [
     {
@@ -1049,7 +1049,7 @@
     {
       "mode": "100644",
       "path": "KOMUT_TOOLKIT_v4/ARACLAR/SHA256SUMS.txt",
-      "sha256": "21726aa966a006dd1fe096251ec4960fa1113077c29e009415eaad5b799e82a3",
+      "sha256": "9a4c8df03345faa9045b8c4fb4a0c7c042ed52c6ac105f2ebf9f457f57c1e209",
       "size": 2902
     },
     {
@@ -1085,14 +1085,14 @@
     {
       "mode": "100644",
       "path": "KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_selftest.py",
-      "sha256": "365944286cdcfee457b0babbccb8ad122b566988178b774341ee7c43287f7d5a",
-      "size": 37615
+      "sha256": "3ad2a57ab1842239ce310407bb4e23bbdea5e227dd2794ad909c0e751c0d6836",
+      "size": 39452
     },
     {
       "mode": "100644",
       "path": "KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_verify.py",
-      "sha256": "99b3591da9f95dcc9423ceeb3b90c5be32de829d1d571f3e4ef642d36f29581c",
-      "size": 20962
+      "sha256": "36942c47f7946f7b4693b2c6af5cb3c8e0bd25f807283ca0f1fd4a7be90712e2",
+      "size": 22154
     },
     {
       "mode": "100644",
@@ -1283,8 +1283,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "1792bccaadab33977187ee364d19cb0b024c3bae5f917826c4e560bebb2f1bd3",
-      "size": 507930
+      "sha256": "3391c4ee2dd10b81a5deb767f558cd1db85cdb209e5303aab6e6a2645823488d",
+      "size": 508879
     },
     {
       "mode": "100644",
@@ -1749,7 +1749,7 @@
       "size": 14827
     }
   ],
-  "generated_at": "2026-11-25T12:54:35Z",
+  "generated_at": "2026-11-25T13:20:48Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1764,6 +1764,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "8a415cbf2a4fc429c72f80d5527747e242fda1e3",
-  "tree_sha256": "ccef9b93c4b469b187d89ee5ac945b4584bbb44b1e32b843219475c567bd6322"
+  "tree": "1ce8f6257ef134ad8b8e94fdd6172908217a6f6a",
+  "tree_sha256": "f3cc0de29a6575f079d26990e4d3abcffaf5a02f30b02131f4fa81744693115b"
 }
