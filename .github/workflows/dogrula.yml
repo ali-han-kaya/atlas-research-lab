@@ -103,6 +103,19 @@ jobs:
       - name: make mutasyon
         run: make mutasyon
 
+      # Mutasyon sayilari kamu anlatimina elle yazilir. Kapi 109/91/18 ve
+      # guncel 140/113/27 sayilarini vaka katalogundan turetir; README, docs
+      # ve iddia defteri ayrisirsa ya da tek-sozlesmeli (140/140) ifade
+      # girerse kirmizi olur. Bataryadan SONRA kosar: kayit taze olsun.
+      - name: Mutasyon anlatimi katalogla tutarli mi
+        run: make mutasyon-anlatim
+
+      # Pozitif taban + 11 negatif vaka: sayi, sozlesme, uyelik, takma ad,
+      # defter ve tek-sozlesmeli ifade bozulunca kapinin gercekten dustugunu
+      # gecici koklerde olcer; gercek agaca yazmaz.
+      - name: Mutasyon anlatimi kapisi negatif testleri
+        run: make mutasyon-anlatim-selftest
+
       # Dort sir kapisi kenarinin duzeltmesi geri alininca ilgili selftest
       # vakasinin FAIL verdigini ve duzeltmeyle PASS verdigini yeniden olcer.
       # Kayit JSON'u ve DEVIR blogu bu kosudan uretilir; bayatlarsa kirmizi.

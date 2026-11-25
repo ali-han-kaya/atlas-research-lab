@@ -2,7 +2,7 @@ PY ?= python3
 # pip-audit yalniz gelistirme aracidir; varsa yerel sanal ortam kullanilir.
 PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(PY))
 
-.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula makbuz-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon mutasyon-kisa sir-mutasyon oztest-mutasyon oztest-mutasyon-yaz oztest demo demo-selftest temiz-teslim taze-klon fresh-clone kapsam kapsam-yaz kapi-sozlesme-test model-kimlik kamu-lint kamu-selftest kamu-arama kamu-arama-selftest yayin-kapisi katalog-kontrol katalog-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
+.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula makbuz-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon mutasyon-anlatim mutasyon-anlatim-selftest mutasyon-kisa sir-mutasyon oztest-mutasyon oztest-mutasyon-yaz oztest demo demo-selftest temiz-teslim taze-klon fresh-clone kapsam kapsam-yaz kapi-sozlesme-test model-kimlik kamu-lint kamu-selftest kamu-arama kamu-arama-selftest yayin-kapisi katalog-kontrol katalog-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giris: hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
@@ -17,6 +17,8 @@ yardim:
 	@echo "make durum-kontrol  DURUM sayfasi kaynaklara gore bayat mi (CI)"
 	@echo "make durum-selftest  DURUM bayatlik kapisinin negatif testleri (gecici kok)"
 	@echo "make mutasyon  kapi sozlesmeleri: temiz taban + ihlal; hata rc!=0, beklenen-bulgu isaretli"
+	@echo "make mutasyon-anlatim  katalogdan 109/91/18 ve guncel sayilari turet; README/docs/iddia ile karsilastir"
+	@echo "make mutasyon-anlatim-selftest  anlatim kapisinin pozitif + negatif vakalari"
 	@echo "make mutasyon-kisa  6 vakalik hizli duman seti (HATA/TERMINAL/BEKLENEN_BULGU)"
 	@echo "make sir-mutasyon  dort sir kapisi kenarinin FAIL->PASS mutasyon kanitini dogrula"
 	@echo "make oztest-mutasyon  hedef kapi bozulunca ilgili oz-testin PASS->FAIL oldugunu olc; bos govdeli testleri tara"
@@ -82,6 +84,12 @@ durum-selftest:
 
 mutasyon:
 	@$(PY) tools/mutasyon_bataryasi.py
+
+mutasyon-anlatim:
+	@$(PY) tools/mutasyon_anlatim_kapisi.py --kontrol
+
+mutasyon-anlatim-selftest:
+	@$(PY) tools/mutasyon_anlatim_kapisi_selftest.py
 
 katalog-tutarlilik:
 	@$(PY) tools/mutasyon_bataryasi.py --katalog-tutarlilik

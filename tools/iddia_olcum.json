@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-25T06:30:36Z",
+  "zaman": "2026-11-25T15:52:26Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -397,6 +397,16 @@
       "rc": 0,
       "ham": "bildirilen=117",
       "deger": "117"
+    },
+    "IDD-56": {
+      "komut": [
+        "{py}",
+        "tools/mutasyon_anlatim_kapisi.py",
+        "--json"
+      ],
+      "rc": 0,
+      "ham": "{\"capa\": 10, \"guncel\": \"140/113/27\", \"guncel_ayrinti\": {\"atesleyen\": 113, \"bulgu\": 27, \"hata\": 105, \"terminal\": 8, \"vaka\": 140}, \"iddia\": 5, \"schema\": \"MUTASYON-ANLATIM/v1\", \"tarihsel\": \"109/91/18\", \"tarihsel_ayrinti\": {\"atesleyen\": 91, \"bulgu\": 18, \"hata\": 84, \"terminal\": 7, \"vaka\": 109}}",
+      "deger": "109/91/18"
     }
   }
 }

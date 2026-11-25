@@ -1254,6 +1254,24 @@
       "kapi": {
         "kontrol": "KAPSAM.bildirilen"
       }
+    },
+    {
+      "id": "IDD-56",
+      "iddia": "tarihsel 109/91/18 snapshot: 109 vaka = 91 atesleyen + 18 beklenen-bulgu",
+      "kaynaklar": [
+        {
+          "dosya": "docs/DERSLER_v1_2026-08-30.md",
+          "alinti": "109 = 91 hata + 18 beklenen-bulgu"
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/mutasyon_anlatim_kapisi.py",
+        "--json"
+      ],
+      "ayikla": "\"tarihsel\": \"(\\d+/\\d+/\\d+)\"",
+      "beklenen": "109/91/18"
     }
   ]
 }
