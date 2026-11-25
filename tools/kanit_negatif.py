@@ -272,7 +272,9 @@ def senaryo(klon, head, bekle):
             sonuc_veri = json.loads(
                 (ozel_paket / "sonuc.json").read_text(encoding="utf-8"))
             paket_att = (ozel_paket / ATTESTATION).read_bytes()
-            log = (ozel_paket / sonuc_veri["commands"][0]["stdout"]).read_text(
+            makbuz = json.loads(
+                (ozel_paket / "makbuz.json").read_text(encoding="utf-8"))
+            log = (ozel_paket / makbuz["items"][0]["stdout"]).read_text(
                 encoding="utf-8").strip()
             ozel_ok = (
                 paket_att == ham
