@@ -190,9 +190,32 @@ def main():
         taban["kimlikler"] = taban["kimlikler"][:144]
         _json_yaz(taban_yolu, taban)
         r = _kontrol(vaka)
-        bekle("yanlis pin/envanter rc!=0", r.returncode != 0, _cikti(r))
+        cikti = _cikti(r)
+        bekle("yanlis pin/envanter make rc=2", r.returncode == 2, cikti)
+        bekle("yanlis pin/envanter pin sapmasini adlandirir",
+              "pinli envanter=144" in cikti or "pin=144" in cikti, cikti)
 
-        # 5) Canli sonuc kanonik kayittan farkli: `--kontrol` canli testi
+        # 5) SURUM atlas_envanter alani pin ile celisiyor: hata mesaji
+        #    alanin adini ve sapmayi tasimali; yalniz rc'ye bakmak yetmez.
+        vaka = Path(gecici) / "surum"
+        shutil.copytree(temel, vaka)
+        surum_yolu = vaka / "SURUM.md"
+        eski = surum_yolu.read_text(encoding="utf-8")
+        aranan = "atlas_envanter: 145"
+        if eski.count(aranan) != 1:
+            bekle("SURUM atlas_envanter testi kurulabildi (alan tek)", False,
+                  "atlas_envanter alani %d kez bulundu" % eski.count(aranan))
+        else:
+            surum_yolu.write_text(eski.replace(aranan, "atlas_envanter: 144"),
+                                  encoding="utf-8")
+            r = _kontrol(vaka)
+            cikti = _cikti(r)
+            bekle("yanlis SURUM atlas_envanter make rc=2",
+                  r.returncode == 2, cikti)
+            bekle("SURUM atlas_envanter sapmasini adlandirir",
+                  "SURUM atlas_envanter=144" in cikti, cikti)
+
+        # 6) Canli sonuc kanonik kayittan farkli: `--kontrol` canli testi
         #    kosmadan gecmemeli. Sahte ATLAS testi 144/144 bildirir; sayfa ve
         #    kanonik kayit 145 der. Yalnizca dosya karsilastiran bir kisayol
         #    bu vakada yanlislikla 0 dondurur ve test kirmizi olur.
