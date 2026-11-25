@@ -1,5 +1,5 @@
 {
-  "commit": "9ee69b2802373c9124ee3aafab6185648d57f2af",
+  "commit": "5154c1675b1feb21eab481c4a3786dbbc1db5721",
   "file_count": 291,
   "files": [
     {
@@ -1283,8 +1283,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "24ca501493b94908fda0b247e8acdecf773303f9c7cc5b30d39410f9572a98a3",
-      "size": 506007
+      "sha256": "e5bddb68d99e3175559edfe32d08947356153a8784154c6f25c2d725a069cc69",
+      "size": 506944
     },
     {
       "mode": "100644",
@@ -1493,8 +1493,8 @@
     {
       "mode": "100644",
       "path": "tools/dogrula.py",
-      "sha256": "e2b965a100603f9e4df6c679c27def753f85295b4ca8667e544840b63dee999c",
-      "size": 43528
+      "sha256": "776b35f9cf4cc51532f8274a1a6072d37f76ec79245d05ac931efac38871695b",
+      "size": 44046
     },
     {
       "mode": "100644",
@@ -1511,8 +1511,8 @@
     {
       "mode": "100644",
       "path": "tools/fikstur_muafiyet_selftest.py",
-      "sha256": "9e0e138f50046438afb996a6eab12b091437d1afa18a15132486ff0a61aeb1db",
-      "size": 11434
+      "sha256": "96576e77e39e1126b862b32800395d6dc2baceef1558adc19e85d19bb2d4310b",
+      "size": 14256
     },
     {
       "mode": "100644",
@@ -1749,7 +1749,7 @@
       "size": 14827
     }
   ],
-  "generated_at": "2026-11-25T11:50:59Z",
+  "generated_at": "2026-11-25T12:15:29Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1764,6 +1764,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "21a7b7d355132e7071ce690b2b7d15019b78b4b9",
-  "tree_sha256": "47cac921251cb68362a0c1103fa719b57b8a2abfa3556c65439367c7f8b06ad2"
+  "tree": "11533067cf38723c27a39dbd6d3a441a6292a37b",
+  "tree_sha256": "cfd7bef2e21708957decd805cebcabcecf2dc77f248fcff22b93e9d95f3a5ace"
 }
