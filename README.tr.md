@@ -192,10 +192,14 @@ dosyadır: laboratuvarın kendi birincil koordinatörüdür.
 
 ## Hızlı başlangıç
 
+Bağımlılıklar sistem Python'una değil, depo içindeki izole `.venv` ortamına kurulur. `make` aktif Python'u kullanır; gerekli bir modül eksikse `make dogrula` kalemleri başlatmadan izole venv kurulum komutlarını yazar.
+
 ```bash
 git clone https://github.com/ali-han-kaya/atlas-research-lab.git
 cd atlas-research-lab
-python3 -m pip install -r requirements-dev.txt   # sürümler sabit: requests + pip-audit + jsonschema
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements-dev.txt   # sürümler sabit: requests + pip-audit + jsonschema
 make kur       # commit/push korumasını bu klonda etkinleştirir
 make dogrula
 make iddia     # tam iddia zinciri: defter → komut → ham kanıt
@@ -552,7 +556,9 @@ paketi** de oluşturur. Paket `kanit-paketi/` altındadır ve git'e eklenmez:
 Üretim ve doğrulama, temiz bir klonda aynı commit üzerinde:
 
 ```bash
-python3 -m pip install -r requirements-dev.txt
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements-dev.txt
 make kanit
 make kanit-paket-dogrula
 make makbuz-dogrula

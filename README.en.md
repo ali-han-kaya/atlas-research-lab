@@ -33,10 +33,14 @@ ATLAS ships the production mechanism itself — the academic audit and code pipe
 
 Requirements: `python3` (3.9+), `make`, `git`. Verification needs no model calls, no network access and no API keys.
 
+Install dependencies into an isolated `.venv` inside the repository, not into the system Python. `make` uses the active Python; if a required module is missing, `make dogrula` prints the isolated-venv setup commands before any checks run.
+
 ```bash
 git clone https://github.com/ali-han-kaya/atlas-research-lab.git
 cd atlas-research-lab
-python3 -m pip install -r requirements-dev.txt   # pinned: requests, pip-audit, jsonschema
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements-dev.txt   # pinned: requests, pip-audit, jsonschema
 make kur                                         # enable commit/push guards in this clone
 make dogrula
 ./demo                                           # expected: exit code 1 (red)

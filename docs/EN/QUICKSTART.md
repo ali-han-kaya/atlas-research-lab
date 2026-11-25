@@ -6,14 +6,20 @@ ATLAS is a verification-first, multi-agent research lab. This repository is the
 mechanism, not the archive: generated papers and corpora are deliberately excluded.
 
 Requirements: `python3` (3.9+), `make`, `git`. No model calls, no network at
-verification time, no API keys.
+verification time, no API keys. Install into an isolated `.venv` inside the
+repository, not into the system Python.
 
 ```bash
 git clone https://github.com/ali-han-kaya/atlas-research-lab.git
 cd atlas-research-lab
-python3 -m pip install -r requirements-dev.txt   # pinned: requests, pip-audit, jsonschema
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements-dev.txt   # pinned: requests, pip-audit, jsonschema
 make kur                                         # enable commit/push guards in this clone
 ```
+
+If a required module is missing, `make dogrula` prints these venv setup steps
+and exits before running the checks; it does not emit a raw traceback.
 
 Use a full clone, not `--depth 1`: `T1` verifies the attestation against the
 commit history, and a shallow clone fails that check.

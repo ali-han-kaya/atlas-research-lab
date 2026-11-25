@@ -53,15 +53,21 @@ CIKIS: 0 = hukme giren kalemlerin hepsi gecti (CALISTIRILMADI varsa bile) ·
 
 OLG-1'in kaniti `attestation.json`'dir; yoksa/bozuksa FAIL'dir, CALISTIRILMADI
 degil. Sahte canak (commit, tarihce) uretilmez.
+
+BAGIMLILIK ON KONTROLU: gerekli bir modul eksikse kalemler baslamadan izole
+venv kurulum komutlari basilir ve rc=2 ile durulur; test paketi yarida ham
+ModuleNotFoundError ile cokmez.
 """
 import contextlib
 import hashlib
+import importlib
 import io
 import json
 import os
 import re
 import subprocess
 import sys
+import warnings
 
 import kapi_cikti
 
@@ -74,6 +80,7 @@ JSON_RAPOR = None
 ATLA_DIZIN = {'.git', '__pycache__', 'node_modules', '.pytest_cache',
               '.ruff_cache', '.venv', '.venv-token', 'kanit-paketi'}
 ATLA_UZANTI = {'.pyc', '.pyo'}
+KURULUM_HATASI = False
 
 SIR_KALIPLARI = [
     ('postgres-dsn', re.compile(r'postgres(?:ql)?://[^\s:/]+:[^\s@]+@')),
@@ -823,7 +830,55 @@ def quickstart_kontrolu():
             % (len(set(h for h, _ in refs)), len(bloklar), sayi), [])
 
 
+def bagimlilik_kontrolu():
+    """Gerekli modulleri kalemlerden once kontrol et; eksikse kurulumu yaz.
+
+    Normal kosuda `dogrula` yalnizca T1 icin `requests` ister. JSON kipinde
+    `kapi_cikti` sema dogrulamasi icin `jsonschema` da gerekir. Kontrol
+    gercek import ile yapilir; boylece yalnizca paket adi degil, bozuk bir
+    transitive bagimlilik da yakalanir.
+    """
+    global KURULUM_HATASI
+    moduller = [('requests', 'T1 DOI/URL ag testleri')]
+    if JSON:
+        moduller.append(('jsonschema', 'JSON kapi sozlesmesi'))
+    eksik = []
+    for ad, neden in moduller:
+        try:
+            with warnings.catch_warnings():
+                warnings.simplefilter('ignore')
+                importlib.import_module(ad)
+        except ModuleNotFoundError:
+            eksik.append((ad, neden, None))
+        except ImportError as e:
+            eksik.append((ad, neden, str(e)))
+    if not eksik:
+        return True
+
+    KURULUM_HATASI = True
+    print('KURULUM GEREKLI — eksik Python bagimliligi: %s'
+          % ', '.join(ad for ad, _, _ in eksik))
+    for ad, neden, hata in eksik:
+        ayrinti = ('  - %s (%s) eksik' % (ad, neden))
+        if hata:
+            ayrinti += ': %s' % hata
+        print(ayrinti)
+    print()
+    print("Bu depo sistem Python'una kurulmaz; izole bir venv kullanin:")
+    print('  python3 -m venv .venv')
+    print('  . .venv/bin/activate              # Windows: .venv\\Scripts\\activate')
+    print('  python -m pip install -r requirements-dev.txt')
+    print('  make dogrula')
+    print()
+    print('venv zaten varsa once etkinlestirin; make aktif Python ile calisir.')
+    print('HUKUM: KOSULAMADI — KURULUM (eksik bagimlilik)')
+    print()
+    return False
+
+
 def main():
+    if not bagimlilik_kontrolu():
+        return 2
     kip = 'CI' if CI else ('HIZLI' if HIZLI else 'TAM')
     print('ATLAS — tek giris dogrulama · %s' % kip)
     print('kok: %s' % KOK)
@@ -1093,8 +1148,12 @@ def main():
 
 if __name__ == '__main__':
     if JSON:
-        with contextlib.redirect_stdout(io.StringIO()):
+        tampon = io.StringIO()
+        with contextlib.redirect_stdout(tampon):
             rc = main()
+        if KURULUM_HATASI:
+            sys.stderr.write(tampon.getvalue())
+            sys.exit(2)
         if JSON_RAPOR is None:
             JSON_RAPOR = kapi_cikti.uret(
                 'dogrula', [], rc=rc, hukum='FAIL',
