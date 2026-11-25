@@ -201,6 +201,11 @@ jobs:
       - name: Kanit paketi dogrula
         run: make kanit-paket-dogrula
 
+      # Gecici bir paket uzerinde sema ve bulgu kimligi bozulmalarinin
+      # PAKET-01/05/06 ile kirmizi oldugunu olcer; ana agaci kirletmez.
+      - name: Kanit paketi oz-testi
+        run: make kanit-paket-selftest
+
       # Makbuz, her komutun argv'sini, cikis kodunu ve ham satirini ayni
       # paketteki sonuc.json, attestation ve komut loglariyla birlestirir.
       - name: Dogrulama makbuzunu denetle

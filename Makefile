@@ -2,7 +2,7 @@ PY ?= python3
 # pip-audit yalniz gelistirme aracidir; varsa yerel sanal ortam kullanilir.
 PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(PY))
 
-.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula makbuz-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon mutasyon-anlatim mutasyon-anlatim-selftest mutasyon-kisa sir-mutasyon oztest-mutasyon oztest-mutasyon-yaz oztest demo demo-selftest temiz-teslim taze-klon fresh-clone kapsam kapsam-yaz kapsam-selftest kapi-sozlesme-test model-kimlik kamu-lint kamu-selftest kamu-arama kamu-arama-selftest yayin-kapisi katalog-kontrol katalog-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
+.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula kanit-paket-selftest makbuz-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon mutasyon-anlatim mutasyon-anlatim-selftest mutasyon-kisa sir-mutasyon oztest-mutasyon oztest-mutasyon-yaz oztest demo demo-selftest temiz-teslim taze-klon fresh-clone kapsam kapsam-yaz kapsam-selftest kapi-sozlesme-test model-kimlik kamu-lint kamu-selftest kamu-arama kamu-arama-selftest yayin-kapisi katalog-kontrol katalog-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giris: hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
@@ -11,6 +11,7 @@ yardim:
 	@echo "make kanit-dogrula  attestation.json'i gercek commit/agac ile dogrula"
 	@echo "make kanit-negatif  KANIT-00..06 kodlarinin her birini gercek bozulmayla sinar"
 	@echo "make kanit-paket-dogrula  kanit-paketi/ icindeki sema, attestation, manifest ve ham kayitlari dogrula"
+	@echo "make kanit-paket-selftest  paket semasi ve bulgu kimliklerinin sessizce gevşemediğini gecici paketle sinar"
 	@echo "make makbuz-dogrula  kanit-paketi/makbuz.json icindeki komut/rc/ham satir bagini commit/agac kanitina karsi denetle"
 	@echo "make olgu-negatif  OLG-1 negatif kontrol: eksik/bozuk attestation ve 145/146 sinamasi"
 	@echo "make durum-yaz  tek uretilmis DURUM sayfasini yenile (docs/DURUM.md)"
@@ -64,6 +65,9 @@ kanit-dogrula:
 
 kanit-paket-dogrula:
 	@$(PY) tools/kanit_paketi_dogrula.py
+
+kanit-paket-selftest:
+	@$(PY) tools/kanit_paketi_selftest.py
 
 makbuz-dogrula:
 	@$(PY) tools/kanit_paketi_dogrula.py --makbuz
