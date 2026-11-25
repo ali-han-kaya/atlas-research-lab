@@ -40,8 +40,18 @@ import tempfile
 from pathlib import Path
 
 KOK = Path(__file__).resolve().parents[1]
+MUTASYON_KATALOG = KOK / 'tools' / 'mutasyon_katalog.json'
+GERCEK_KATALOG = KOK / 'tools' / 'model_katalog.json'
+# MOD-04/05 fiksturlerinin kullandigi kimlikler. Gercek katalogdan bir kimlik
+# duserse batarya ESKI kimlikle kosmaya devam etmemeli: asagidaki tutarlilik
+# kontrolu her kosuda fail-closed calisir.
+MOD_FIKSTUR_KIMLIKLERI = (
+    'anthropic/claude-opus-5',
+    'deepseek/deepseek-v4-flash',
+    'z-ai/glm-5.2',
+)
 # check_models sabit katalogu kullanir (ag/canli models.dev gerekmez).
-os.environ.setdefault('ATLAS_MODEL_KATALOG', str(KOK / 'tools' / 'mutasyon_katalog.json'))
+os.environ.setdefault('ATLAS_MODEL_KATALOG', str(MUTASYON_KATALOG))
 AYRINTILI = '--ayrintili' in sys.argv
 KISA = '--kisa' in sys.argv
 KISA_VAKALAR = ('KOD-SEC-02', 'ATLAS-PL-10', 'FRZ-08', 'FRZ-08-IMZA',
@@ -2282,11 +2292,103 @@ def sonuc_yaz(satirlar, meta, kisa):
         veri['sayilar']['gecti'], veri['sayilar']['kalan']))
 
 
+def _katalog_idleri(yol):
+    """`{openrouter: {models: {...}}}` dosyasindan model kimliklerini okur."""
+    veri = json.loads(Path(yol).read_text(encoding='utf-8'))
+    modeller = (veri.get('openrouter') or {}).get('models')
+    if not isinstance(modeller, dict) or not modeller:
+        raise ValueError('openrouter.models yok veya bos')
+    return set(modeller)
+
+
+def katalog_tutarliligi(gercek=GERCEK_KATALOG, fikstur=MUTASYON_KATALOG):
+    """MOD-04/05 kimlikleri gercek katalogda mi? (hatalar, fikstur_n, gercek_n)
+
+    Fikstur katalogu gercek katalogun ALT KUMESI olmalidir: fiksturde olup
+    gercekte olmayan her kimlik, katalog degistikten sonra sessizce eski
+    kimlikle kosuldugunun isaretidir.
+    """
+    try:
+        gercek_idler = _katalog_idleri(gercek)
+    except (OSError, ValueError, json.JSONDecodeError) as e:
+        return ['gercek katalog okunamadi: %s: %s' % (gercek, e)], 0, 0
+    try:
+        fikstur_idler = _katalog_idleri(fikstur)
+    except (OSError, ValueError, json.JSONDecodeError) as e:
+        return ['fikstur katalogu okunamadi: %s: %s' % (fikstur, e)], 0, len(gercek_idler)
+    hatalar = []
+    for kimlik in MOD_FIKSTUR_KIMLIKLERI:
+        if kimlik not in gercek_idler:
+            hatalar.append('MOD fikstur kimligi gercek katalogda YOK: %s' % kimlik)
+        if kimlik not in fikstur_idler:
+            hatalar.append('MOD fikstur kimligi fikstur katalogunda YOK: %s' % kimlik)
+    for kimlik in sorted(fikstur_idler - gercek_idler):
+        hatalar.append('fikstur katalogunda gercekte olmayan kimlik: %s' % kimlik)
+    return hatalar, len(fikstur_idler), len(gercek_idler)
+
+
+def katalog_kontrolu():
+    """Tutarlilik hatasi varsa ayrintili FAIL basar; main bunu kosulsuz cagirir."""
+    hatalar, fikstur_n, gercek_n = katalog_tutarliligi()
+    if hatalar:
+        for hata in hatalar:
+            print('KATALOG TUTARSIZ: %s' % hata)
+        print('KATALOG TUTARLILIK: FAIL — %d sorun' % len(hatalar))
+        return False
+    print('KATALOG TUTARLILIK: PASS — %d/%d MOD kimligi gercek katalogda '
+          '· fikstur %d / gercek %d' % (
+              len(MOD_FIKSTUR_KIMLIKLERI), len(MOD_FIKSTUR_KIMLIKLERI),
+              fikstur_n, gercek_n))
+    return True
+
+
+def katalog_oztest():
+    """Pozitif + uc negatif: katalog degisimi sessizce gecmemeli."""
+    vakalar = []
+    hatalar, _, _ = katalog_tutarliligi()
+    vakalar.append(('mevcut-katalog', not hatalar))
+    with tempfile.TemporaryDirectory(prefix='atlas_katalog_') as td:
+        td = Path(td)
+        gercek = json.loads(GERCEK_KATALOG.read_text(encoding='utf-8'))
+        del gercek['openrouter']['models']['deepseek/deepseek-v4-flash']
+        yol = td / 'gercek-eksik.json'
+        yol.write_text(json.dumps(gercek, ensure_ascii=False), encoding='utf-8')
+        h, _, _ = katalog_tutarliligi(gercek=yol)
+        vakalar.append(('gercek-eksik-yakalanir',
+                        any('deepseek/deepseek-v4-flash' in x for x in h)))
+        fikstur = json.loads(MUTASYON_KATALOG.read_text(encoding='utf-8'))
+        del fikstur['openrouter']['models']['z-ai/glm-5.2']
+        yol = td / 'fikstur-eksik.json'
+        yol.write_text(json.dumps(fikstur, ensure_ascii=False), encoding='utf-8')
+        h, _, _ = katalog_tutarliligi(fikstur=yol)
+        vakalar.append(('fikstur-eksik-yakalanir',
+                        any('z-ai/glm-5.2' in x for x in h)))
+        fikstur = json.loads(MUTASYON_KATALOG.read_text(encoding='utf-8'))
+        fikstur['openrouter']['models']['yok/model'] = {
+            'reasoning': True, 'tool_call': True}
+        yol = td / 'fikstur-fazla.json'
+        yol.write_text(json.dumps(fikstur, ensure_ascii=False), encoding='utf-8')
+        h, _, _ = katalog_tutarliligi(fikstur=yol)
+        vakalar.append(('fikstur-fazla-yakalanir', any('yok/model' in x for x in h)))
+    for ad, gecti in vakalar:
+        print('%s %s' % ('PASS' if gecti else 'FAIL', ad))
+    print('KATALOG-TUTARLILIK OZ-TEST: %d/%d' % (
+        sum(1 for _, g in vakalar if g), len(vakalar)))
+    return all(g for _, g in vakalar)
+
+
 def main():
+    if '--katalog-tutarlilik' in sys.argv:
+        return 0 if katalog_kontrolu() else 1
+    if '--katalog-tutarlilik-oztest' in sys.argv:
+        return 0 if katalog_oztest() else 1
     print('MUTASYON BATARYASI — ATLAS + KOD kapi kurallari')
     print('kaynak: %s' % KOK.name)
     print('kural: once TEMIZ TABAN, sonra tek ihlal; kirmizi veya beklenen bulgu.')
     print()
+    if not katalog_kontrolu():
+        print('HUKUM: FAIL — katalog tutarsiz; batarya eski kimliklerle kosmaz.')
+        return 1
 
     try:
         _src01_fikstur(KOK, bozuk=True)

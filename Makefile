@@ -83,6 +83,12 @@ durum-selftest:
 mutasyon:
 	@$(PY) tools/mutasyon_bataryasi.py
 
+katalog-tutarlilik:
+	@$(PY) tools/mutasyon_bataryasi.py --katalog-tutarlilik
+
+katalog-tutarlilik-test:
+	@$(PY) tools/mutasyon_bataryasi.py --katalog-tutarlilik-oztest
+
 mutasyon-kisa:
 	@$(PY) tools/mutasyon_bataryasi.py --kisa
 
@@ -90,6 +96,7 @@ sir-mutasyon:
 	@$(PY) tools/sir_kapisi_mutasyon.py --kontrol
 
 oztest-mutasyon:
+	@$(PY) tools/mutasyon_bataryasi.py --katalog-tutarlilik-oztest
 	@$(PY) tools/oztest_mutasyon.py --kontrol
 
 oztest-mutasyon-yaz:
