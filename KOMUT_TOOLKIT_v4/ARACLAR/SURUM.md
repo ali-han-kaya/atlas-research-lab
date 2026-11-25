@@ -74,11 +74,20 @@ yok" kuralı kendi geçmişimiz için de geçerlidir.
 Kendin doğrulamak istersen:
 
 ```bash
-python3 ARACLAR/betikler/v4_selftest.py        # 36/36 gecmeli, rc=0
+python3 ARACLAR/betikler/v4_selftest.py        # hepsi gecmeli, rc=0
 python3 ARACLAR/betikler/v4_consistency.py .   # rc=0
+# TEK YETKILI TAM TARAMA (paket): kendi fikstur manifestini otomatik uygular.
 python3 ARACLAR/betikler/v4_verify.py . --kanit-dizin ARACLAR/KANIT --muafiyet ARACLAR/MUAFIYET.json
 sha256sum -c ARACLAR/SHA256SUMS.txt
 ```
+
+`v4_verify.py` bagimlilik/onbellek dizinlerinin (`.venv`, `node_modules`, `.next`,
+`__pycache__`, `.tox`) **icine girmez**; dizini tek bir `P1` notu olarak raporlar,
+`P0` uretmez. Fikstur muafiyeti tek basina kosuda da gecerlidir: arac kendi
+paketini tararken `ARACLAR/FIKSTUR.json`'u, depo kokunu tararken deponun kendi
+`tools/secret_fixtures.json`'unu uygular; **hedefin getirdigi manifest asla
+okunmaz**. Depo geneli sir taramasi icin tek yetkili komut depo kokunde
+`python3 KOD_SABLONLAR/scripts/secret_scan.py --tum`'dur.
 
 ## 4. BILINEN_SINIRLAR — ölçülmeyenler
 

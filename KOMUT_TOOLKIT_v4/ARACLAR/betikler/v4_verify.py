@@ -5,6 +5,13 @@
                          [--kanit-dizin RAPORLAR] [--muafiyet muafiyet.json]
                          [--fikstur fikstur.json] [--out rapor.json] [--sessiz]
 
+TEK YETKILI TAM TARAMA (paket): `cd KOMUT_TOOLKIT_v4 && python3
+ARACLAR/betikler/v4_verify.py . --kanit-dizin ARACLAR/KANIT` — kendi
+`ARACLAR/FIKSTUR.json`'unu otomatik uygular (raporda `fikstur_otomatik`).
+Depo geneli sir taramasi ise `KOD_SABLONLAR/scripts/secret_scan.py --tum`.
+Bagimlilik/onbellek dizinlerinin (`.venv`, `node_modules`, ...) ICINE
+girilmez; dizin tek bir P1 hijyen notu olarak gorunur.
+
 Kapatilan somut delikler (hepsi gercek kod uzerinde olculdu):
   D1  Bos klasore dogrultuldugunda olumlu karar veriyordu (files=0, PASS).
       -> EMPTY_TARGET = P0.
@@ -38,6 +45,14 @@ from v4_common import (  # noqa: E402
     EXIT_BLOCK, EXIT_OK, EXIT_USAGE, emit, fail_closed, finding, recount,
     sha256_file, verdict_from,
 )
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+PAKET_KOKU = os.path.abspath(os.path.join(HERE, "..", ".."))
+KENDI_FIKSTUR = os.path.abspath(os.path.join(HERE, "..", "FIKSTUR.json"))
+# Depo kopyasinda ikinci birinci-taraf manifest vardir (secret_scan ile ayni).
+# Yalniz KOK tam olarak depo koku ise uygulanir; hedefin getirdigi manifest asla.
+REPO_KOKU = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
+REPO_FIKSTUR = os.path.join(REPO_KOKU, "tools", "secret_fixtures.json")
 
 HYGIENE_PATTERNS = [
     (r"(^|/)(node_modules|\.next|__pycache__|\.pytest_cache|\.mypy_cache|\.venv|venv|\.tox)(/|$)",
@@ -123,9 +138,24 @@ def safe_extract_zip(path, dest, findings, addf):
     return True
 
 
-def iter_files(root):
+SKIP_DIRS = {".git", "node_modules", ".next", "__pycache__", ".pytest_cache",
+             ".mypy_cache", ".ruff_cache", ".cache", ".venv", "venv", ".tox"}
+
+
+def iter_files(root, pruned=None):
+    """Dosyalari gez; bagimlilik/onbellek dizinlerinin ICINE girme.
+
+    Ucuncu taraf paketlerde sahte anahtar/parola sabiti boldur; icine girildiginde
+    kapi kendi deposunda yuzlerce P0 uretir ve tarama dakikalarca surer. Bu
+    dizinler taranmaz ama YOK SAYILMAZ: `pruned` listesine yazilir ve tek bir
+    hijyen notu olarak raporda gorunur (arsive konursa yine yakalanir).
+    """
     for dirpath, dirnames, filenames in os.walk(root):
-        dirnames[:] = [d for d in dirnames if d != ".git"]
+        for d in sorted(dirnames):
+            if d in SKIP_DIRS and d != ".git" and pruned is not None:
+                pruned.append(os.path.relpath(os.path.join(dirpath, d), root)
+                              .replace(os.sep, "/"))
+        dirnames[:] = sorted(d for d in dirnames if d not in SKIP_DIRS)
         for fn in sorted(filenames):
             yield os.path.join(dirpath, fn)
 
@@ -139,7 +169,9 @@ def main(argv=None):
                     help="hijyenden muaf kanit/rapor dizini (birden fazla verilebilir)")
     ap.add_argument("--muafiyet", help="imzali muafiyet kayitlari (JSON liste)")
     ap.add_argument("--fikstur",
-                    help="satir SHA-256'li fikstur manifesti (JSON); yalniz acikca verilirse")
+                    help="satir SHA-256'li fikstur manifesti (JSON); verilmezse "
+                         "arac KENDI ARACLAR/FIKSTUR.json'unu yalniz kendi "
+                         "paketini tararken uygular; hedefin manifesti okunmaz")
     ap.add_argument("--out")
     ap.add_argument("--sessiz", action="store_true")
     args = ap.parse_args(argv)
@@ -175,19 +207,24 @@ def main(argv=None):
                  "muafiyet insan imzasi ister; imza+gerekce+konum zorunlu")
 
     # Fikstur muafiyeti DESEN/DOSYA degil, TAM (dosya, satir SHA-256) ciftidir.
-    # Manifest ancak --fikstur ile ACIKCA verilirse okunur; hedef agacta bulunan
-    # bir manifest kendiliginden uygulanmaz. Böylece hedef depo kendini muaf
-    # tutamaz; bozuk veya izinli olmayan kayit fail-closed olur.
-    fixtures = set()
-    if args.fikstur:
+    # KAYNAK HER ZAMAN ARACIN KENDI PAKETIDIR: hedef agacta bulunan bir manifest
+    # asla okunmaz; boylece hedef depo kendini muaf tutamaz (SP-13). `--fikstur`
+    # acikca verilirse o kullanilir. Verilmezse arac kendi ARACLAR/FIKSTUR.json'
+    # unu YALNIZ kendi paketini (ya da onu iceren bir ust dizini) tararken
+    # uygular: `v4_verify.py .` tek basina da kendi test fiksturlerini susturur,
+    # depo kokunde ise deponun kendi `tools/secret_fixtures.json`'u (secret_scan
+    # ile ayni kayitlar) devreye girer; yabanci hedefte kayit yollari tutmadigi
+    # icin hicbir sey susturulmaz.
+    def _fikstur_oku(yol):
         try:
-            with open(args.fikstur, encoding="utf-8") as f:
+            with open(yol, encoding="utf-8") as f:
                 fd = json.load(f)
         except Exception as e:
             fail_closed(f"fikstur manifesti okunamadi: {e}", args.out)
         if not isinstance(fd, dict) or not isinstance(fd.get("fiksturler"), list):
             fail_closed("fikstur manifesti semasi gecersiz: {\"fiksturler\": []} bekleniyor",
                         args.out)
+        kayitlar = []
         for k in fd["fiksturler"]:
             if not isinstance(k, dict):
                 fail_closed("fikstur kaydi nesne degil", args.out)
@@ -198,9 +235,37 @@ def main(argv=None):
                     not str(k.get("gerekce", "")).strip() or
                     not str(k.get("kanit", "")).strip()):
                 fail_closed(f"fikstur kaydi gecersiz: {rel!r}", args.out)
-            if (rel, h) in fixtures:
-                fail_closed(f"yinelenen fikstur kaydi: {rel}", args.out)
-            fixtures.add((rel, h))
+            kayitlar.append((rel, h))
+        return kayitlar
+
+    hedef_kok = os.path.abspath(args.hedef)
+    fikstur_kaynagi = None
+    fikstur_otomatik = False
+    kayitlar = []
+    if args.fikstur:
+        fikstur_kaynagi = os.path.abspath(args.fikstur)
+        kayitlar = _fikstur_oku(fikstur_kaynagi)
+    elif os.path.isdir(hedef_kok):
+        if hedef_kok == PAKET_KOKU and os.path.isfile(KENDI_FIKSTUR):
+            fikstur_kaynagi = KENDI_FIKSTUR
+        elif hedef_kok == REPO_KOKU and os.path.isfile(REPO_FIKSTUR):
+            fikstur_kaynagi = REPO_FIKSTUR
+        if fikstur_kaynagi:
+            fikstur_otomatik = True
+            kayitlar = _fikstur_oku(fikstur_kaynagi)
+    # Paket manifesti PAKET-GORELI yollar tasir; hedef paketin ust dizini ise
+    # onek eklenir. Depo manifesti ise zaten depo-goreli yazilmistir.
+    onek = ""
+    if (fikstur_otomatik and fikstur_kaynagi == KENDI_FIKSTUR
+            and hedef_kok != PAKET_KOKU):
+        onek = os.path.relpath(PAKET_KOKU, hedef_kok).replace(os.sep, "/")
+    fixtures = set()
+    for rel, h in kayitlar:
+        goreli = (rel if not onek else
+                  os.path.normpath(os.path.join(onek, rel)).replace(os.sep, "/"))
+        if (goreli, h) in fixtures:
+            fail_closed(f"yinelenen fikstur kaydi: {goreli}", args.out)
+        fixtures.add((goreli, h))
 
     tmp = None
     root = os.path.abspath(args.hedef)
@@ -217,7 +282,8 @@ def main(argv=None):
     elif not os.path.isdir(root):
         fail_closed(f"hedef klasor/arsiv yok: {root}", args.out)
 
-    files = [p for p in iter_files(root) if os.path.isfile(p)]
+    pruned = []
+    files = [p for p in iter_files(root, pruned) if os.path.isfile(p)]
 
     # D1: bos hedef olumlu karar veremez
     if not files:
@@ -244,6 +310,9 @@ def main(argv=None):
             if re.search(pat, rel):
                 hygiene.append((rel, why))
                 break
+    # Bagimlilik dizinleri icerigiyle taranmadi; kendisi tek P1 notu olarak kalir.
+    for rel in pruned:
+        hygiene.append((rel + "/", "bagimlilik/onbellek klasoru (taranmadi)"))
     for rel, why in hygiene[:40]:
         sev = "P0" if ".env" in rel.split("/")[-1] and "example" not in rel else "P1"
         addf("STYLE_FAILURE" if sev == "P1" else "DATA_LOSS", sev, rel,
@@ -349,6 +418,9 @@ def main(argv=None):
         "sir_bulgusu": len(real_secrets),
         "fikstur_muafiyeti": sum(1 for n in noted
                                 if n.get("not") == "fikstur satir SHA-256"),
+        "fikstur_manifesti": fikstur_kaynagi,
+        "fikstur_otomatik": fikstur_otomatik,
+        "taranmayan_dizin": pruned,
         "sir_notu": noted[:20],
         "manifest": manifest_report,
         "counts": {"P0": p0, "P1": p1, "P2": p2},

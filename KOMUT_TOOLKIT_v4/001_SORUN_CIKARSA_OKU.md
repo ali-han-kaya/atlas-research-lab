@@ -114,6 +114,12 @@ python3 ARACLAR/betikler/v4_gate.py <a.json> <b.json>    # karar birlestirici
 python3 ARACLAR/betikler/v4_consistency.py .       # paket ici celiski taramasi
 ```
 
+`v4_verify.py` tek başına çalışırken **kendi** `ARACLAR/FIKSTUR.json`'unu yalnız
+paketin kendisini tararken uygular; harici bir hedefte fikstur muafiyeti için
+`--fikstur` açıkça verilmelidir (hedefin kendi manifesti asla okunmaz).
+`.venv`, `node_modules`, `.next` gibi bağımlılık/önbellek dizinlerinin içine
+girilmez; dizin tek bir `P1` notu olarak raporda görünür.
+
 Harici paket gerekmez — yalnız Python standart kütüphanesi.
 
 **Sürüm:** Sözdizimi Python 3.9 hedefiyle doğrulandı ve 3.9 dışı hiçbir çalışma

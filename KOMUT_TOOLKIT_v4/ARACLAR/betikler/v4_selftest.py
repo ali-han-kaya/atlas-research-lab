@@ -536,20 +536,17 @@ def _run_all(tmp, pkg_root):
     # yalniz tam satir SHA-256'si ile susturur; baska bir sata/baslikta ayni
     # deger bulunursa kapi yine atesler. Repo kopyasinda tools/secret_fixtures.json,
     # tek basina pakette ARACLAR/FIKSTUR.json kullanilir.
-    repo_fikstur = os.path.join(os.path.dirname(pkg_root), "tools", "secret_fixtures.json")
-    yerel_fikstur = os.path.join(pkg_root, "ARACLAR", "FIKSTUR.json")
-    # Paket kendi koku taranirken yollar ARACLAR/... biçimindedir; repo
-    # manifesti ise KOMUT_TOOLKIT_v4/... onekini tasir. Bu yuzden paket icin
-    # HER ZAMAN yerel manifest kullanilir; repo manifesti secret_scan icindir.
-    fikstur = yerel_fikstur if os.path.isfile(yerel_fikstur) else repo_fikstur
-    if os.path.isfile(fikstur):
-        extra = ["--fikstur", fikstur]
-    else:
-        # Paket eski bir kopya ise fail-closed: genis muafiyete geri DUSME.
-        extra = []
-    rc, d, _ = run(VERIFY, pkg_root, "--kanit-dizin", "ARACLAR/KANIT", *extra, "--sessiz")
-    check("SP-7", "arac kendi arsiv/sir kapisindan geciyor",
-          rc == 0, f"rc={rc} bulgular={[f.get('location') for f in d.get('findings', [])][:6]}")
+    # TEK BASINA `v4_verify.py .`: fikstur manifesti ACIKCA verilmez. Arac kendi
+    # paketini taradigini olcup KENDI ARACLAR/FIKSTUR.json'unu uygulamalidir;
+    # aksi halde paket kendi test fiksturleri yuzunden kirmizi kalir.
+    rc, d, _ = run(VERIFY, pkg_root, "--kanit-dizin", "ARACLAR/KANIT", "--sessiz")
+    check("SP-7", "arac kendi kapisindan tek basina geciyor (otomatik fikstur)",
+          rc == 0 and d.get("fikstur_otomatik") is True
+          and d.get("fikstur_muafiyeti", 0) >= 1
+          and d.get("counts", {}).get("P0") == 0,
+          f"rc={rc} counts={d.get('counts')} oto={d.get('fikstur_otomatik')} "
+          f"fikstur={d.get('fikstur_muafiyeti')} "
+          f"bulgular={[f.get('location') for f in d.get('findings', [])][:6]}")
 
     # ==================================================================
     # E. FIKSTURUN DORT YONLU ZAYIFLAMAMA TESTI (SP-8..SP-13)
@@ -612,14 +609,16 @@ def _run_all(tmp, pkg_root):
           f"rc={rc} bulgular={[f.get('code') for f in d.get('findings', [])][:3]}")
 
     fx = _fikstur_hedefi("sp13", {"docs/ornek.md": _satir + "\n"})
-    # Hedefin kendi manifesti OLSUN; acikca --fikstur verilmezse okunmamali.
-    write(j(fx, "fikstur_manifest.json"), json.dumps(
+    # Hedef, otomatik yuklemenin BAKTIGI tam yola kendi manifestini koysun:
+    # ARACLAR/FIKSTUR.json. Arac yalniz KENDI paketinin manifestini okur.
+    write(j(fx, "ARACLAR/FIKSTUR.json"), json.dumps(
         {"fiksturler": [{"dosya": "docs/ornek.md", "satir_sha256": _satir_sha,
                          "gerekce": "hedef", "kanit": "kendini muaf tutmamali"}]}))
     rc, d, _ = run(VERIFY, fx, "--sessiz")
-    check("SP-13", "hedef depo kendi manifestiyle kendini muaf tutamaz",
-          rc == 1 and d.get("counts", {}).get("P0", 0) >= 1,
-          f"rc={rc} counts={d.get('counts')}")
+    check("SP-13", "hedef depo ARACLAR/FIKSTUR.json ile kendini muaf tutamaz",
+          rc == 1 and d.get("counts", {}).get("P0", 0) >= 1
+          and d.get("fikstur_otomatik") is False,
+          f"rc={rc} counts={d.get('counts')} oto={d.get('fikstur_otomatik')}")
 
     rc, d, _ = run(CONSISTENCY, pkg_root, "--sessiz")
     scope = d.get("kapsam", {})

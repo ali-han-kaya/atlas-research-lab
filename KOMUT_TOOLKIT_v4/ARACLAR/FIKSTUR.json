@@ -25,14 +25,14 @@
     },
     {
       "dosya": "ARACLAR/betikler/v4_selftest.py",
-      "satir": 558,
+      "satir": 555,
       "satir_sha256": "f3d6c3a70a73c3b02d7634a102b6b1d51d14fff2bf956776350ab9340c7af5ca",
       "gerekce": "SP-8..SP-13 testinin sabit PEM ornegi; yalniz test girdisi.",
       "kanit": "v4_selftest.py SP-8..SP-13"
     },
     {
       "dosya": "ARACLAR/betikler/v4_selftest.py",
-      "satir": 598,
+      "satir": 595,
       "satir_sha256": "99f7b134c2208a215e50fa0c808bc92c6fab5c94a1d43160cf7d9fed1762c387",
       "gerekce": "SP-11 testinin sabit sahte AWS anahtari; yalniz test girdisi.",
       "kanit": "v4_selftest.py SP-11"
