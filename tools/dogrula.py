@@ -914,9 +914,17 @@ def main():
             deger = _sayi(ozet)
         else:
             deger = ozet
+        # T1/T2/T3 icin ham kanit, komutun GERCEK son satiridir: T1 satiri
+        # `... KANIT commit=<sha> tree=<sha>` provenance'i tasir. Sayisal
+        # parçaya indirmek kaniti zayiflatir; degisken kisim karsilastirmada
+        # normalize edilir (iddia.py), saklanan satir tam kalir.
+        if kid in ('T1', 'T2', 'T3') and ozet:
+            ham_satir = ozet
+        else:
+            ham_satir = 'dogrula %s %s %s' % (kid, kdurum, deger or '')
         kontroller.append(_json_kontrol(
             kid, ad, kdurum, deger=deger, ayrinti=not_metni,
-            ham='dogrula %s %s %s' % (kid, kdurum, deger or '')))
+            ham=ham_satir))
 
     gecen = len(kalemler) - len(kalan) - len(atlanan)
     kontroller.append(_json_kontrol(

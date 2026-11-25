@@ -183,12 +183,12 @@
         "tools/dogrula.py",
         "--json"
       ],
-      "ham_grup": true,
       "beklenen": "146/146",
       "rc_beklenen": 0,
       "kapi": {
         "kontrol": "T1"
-      }
+      },
+      "not": "ham kanit T1 ciktisinin TAM satiridir (commit/tree dahil); karsilastirmada yalniz commit/tree normalize edilir"
     },
     {
       "id": "IDD-04",

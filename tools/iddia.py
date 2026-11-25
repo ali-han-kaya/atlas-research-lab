@@ -537,6 +537,19 @@ def _paralel_olc(komutlar, onbellek):
             onbellek[anahtar] = gelecek.result()
 
 
+HAM_DEGISKEN = re.compile(r'\b(commit|tree)=[0-9a-f]{7,64}\b')
+
+
+def ham_normalize(satir):
+    """Ham kanit satirini karsilastirma icin normalize et.
+
+    Yalniz DEGISKEN provenance kismi (commit/tree hash) mesru olarak her
+    commit'te degisir; onun disinda satir BIREBIR ayni olmalidir. Normalizasyon
+    dar tutulur: baska hicbir alan esnetilmez.
+    """
+    return HAM_DEGISKEN.sub(r'\1=<SHA>', satir)
+
+
 def _taze_kapi(kayit, onbellek):
     """Sürümlü kapı zarfından tek kontrol değeri seç."""
     rc, _birlesik, cikti = komut_kos(kayit['komut'], onbellek)
@@ -609,7 +622,7 @@ def olc(kayit, onbellek, kanit):
         return False, deger, ('ham kanit degeri %s, beyan %s'
                               % (kanit['deger'], kayit['beklenen']))
     if kayit.get('kapi'):
-        if kanit['ham'] != satir:
+        if ham_normalize(kanit['ham']) != ham_normalize(satir):
             return False, deger, ('ham kanit guncel zarf degeriyle ayni degil — '
                                   'make iddia-yaz')
         return True, deger, ''
