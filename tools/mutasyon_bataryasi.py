@@ -2238,9 +2238,14 @@ def sonuc_yaz(satirlar, meta, kisa):
     """Makine-okunur kosu sonucu: her vaka icin GERCEKLESEN durum.
 
     `kapsam.py` bu dosyadan 'vaka var' ile 'son kosuda gecti' ayrimini
-    turetir. Tazelik icin HEAD ve kirlilik yazilir: farkli bir agacın
-    sonucu kanit sayilmaz.
+    turetir. Cikti DETERMINISTIKTIR (zaman/HEAD yok); tazelik yalniz
+    `kaynak_sha256` ile denetlenir. Kisa kosu dosyayi yazmaz.
     """
+    if kisa:
+        # Kisa kosu kanit DEGILDIR: izlenen kanit dosyasini ezmemeli, yoksa
+        # temiz klonda agac kirlenir ve kanit 6 vakaya duser.
+        print('SONUC YAZILMADI: kisa kosu (kanit dosyasi korunur)')
+        return
     kayitlar = []
     for kimlik, katman, kural, durum, ayrinti in satirlar:
         bilgi = meta.get(kimlik, {})
