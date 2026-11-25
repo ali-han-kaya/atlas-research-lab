@@ -8,7 +8,21 @@
 TEK YETKILI TAM TARAMA (paket): `cd KOMUT_TOOLKIT_v4 && python3
 ARACLAR/betikler/v4_verify.py . --kanit-dizin ARACLAR/KANIT` — kendi
 `ARACLAR/FIKSTUR.json`'unu otomatik uygular (raporda `fikstur_otomatik`).
-Depo geneli sir taramasi ise `KOD_SABLONLAR/scripts/secret_scan.py --tum`.
+Ayni manifest, paketin bir ALT DIZINI taranirken de hedef-goreli yola
+cevrilerek uygulanir: `cd ARACLAR/betikler && python3 v4_verify.py .`
+gomulu test ornekleri yuzunden kirmizi KALMAZ; manifest disi her sir P0'dir.
+
+MANUEL YOL (desteklenen): otomatik yukleme yalniz aracin kendi paketi
+icindir. Yabanci/kopya agacta tam satir SHA-256'larini tasiyan manifest
+ACIKCA verilir. `--fikstur` yollari TARANAN KOKE gorelidir:
+
+    cd KOMUT_TOOLKIT_v4
+    python3 ARACLAR/betikler/v4_verify.py . --fikstur ARACLAR/FIKSTUR.json
+
+Paket manifesti paket-goreli oldugu icin hedef paket kokudur; manifest
+verilmezse ham cagri gomulu ornekleri P0 sayar (zorunlu yuzey sessizce
+susturulmaz). Depo geneli sir taramasi ise
+`KOD_SABLONLAR/scripts/secret_scan.py --tum`.
 Bagimlilik/onbellek dizinlerinin (`.venv`, `node_modules`, ...) ICINE
 girilmez; dizin tek bir P1 hijyen notu olarak gorunur.
 
@@ -60,6 +74,14 @@ REPO_FIKSTUR = os.path.join(REPO_KOKU, "tools", "secret_fixtures.json")
 PAKET_FIKSTUR_DOSYALARI = {"ARACLAR/betikler/v4_selftest.py"}
 REPO_FIKSTUR_DOSYALARI = {"KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_selftest.py",
                           "docs/OLCUM-02-CANLI-KOSU.md"}
+
+
+def _paket_icinde(yol: str) -> bool:
+    """Hedef aracin kendi paketi mi, yoksa onun bir alt dizini mi?"""
+    try:
+        return os.path.commonpath([PAKET_KOKU, yol]) == PAKET_KOKU
+    except ValueError:
+        return False
 
 HYGIENE_PATTERNS = [
     (r"(^|/)(node_modules|\.next|__pycache__|\.pytest_cache|\.mypy_cache|\.venv|venv|\.tox)(/|$)",
@@ -176,9 +198,11 @@ def main(argv=None):
                     help="hijyenden muaf kanit/rapor dizini (birden fazla verilebilir)")
     ap.add_argument("--muafiyet", help="imzali muafiyet kayitlari (JSON liste)")
     ap.add_argument("--fikstur",
-                    help="satir SHA-256'li fikstur manifesti (JSON); verilmezse "
-                         "arac KENDI ARACLAR/FIKSTUR.json'unu yalniz kendi "
-                         "paketini tararken uygular; hedefin manifesti okunmaz")
+                    help="satir SHA-256'li fikstur manifesti (JSON); dosya yollari "
+                         "TARANAN KOKE gorelidir. Verilmezse arac KENDI "
+                         "ARACLAR/FIKSTUR.json'unu yalniz kendi paketini (veya alt "
+                         "dizinini) tararken uygular; hedefin manifesti okunmaz. "
+                         "Manuel ornek: v4_verify.py . --fikstur ARACLAR/FIKSTUR.json")
     ap.add_argument("--out")
     ap.add_argument("--sessiz", action="store_true")
     args = ap.parse_args(argv)
@@ -255,30 +279,33 @@ def main(argv=None):
         fikstur_kaynagi = os.path.abspath(args.fikstur)
         kayitlar = _fikstur_oku(fikstur_kaynagi)
     elif os.path.isdir(hedef_kok):
-        if hedef_kok == PAKET_KOKU and os.path.isfile(KENDI_FIKSTUR):
+        if _paket_icinde(hedef_kok) and os.path.isfile(KENDI_FIKSTUR):
             fikstur_kaynagi = KENDI_FIKSTUR
         elif hedef_kok == REPO_KOKU and os.path.isfile(REPO_FIKSTUR):
             fikstur_kaynagi = REPO_FIKSTUR
         if fikstur_kaynagi:
             fikstur_otomatik = True
             kayitlar = _fikstur_oku(fikstur_kaynagi)
-    # Paket manifesti PAKET-GORELI yollar tasir; hedef paketin ust dizini ise
-    # onek eklenir. Depo manifesti ise zaten depo-goreli yazilmistir.
-    onek = ""
-    if (fikstur_otomatik and fikstur_kaynagi == KENDI_FIKSTUR
-            and hedef_kok != PAKET_KOKU):
-        onek = os.path.relpath(PAKET_KOKU, hedef_kok).replace(os.sep, "/")
+    # Paket manifesti PAKET-GORELI yollar tasir; hedef paketin kendisi ya da
+    # alt diziniyse kayit hedef-goreli yola cevrilir. Hedefin disinda kalan
+    # kayitlar (ornegin paketin ust dizinini tararken) atlanir. Depo manifesti
+    # ise zaten depo-goreli yazilmistir.
     izinli = set()
     if fikstur_otomatik:
         izinli = (PAKET_FIKSTUR_DOSYALARI if fikstur_kaynagi == KENDI_FIKSTUR
                   else REPO_FIKSTUR_DOSYALARI)
     fixtures = set()
     for rel, h in kayitlar:
-        goreli = (rel if not onek else
-                  os.path.normpath(os.path.join(onek, rel)).replace(os.sep, "/"))
-        if izinli and goreli not in izinli:
+        if fikstur_otomatik and fikstur_kaynagi == KENDI_FIKSTUR:
+            goreli = os.path.relpath(os.path.join(PAKET_KOKU, rel), hedef_kok)
+        else:
+            goreli = rel
+        goreli = goreli.replace(os.sep, "/")
+        if goreli == ".." or goreli.startswith("../"):
+            continue
+        if izinli and rel not in izinli:
             fail_closed(
-                f"izinsiz fikstur dosyasi (otomatik manifest): {goreli!r}", args.out)
+                f"izinsiz fikstur dosyasi (otomatik manifest): {rel!r}", args.out)
         if (goreli, h) in fixtures:
             fail_closed(f"yinelenen fikstur kaydi: {goreli}", args.out)
         fixtures.add((goreli, h))

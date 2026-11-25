@@ -661,6 +661,40 @@ def _run_all(tmp, pkg_root):
           and d.get("fikstur_muafiyeti", 0) >= 1,
           f"rc={rc} counts={d.get('counts')} fikstur={d.get('fikstur_muafiyeti')}")
 
+    # F. HAM ALT-DIZIN CAGRISI VE MANUEL EXACT MANIFEST (SP-17..SP-19)
+    # `cd ARACLAR/betikler && python3 v4_verify.py .` hedefi paketin alt dizinidir;
+    # arac kendi manifestini hedef-goreli yola cevirip uygulamali. Manifest disi
+    # sir ise yine P0 kalmali (zorunlu yuzey zayiflamaz). Manuel yolda ayni
+    # manifest acikca verilir ve paket kokunde temiz calisir.
+    tam = j(tmp, "sp17")
+    shutil.copytree(pkg_root, tam,
+                    ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    tam_verify = j(tam, "ARACLAR/betikler/v4_verify.py")
+    alt = j(tam, "ARACLAR/betikler")
+    rc, d, _ = run(tam_verify, alt)
+    check("SP-17", "paket alt dizini ham taramada arac manifestini uygular",
+          rc == 0 and d.get("counts", {}).get("P0") == 0
+          and d.get("fikstur_otomatik") is True
+          and d.get("fikstur_muafiyeti", 0) == 5,
+          f"rc={rc} counts={d.get('counts')} oto={d.get('fikstur_otomatik')} "
+          f"fikstur={d.get('fikstur_muafiyeti')}")
+
+    write(j(alt, "gizli.md"), gizli_satir + "\n")
+    rc, d, _ = run(tam_verify, alt)
+    check("SP-18", "alt dizinde manifest disi sir yine P0 (yuzey zayiflamadi)",
+          rc == 1 and d.get("counts", {}).get("P0", 0) >= 1
+          and d.get("fikstur_muafiyeti", 0) == 5,
+          f"rc={rc} counts={d.get('counts')} fikstur={d.get('fikstur_muafiyeti')}")
+    os.remove(j(alt, "gizli.md"))
+
+    rc, d, _ = run(tam_verify, tam, "--fikstur", j(tam, "ARACLAR/FIKSTUR.json"))
+    check("SP-19", "manuel exact manifest paket kokunde temiz calisir",
+          rc == 0 and d.get("counts", {}).get("P0") == 0
+          and d.get("fikstur_otomatik") is False
+          and d.get("fikstur_muafiyeti", 0) == 5,
+          f"rc={rc} counts={d.get('counts')} oto={d.get('fikstur_otomatik')} "
+          f"fikstur={d.get('fikstur_muafiyeti')}")
+
     rc, d, _ = run(CONSISTENCY, pkg_root, "--sessiz")
     scope = d.get("kapsam", {})
     tut1 = [("paket", rc == 0 and d.get("counts") == {"P0": 0, "P1": 0, "P2": 0}
