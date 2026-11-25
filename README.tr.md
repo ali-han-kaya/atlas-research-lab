@@ -427,6 +427,12 @@ koşmaz, bu satırları `ATLANDI` basar ve PASS saymaz; varsayılan `make iddia`
 koşu olarak kalır. `--yaz` ile birleştirilemez, çünkü kısmi anlık görüntü tam
 kanıtı silerdi.
 
+GitHub Actions'ta bu adım kırmızı yandığında, aynı tek satırlık özet
+`::error::` annotation'ı olarak da yayınlanır: her başarısız iddia için
+beyan, ölçüm ve kaynak kırmızı job özetinde tek satırda görünür. Annotation
+yalnız CI ortamında yazılır; yerel çıktı ve yeşil akış harfi harfine aynı
+kalır.
+
 `make iddia` her satırı yeniden koşar; beyan ile ölçüm tutmazsa satırı
 kimliğiyle (`IDD-07`) kırmızı basar ve `rc=1` döner. Alıntısı dosyasında birebir
 bulunmayan bir satır defteri bozuk sayar (`rc=2`): iddia metni uydurulamaz.

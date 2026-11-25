@@ -59,6 +59,7 @@ KULLANIM
 import concurrent.futures
 import datetime
 import json
+import os
 import re
 import subprocess
 import sys
@@ -639,6 +640,28 @@ def olc(kayit, onbellek, kanit):
     return True, deger, ''
 
 
+def _gha_kacis(metin):
+    """GitHub Actions workflow komutu icin kacis.
+
+    Runner `::error::` satirlarinda `%`, CR ve LF ayirici olarak kullanilir;
+    bunlar kacarilmazsa annotation bozulur veya satir bolunur.
+    """
+    return (str(metin).replace('%', '%25')
+            .replace('\r', '%0D').replace('\n', '%0A'))
+
+
+def gha_hata(baslik, mesaj):
+    """CI'da `::error::` annotation satiri uret; yerelde bos dize.
+
+    Yalniz GitHub Actions ortaminda yazilir (GITHUB_ACTIONS=true). Boylece
+    yerel/`make iddia` cikitisi harfi harfine ayni kalir: yesil akis ve
+    mevcut log satiri degismez; annotation yalniz kirmizi job ozetinde gorunur.
+    """
+    if os.environ.get('GITHUB_ACTIONS') != 'true':
+        return ''
+    return '::error title=%s::%s' % (_gha_kacis(baslik), _gha_kacis(mesaj))
+
+
 def _kisa(metin, sinir=64):
     metin = ' '.join(str(metin).split())
     return metin if len(metin) <= sinir else metin[:sinir - 1] + '…'
@@ -674,6 +697,10 @@ def main(argv):
     except DefterHatasi as e:
         print('DEFTER BOZUK: %s' % e)
         print('IDDIA FAIL — defter: %s' % e)
+        # Defter bozuksa beyan/olcum yok; yine de kirmizi job ozeti adlandirilsin.
+        annotation = gha_hata('iddia FAIL: defter', 'defter: %s' % e)
+        if annotation:
+            print(annotation)
         print('HUKUM: DEFTER BOZUK — hicbir iddia olculmedi')
         return 2
 
@@ -681,6 +708,9 @@ def main(argv):
         kapsam_denetimi = kapsam_denetle(defter)
     except DefterHatasi as e:
         print('KAPSAM BOZUK: %s' % e)
+        annotation = gha_hata('iddia FAIL: kapsam', 'kapsam istisnasi: %s' % e)
+        if annotation:
+            print(annotation)
         print('HUKUM: KAPSAM BOZUK — kapsam istisnasi gecersiz')
         return 2
 
@@ -798,10 +828,16 @@ def main(argv):
         for kayit in defter['iddialar']:
             kaynaklar[kayit['id']] = ', '.join(dict.fromkeys(
                 x['dosya'] for x in kayit['kaynaklar']))
-        print('IDDIA FAIL — ' + ' | '.join(
-            '%s: beyan=%s · olcum=%s · kaynak=%s · %s'
-            % (s[1], beklenenler.get(s[1], '—'), s[3],
-               kaynaklar.get(s[1], '—'), s[4]) for s in kalan))
+        ozetler = ['%s: beyan=%s · olcum=%s · kaynak=%s · %s'
+                   % (s[1], beklenenler.get(s[1], '—'), s[3],
+                      kaynaklar.get(s[1], '—'), s[4]) for s in kalan]
+        print('IDDIA FAIL — ' + ' | '.join(ozetler))
+        # Ayni tek satirlik ozet, kirmizi job ozetinde de gorunsun: her
+        # basarisiz iddia icin bir annotation (beyan · olcum · kaynak).
+        for ozet in ozetler:
+            annotation = gha_hata('iddia FAIL: %s' % ozet.split(':', 1)[0], ozet)
+            if annotation:
+                print(annotation)
     ag_sayisi = len([s for s in satirlar if s[0] == 'AG'])
     beyan = len([s for s in satirlar if s[0] == 'BEYAN'])
     olculmedi = len([s for s in satirlar if s[0] == 'OLCULMEDI'])
