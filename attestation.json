@@ -1,5 +1,5 @@
 {
-  "commit": "b3d2d8f2d76f3f6767adde51a77d36a85217f397",
+  "commit": "159dc3ac66f9435d04d7235f1b659299644260cd",
   "file_count": 288,
   "files": [
     {
@@ -1211,8 +1211,8 @@
     {
       "mode": "100644",
       "path": "README.en.md",
-      "sha256": "4f1c892ba0e8a376b5295b7d3251242f0b4012f3a2e1159a262521b735db94c9",
-      "size": 8260
+      "sha256": "074ac0c12af2ddb23f4e05b2e42a96f77afdc58dad05b60ec4812b8de43b3c69",
+      "size": 8503
     },
     {
       "mode": "100644",
@@ -1223,8 +1223,8 @@
     {
       "mode": "100644",
       "path": "README.tr.md",
-      "sha256": "841190885e6a2d940764fed5387c2d994e4d44efc3b614cf7f1ff726f438395c",
-      "size": 36456
+      "sha256": "3ced67ac9712bf22aa1f82a856f1625ee83b8201fef24738dfc6d09c69cba05e",
+      "size": 36992
     },
     {
       "mode": "100644",
@@ -1409,8 +1409,8 @@
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "4cb3404d3bdfa6cc386f4bdbfbc223b08b0b0c091021f261d85f8ea43aa8e8a9",
-      "size": 31678
+      "sha256": "12f4fa5173699bde158034f3866a1e46e26e09f5e44efef6046ea8374f4573a4",
+      "size": 32025
     },
     {
       "mode": "100644",
@@ -1523,8 +1523,8 @@
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "828adad6a033cbd09e9b926a4f87249a6ca6c781e85afcdbee6e22a73e71cc7b",
-      "size": 8718
+      "sha256": "89987160a7048658a9e0ac2354f204c136f105ff23ad42e21ab418e848e9be7f",
+      "size": 8757
     },
     {
       "mode": "100644",
@@ -1731,7 +1731,7 @@
       "size": 14827
     }
   ],
-  "generated_at": "2026-11-25T02:45:37Z",
+  "generated_at": "2026-11-25T02:59:49Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1746,6 +1746,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "f9f6fa9e9f26c4c930eeabf6602d88f6b9b053fc",
-  "tree_sha256": "36bafed70e9f425e45764bfd1f306b9c31d000e6fd59f1836bc2fc0ec8c8123c"
+  "tree": "5babf20eb45fd051db3924ab78b2ee3e691cd102",
+  "tree_sha256": "46c3a9afd588d83f883ac94e683d622f20cc1a6fcf9fe352941145aceb92562c"
 }
