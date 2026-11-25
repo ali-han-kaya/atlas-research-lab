@@ -170,6 +170,42 @@ def main():
                     and "FAIL PAKET-06" in ust_metin,
                     ust_hatasi or ust_metin,
                 )
+
+                log_paket = kok / "bozuk-log"
+                shutil.copytree(paket, log_paket)
+                makbuz = json.loads(
+                    (paket / "makbuz.json").read_text(encoding="utf-8"))
+                log_yolu = log_paket / makbuz["items"][0]["stdout"]
+                log_yolu.write_text(
+                    log_yolu.read_text(encoding="utf-8") + "BOZUK LOG\n",
+                    encoding="utf-8",
+                )
+                log, log_hatasi = dogrula(log_paket)
+                log_metin = cikti(log)
+                bekle(
+                    "bozuk log PAKET-05",
+                    log is not None and log.returncode == 1
+                    and "FAIL PAKET-05" in log_metin,
+                    log_hatasi or log_metin,
+                )
+
+                manifest_paket = kok / "bozuk-manifest"
+                shutil.copytree(paket, manifest_paket)
+                manifest_yolu = manifest_paket / "manifest.sha256"
+                satirlar = manifest_yolu.read_text(encoding="utf-8").splitlines()
+                parcalar = satirlar[0].split("  ", 1)
+                satirlar[0] = "0" * 64 + "  " + parcalar[1]
+                manifest_yolu.write_text(
+                    "\n".join(satirlar) + "\n", encoding="utf-8"
+                )
+                manifest, manifest_hatasi = dogrula(manifest_paket)
+                manifest_metin = cikti(manifest)
+                bekle(
+                    "bozuk manifest PAKET-03",
+                    manifest is not None and manifest.returncode == 1
+                    and "FAIL PAKET-03" in manifest_metin,
+                    manifest_hatasi or manifest_metin,
+                )
     finally:
         att_sonra = sha256(att_yolu)
         durum_sonra, _ = kos(
