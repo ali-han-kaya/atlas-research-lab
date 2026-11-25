@@ -1,5 +1,5 @@
 {
-  "commit": "93492e421ce6a33ce76cefd4e15da5e2cd113c52",
+  "commit": "4ba9135385d59d7b2287c7a0144d4d282a5a0225",
   "file_count": 291,
   "files": [
     {
@@ -1169,8 +1169,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "3625641c24b6b1914205944ef934aaf2937e3620047d01160e54a27c081fe16e",
-      "size": 7246
+      "sha256": "9063e2b41c044b56ed62828faaae33391e2f424b01f182f3db54d2910756fa20",
+      "size": 7478
     },
     {
       "mode": "100644",
@@ -1283,8 +1283,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "3391c4ee2dd10b81a5deb767f558cd1db85cdb209e5303aab6e6a2645823488d",
-      "size": 508879
+      "sha256": "ba9111844a5afdf08507bf2508714c5609372ec36a34ff0ee38a4be4c8cde183",
+      "size": 509780
     },
     {
       "mode": "100644",
@@ -1649,8 +1649,8 @@
     {
       "mode": "100644",
       "path": "tools/mutasyon_bataryasi.py",
-      "sha256": "9514f96b7ac2e334370cea3f24b5d98dee72793f8ee2f2675dd7540a776a98d7",
-      "size": 109885
+      "sha256": "a34369e9ec9b286fb75755a20e8260fa06f5918cc33cd3a822dbea9958fa4e9a",
+      "size": 114651
     },
     {
       "mode": "100644",
@@ -1661,7 +1661,7 @@
     {
       "mode": "100644",
       "path": "tools/mutasyon_sonuc.json",
-      "sha256": "a36ebaf207911ee760fea0b68fcbf08c13fe34784d9af515fc75dfdf3a2ea01d",
+      "sha256": "b3330df2d85a3f290d3f456bf3a3c4f5255e6bcc88f51672df042e38bf3d5565",
       "size": 52455
     },
     {
@@ -1749,7 +1749,7 @@
       "size": 14827
     }
   ],
-  "generated_at": "2026-11-25T13:24:00Z",
+  "generated_at": "2026-11-25T14:01:34Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1764,6 +1764,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "abc985bff10f603c1d41f924426bb0f1debe68cc",
-  "tree_sha256": "75d15f18c434e5bf47b840af40c3f59efd6e9d12d43acd29bbb5d381f146f911"
+  "tree": "33a63a77c7aaf6ba917a94b6cdadf30aa2f72cc0",
+  "tree_sha256": "1a69caa7de44d0c30091146cd505c7be7f6b584308dfa85801c46253a043f9ad"
 }
