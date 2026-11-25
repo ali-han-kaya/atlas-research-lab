@@ -1,5 +1,5 @@
 {
-  "commit": "e415fb60cba66593a324a9c840c07250d70ca387",
+  "commit": "52c00f527826c1140b836ba728945264849b125f",
   "file_count": 291,
   "files": [
     {
@@ -1049,7 +1049,7 @@
     {
       "mode": "100644",
       "path": "KOMUT_TOOLKIT_v4/ARACLAR/SHA256SUMS.txt",
-      "sha256": "d39309eb156f7d2348c2bb91b7404a056dfb72f2a1ed9434e58c8e6aac55c509",
+      "sha256": "65bc215aa461bb513abea6413e822c483dc79b2d8afbc38531ffddd5f87acfa8",
       "size": 2902
     },
     {
@@ -1283,8 +1283,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "5a6572b0806f117e19696187ba9b6a399aa42bcf997c6d06d35101f12d8a8769",
-      "size": 503023
+      "sha256": "ea8df5344ba078bf2e4d15951648c18fe206fb586b0c3c19a1060697a3cf82e8",
+      "size": 504456
     },
     {
       "mode": "100644",
@@ -1493,8 +1493,8 @@
     {
       "mode": "100644",
       "path": "tools/dogrula.py",
-      "sha256": "053f910eace1d46c406c1a4c06d1cf6921c58c06d1778e4f2432ee9a8bc2a918",
-      "size": 40591
+      "sha256": "e2b965a100603f9e4df6c679c27def753f85295b4ca8667e544840b63dee999c",
+      "size": 43528
     },
     {
       "mode": "100644",
@@ -1749,7 +1749,7 @@
       "size": 14827
     }
   ],
-  "generated_at": "2026-11-25T06:41:07Z",
+  "generated_at": "2026-11-25T10:48:28Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1764,6 +1764,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "fdfcc43c0ef81757a70ff83e5d658303f36fc935",
-  "tree_sha256": "f43da41725183b476f444a9bdac35da026a38b7c8215922d75483af37ca023a5"
+  "tree": "f24c8b288a6f0579c04dbe555ed30fa11f66549a",
+  "tree_sha256": "aa31680900d2362fd7e9cc3b915730c2b0e7b2db585dc9308fc8700427a124cb"
 }
