@@ -620,6 +620,47 @@ def _run_all(tmp, pkg_root):
           and d.get("fikstur_otomatik") is False,
           f"rc={rc} counts={d.get('counts')} oto={d.get('fikstur_otomatik')}")
 
+    # --- HEDEFIN KENDI MANIFESTI: ARACIN KOPYASI bile keyfi dosyayi susturamaz.
+    # SP-13 disaridan verilen hedefi sinar; burada hedef ARACIN KOPYASIDIR ve
+    # otomatik yukleme devreye girer (hedef == kopyanin paket koku). Yani
+    # "manifest arac sahipliginde" iddiasinin tam siniri olculur.
+    sahte_sir = "AKIA" + "2E1F4B7C9D0E3F9A"
+    gizli_satir = "AWS_ACCESS_KEY_ID=" + sahte_sir
+    kopya = j(tmp, "sp14")
+    os.makedirs(j(kopya, "ARACLAR/betikler"), exist_ok=True)
+    shutil.copy2(os.path.join(HERE, "v4_verify.py"),
+                 j(kopya, "ARACLAR/betikler/v4_verify.py"))
+    shutil.copy2(os.path.join(HERE, "v4_common.py"),
+                 j(kopya, "ARACLAR/betikler/v4_common.py"))
+    write(j(kopya, "docs/gizli.md"), gizli_satir + "\n")
+    kopya_verify = j(kopya, "ARACLAR/betikler/v4_verify.py")
+    rc, d, _ = run(kopya_verify, kopya)
+    check("SP-14", "kopya paket on kosulu: keyfi dosyadaki sir manifest yokken yakalanir",
+          rc == 1 and d.get("counts", {}).get("P0", 0) >= 1
+          and any("docs/gizli.md" in str(f.get("location", ""))
+                  for f in d.get("findings", [])),
+          f"rc={rc} bulgular={[f.get('location') for f in d.get('findings', [])][:3]}")
+
+    write(j(kopya, "ARACLAR/FIKSTUR.json"), json.dumps(
+        {"fiksturler": [{"dosya": "docs/gizli.md",
+                         "satir_sha256": hashlib.sha256(gizli_satir.encode()).hexdigest(),
+                         "gerekce": "hedef", "kanit": "kendini muaf tutmamali"}]}))
+    rc, d, _ = run(kopya_verify, kopya)
+    kodlar = [f.get("code") for f in d.get("findings", [])]
+    check("SP-15", "kopya paket kendi ARACLAR/FIKSTUR.json'u ile keyfi dosyayi susturamaz",
+          rc == 1 and "SCHEMA_INVALID" in kodlar
+          and any("izinsiz fikstur" in str(f.get("evidence", ""))
+                  for f in d.get("findings", [])),
+          f"rc={rc} kodlar={kodlar[:4]}")
+
+    # Acikca verilen --fikstur operator kararidir; ayni kayit susturur.
+    rc, d, _ = run(kopya_verify, kopya, "--fikstur",
+                   j(kopya, "ARACLAR/FIKSTUR.json"))
+    check("SP-16", "operatorun acikca verdigi --fikstur ile susturma calisir",
+          rc == 0 and d.get("counts", {}).get("P0") == 0
+          and d.get("fikstur_muafiyeti", 0) >= 1,
+          f"rc={rc} counts={d.get('counts')} fikstur={d.get('fikstur_muafiyeti')}")
+
     rc, d, _ = run(CONSISTENCY, pkg_root, "--sessiz")
     scope = d.get("kapsam", {})
     tut1 = [("paket", rc == 0 and d.get("counts") == {"P0": 0, "P1": 0, "P2": 0}

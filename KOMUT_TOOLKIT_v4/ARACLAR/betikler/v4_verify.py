@@ -53,6 +53,13 @@ KENDI_FIKSTUR = os.path.abspath(os.path.join(HERE, "..", "FIKSTUR.json"))
 # Yalniz KOK tam olarak depo koku ise uygulanir; hedefin getirdigi manifest asla.
 REPO_KOKU = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 REPO_FIKSTUR = os.path.join(REPO_KOKU, "tools", "secret_fixtures.json")
+# Otomatik yuklenen manifest yalniz BIRINCI-TARAF fikstur dosyalarini
+# susturabilir. Liste manifestten DEGIL koddan gelir: hedef agac kendi
+# ARACLAR/FIKSTUR.json'u ile keyfi bir dosyayi muaf tutamaz (SP-15).
+# `--fikstur` acikca verilirse operatorun kararidir; bu listeye tabi degildir.
+PAKET_FIKSTUR_DOSYALARI = {"ARACLAR/betikler/v4_selftest.py"}
+REPO_FIKSTUR_DOSYALARI = {"KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_selftest.py",
+                          "docs/OLCUM-02-CANLI-KOSU.md"}
 
 HYGIENE_PATTERNS = [
     (r"(^|/)(node_modules|\.next|__pycache__|\.pytest_cache|\.mypy_cache|\.venv|venv|\.tox)(/|$)",
@@ -214,7 +221,9 @@ def main(argv=None):
     # uygular: `v4_verify.py .` tek basina da kendi test fiksturlerini susturur,
     # depo kokunde ise deponun kendi `tools/secret_fixtures.json`'u (secret_scan
     # ile ayni kayitlar) devreye girer; yabanci hedefte kayit yollari tutmadigi
-    # icin hicbir sey susturulmaz.
+    # icin hicbir sey susturulmaz. Otomatik manifestler ayrica IZINLI DOSYA
+    # listesine tabidir: kopyalanmis bir paket kendi manifestine keyfi dosya
+    # ekleyip muafiyet uretemez; boyle bir kayit fail-closed durdurur.
     def _fikstur_oku(yol):
         try:
             with open(yol, encoding="utf-8") as f:
@@ -259,10 +268,17 @@ def main(argv=None):
     if (fikstur_otomatik and fikstur_kaynagi == KENDI_FIKSTUR
             and hedef_kok != PAKET_KOKU):
         onek = os.path.relpath(PAKET_KOKU, hedef_kok).replace(os.sep, "/")
+    izinli = set()
+    if fikstur_otomatik:
+        izinli = (PAKET_FIKSTUR_DOSYALARI if fikstur_kaynagi == KENDI_FIKSTUR
+                  else REPO_FIKSTUR_DOSYALARI)
     fixtures = set()
     for rel, h in kayitlar:
         goreli = (rel if not onek else
                   os.path.normpath(os.path.join(onek, rel)).replace(os.sep, "/"))
+        if izinli and goreli not in izinli:
+            fail_closed(
+                f"izinsiz fikstur dosyasi (otomatik manifest): {goreli!r}", args.out)
         if (goreli, h) in fixtures:
             fail_closed(f"yinelenen fikstur kaydi: {goreli}", args.out)
         fixtures.add((goreli, h))
