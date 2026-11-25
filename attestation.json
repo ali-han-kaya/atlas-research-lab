@@ -1,6 +1,6 @@
 {
-  "commit": "1b71a35882b00789e4a264a7f17f56fde79d0319",
-  "file_count": 286,
+  "commit": "e1ab8091d22c626eb36f8b2a38c6ec25d93b3c14",
+  "file_count": 288,
   "files": [
     {
       "mode": "100755",
@@ -1163,8 +1163,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "24013ef6cf3842d43b5419a7bf62a8d3ba52c04a10c43bd778c36a1f81f443df",
-      "size": 6656
+      "sha256": "d979e09176cd46ea65a2ca9c9dfeaf9e22b01d067aa02864b22f6afb333d065a",
+      "size": 6782
     },
     {
       "mode": "100644",
@@ -1211,8 +1211,8 @@
     {
       "mode": "100644",
       "path": "README.en.md",
-      "sha256": "a6af7ca0ab98dc55b13be207f761ad54be0693a1c86ddfb45e6bfa9d91d55b0c",
-      "size": 6028
+      "sha256": "4f1c892ba0e8a376b5295b7d3251242f0b4012f3a2e1159a262521b735db94c9",
+      "size": 8260
     },
     {
       "mode": "100644",
@@ -1277,8 +1277,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "f3ca97cf491ca019e7748170ba9355bc13763fcd18d354cbc4912f7507f925ed",
-      "size": 497743
+      "sha256": "3000dfb7da2d7b4558b686d3e180064e712d1735eee05002b45c2d538b93e64f",
+      "size": 498628
     },
     {
       "mode": "100644",
@@ -1333,6 +1333,12 @@
       "path": "docs/KOD_BEDAVA_MODEL_POLITIKASI.md",
       "sha256": "c2d5aece2b7af778006eaf07b5a02e6adae2733f954582e9ca1080e4f43b3d4a",
       "size": 15958
+    },
+    {
+      "mode": "100644",
+      "path": "docs/KURAL-KATALOGU.md",
+      "sha256": "235ecbaa5b6fcea4411d07dbcc5b11dd3b2aac57db7b4a07bd87eb32bfab969b",
+      "size": 18021
     },
     {
       "mode": "100644",
@@ -1588,6 +1594,12 @@
     },
     {
       "mode": "100644",
+      "path": "tools/kural_katalogu.py",
+      "sha256": "eef3260e8fe98ce36776eeb36ea40a3012c624b4bbf4cf37148c12fbf3817f2f",
+      "size": 11281
+    },
+    {
+      "mode": "100644",
       "path": "tools/model_katalog.json",
       "sha256": "0424fbde7ca3dd868c196e1388246d671ca2b481003e39727ea7430a41c87ee8",
       "size": 1055
@@ -1709,8 +1721,8 @@
     {
       "mode": "100644",
       "path": "tools/yayin_manifest.json",
-      "sha256": "a76a3b5ec65fc3b72cdf3c2a32c896f8b919adf612124387b7273e339649031f",
-      "size": 13004
+      "sha256": "ccb752fb5951accabb53bfccbebfc0ab41ef6fa8956cbfbd9550a290a0fb82ca",
+      "size": 13065
     },
     {
       "mode": "100644",
@@ -1719,7 +1731,7 @@
       "size": 14764
     }
   ],
-  "generated_at": "2026-11-25T01:14:18Z",
+  "generated_at": "2026-11-25T01:47:31Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1734,6 +1746,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "75dd3d292a2fc1ce2dd5653f27223397b46c396e",
-  "tree_sha256": "8921019931b568c918ca5d2a9b948f90af67a41a8fb09e1729dd8dd558c9fc06"
+  "tree": "25ed9e8ec10c3e7e09a7b063c59afe23da972c4d",
+  "tree_sha256": "c46976c28fdf4e2143c4368391f07aed793e74b27ca03aa1bbd727f990e37b26"
 }
