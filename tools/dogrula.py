@@ -88,6 +88,14 @@ SIR_KALIPLARI = [
 # SHA-256'siyla susturulur. Manifest aracin kendi deposundadir; hedefin
 # getirdigi bir manifest otomatik okunmaz.
 FIKSTUR_DOSYASI = os.path.join(KOK, 'tools', 'secret_fixtures.json')
+# Muafiyetin izin verdigi BIRINCI-TARAF dosyalar. Liste manifestten DEGIL
+# koddan gelir: hedef depo kendi manifestine istedigi dosyayi ekleyip keyfi
+# bir satiri susturamaz. `secret_scan.FIKSTUR_DOSYALARI` ile ayni olmali;
+# fikstur_muafiyet_selftest bu pariteyi kaynaktan okuyup sinar.
+FIKSTUR_DOSYALARI = {
+    'docs/OLCUM-02-CANLI-KOSU.md',
+    'KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_selftest.py',
+}
 # Gercek PEM anahtarinin basligin ALTINDA uzun base64 govdesi vardir. Ornek
 # komutlarda gecen `-----BEGIN ... KEY-----\\nMII...` bu desene uymaz; ham grep
 # saymak yerine gercek bicimi ariyoruz.
@@ -182,6 +190,8 @@ def _fikstur_kumesi():
                     or not str(k.get('gerekce', '')).strip()
                     or not str(k.get('kanit', '')).strip()):
                 raise ValueError('gecersiz kayit: %r' % rel)
+            if rel not in FIKSTUR_DOSYALARI:
+                raise ValueError('izinsiz fikstur dosyasi: %r' % rel)
             if (rel, h) in kume:
                 raise ValueError('yinelenen kayit: %r' % rel)
             kume.add((rel, h))

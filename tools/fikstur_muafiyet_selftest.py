@@ -14,7 +14,9 @@ NEDEN VAR
 NASIL
   Gercek kapi calistirilir: minimal gecici agacta `secret_scan.py --tum --json`
   kosar (KOK == ARAC_KOK oldugu icin muafiyet devreye girer). Ayrica H4
-  (`dogrula.sir_tarama`) ayni sozlesme icin modul duzeyinde sinanir.
+  (`dogrula.sir_tarama`) ayni sozlesme icin modul duzeyinde sinanir — izinli
+  dosya listesi dahil: manifest, kodda sayilan listenin DISINDA bir dosyayi
+  susturamaz (besinci zayiflama).
   Ana agaca YAZILMAZ; her vaka kendi gecici agacini kurar.
 
 KULLANIM
@@ -22,6 +24,7 @@ KULLANIM
 
 CIKIS: 0 = butun vakalar gecti · 1 = en az bir vaka kirmizi
 """
+import ast
 import hashlib
 import json
 import shutil
@@ -196,6 +199,28 @@ def vaka_gecersiz_kayit(tmp):
                 'rc=%d cikti=%s' % (rc, cikti.strip().splitlines()[-1][:120]))
 
 
+def _secret_scan_izinli():
+    """`secret_scan.FIKSTUR_DOSYALARI` kumesini KAYNAKTAN oku (import etmeden).
+
+    Betik import edilirse modul duzeyinde tarama kosar; bu yuzden AST ile
+    yalniz atama dugumu okunur. Bulunamazsa None doner ve parite testi kalir.
+    """
+    try:
+        kaynak = (KOK / KAPI).read_text(encoding='utf-8')
+        agac_ast = ast.parse(kaynak)
+    except (OSError, SyntaxError):
+        return None
+    for dugum in ast.walk(agac_ast):
+        if isinstance(dugum, ast.Assign) and any(
+                isinstance(h, ast.Name) and h.id == 'FIKSTUR_DOSYALARI'
+                for h in dugum.targets):
+            try:
+                return set(ast.literal_eval(dugum.value))
+            except (ValueError, TypeError):
+                return None
+    return None
+
+
 def h4_vakalari(tmp):
     """H4 (`dogrula.sir_tarama`) ayni sozlesmeyi korumali."""
     sys.path.insert(0, str(KOK / 'tools'))
@@ -233,6 +258,37 @@ def h4_vakalari(tmp):
         kontrol('H4 bozuk manifest fail-closed',
                 (not gecti) and 'manifesti' in (ozet + str(detay)),
                 'gecti=%s ozet=%s detay=%s' % (gecti, ozet, detay[:2]))
+
+        # BESINCI ZAYIFLAMA: manifest, izinli listenin DISINDA bir dosyayi
+        # susturmaya calisirsa H4 "temiz" DEMEMELI. On kosul sart: ayni satir
+        # manifest yokken gercekten yakalanmali (yoksa test bos yere gecer).
+        satir = 'AWS_ACCESS_KEY_ID=' + SAHTE
+        on = agac(Path(tmp) / 'h4d', {'src/rastgele.py': [satir]}, [])
+        dogrula.KOK = str(on)
+        dogrula.FIKSTUR_DOSYASI = str(on / 'tools' / 'secret_fixtures.json')
+        gecti0, ozet0, detay0 = dogrula.sir_tarama()
+        kontrol('H4 on kosul: izinsiz dosyadaki sir yakalaniyor',
+                (not gecti0) and any('src/rastgele.py' in d for d in detay0),
+                'gecti=%s ozet=%s detay=%s' % (gecti0, ozet0, detay0[:2]))
+        if (not gecti0) and any('src/rastgele.py' in d for d in detay0):
+            agac_yolu = agac(Path(tmp) / 'h4e', {'src/rastgele.py': [satir]},
+                             [kayit('src/rastgele.py', satir)])
+            dogrula.KOK = str(agac_yolu)
+            dogrula.FIKSTUR_DOSYASI = str(agac_yolu / 'tools' / 'secret_fixtures.json')
+            gecti, ozet, detay = dogrula.sir_tarama()
+            kontrol('H4 izinsiz dosya kaydi susturamaz (besinci zayiflama)',
+                    (not gecti) and ('izinsiz' in (ozet + str(detay))),
+                    'gecti=%s ozet=%s detay=%s' % (gecti, ozet, detay[:2]))
+
+        # Izin listesi koddan gelir ve secret_scan ile AYNI olmali: biri
+        # genisletilip oteki unutulursa iki kapi farkli sey soyler.
+        h4_izinli = getattr(dogrula, 'FIKSTUR_DOSYALARI', None)
+        kapi_izinli = _secret_scan_izinli()
+        kontrol('H4 izin listesi secret_scan ile ayni',
+                h4_izinli == kapi_izinli == {IZINLI_A, IZINLI_B},
+                'H4=%s secret_scan=%s beklenen=%s' % (
+                    sorted(h4_izinli or []), sorted(kapi_izinli or []),
+                    sorted({IZINLI_A, IZINLI_B})))
     finally:
         dogrula.KOK, dogrula.FIKSTUR_DOSYASI = eski_kok, eski_fikstur
 
