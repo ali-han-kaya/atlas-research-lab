@@ -30,6 +30,21 @@ bir vaka eklemek ya da `KAPSAM_ISTISNA`ya betik+kural anahtariyla
 olculmus gerekce yazmak. Betik adina dayanan eski gerekce yeni kurala
 otomatik uygulanmaz.
 
+## Kanit kaynagi: gercek kosu, yalniz vaka listesi degil
+
+Durum etiketleri `tools/mutasyon_sonuc.json` dosyasindan turetilir.
+Bu dosya `make mutasyon`un son kosusunda yazilir ve her vaka icin
+GERCEKLESEN durumu tasir. Iki sey ayri seylerdir:
+
+- **vaka var** — bataryada o kurali atesleyen bir vaka tanimli
+- **son kosuda gecti** — o vaka son kosuda temiz taban + tek ihlal +
+  kirmizi/terminal sozlesmesini gercekten sagladi
+
+Kanit tazeligi HEAD'e degil KAYNAK ICERIGINE baglidir: batarya ve kapi
+betiklerinin SHA-256 ozeti degistiyse kanit bayatlar ve etiket
+`KANITSIZ` olur. Boylece kanit dosyasini commit etmek kaniti
+gecersiz kilmaz, ama kapi kodunu degistirmek kiler.
+
 ## Ozet
 
 | Olcum | Deger |
@@ -46,7 +61,11 @@ otomatik uygulanmaz.
 | — TERMINAL (rc=2) | 8 |
 | — beklenen bulgu | 27 |
 | Atesleyen vakayla test edilen kural (TEST EDILDI) | 93 |
+| — bunlardan son kosuda GECEN (kanitli) | 93 |
+| — vaka VAR, son kosu kaniti YOK | 0 |
 | Yalniz beklenen-bulgu ile dogrulanan kural (BEKLENEN BULGU) | 24 |
+| — bunlardan son kosuda GECEN (kanitli) | 24 |
+| — vaka VAR, son kosu kaniti YOK | 0 |
 | Toplam dogrulanan kural | 117 |
 | Gerekceli kapsam disi | 0 |
 | Bosluk (gerekce yok) | 0 |
@@ -289,120 +308,120 @@ tip ihlalidir; kopya degil, farkli hata dalidir.
 
 | Betik | Kural | Mutasyon vakasi | Durum | Gerekce |
 |---|---|---|---|---|
-| `check_models.py` | MOD-01 | MOD-01 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: MOD-01 |
-| `check_models.py` | MOD-02 | MOD-02 | TEST EDILDI | atesleyen mutasyon vakasi: MOD-02 |
-| `check_models.py` | MOD-03 | MOD-03 | TEST EDILDI | atesleyen mutasyon vakasi: MOD-03 |
-| `check_models.py` | MOD-04 | MOD-04 | TEST EDILDI | atesleyen mutasyon vakasi: MOD-04 |
-| `check_models.py` | MOD-05 | MOD-05, MOD-05-TOOLCALL | TEST EDILDI | atesleyen mutasyon vakasi: MOD-05, MOD-05-TOOLCALL |
-| `check_models.py` | MOD-06 | MOD-06 | TEST EDILDI | atesleyen mutasyon vakasi: MOD-06 |
-| `check_models.py` | MOD-07 | MOD-07 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: MOD-07 |
-| `check_models.py` | MOD-08 | MOD-08, MOD-08-KOK-DISI, MOD-08-DOSYA-DEGIL | TEST EDILDI | atesleyen mutasyon vakasi: MOD-08, MOD-08-KOK-DISI, MOD-08-DOSYA-DEGIL |
-| `cite_match.py` | CITE-01 | CITE-01 | TEST EDILDI | atesleyen mutasyon vakasi: CITE-01 |
-| `cite_match.py` | CITE-02 | CITE-02 | TEST EDILDI | atesleyen mutasyon vakasi: CITE-02 |
-| `cite_match.py` | CITE-03 | CITE-03 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: CITE-03 |
-| `declaration_check.py` | DEC-01 | DEC-01 | TEST EDILDI | atesleyen mutasyon vakasi: DEC-01 |
-| `declaration_check.py` | DEC-02 | DEC-02 | TEST EDILDI | atesleyen mutasyon vakasi: DEC-02 |
-| `declaration_check.py` | DEC-03 | ATLAS-DEC-03 | TEST EDILDI | atesleyen mutasyon vakasi: ATLAS-DEC-03 |
-| `declaration_check.py` | DEC-04 | DEC-04 | TEST EDILDI | atesleyen mutasyon vakasi: DEC-04 |
-| `declaration_check.py` | DEC-05 | DEC-05 | TEST EDILDI | atesleyen mutasyon vakasi: DEC-05 |
-| `declaration_check.py` | DEC-06 | DEC-06 | TEST EDILDI | atesleyen mutasyon vakasi: DEC-06 |
-| `declaration_check.py` | DEC-07 | DEC-07 | TEST EDILDI | atesleyen mutasyon vakasi: DEC-07 |
-| `fix_reconcile.py` | REC-01 | REC-01 | TEST EDILDI | atesleyen mutasyon vakasi: REC-01 |
-| `fix_reconcile.py` | REC-02 | REC-02, REC-02-CIFT-ONCELIK | TEST EDILDI | atesleyen mutasyon vakasi: REC-02, REC-02-CIFT-ONCELIK |
-| `fix_reconcile.py` | REC-03 | REC-03 | TEST EDILDI | atesleyen mutasyon vakasi: REC-03 |
-| `fix_reconcile.py` | REC-04 | REC-04 | TEST EDILDI | atesleyen mutasyon vakasi: REC-04 |
-| `fix_reconcile.py` | REC-05 | REC-05, REC-05-BOZUK-JSON, REC-05-REKONSILIASYON-BOZUK | TEST EDILDI | atesleyen mutasyon vakasi: REC-05, REC-05-BOZUK-JSON, REC-05-REKONSILIASYON-BOZUK |
-| `fix_reconcile.py` | REC-06 | REC-06, REC-06-COKLU-HAYALET | TEST EDILDI | atesleyen mutasyon vakasi: REC-06, REC-06-COKLU-HAYALET |
-| `olgu_lint.py` | OLGU-04 | OLGU-04 | TEST EDILDI | atesleyen mutasyon vakasi: OLGU-04 |
-| `olgu_lint.py` | OLGU-05 | OLGU-05 | TEST EDILDI | atesleyen mutasyon vakasi: OLGU-05 |
-| `olgu_lint.py` | OLGU-06 | OLGU-06 | TEST EDILDI | atesleyen mutasyon vakasi: OLGU-06 |
-| `oztest_attest.py` | OZT-01 | OZT-01 | TEST EDILDI | atesleyen mutasyon vakasi: OZT-01 |
-| `oztest_attest.py` | OZT-02 | OZT-02 | TEST EDILDI | atesleyen mutasyon vakasi: OZT-02 |
-| `oztest_attest.py` | OZT-03 | OZT-03 | TEST EDILDI | atesleyen mutasyon vakasi: OZT-03 |
-| `oztest_attest.py` | OZT-05 | OZT-05 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: OZT-05 |
-| `oztest_attest.py` | OZT-06 | OZT-06 | TEST EDILDI | atesleyen mutasyon vakasi: OZT-06 |
-| `prompt_lint.py` | PL-01 | PL-01 | TEST EDILDI | atesleyen mutasyon vakasi: PL-01 |
-| `prompt_lint.py` | PL-02 | PL-02 | TEST EDILDI | atesleyen mutasyon vakasi: PL-02 |
-| `prompt_lint.py` | PL-04 | PL-04 | TEST EDILDI | atesleyen mutasyon vakasi: PL-04 |
-| `prompt_lint.py` | PL-09 | PL-09 | TEST EDILDI | atesleyen mutasyon vakasi: PL-09 |
-| `prompt_lint.py` | PL-10 | ATLAS-PL-10 | TEST EDILDI | atesleyen mutasyon vakasi: ATLAS-PL-10 |
-| `prompt_lint.py` | PL-11 | PL-11 | TEST EDILDI | atesleyen mutasyon vakasi: PL-11 |
-| `prompt_lint.py` | PL-12 | PL-12 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: PL-12 |
-| `prompt_lint.py` | PL-13 | PL-13 | TEST EDILDI | atesleyen mutasyon vakasi: PL-13 |
-| `prompt_lint.py` | PL-14 | PL-14 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: PL-14 |
-| `prompt_lint.py` | PL-16 | PL-16 | TEST EDILDI | atesleyen mutasyon vakasi: PL-16 |
-| `prompt_lint.py` | PL-18 | PL-18 | TEST EDILDI | atesleyen mutasyon vakasi: PL-18 |
-| `prompt_lint.py` | PL-19 | PL-19, PL-19-UYARI, PL-19-JSON-YOK | TEST EDILDI | atesleyen mutasyon vakasi: PL-19, PL-19-UYARI, PL-19-JSON-YOK |
-| `provenance_check.py` | CHK-01 | CHK-01 | TEST EDILDI | atesleyen mutasyon vakasi: CHK-01 |
-| `provenance_check.py` | CHK-02 | CHK-02 | TEST EDILDI | atesleyen mutasyon vakasi: CHK-02 |
-| `provenance_check.py` | CHK-05 | CHK-05 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: CHK-05 |
-| `quote_ratio.py` | QR-01 | QR-01 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: QR-01 |
-| `quote_ratio.py` | QR-02 | ATLAS-QR-02, QR-02-DENGE | TEST EDILDI | atesleyen mutasyon vakasi: ATLAS-QR-02, QR-02-DENGE |
-| `scope_profile_check.py` | SP-01 | SP-01 | TEST EDILDI | atesleyen mutasyon vakasi: SP-01 |
-| `scope_profile_check.py` | SP-02 | SP-02 | TEST EDILDI | atesleyen mutasyon vakasi: SP-02 |
-| `scope_profile_check.py` | SP-03 | SP-03 | TEST EDILDI | atesleyen mutasyon vakasi: SP-03 |
-| `scope_profile_check.py` | SP-04 | SP-04 | TEST EDILDI | atesleyen mutasyon vakasi: SP-04 |
-| `scope_profile_check.py` | SP-05 | SP-05 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: SP-05 |
-| `scope_profile_check.py` | SP-06 | SP-06 | TEST EDILDI | atesleyen mutasyon vakasi: SP-06 |
-| `scope_profile_check.py` | SP-07 | SP-07 | TEST EDILDI | atesleyen mutasyon vakasi: SP-07 |
-| `source_class_check.py` | SRC-01 | SRC-01 | TEST EDILDI | atesleyen mutasyon vakasi: SRC-01 |
-| `source_class_check.py` | SRC-02 | SRC-02 | TEST EDILDI | atesleyen mutasyon vakasi: SRC-02 |
-| `source_class_check.py` | SRC-03 | SRC-03 | TEST EDILDI | atesleyen mutasyon vakasi: SRC-03 |
-| `teslim_imza.py` | TSL-01 | TSL-01 | TEST EDILDI | atesleyen mutasyon vakasi: TSL-01 |
-| `teslim_imza.py` | TSL-02 | TSL-02 | TEST EDILDI | atesleyen mutasyon vakasi: TSL-02 |
-| `teslim_imza.py` | TSL-03 | TSL-03 | TEST EDILDI | atesleyen mutasyon vakasi: TSL-03 |
-| `teslim_imza.py` | TSL-04 | TSL-04 | TEST EDILDI | atesleyen mutasyon vakasi: TSL-04 |
-| `teslim_imza.py` | TSL-05 | TSL-05 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: TSL-05 |
-| `teslim_imza.py` | TSL-06 | TSL-06 | TEST EDILDI | atesleyen mutasyon vakasi: TSL-06 |
-| `translit_check.py` | TR-01 | TR-01 | TEST EDILDI | atesleyen mutasyon vakasi: TR-01 |
-| `translit_check.py` | TR-02 | TR-02 | TEST EDILDI | atesleyen mutasyon vakasi: TR-02 |
-| `api_surface.py` | API-01 | API-01 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: API-01 |
-| `api_surface.py` | API-02 | API-02 | TEST EDILDI | atesleyen mutasyon vakasi: API-02 |
-| `api_surface.py` | API-04 | API-04 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: API-04 |
-| `api_surface.py` | API-05 | API-05 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: API-05 |
-| `chg_reconcile.py` | RECK-01 | RECK-01 | TEST EDILDI | atesleyen mutasyon vakasi: RECK-01 |
-| `chg_reconcile.py` | RECK-02 | RECK-02 | TEST EDILDI | atesleyen mutasyon vakasi: RECK-02 |
-| `chg_reconcile.py` | RECK-03 | RECK-03 | TEST EDILDI | atesleyen mutasyon vakasi: RECK-03 |
-| `chg_reconcile.py` | RECK-04 | RECK-04 | TEST EDILDI | atesleyen mutasyon vakasi: RECK-04 |
-| `chg_reconcile.py` | RECK-05 | RECK-05 | TEST EDILDI | atesleyen mutasyon vakasi: RECK-05 |
-| `chg_reconcile.py` | RECK-06 | RECK-06 | TEST EDILDI | atesleyen mutasyon vakasi: RECK-06 |
-| `chg_reconcile.py` | RECK-07 | RECK-07 | TEST EDILDI | atesleyen mutasyon vakasi: RECK-07 |
-| `chg_reconcile.py` | RECK-08 | RECK-08 | TEST EDILDI | atesleyen mutasyon vakasi: RECK-08 |
-| `chg_reconcile.py` | RECK-09 | RECK-09 | TEST EDILDI | atesleyen mutasyon vakasi: RECK-09 |
-| `dep_audit.py` | DEP-01 | DEP-01 | TEST EDILDI | atesleyen mutasyon vakasi: DEP-01 |
-| `dep_audit.py` | DEP-03 | DEP-03 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: DEP-03 |
-| `dep_audit.py` | DEP-04 | DEP-04 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: DEP-04 |
-| `dep_audit.py` | DEP-05 | DEP-05 | TEST EDILDI | atesleyen mutasyon vakasi: DEP-05 |
-| `dep_audit.py` | DEP-06 | DEP-06 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: DEP-06 |
-| `freeze_check.py` | FRZ-01 | FRZ-01, FRZ-01-KAYIP, FRZ-01-02 | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-01, FRZ-01-KAYIP, FRZ-01-02 |
-| `freeze_check.py` | FRZ-02 | FRZ-01-02, FRZ-02, FRZ-02-KAYIP | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-01-02, FRZ-02, FRZ-02-KAYIP |
-| `freeze_check.py` | FRZ-03 | FRZ-03 | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-03 |
-| `freeze_check.py` | FRZ-04 | FRZ-04 | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-04 |
-| `freeze_check.py` | FRZ-05 | FRZ-05 | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-05 |
-| `freeze_check.py` | FRZ-06 | FRZ-06 | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-06 |
-| `freeze_check.py` | FRZ-07 | FRZ-07 | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-07 |
-| `freeze_check.py` | FRZ-08 | FRZ-08, FRZ-08-IMZA, FRZ-08-GECERSIZ-IMZA, FRZ-08-P1 | TEST EDILDI | atesleyen mutasyon vakasi: FRZ-08, FRZ-08-IMZA, FRZ-08-GECERSIZ-IMZA, FRZ-08-P1 |
-| `perm_lint.py` | PERM-01 | KOD-PERM-01 | TEST EDILDI | atesleyen mutasyon vakasi: KOD-PERM-01 |
-| `perm_lint.py` | PERM-02 | PERM-02 | TEST EDILDI | atesleyen mutasyon vakasi: PERM-02 |
-| `perm_lint.py` | PERM-03 | PERM-03 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: PERM-03 |
-| `perm_lint.py` | PERM-04 | PERM-04 | TEST EDILDI | atesleyen mutasyon vakasi: PERM-04 |
-| `perm_lint.py` | PERM-05 | PERM-05 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: PERM-05 |
-| `perm_lint.py` | PERM-06 | PERM-06 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: PERM-06 |
-| `perm_lint.py` | PERM-07 | PERM-07 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: PERM-07 |
-| `perm_lint.py` | PERM-08 | PERM-08 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: PERM-08 |
-| `secret_scan.py` | SEC-01 | SEC-01 | TEST EDILDI | atesleyen mutasyon vakasi: SEC-01 |
-| `secret_scan.py` | SEC-02 | KOD-SEC-02 | TEST EDILDI | atesleyen mutasyon vakasi: KOD-SEC-02 |
-| `secret_scan.py` | SEC-03 | SEC-03 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: SEC-03 |
-| `secret_scan.py` | SEC-05 | SEC-05 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: SEC-05 |
-| `test_attest.py` | TST-01 | TST-01 | TEST EDILDI | atesleyen mutasyon vakasi: TST-01 |
-| `test_attest.py` | TST-02 | TST-02 | TEST EDILDI | atesleyen mutasyon vakasi: TST-02 |
-| `test_attest.py` | TST-03 | TST-03 | TEST EDILDI | atesleyen mutasyon vakasi: TST-03 |
-| `test_attest.py` | TST-04 | TST-04 | TEST EDILDI | atesleyen mutasyon vakasi: TST-04 |
-| `test_attest.py` | TST-05 | TST-05 | TEST EDILDI | atesleyen mutasyon vakasi: TST-05 |
-| `test_attest.py` | TST-06 | TST-06 | BEKLENEN BULGU | yalniz beklenen-bulgu sozlesmesi: TST-06 |
-| `test_attest.py` | TST-07 | TST-07 | TEST EDILDI | atesleyen mutasyon vakasi: TST-07 |
-| `test_attest.py` | TST-08 | TST-08 | TEST EDILDI | atesleyen mutasyon vakasi: TST-08 |
-| `test_attest.py` | TST-09 | TST-09 | TEST EDILDI | atesleyen mutasyon vakasi: TST-09 |
-| `test_attest.py` | TST-10 | TST-10 | TEST EDILDI | atesleyen mutasyon vakasi: TST-10 |
-| `test_attest.py` | TST-11 | TST-11 | TEST EDILDI | atesleyen mutasyon vakasi: TST-11 |
-| `test_attest.py` | TST-12 | TST-12 | TEST EDILDI | atesleyen mutasyon vakasi: TST-12 |
+| `check_models.py` | MOD-01 | MOD-01 | BEKLENEN BULGU | son kosuda gecti: MOD-01 |
+| `check_models.py` | MOD-02 | MOD-02 | TEST EDILDI | son kosuda gecti: MOD-02 |
+| `check_models.py` | MOD-03 | MOD-03 | TEST EDILDI | son kosuda gecti: MOD-03 |
+| `check_models.py` | MOD-04 | MOD-04 | TEST EDILDI | son kosuda gecti: MOD-04 |
+| `check_models.py` | MOD-05 | MOD-05, MOD-05-TOOLCALL | TEST EDILDI | son kosuda gecti: MOD-05, MOD-05-TOOLCALL |
+| `check_models.py` | MOD-06 | MOD-06 | TEST EDILDI | son kosuda gecti: MOD-06 |
+| `check_models.py` | MOD-07 | MOD-07 | BEKLENEN BULGU | son kosuda gecti: MOD-07 |
+| `check_models.py` | MOD-08 | MOD-08, MOD-08-KOK-DISI, MOD-08-DOSYA-DEGIL | TEST EDILDI | son kosuda gecti: MOD-08, MOD-08-KOK-DISI, MOD-08-DOSYA-DEGIL |
+| `cite_match.py` | CITE-01 | CITE-01 | TEST EDILDI | son kosuda gecti: CITE-01 |
+| `cite_match.py` | CITE-02 | CITE-02 | TEST EDILDI | son kosuda gecti: CITE-02 |
+| `cite_match.py` | CITE-03 | CITE-03 | BEKLENEN BULGU | son kosuda gecti: CITE-03 |
+| `declaration_check.py` | DEC-01 | DEC-01 | TEST EDILDI | son kosuda gecti: DEC-01 |
+| `declaration_check.py` | DEC-02 | DEC-02 | TEST EDILDI | son kosuda gecti: DEC-02 |
+| `declaration_check.py` | DEC-03 | ATLAS-DEC-03 | TEST EDILDI | son kosuda gecti: ATLAS-DEC-03 |
+| `declaration_check.py` | DEC-04 | DEC-04 | TEST EDILDI | son kosuda gecti: DEC-04 |
+| `declaration_check.py` | DEC-05 | DEC-05 | TEST EDILDI | son kosuda gecti: DEC-05 |
+| `declaration_check.py` | DEC-06 | DEC-06 | TEST EDILDI | son kosuda gecti: DEC-06 |
+| `declaration_check.py` | DEC-07 | DEC-07 | TEST EDILDI | son kosuda gecti: DEC-07 |
+| `fix_reconcile.py` | REC-01 | REC-01 | TEST EDILDI | son kosuda gecti: REC-01 |
+| `fix_reconcile.py` | REC-02 | REC-02, REC-02-CIFT-ONCELIK | TEST EDILDI | son kosuda gecti: REC-02, REC-02-CIFT-ONCELIK |
+| `fix_reconcile.py` | REC-03 | REC-03 | TEST EDILDI | son kosuda gecti: REC-03 |
+| `fix_reconcile.py` | REC-04 | REC-04 | TEST EDILDI | son kosuda gecti: REC-04 |
+| `fix_reconcile.py` | REC-05 | REC-05, REC-05-BOZUK-JSON, REC-05-REKONSILIASYON-BOZUK | TEST EDILDI | son kosuda gecti: REC-05, REC-05-BOZUK-JSON, REC-05-REKONSILIASYON-BOZUK |
+| `fix_reconcile.py` | REC-06 | REC-06, REC-06-COKLU-HAYALET | TEST EDILDI | son kosuda gecti: REC-06, REC-06-COKLU-HAYALET |
+| `olgu_lint.py` | OLGU-04 | OLGU-04 | TEST EDILDI | son kosuda gecti: OLGU-04 |
+| `olgu_lint.py` | OLGU-05 | OLGU-05 | TEST EDILDI | son kosuda gecti: OLGU-05 |
+| `olgu_lint.py` | OLGU-06 | OLGU-06 | TEST EDILDI | son kosuda gecti: OLGU-06 |
+| `oztest_attest.py` | OZT-01 | OZT-01 | TEST EDILDI | son kosuda gecti: OZT-01 |
+| `oztest_attest.py` | OZT-02 | OZT-02 | TEST EDILDI | son kosuda gecti: OZT-02 |
+| `oztest_attest.py` | OZT-03 | OZT-03 | TEST EDILDI | son kosuda gecti: OZT-03 |
+| `oztest_attest.py` | OZT-05 | OZT-05 | BEKLENEN BULGU | son kosuda gecti: OZT-05 |
+| `oztest_attest.py` | OZT-06 | OZT-06 | TEST EDILDI | son kosuda gecti: OZT-06 |
+| `prompt_lint.py` | PL-01 | PL-01 | TEST EDILDI | son kosuda gecti: PL-01 |
+| `prompt_lint.py` | PL-02 | PL-02 | TEST EDILDI | son kosuda gecti: PL-02 |
+| `prompt_lint.py` | PL-04 | PL-04 | TEST EDILDI | son kosuda gecti: PL-04 |
+| `prompt_lint.py` | PL-09 | PL-09 | TEST EDILDI | son kosuda gecti: PL-09 |
+| `prompt_lint.py` | PL-10 | ATLAS-PL-10 | TEST EDILDI | son kosuda gecti: ATLAS-PL-10 |
+| `prompt_lint.py` | PL-11 | PL-11 | TEST EDILDI | son kosuda gecti: PL-11 |
+| `prompt_lint.py` | PL-12 | PL-12 | BEKLENEN BULGU | son kosuda gecti: PL-12 |
+| `prompt_lint.py` | PL-13 | PL-13 | TEST EDILDI | son kosuda gecti: PL-13 |
+| `prompt_lint.py` | PL-14 | PL-14 | BEKLENEN BULGU | son kosuda gecti: PL-14 |
+| `prompt_lint.py` | PL-16 | PL-16 | TEST EDILDI | son kosuda gecti: PL-16 |
+| `prompt_lint.py` | PL-18 | PL-18 | TEST EDILDI | son kosuda gecti: PL-18 |
+| `prompt_lint.py` | PL-19 | PL-19, PL-19-UYARI, PL-19-JSON-YOK | TEST EDILDI | son kosuda gecti: PL-19, PL-19-UYARI, PL-19-JSON-YOK |
+| `provenance_check.py` | CHK-01 | CHK-01 | TEST EDILDI | son kosuda gecti: CHK-01 |
+| `provenance_check.py` | CHK-02 | CHK-02 | TEST EDILDI | son kosuda gecti: CHK-02 |
+| `provenance_check.py` | CHK-05 | CHK-05 | BEKLENEN BULGU | son kosuda gecti: CHK-05 |
+| `quote_ratio.py` | QR-01 | QR-01 | BEKLENEN BULGU | son kosuda gecti: QR-01 |
+| `quote_ratio.py` | QR-02 | ATLAS-QR-02, QR-02-DENGE | TEST EDILDI | son kosuda gecti: ATLAS-QR-02, QR-02-DENGE |
+| `scope_profile_check.py` | SP-01 | SP-01 | TEST EDILDI | son kosuda gecti: SP-01 |
+| `scope_profile_check.py` | SP-02 | SP-02 | TEST EDILDI | son kosuda gecti: SP-02 |
+| `scope_profile_check.py` | SP-03 | SP-03 | TEST EDILDI | son kosuda gecti: SP-03 |
+| `scope_profile_check.py` | SP-04 | SP-04 | TEST EDILDI | son kosuda gecti: SP-04 |
+| `scope_profile_check.py` | SP-05 | SP-05 | BEKLENEN BULGU | son kosuda gecti: SP-05 |
+| `scope_profile_check.py` | SP-06 | SP-06 | TEST EDILDI | son kosuda gecti: SP-06 |
+| `scope_profile_check.py` | SP-07 | SP-07 | TEST EDILDI | son kosuda gecti: SP-07 |
+| `source_class_check.py` | SRC-01 | SRC-01 | TEST EDILDI | son kosuda gecti: SRC-01 |
+| `source_class_check.py` | SRC-02 | SRC-02 | TEST EDILDI | son kosuda gecti: SRC-02 |
+| `source_class_check.py` | SRC-03 | SRC-03 | TEST EDILDI | son kosuda gecti: SRC-03 |
+| `teslim_imza.py` | TSL-01 | TSL-01 | TEST EDILDI | son kosuda gecti: TSL-01 |
+| `teslim_imza.py` | TSL-02 | TSL-02 | TEST EDILDI | son kosuda gecti: TSL-02 |
+| `teslim_imza.py` | TSL-03 | TSL-03 | TEST EDILDI | son kosuda gecti: TSL-03 |
+| `teslim_imza.py` | TSL-04 | TSL-04 | TEST EDILDI | son kosuda gecti: TSL-04 |
+| `teslim_imza.py` | TSL-05 | TSL-05 | BEKLENEN BULGU | son kosuda gecti: TSL-05 |
+| `teslim_imza.py` | TSL-06 | TSL-06 | TEST EDILDI | son kosuda gecti: TSL-06 |
+| `translit_check.py` | TR-01 | TR-01 | TEST EDILDI | son kosuda gecti: TR-01 |
+| `translit_check.py` | TR-02 | TR-02 | TEST EDILDI | son kosuda gecti: TR-02 |
+| `api_surface.py` | API-01 | API-01 | BEKLENEN BULGU | son kosuda gecti: API-01 |
+| `api_surface.py` | API-02 | API-02 | TEST EDILDI | son kosuda gecti: API-02 |
+| `api_surface.py` | API-04 | API-04 | BEKLENEN BULGU | son kosuda gecti: API-04 |
+| `api_surface.py` | API-05 | API-05 | BEKLENEN BULGU | son kosuda gecti: API-05 |
+| `chg_reconcile.py` | RECK-01 | RECK-01 | TEST EDILDI | son kosuda gecti: RECK-01 |
+| `chg_reconcile.py` | RECK-02 | RECK-02 | TEST EDILDI | son kosuda gecti: RECK-02 |
+| `chg_reconcile.py` | RECK-03 | RECK-03 | TEST EDILDI | son kosuda gecti: RECK-03 |
+| `chg_reconcile.py` | RECK-04 | RECK-04 | TEST EDILDI | son kosuda gecti: RECK-04 |
+| `chg_reconcile.py` | RECK-05 | RECK-05 | TEST EDILDI | son kosuda gecti: RECK-05 |
+| `chg_reconcile.py` | RECK-06 | RECK-06 | TEST EDILDI | son kosuda gecti: RECK-06 |
+| `chg_reconcile.py` | RECK-07 | RECK-07 | TEST EDILDI | son kosuda gecti: RECK-07 |
+| `chg_reconcile.py` | RECK-08 | RECK-08 | TEST EDILDI | son kosuda gecti: RECK-08 |
+| `chg_reconcile.py` | RECK-09 | RECK-09 | TEST EDILDI | son kosuda gecti: RECK-09 |
+| `dep_audit.py` | DEP-01 | DEP-01 | TEST EDILDI | son kosuda gecti: DEP-01 |
+| `dep_audit.py` | DEP-03 | DEP-03 | BEKLENEN BULGU | son kosuda gecti: DEP-03 |
+| `dep_audit.py` | DEP-04 | DEP-04 | BEKLENEN BULGU | son kosuda gecti: DEP-04 |
+| `dep_audit.py` | DEP-05 | DEP-05 | TEST EDILDI | son kosuda gecti: DEP-05 |
+| `dep_audit.py` | DEP-06 | DEP-06 | BEKLENEN BULGU | son kosuda gecti: DEP-06 |
+| `freeze_check.py` | FRZ-01 | FRZ-01, FRZ-01-KAYIP, FRZ-01-02 | TEST EDILDI | son kosuda gecti: FRZ-01, FRZ-01-KAYIP, FRZ-01-02 |
+| `freeze_check.py` | FRZ-02 | FRZ-01-02, FRZ-02, FRZ-02-KAYIP | TEST EDILDI | son kosuda gecti: FRZ-01-02, FRZ-02, FRZ-02-KAYIP |
+| `freeze_check.py` | FRZ-03 | FRZ-03 | TEST EDILDI | son kosuda gecti: FRZ-03 |
+| `freeze_check.py` | FRZ-04 | FRZ-04 | TEST EDILDI | son kosuda gecti: FRZ-04 |
+| `freeze_check.py` | FRZ-05 | FRZ-05 | TEST EDILDI | son kosuda gecti: FRZ-05 |
+| `freeze_check.py` | FRZ-06 | FRZ-06 | TEST EDILDI | son kosuda gecti: FRZ-06 |
+| `freeze_check.py` | FRZ-07 | FRZ-07 | TEST EDILDI | son kosuda gecti: FRZ-07 |
+| `freeze_check.py` | FRZ-08 | FRZ-08, FRZ-08-IMZA, FRZ-08-GECERSIZ-IMZA, FRZ-08-P1 | TEST EDILDI | son kosuda gecti: FRZ-08, FRZ-08-IMZA, FRZ-08-GECERSIZ-IMZA, FRZ-08-P1 |
+| `perm_lint.py` | PERM-01 | KOD-PERM-01 | TEST EDILDI | son kosuda gecti: KOD-PERM-01 |
+| `perm_lint.py` | PERM-02 | PERM-02 | TEST EDILDI | son kosuda gecti: PERM-02 |
+| `perm_lint.py` | PERM-03 | PERM-03 | BEKLENEN BULGU | son kosuda gecti: PERM-03 |
+| `perm_lint.py` | PERM-04 | PERM-04 | TEST EDILDI | son kosuda gecti: PERM-04 |
+| `perm_lint.py` | PERM-05 | PERM-05 | BEKLENEN BULGU | son kosuda gecti: PERM-05 |
+| `perm_lint.py` | PERM-06 | PERM-06 | BEKLENEN BULGU | son kosuda gecti: PERM-06 |
+| `perm_lint.py` | PERM-07 | PERM-07 | BEKLENEN BULGU | son kosuda gecti: PERM-07 |
+| `perm_lint.py` | PERM-08 | PERM-08 | BEKLENEN BULGU | son kosuda gecti: PERM-08 |
+| `secret_scan.py` | SEC-01 | SEC-01 | TEST EDILDI | son kosuda gecti: SEC-01 |
+| `secret_scan.py` | SEC-02 | KOD-SEC-02 | TEST EDILDI | son kosuda gecti: KOD-SEC-02 |
+| `secret_scan.py` | SEC-03 | SEC-03 | BEKLENEN BULGU | son kosuda gecti: SEC-03 |
+| `secret_scan.py` | SEC-05 | SEC-05 | BEKLENEN BULGU | son kosuda gecti: SEC-05 |
+| `test_attest.py` | TST-01 | TST-01 | TEST EDILDI | son kosuda gecti: TST-01 |
+| `test_attest.py` | TST-02 | TST-02 | TEST EDILDI | son kosuda gecti: TST-02 |
+| `test_attest.py` | TST-03 | TST-03 | TEST EDILDI | son kosuda gecti: TST-03 |
+| `test_attest.py` | TST-04 | TST-04 | TEST EDILDI | son kosuda gecti: TST-04 |
+| `test_attest.py` | TST-05 | TST-05 | TEST EDILDI | son kosuda gecti: TST-05 |
+| `test_attest.py` | TST-06 | TST-06 | BEKLENEN BULGU | son kosuda gecti: TST-06 |
+| `test_attest.py` | TST-07 | TST-07 | TEST EDILDI | son kosuda gecti: TST-07 |
+| `test_attest.py` | TST-08 | TST-08 | TEST EDILDI | son kosuda gecti: TST-08 |
+| `test_attest.py` | TST-09 | TST-09 | TEST EDILDI | son kosuda gecti: TST-09 |
+| `test_attest.py` | TST-10 | TST-10 | TEST EDILDI | son kosuda gecti: TST-10 |
+| `test_attest.py` | TST-11 | TST-11 | TEST EDILDI | son kosuda gecti: TST-11 |
+| `test_attest.py` | TST-12 | TST-12 | TEST EDILDI | son kosuda gecti: TST-12 |

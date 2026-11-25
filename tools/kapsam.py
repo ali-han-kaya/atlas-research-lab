@@ -17,7 +17,9 @@ KULLANIM
 import contextlib
 import importlib.util
 import io
+import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -329,9 +331,10 @@ def risk_tablosu(satirlar):
                           RISK_GRUPLARI[grup], _gerekce))
             continue
         _durum = durum[kural]
-        if _durum == 'TEST EDILDI' and kural in RISK_EKLENEN:
+        _temel = _durum.split('\u00b7')[0]
+        if _temel == 'TEST EDILDI' and kural in RISK_EKLENEN:
             _durum = 'TEST EDILDI (%s)' % KAPSAM_TARIHI
-        elif _durum == 'BEKLENEN BULGU' and kural in RISK_EKLENEN:
+        elif _temel == 'BEKLENEN BULGU' and kural in RISK_EKLENEN:
             _durum = 'BEKLENEN BULGU (%s)' % KAPSAM_TARIHI
         elif _durum == 'BOSLUK':
             # Gizli sayi dusumu yok: kalan her bosluk acikca bir sonraki
@@ -800,6 +803,76 @@ def oz_testler():
     return metin
 
 
+SONUC_DOSYASI = KOK / 'tools' / 'mutasyon_sonuc.json'
+SONUC_SEMA = 'MUTASYON-SONUC/v1'
+GECEN_DURUMLAR = ('GECTI', 'GECTI-TERMINAL', 'GECTI-BULGU')
+
+
+def kaynak_imzasi():
+    """Batarya + tum kapi betiklerinin icerik ozeti (mutasyon_bataryasi ile ayni)."""
+    import hashlib
+    parcalar = [KOK / 'tools' / 'mutasyon_bataryasi.py']
+    for d in DIZINLER:
+        parcalar += sorted((KOK / d).glob('*.py'))
+    h = hashlib.sha256()
+    for p in parcalar:
+        h.update(str(p.relative_to(KOK)).encode('utf-8'))
+        h.update(b'\0')
+        h.update(p.read_bytes())
+        h.update(b'\n')
+    return h.hexdigest()
+
+
+def kosu_kaniti():
+    """Son mutasyon kosusundan (taze ise {(betik, kural): gecti}) cikar.
+
+    Taze degilse (dosya yok, sema farkli, baska HEAD, kirli agac, kisa kosu)
+    kanit YOK sayilir: 'vaka var' ile 'son kosuda gecti' ayrilir.
+    """
+    if not SONUC_DOSYASI.is_file():
+        return False, {}, 'sonuc dosyasi yok'
+    try:
+        veri = json.loads(SONUC_DOSYASI.read_text(encoding='utf-8'))
+    except ValueError as e:
+        return False, {}, 'sonuc JSON bozuk: %s' % e
+    if veri.get('schema') != SONUC_SEMA:
+        return False, {}, 'sema farkli: %r' % veri.get('schema')
+    if veri.get('kisa'):
+        return False, {}, 'kisa kosu (tam batarya degil)'
+    # Tazelik HEAD'e degil KAYNAK ICERIGINE baglidir: kanit dosyasini commit
+    # etmek HEAD'i degistirir, kaynagi degistirmez. Kapi betigi veya batarya
+    # degistiyse kanit bayattir.
+    imza = kaynak_imzasi()
+    if veri.get('kaynak_sha256') != imza:
+        return False, {}, 'kaynak degismis (kanit bayat)'
+    kanit = {}
+    onekler = {}
+    for v in veri.get('vakalar') or []:
+        betik = v.get('betik') or ''
+        kural = v.get('kural') or ''
+        onek = v.get('kural_onek') or ''
+        gecti = bool(v.get('gecti')) and v.get('durum') in GECEN_DURUMLAR
+        if betik and onek:
+            anahtar = (betik, onek)
+            onekler[anahtar] = onekler.get(anahtar, True) and gecti
+        elif betik and kural:
+            anahtar = (betik, kural)
+            kanit[anahtar] = kanit.get(anahtar, True) and gecti
+    kanit['__onek__'] = onekler
+    return True, kanit, ''
+
+
+def kanit_gecti(kanit, betik, kural):
+    """Bu (betik, kural) icin son kosu kaniti var ve gecti mi?"""
+    if not kanit:
+        return False
+    onekler = kanit.get('__onek__') or {}
+    for (b, onek), gecti in onekler.items():
+        if b == betik and kural.startswith(onek):
+            return bool(gecti)
+    return bool(kanit.get((betik, kural), False))
+
+
 def olc():
     """[(betik, kural, vaka|None, durum, gerekce)] + ozet sayilari.
 
@@ -817,6 +890,7 @@ def olc():
             testler.setdefault(betik, {}).setdefault(anahtar, []).append(vaka[0])
             kontratlar.setdefault(betik, {}).setdefault(anahtar, set()).add(sozlesme)
     oz = oz_testler()
+    taze, kanit, _neden = kosu_kaniti()
 
     satirlar = []
     test = beklenen = disi = bosluk = oz_anilan = 0
@@ -826,14 +900,22 @@ def olc():
             if vakalar:
                 turler = kontratlar.get(betik, {}).get(k, set())
                 etiket = ', '.join(vakalar)
+                # 'vaka var' ile 'son kosuda gecti' ayri seylerdir: kanit
+                # yoksa durum etiketi bunu acikca soyler, sessizce PASS demez.
+                gecti = taze and kanit_gecti(kanit, betik, k)
+                ek = '' if gecti else '·KANITSIZ'
                 if turler & {mod.SOZLESME_HATA, mod.SOZLESME_TERMINAL}:
                     test += 1
-                    satirlar.append((betik, k, etiket, 'TEST EDILDI',
-                                     'atesleyen mutasyon vakasi: %s' % etiket))
+                    satirlar.append((betik, k, etiket, 'TEST EDILDI' + ek,
+                                     ('son kosuda gecti: %s' % etiket) if gecti
+                                     else ('vaka var, son kosu kaniti YOK: %s'
+                                           % etiket)))
                 else:
                     beklenen += 1
-                    satirlar.append((betik, k, etiket, 'BEKLENEN BULGU',
-                                     'yalniz beklenen-bulgu sozlesmesi: %s' % etiket))
+                    satirlar.append((betik, k, etiket, 'BEKLENEN BULGU' + ek,
+                                     ('son kosuda gecti: %s' % etiket) if gecti
+                                     else ('vaka var, son kosu kaniti YOK: %s'
+                                           % etiket)))
             elif (betik, k) in KAPSAM_ISTISNA:
                 disi += 1
                 satirlar.append((betik, k, None, 'KAPSAM DISI',
@@ -868,7 +950,8 @@ def ratchet(satirlar):
     bosluklar = [(b, k, g) for b, k, _v, d, g in satirlar if d == 'BOSLUK']
     yeni = [x for x in bosluklar if x[1] not in TABAN_BOSLUKLAR]
     geri = [x for x in bosluklar if x[1] in TABAN_BOSLUKLAR]
-    test = sum(1 for _b, _k, _v, d, _g in satirlar if d == 'TEST EDILDI')
+    test = sum(1 for _b, _k, _v, d, _g in satirlar
+               if d.split('\u00b7')[0] == 'TEST EDILDI')
     test_eksik = max(0, TABAN_TEST_EDILEN - test)
     bosluk_fazla = max(0, len(bosluklar) - TABAN_BOSLUK_SAYISI)
     return yeni, geri, test_eksik, bosluk_fazla
@@ -1005,6 +1088,17 @@ def markdown():
            'bir vaka eklemek ya da `KAPSAM_ISTISNA`ya betik+kural anahtariyla',
            'olculmus gerekce yazmak. Betik adina dayanan eski gerekce yeni kurala',
            'otomatik uygulanmaz.', '',
+           '## Kanit kaynagi: gercek kosu, yalniz vaka listesi degil', '',
+           'Durum etiketleri `tools/mutasyon_sonuc.json` dosyasindan turetilir.',
+           'Bu dosya `make mutasyon`un son kosusunda yazilir ve her vaka icin',
+           'GERCEKLESEN durumu tasir. Iki sey ayri seylerdir:', '',
+           '- **vaka var** — bataryada o kurali atesleyen bir vaka tanimli',
+           '- **son kosuda gecti** — o vaka son kosuda temiz taban + tek ihlal +',
+           '  kirmizi/terminal sozlesmesini gercekten sagladi', '',
+           'Kanit tazeligi HEAD\'e degil KAYNAK ICERIGINE baglidir: batarya ve kapi',
+           'betiklerinin SHA-256 ozeti degistiyse kanit bayatlar ve etiket',
+           '`KANITSIZ` olur. Boylece kanit dosyasini commit etmek kaniti',
+           'gecersiz kilmaz, ama kapi kodunu degistirmek kiler.', '',
            '## Ozet', '',
            '| Olcum | Deger |', '|---|---|',
            '| Taranan betik | %d |' % len(envan),
@@ -1020,7 +1114,17 @@ def markdown():
            '| — TERMINAL (rc=2) | %d |' % terminal_vaka,
            '| — beklenen bulgu | %d |' % beklenen_bulgu,
            '| Atesleyen vakayla test edilen kural (TEST EDILDI) | %d |' % test,
+           '| — bunlardan son kosuda GECEN (kanitli) | %d |'
+           % sum(1 for _b, _k, _v, d, _g in satirlar if d == 'TEST EDILDI'),
+           '| — vaka VAR, son kosu kaniti YOK | %d |'
+           % sum(1 for _b, _k, _v, d, _g in satirlar
+                 if d == 'TEST EDILDI\u00b7KANITSIZ'),
            '| Yalniz beklenen-bulgu ile dogrulanan kural (BEKLENEN BULGU) | %d |' % beklenen_test,
+           '| — bunlardan son kosuda GECEN (kanitli) | %d |'
+           % sum(1 for _b, _k, _v, d, _g in satirlar if d == 'BEKLENEN BULGU'),
+           '| — vaka VAR, son kosu kaniti YOK | %d |'
+           % sum(1 for _b, _k, _v, d, _g in satirlar
+                 if d == 'BEKLENEN BULGU\u00b7KANITSIZ'),
            '| Toplam dogrulanan kural | %d |' % (test + beklenen_test),
            '| Gerekceli kapsam disi | %d |' % disi,
            '| Bosluk (gerekce yok) | %d |' % bosluk,
@@ -1168,6 +1272,9 @@ def json_rapor():
     testte_gecmeyen = max(0, bosluk - oz_anilan)
     bildirilen = sum(len(v) for v in envan.values())
     toplam_dogrulanan = test + beklenen
+    kanitli = sum(1 for _b, _k, _v, d, _g in satirlar
+                  if d in ('TEST EDILDI', 'BEKLENEN BULGU'))
+    kanitsiz = sum(1 for _b, _k, _v, d, _g in satirlar if 'KANITSIZ' in d)
     ratchet_gecti = not (yeni or geri or test_eksik or bosluk_fazla)
     kontroller = [
         kapi_cikti.kontrol('KAPSAM.oztest', 'kapsam ic oz-testleri',
@@ -1211,6 +1318,12 @@ def json_rapor():
         kapi_cikti.kontrol('KAPSAM.toplam_dogrulanan', 'toplam dogrulanan kural',
                            'PASS', deger=str(toplam_dogrulanan),
                            ham='toplam_dogrulanan=%d' % toplam_dogrulanan),
+        kapi_cikti.kontrol('KAPSAM.kanitli', 'son kosuda gecen kural',
+                           'PASS', deger=str(kanitli),
+                           ham='kanitli=%d' % kanitli),
+        kapi_cikti.kontrol('KAPSAM.kanitsiz', 'vaka var, son kosu kaniti yok',
+                           'PASS', deger=str(kanitsiz),
+                           ham='kanitsiz=%d' % kanitsiz),
     ]
     gecti = oztest_gecti and ratchet_gecti
     return kapi_cikti.uret('kapsam', kontroller,

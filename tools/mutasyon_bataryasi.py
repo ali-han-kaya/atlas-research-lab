@@ -27,6 +27,7 @@ CIKIS
        beklenen-bulgu isaretli)
   1  : en az bir vaka ateslemedi / taban kirlendi / mutasyon uygulanamadi
 """
+import datetime
 import hashlib
 import hmac
 import json
@@ -2199,6 +2200,86 @@ def hazirla(kok, opsiyon=None):
         opsiyon['kur'](kok)
 
 
+SONUC_DOSYASI = KOK / 'tools' / 'mutasyon_sonuc.json'
+SONUC_SEMA = 'MUTASYON-SONUC/v1'
+GECEN_DURUMLAR = ('GECTI', 'GECTI-TERMINAL', 'GECTI-BULGU')
+
+
+def _git_metin(*args):
+    try:
+        r = subprocess.run(['git', '-C', str(KOK)] + list(args),
+                           capture_output=True, text=True)
+        return r.stdout.strip() if r.returncode == 0 else ''
+    except OSError:
+        return ''
+
+
+def kaynak_imzasi():
+    """Kanitin bagli oldugu kaynaklarin icerik ozeti.
+
+    HEAD'e baglamak ise yaramaz: kanit dosyasini (ve kapsam tablosunu) commit
+    etmek HEAD'i degistirir ve kanit sonsuza dek 'bayat' gorunur. Bu yuzden
+    olculen seyin KENDISI hash'lenir: batarya + tum kapi betikleri. Kaynak
+    degismedikce kanit gecerlidir.
+    """
+    parcalar = [KOK / 'tools' / 'mutasyon_bataryasi.py']
+    for d in ('ATLAS_SABLONLAR/scripts', 'KOD_SABLONLAR/scripts'):
+        parcalar += sorted((KOK / d).glob('*.py'))
+    h = hashlib.sha256()
+    for p in parcalar:
+        h.update(str(p.relative_to(KOK)).encode('utf-8'))
+        h.update(b'\0')
+        h.update(p.read_bytes())
+        h.update(b'\n')
+    return h.hexdigest()
+
+
+def sonuc_yaz(satirlar, meta, kisa):
+    """Makine-okunur kosu sonucu: her vaka icin GERCEKLESEN durum.
+
+    `kapsam.py` bu dosyadan 'vaka var' ile 'son kosuda gecti' ayrimini
+    turetir. Tazelik icin HEAD ve kirlilik yazilir: farkli bir agacın
+    sonucu kanit sayilmaz.
+    """
+    kirli = [s for s in _git_metin('status', '--porcelain').splitlines()
+             if s.strip() and 'tools/mutasyon_sonuc.json' not in s]
+    kayitlar = []
+    for kimlik, katman, kural, durum, ayrinti in satirlar:
+        bilgi = meta.get(kimlik, {})
+        kayitlar.append({
+            'id': kimlik,
+            'katman': katman,
+            'aciklama': kural,
+            'kural': bilgi.get('kural', ''),
+            'kural_onek': bilgi.get('kural_onek', ''),
+            'betik': bilgi.get('betik', ''),
+            'sozlesme': bilgi.get('sozlesme', ''),
+            'durum': durum,
+            'gecti': durum in GECEN_DURUMLAR,
+            'ayrinti': ayrinti,
+        })
+    veri = {
+        'schema': SONUC_SEMA,
+        'zaman': datetime.datetime.now(datetime.timezone.utc)
+                         .strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'head': _git_metin('rev-parse', 'HEAD'),
+        'kirli': bool(kirli),
+        'kaynak_sha256': kaynak_imzasi(),
+        'kisa': bool(kisa),
+        'sayilar': {
+            'vaka': len(kayitlar),
+            'gecti': sum(1 for k in kayitlar if k['gecti']),
+            'kalan': sum(1 for k in kayitlar if not k['gecti']),
+        },
+        'vakalar': kayitlar,
+    }
+    SONUC_DOSYASI.write_text(
+        json.dumps(veri, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
+    print('SONUC YAZILDI: %s (%d vaka · %d gecti · %d kaldi)' % (
+        SONUC_DOSYASI.relative_to(KOK), len(kayitlar),
+        veri['sayilar']['gecti'], veri['sayilar']['kalan']))
+
+
 def main():
     print('MUTASYON BATARYASI — ATLAS + KOD kapi kurallari')
     print('kaynak: %s' % KOK.name)
@@ -2227,6 +2308,16 @@ def main():
         print('KISA SET: %d/%d vaka — %s' % (
             len(tum), len(vakalar()), ', '.join(v[0] for v in tum)))
     sozlesmeler = [vaka_sozlesmesi(v)[0] for v in tum]
+    # Kural kimligi: `iz` alanindaki kural kimlikleri (KAPSAM ile ayni turetme).
+    meta = {}
+    for v in tum:
+        tur, kume = izinli_etiketler(v[6])
+        kimlikler = sorted(kume) if tur == 'KUME' else []
+        meta[v[0]] = {'sozlesme': vaka_sozlesmesi(v)[0], 'betik': v[3],
+                      'kural': kimlikler[0] if kimlikler else '',
+                      # Onek modu ('SEC-'): kanit ayni onekle baslayan TUM
+                      # kurallara baglanir; kimlik listesi anlamsizdir.
+                      'kural_onek': kume[0] if tur == 'ONEK' else ''}
     hata_top = sozlesmeler.count(SOZLESME_HATA)
     terminal_top = sozlesmeler.count(SOZLESME_TERMINAL)
     bulgu_top = sozlesmeler.count(SOZLESME_BULGU)
@@ -2288,6 +2379,8 @@ def main():
           '%d/%d BEKLENEN_BULGU' % (
               gecen, hata_top, gecen_terminal, terminal_top,
               gecen_bulgu, bulgu_top))
+
+    sonuc_yaz(satirlar, meta, KISA)
 
     kirik = [s for s in satirlar
              if s[3] not in ('GECTI', 'GECTI-TERMINAL', 'GECTI-BULGU')]
