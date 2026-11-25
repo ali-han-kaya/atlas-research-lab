@@ -1,5 +1,5 @@
 {
-  "commit": "3168bf87c49d130b88c5ec19a1ef6d8b4da83e67",
+  "commit": "ac6c655ce2c00017f4645f795119bdbbea29eb59",
   "file_count": 296,
   "files": [
     {
@@ -1583,8 +1583,8 @@
     {
       "mode": "100644",
       "path": "tools/kanit_paketi_selftest.py",
-      "sha256": "59cf258189bf257e43278aa1967df45bae05959654dc452e3babb8d193e07d7e",
-      "size": 6391
+      "sha256": "2ffc4364e87fc7eebec5b180f44cfe00999d82e17cc2ce1278d9961cc756f905",
+      "size": 8056
     },
     {
       "mode": "100644",
@@ -1779,7 +1779,7 @@
       "size": 14827
     }
   ],
-  "generated_at": "2026-11-25T23:13:34Z",
+  "generated_at": "2026-11-25T23:27:49Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1794,6 +1794,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "794c063427b54a565675db19c5ce61bc405a7518",
-  "tree_sha256": "8d45b31e5bca4862864f6bcbb0e1a54e556be87c24bc3e326b0830999adf527c"
+  "tree": "9865c241cd4fa73bca89cf18765b9fc11c151fb7",
+  "tree_sha256": "a85cf258dce272257ee74599087a6b2200fb7e150bb2dd9cbb9f59f09dc044ef"
 }
