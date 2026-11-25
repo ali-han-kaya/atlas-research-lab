@@ -40,6 +40,19 @@ corrupt, `OLG-1` fails rather than being reported as not run. See *OLG-1 and
 tree evidence* in the Turkish README. Current generated values are in
 [`docs/DURUM.md`](../DURUM.md); numbers are not maintained by hand.
 
+**Raw tree scan in CI.** The workflow invokes the scanner directly before
+`make dogrula-ci`:
+
+```bash
+test -z "$(git status --porcelain --untracked-files=all)"
+python3 KOD_SABLONLAR/scripts/secret_scan.py --tum
+```
+
+The clean-tree assertion runs first, so `--tum` sees only tracked files. This
+path is deliberately independent of `H4`: it calls `secret_scan.py` itself,
+fails the step on a live P0 or a `KISMI` (partial) result, and does not add a
+ninth check to `make dogrula`.
+
 **Approximate duration:** 196 s on a fresh `/tmp` clone (macOS 27.2, Python 3.9.6;
 one run on 2026-11-24). Timings move with filesystem and start-up cost; a CI
 runner may differ.
@@ -210,8 +223,9 @@ are printed as `ATLANDI`, and the summary counts them separately — they are
 never PASS. The default `make iddia` remains the full run, and `--yaz --hizli`
 is refused because a partial snapshot would delete the other rows' evidence.
 
-CI runs `make dogrula-ci`, `make mutasyon`, `make kapsam`, `make guvenlik`, and
-asserts `./demo` exits **1** while `make demo` exits **2** (the wrapper cannot
+CI runs the raw `secret_scan.py --tum` tree scan after the clean-tree
+assertion, `make dogrula-ci`, `make mutasyon`, `make kapsam`, `make guvenlik`,
+and asserts `./demo` exits **1** while `make demo` exits **2** (the wrapper cannot
 carry 1). The live `make katalog-kontrol` gate runs outside CI; the workflow
 does not call it. `make dogrula-ci` includes the offline
 `make katalog-selftest` prerequisite. Workflow: `.github/workflows/dogrula.yml`.
