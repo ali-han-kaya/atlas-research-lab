@@ -1,5 +1,5 @@
 {
-  "commit": "7980671c9917f22601f65cab9698e102e97de1f4",
+  "commit": "a27802128286a6554fd3a76179f4dd159e06d658",
   "file_count": 294,
   "files": [
     {
@@ -1217,8 +1217,8 @@
     {
       "mode": "100644",
       "path": "README.en.md",
-      "sha256": "074ac0c12af2ddb23f4e05b2e42a96f77afdc58dad05b60ec4812b8de43b3c69",
-      "size": 8503
+      "sha256": "ebc6401f0836594ba03764ce5288d11b9f57b4761de01f1652bce98396f6aca1",
+      "size": 8785
     },
     {
       "mode": "100644",
@@ -1229,8 +1229,8 @@
     {
       "mode": "100644",
       "path": "README.tr.md",
-      "sha256": "ecd997aae407dc9ccc25f280d2d6f94297652eaba903bb648566685799bca2f1",
-      "size": 37332
+      "sha256": "067645acf9a46c81392dd06bffae3849a446c9481e5e4717e322ffc86bb2ef84",
+      "size": 37647
     },
     {
       "mode": "100644",
@@ -1253,8 +1253,8 @@
     {
       "mode": "100644",
       "path": "docs/ATLAS-KISA-TUR.md",
-      "sha256": "18b810f65b5947037717ae7174d00f6b360659a3306871b601c20699477fbcb6",
-      "size": 4687
+      "sha256": "b0c4d1cc83426bba7fd2186b5a8a99d581a5eb778f37a11600dfea704b91cab9",
+      "size": 4729
     },
     {
       "mode": "100644",
@@ -1313,8 +1313,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "332d59e831a802ba9271fc4fedff5e18c1b0330f1804475eb5b31e0d9a1874ca",
-      "size": 12564
+      "sha256": "e9e9118a07c04d5b161b04b1f0bb4755a60409f83d1038b99758a67138fdb970",
+      "size": 12840
     },
     {
       "mode": "100644",
@@ -1493,8 +1493,8 @@
     {
       "mode": "100644",
       "path": "tools/dogrula.py",
-      "sha256": "776b35f9cf4cc51532f8274a1a6072d37f76ec79245d05ac931efac38871695b",
-      "size": 44046
+      "sha256": "01c535174af5e0cce39590a01da14dc4630d50ddad1a954edd1611c10207c400",
+      "size": 46171
     },
     {
       "mode": "100644",
@@ -1767,7 +1767,7 @@
       "size": 14827
     }
   ],
-  "generated_at": "2026-11-25T18:48:10Z",
+  "generated_at": "2026-11-25T19:22:03Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1782,6 +1782,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "85d088230423d2cd4d4073c5dd369447362c941b",
-  "tree_sha256": "cfaea56352e5b8be28604d20b38a6aff35175f6e92e98c8fc4b704968c5c8c91"
+  "tree": "4a80d56f2ca35e15e34a609b54d14a00b9d54b1a",
+  "tree_sha256": "49e1e04abb8983de5df2b57ebeecf93b8cd1cfa462f817bc86a260b593445ce3"
 }
