@@ -475,7 +475,7 @@
         "tools/dogrula.py",
         "--json"
       ],
-      "beklenen": "77",
+      "beklenen": "78",
       "kapi": {
         "kontrol": "H2"
       }
