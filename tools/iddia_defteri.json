@@ -403,6 +403,10 @@
         {
           "dosya": "docs/EN/QUICKSTART.md",
           "alinti": "## 1. `make dogrula` — one entry point, eight checks"
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "H1..H5 hygiene/secrets + T1..T3 self-tests; 8 checks, raw output"
         }
       ],
       "durum": "OLCULDU",
@@ -1229,6 +1233,26 @@
       "beklenen": "1",
       "kapi": {
         "kontrol": "KAPSAM.referans"
+      }
+    },
+    {
+      "id": "IDD-55",
+      "iddia": "kural katalogu ozeti: 121 bildirim = 117 kural + 4 olu kimlik + 1 referans",
+      "kaynaklar": [
+        {
+          "dosya": "README.en.md",
+          "alinti": "Gate scripts declare **121** identifiers. **117** of them are rules — **93** proven by a case that turns the gate red and **24** that only emit an expected marker — and **4** are dead identities that no code branch ever prints, plus **1** external decision reference."
+        }
+      ],
+      "durum": "OLCULDU",
+      "komut": [
+        "{py}",
+        "tools/kapsam.py",
+        "--json"
+      ],
+      "beklenen": "117",
+      "kapi": {
+        "kontrol": "KAPSAM.bildirilen"
       }
     }
   ]
