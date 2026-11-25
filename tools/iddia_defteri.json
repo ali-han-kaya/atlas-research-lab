@@ -1172,7 +1172,7 @@
         }
       ],
       "durum": "BEYAN",
-      "gerekce": "54/54 is the earlier frozen mutation baseline, retained as a historical snapshot. Current HEAD measures 114/114 firing cases + 27/27 expected findings over 117 verified rules (93 firing-tested, 24 expected-finding-only); 8/8 and 174/174 are current and measured by IDD-01/IDD-02."
+      "gerekce": "54/54 is the earlier frozen mutation baseline, retained as a historical snapshot. Current HEAD measures 113/113 firing cases + 27/27 expected findings over 117 verified rules (93 firing-tested, 24 expected-finding-only; 140-case battery); 8/8 and 174/174 are current and measured by IDD-01/IDD-02."
     },
     {
       "id": "IDD-52",
