@@ -18,6 +18,7 @@ import contextlib, hashlib, io, json, os, pathlib, re, runpy, shutil, sqlite3, s
 import unittest.mock
 
 SCRIPTS = pathlib.Path(__file__).resolve().parent
+SRC01_FIKSTUR = SCRIPTS.parent.parent / "tools" / "src01_kaynak_siniflandirma_fiksturu.md"
 SESSIZ = "--sessiz" in sys.argv
 TUT = "--tut" in sys.argv
 sonuc = []
@@ -36,6 +37,86 @@ def kos(betik, *args, cwd=None, env=None):
         cmd = [sys.executable, str(SCRIPTS / betik), *args]
     r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, env=env, timeout=600)
     return r.returncode, (r.stdout or "") + (r.stderr or "")
+
+
+def _src01_hucreler(satir):
+    """Pipe tablo satirini hucrelere ayirir; hizalama bosluklarini atar."""
+    return [h.strip() for h in satir.strip().strip("|").split("|")]
+
+
+def _src01_satir(hucreler):
+    return "| " + " | ".join(hucreler) + " |"
+
+
+def _src01_tablo_sil(metin):
+    """SRC-01 fiksturundeki KAYNAK SINIFLANDIRMA bolumunu kaldirir.
+
+    Metin kopyalanmaz; baslik ve altindaki tablo yapisal olarak cikarilir.
+    """
+    satirlar = metin.splitlines()
+    sonuc = []
+    atla = False
+    for satir in satirlar:
+        if re.match(r"^##\s+KAYNAK\s+SINIFLANDIRMA(?:\s+TABLOSU)?\s*$",
+                    satir.strip(), re.I):
+            atla = True
+            continue
+        if atla and re.match(r"^#{1,2}\s+", satir):
+            atla = False
+        if not atla:
+            sonuc.append(satir)
+    return "\n".join(sonuc) + ("\n" if metin.endswith("\n") else "")
+
+
+def _src01_sutun_sil(metin, ad):
+    """PROVENANCE tablosundan verilen sutunu yapisal olarak cikarir."""
+    satirlar = metin.splitlines()
+    sonuc = []
+    idx = None
+    for satir in satirlar:
+        if satir.strip().startswith("|"):
+            hucreler = _src01_hucreler(satir)
+            if idx is None and any(re.fullmatch(r"SC(?:OPE)?-ID", h, re.I)
+                                   for h in hucreler):
+                for i, h in enumerate(hucreler):
+                    if re.fullmatch(ad, h, re.I):
+                        idx = i
+                        break
+            if idx is not None and len(hucreler) > idx:
+                hucreler = hucreler[:idx] + hucreler[idx + 1:]
+                sonuc.append(_src01_satir(hucreler))
+                continue
+        else:
+            idx = None
+        sonuc.append(satir)
+    return "\n".join(sonuc) + ("\n" if metin.endswith("\n") else "")
+
+
+def _src01_sinif_degistir(metin, sid, yeni, bosluk=False):
+    """PROVENANCE satirinin Kaynak Sinifi degerini yapisal olarak degistirir."""
+    satirlar = metin.splitlines()
+    sonuc = []
+    idx = None
+    for satir in satirlar:
+        if satir.strip().startswith("|"):
+            hucreler = _src01_hucreler(satir)
+            if idx is None and any(re.fullmatch(r"SC(?:OPE)?-ID", h, re.I)
+                                   for h in hucreler):
+                for i, h in enumerate(hucreler):
+                    if re.fullmatch(r"Kaynak\s*S[ıi]n[ıi]f[ıi]", h, re.I):
+                        idx = i
+                        break
+            if (idx is not None and len(hucreler) > idx
+                    and re.search(r"\b%s\b" % re.escape(sid), hucreler[0])):
+                if bosluk:
+                    sonuc.append("")
+                hucreler[idx] = yeni
+                sonuc.append(_src01_satir(hucreler))
+                continue
+        else:
+            idx = None
+        sonuc.append(satir)
+    return "\n".join(sonuc) + ("\n" if metin.endswith("\n") else "")
 
 
 DOLGU = ("Bu satir fikstirin boyut esigini karsilamak icin eklenmistir. "
@@ -1386,124 +1467,106 @@ def calis(tmp):
     )
 
     # B-2: Kaynak Sinifi
-    # Tablosuz taban: eski kademeli davranis korunur (sinif sutunu varsa PASS).
-    p = kur(T / "sc1")
-    sc1_saglam_rc, sc1_saglam_o = kos("source_class_check.py", cwd=p)
-    sc1_saglam_ok = (
-        sc1_saglam_rc == 0
-        and "SOURCE-CLASS-CHECK PASS" in sc1_saglam_o
-        and "FAIL SRC-01" not in sc1_saglam_o
-        and "KAYNAK SINIFLANDIRMA" not in (p / "03-FAZ-3-MASTER-v5.5.md").read_text(encoding="utf-8")
-        and "Traceback" not in sc1_saglam_o
+    # SC-1 tek kaynak: tools/src01_kaynak_siniflandirma_fiksturu.md.
+    # Mutasyon bataryasi da ayni izlenen dosyayi okur; burada tablo metni
+    # kopyalanmaz, varyantlar fiksturun yapisindan turetilir.
+    sc1_aciklama = (
+        "tek izlenen SRC-01 fiksturunden tablosuz/tablo/yanlis sinif/"
+        "bosluk/ek vakalari; yeni test kimligi yok"
     )
+    try:
+        src01 = SRC01_FIKSTUR.read_text(encoding="utf-8")
+    except OSError as exc:
+        kontrol("SC-1", sc1_aciklama, False,
+                f"SRC-01 fiksturu okunamadi: {SRC01_FIKSTUR} ({exc})")
+    else:
+        sc1_dir = T / "sc1"
+        sc1_dir.mkdir(parents=True, exist_ok=True)
 
-    # Eski 5-sutunlu PROVENANCE: sinif sutunu yok -> kademeli CALISTIRILMADI.
-    sc1_eski = kur(T / "sc1_eski")
-    sc1_eski_f = sc1_eski / "03-FAZ-3-MASTER-v5.5.md"
-    sc1_eski_metin = sc1_eski_f.read_text(encoding="utf-8")
-    sc1_eski_metin = sc1_eski_metin.replace(
-        "| SC-ID | Bolum | Kaynak | Satir | Kaynak Sinifi | Durum |\n"
-        "|---|---|---|---|---|---|",
-        "| SC-ID | Bolum | Kaynak | Satir | Durum |\n"
-        "|---|---|---|---|---|",
-    ).replace("| IKINCIL | kapsiyor |", "| kapsiyor |")
-    sc1_eski_f.write_text(sc1_eski_metin, encoding="utf-8")
-    sc1_eski_rc, sc1_eski_o = kos("source_class_check.py", cwd=sc1_eski)
-    sc1_eski_ok = (
-        sc1_eski_rc == 0
-        and "INFO SRC-01: CALISTIRILMADI" in sc1_eski_o
-        and "eski 5-sutunlu" in sc1_eski_o
-        and "FAIL SRC-01" not in sc1_eski_o
-        and "Traceback" not in sc1_eski_o
-    )
+        def sc1_kos(ad, metin):
+            yol = sc1_dir / f"{ad}.md"
+            yol.write_text(metin, encoding="utf-8")
+            return kos("source_class_check.py", "--dosya", str(yol), cwd=T)
 
-    def sc1_tablo_kur(ad, sinif):
-        proje = kur(T / ad)
-        f = proje / "03-FAZ-3-MASTER-v5.5.md"
-        metin = f.read_text(encoding="utf-8")
-        metin = metin.replace(
-            "## PROVENANCE Tablosu",
-            "## KAYNAK SINIFLANDIRMA\n\n"
-            "| Sinyal | Sinif |\n"
-            "|---|---|\n"
-            "| KURAN | BIRINCIL |\n"
-            "| MAKALE | IKINCIL |\n\n"
-            "## PROVENANCE Tablosu",
+        # Tablosuz taban: eski kademeli davranis korunur (sinif sutunu varsa PASS).
+        sc1_saglam_rc, sc1_saglam_o = sc1_kos("saglam", _src01_tablo_sil(src01))
+        sc1_saglam_ok = (
+            sc1_saglam_rc == 0
+            and "SOURCE-CLASS-CHECK PASS" in sc1_saglam_o
+            and "FAIL SRC-01" not in sc1_saglam_o
+            and "Traceback" not in sc1_saglam_o
         )
-        metin = metin.replace(
-            "| SC-006 | Bolum 6 | Uretildi | 60 | IKINCIL | kapsiyor |",
-            f"| SC-006 | Bolum 6 | MAKALE | 60 | {sinif} | kapsiyor |",
+
+        # Eski 5-sutunlu PROVENANCE: sinif sutunu yok -> kademeli CALISTIRILMADI.
+        sc1_eski_rc, sc1_eski_o = sc1_kos(
+            "eski", _src01_sutun_sil(src01, r"Kaynak\s*S[ıi]n[ıi]f[ıi]"))
+        sc1_eski_ok = (
+            sc1_eski_rc == 0
+            and "INFO SRC-01: CALISTIRILMADI" in sc1_eski_o
+            and "eski 5-sutunlu" in sc1_eski_o
+            and "FAIL SRC-01" not in sc1_eski_o
+            and "Traceback" not in sc1_eski_o
         )
-        f.write_text(metin, encoding="utf-8")
-        return proje
 
-    # Tablo var + sinyal/sinif uyumu: yeni dal yesil kalir.
-    sc1_tablo = sc1_tablo_kur("sc1_tablo", "IKINCIL")
-    sc1_tablo_rc, sc1_tablo_o = kos("source_class_check.py", cwd=sc1_tablo)
-    sc1_tablo_ok = (
-        sc1_tablo_rc == 0
-        and "SOURCE-CLASS-CHECK PASS" in sc1_tablo_o
-        and "FAIL SRC-01" not in sc1_tablo_o
-        and "Traceback" not in sc1_tablo_o
-    )
+        # Tablo var + sinyal/sinif uyumu: yeni dal yesil kalir.
+        sc1_tablo_rc, sc1_tablo_o = sc1_kos("tablo", src01)
+        sc1_tablo_ok = (
+            sc1_tablo_rc == 0
+            and "SOURCE-CLASS-CHECK PASS" in sc1_tablo_o
+            and "FAIL SRC-01" not in sc1_tablo_o
+            and "Traceback" not in sc1_tablo_o
+        )
 
-    # Tablo var + yanlis sinif: yeni dal FAIL SRC-01 uretir.
-    sc1_yanlis = sc1_tablo_kur("sc1_yanlis", "BIRINCIL")
-    sc1_yanlis_rc, sc1_yanlis_o = kos("source_class_check.py", cwd=sc1_yanlis)
-    sc1_yanlis_ok = (
-        sc1_yanlis_rc == 1
-        and "FAIL SRC-01: SC-006" in sc1_yanlis_o
-        and "IKINCIL, PROVENANCE'ta BIRINCIL" in sc1_yanlis_o
-        and "Traceback" not in sc1_yanlis_o
-    )
+        # Tablo var + yanlis sinif: yeni dal FAIL SRC-01 uretir.
+        sc1_yanlis_rc, sc1_yanlis_o = sc1_kos(
+            "yanlis", _src01_sinif_degistir(src01, "SC-002", "BIRINCIL"))
+        sc1_yanlis_ok = (
+            sc1_yanlis_rc == 1
+            and "FAIL SRC-01: SC-002" in sc1_yanlis_o
+            and "IKINCIL, PROVENANCE'ta BIRINCIL" in sc1_yanlis_o
+            and "Traceback" not in sc1_yanlis_o
+        )
 
-    sc1_bosluk = kur(T / "sc1_bosluk")
-    sc1_bosluk_f = sc1_bosluk / "03-FAZ-3-MASTER-v5.5.md"
-    sc1_bosluk_f.write_text(
-        sc1_bosluk_f.read_text(encoding="utf-8").replace(
-            "| SC-006 | Bolum 6 | Uretildi | 60 | IKINCIL | kapsiyor |",
-            "\n| SC-006 | Bolum 6 | Uretildi | 60 | BILINMEYEN | kapsiyor |",
-        ),
-        encoding="utf-8",
-    )
-    sc1_bosluk_rc, sc1_bosluk_o = kos("source_class_check.py", cwd=sc1_bosluk)
-    sc1_bosluk_ok = (
-        sc1_bosluk_rc == 1
-        and "FAIL SRC-02: SC-006" in sc1_bosluk_o
-        and "Traceback" not in sc1_bosluk_o
-    )
+        # Bosluk sonrasi gecersiz sinif: satir atlanmaz, SRC-02 FAIL.
+        sc1_bosluk_rc, sc1_bosluk_o = sc1_kos(
+            "bosluk",
+            _src01_sinif_degistir(src01, "SC-002", "BILINMEYEN", bosluk=True),
+        )
+        sc1_bosluk_ok = (
+            sc1_bosluk_rc == 1
+            and "FAIL SRC-02: SC-002" in sc1_bosluk_o
+            and "Traceback" not in sc1_bosluk_o
+        )
 
-    sc1_ek = kur(T / "sc1_ek")
-    sc1_ek_f = sc1_ek / "03-FAZ-3-MASTER-v5.5.md"
-    sc1_ek_f.write_text(
-        sc1_ek_f.read_text(encoding="utf-8")
-        + "\n\n## Ek Tablo\n\n"
-          "| Kod | Aciklama | A | B | Deger | Durum |\n"
-          "|---|---|---|---|---|---|\n"
-          "| SC-999 | Ilgisiz | X | Y | BILINMEYEN | kayit |\n",
-        encoding="utf-8",
-    )
-    sc1_ek_rc, sc1_ek_o = kos("source_class_check.py", cwd=sc1_ek)
-    sc1_ek_ok = (
-        sc1_ek_rc == 0
-        and "SOURCE-CLASS-CHECK PASS" in sc1_ek_o
-        and "FAIL SRC-02: SC-999" not in sc1_ek_o
-        and "Traceback" not in sc1_ek_o
-    )
+        # PROVENANCE disindaki ek tablo taranmaz; SC-999 yanlis pozitif uretmez.
+        sc1_ek_metin = (
+            src01
+            + "\n\n## Ek Tablo\n\n"
+              "| Kod | Aciklama | A | B | Deger | Durum |\n"
+              "|---|---|---|---|---|---|\n"
+              "| SC-999 | Ilgisiz | X | Y | BILINMEYEN | kayit |\n"
+        )
+        sc1_ek_rc, sc1_ek_o = sc1_kos("ek", sc1_ek_metin)
+        sc1_ek_ok = (
+            sc1_ek_rc == 0
+            and "SOURCE-CLASS-CHECK PASS" in sc1_ek_o
+            and "FAIL SRC-02: SC-999" not in sc1_ek_o
+            and "Traceback" not in sc1_ek_o
+        )
 
-    kontrol(
-        "SC-1",
-        "tablosuz eski kademeli PASS; tablo uyumlu PASS; yanlis sinif FAIL SRC-01; "
-        "bosluk sonrasi gecersiz sinif SRC-02 FAIL",
-        sc1_saglam_ok and sc1_eski_ok and sc1_tablo_ok and sc1_yanlis_ok
-        and sc1_bosluk_ok and sc1_ek_ok,
-        f"tablosuz=(rc={sc1_saglam_rc}, ok={sc1_saglam_ok}) "
-        f"eski5=(rc={sc1_eski_rc}, ok={sc1_eski_ok}) "
-        f"tablo=(rc={sc1_tablo_rc}, ok={sc1_tablo_ok}) "
-        f"yanlis=(rc={sc1_yanlis_rc}, ok={sc1_yanlis_ok}) "
-        f"bosluk=(rc={sc1_bosluk_rc}, ok={sc1_bosluk_ok}) "
-        f"ek=(rc={sc1_ek_rc}, ok={sc1_ek_ok})",
-    )
+        kontrol(
+            "SC-1",
+            sc1_aciklama,
+            sc1_saglam_ok and sc1_eski_ok and sc1_tablo_ok and sc1_yanlis_ok
+            and sc1_bosluk_ok and sc1_ek_ok,
+            f"tablosuz=(rc={sc1_saglam_rc}, ok={sc1_saglam_ok}) "
+            f"eski5=(rc={sc1_eski_rc}, ok={sc1_eski_ok}) "
+            f"tablo=(rc={sc1_tablo_rc}, ok={sc1_tablo_ok}) "
+            f"yanlis=(rc={sc1_yanlis_rc}, ok={sc1_yanlis_ok}) "
+            f"bosluk=(rc={sc1_bosluk_rc}, ok={sc1_bosluk_ok}) "
+            f"ek=(rc={sc1_ek_rc}, ok={sc1_ek_ok})",
+        )
+
 
     p = kur(T / "sc2")
     f = p / "03-FAZ-3-MASTER-v5.5.md"

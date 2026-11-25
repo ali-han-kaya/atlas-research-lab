@@ -1,6 +1,7 @@
-<!-- SRC-01 mutasyon fiksturu. Temiz taban bu dosyadir; bozuk varyantta
-     yalniz SC-002'nin Kaynak Sinifi IKINCIL -> BIRINCIL olur, KAYNAK
-     SINIFLANDIRMA tablosu degismez. -->
+<!-- SRC-01 ortak fiksturu. Hem mutasyon bataryasi hem atlas_selftest SC-1
+     bu dosyayi okur; tablo metni testlerde kopyalanmaz. Temiz taban bu
+     dosyadir; bozuk varyantta yalniz SC-002'nin Kaynak Sinifi
+     IKINCIL -> BIRINCIL olur, KAYNAK SINIFLANDIRMA tablosu degismez. -->
 # Makale
 
 ## KAYNAK SINIFLANDIRMA
