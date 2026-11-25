@@ -280,6 +280,22 @@ def yayin_kapisi():
     return rc == 0, son[:150], ([] if rc == 0 else satirlar[-12:])
 
 
+def fikstur_muafiyeti():
+    """Sır fikstürü muafiyetinin regresyon testini koş.
+
+    Sayılan sekiz kaleme dahil değildir; kamu temizligi gibi bir on kosuldur.
+    Muafiyet dar kalmazsa sır taraması sessizce korleşir: bilinen satır
+    susmalı, satır veya dosya değişince P0 yanmalı, bozuk manifest
+    fail-closed olmalı. Uc davranis da gerçek kapıyla ölçülür.
+    """
+    rc, cikti, _ = kos([sys.executable,
+                        os.path.join(KOK, 'tools', 'fikstur_muafiyet_selftest.py')])
+    satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
+    baslik = [s for s in satirlar if s.startswith('HUKUM:')]
+    son = (baslik[-1] if baslik else (satirlar[-1] if satirlar else '(bos cikti)'))
+    return rc == 0, son[:150], ([] if rc == 0 else satirlar[-12:])
+
+
 def kapsam_oztesti():
     """Kapsam taramasinin kendi sinirlarini olctugunu dogrula.
 
@@ -817,6 +833,20 @@ def main():
                         'yayin kapisi FAIL')
         print()
         print('  HUKUM: FAIL — YAYIN KAPISI (manifest/makale/sir/ozel yol)')
+        return 1
+    print()
+
+    fikstur_gecti, fikstur_ozet, fikstur_detay = fikstur_muafiyeti()
+    print('  %-24s %-7s %s' % ('fikstur muafiyeti',
+                                'PASS' if fikstur_gecti else 'FAIL', fikstur_ozet))
+    for satir in fikstur_detay:
+        print('        | %s' % satir[:400])
+    if not fikstur_gecti:
+        if JSON:
+            _json_erken('ONKOSUL.FIKSTUR', 'fikstur muafiyeti', fikstur_ozet,
+                        'fikstur muafiyet testi FAIL')
+        print()
+        print('  HUKUM: FAIL — FIKSTUR MUAFIYETI (sessiz/P0/fail-closed)')
         return 1
     print()
 

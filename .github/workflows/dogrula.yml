@@ -65,6 +65,13 @@ jobs:
       # sayılmaz; koşan 8/8 ile eksik koşu arasındaki fark gizlenmez.
       # katalog-selftest is an offline prerequisite of dogrula-ci.
       # The live models.dev gate (make katalog-kontrol) intentionally runs outside CI.
+      # Sir fiksturu muafiyetinin regresyon testi. `make dogrula` bunu on
+      # kosul olarak kosar; burada ayrica dogrudan baglanir ki kirmizi adim
+      # adiyla gorunsun: bilinen satir sessiz, satir/dosya degisimi P0, bozuk
+      # manifest fail-closed.
+      - name: Sir fiksturu muafiyeti (sessiz / P0 / fail-closed)
+        run: make fikstur-muafiyet-test
+
       - name: make dogrula-ci
         run: make dogrula-ci
 

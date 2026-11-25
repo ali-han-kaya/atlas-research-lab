@@ -254,6 +254,7 @@
     "tools/dogrula.py",
     "tools/durum.py",
     "tools/durum_selftest.py",
+    "tools/fikstur_muafiyet_selftest.py",
     "tools/guvenlik.py",
     "tools/iddia.py",
     "tools/iddia_bozma_selftest.py",

@@ -166,6 +166,12 @@ iddia-yaz:
 iddia-selftest:
 	@$(PY) tools/iddia_selftest.py
 
+# Sir fiksturu muafiyetinin regresyon testi: bilinen satir sessiz, satir/dosya
+# degisimi P0, bozuk manifest fail-closed. `make dogrula` bunu on kosul olarak
+# kosar; CI ayrica dogrudan cagrir.
+fikstur-muafiyet-test:
+	@$(PY) tools/fikstur_muafiyet_selftest.py
+
 # Gecici kopyada IDD-04'u bozup gercek kapinin kirmizi yandigini olcer.
 # Push/PR'da KOSMAZ; yalniz elle (ve workflow_dispatch ile) cagrilir.
 iddia-bozma-selftest:
