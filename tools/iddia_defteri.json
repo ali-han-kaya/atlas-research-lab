@@ -466,7 +466,7 @@
       "kaynaklar": [
         {
           "dosya": "docs/DURUM.md",
-          "alinti": "| Python dosya sayısı (H2) | 79 |"
+          "alinti": "| Python dosya sayısı (H2) | 80 |"
         }
       ],
       "durum": "OLCULDU",
@@ -475,7 +475,7 @@
         "tools/dogrula.py",
         "--json"
       ],
-      "beklenen": "79",
+      "beklenen": "80",
       "kapi": {
         "kontrol": "H2"
       }
