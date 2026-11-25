@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DURUM NEGATIF TEST — bayatlik kapisinin gercekten reddettigini kanitla.
 
-Testler gercek depoyu degistirmez. Her vaka icin gecici bir kok kurulur:
+Testler gercek depoyu degistirmez. Her vaka icin gecici bir kok kurulur ve
+`make durum-kontrol` gercek Makefile hedefi olarak `DURUM_KOK` ile kosar:
   * `--kontrol` once sayfayi kanonik kayitlarla karsilastirir,
   * sayfa guncelse ATLAS/KOD oz-testlerini alt surec olarak kosar,
   * sayfa, pin veya canli sonuc saptiginda rc!=0; sayfa tek sayiyla
@@ -19,6 +20,7 @@ import tempfile
 from pathlib import Path
 
 ARAC = Path(__file__).resolve().with_name("durum.py")
+KOK = Path(__file__).resolve().parents[1]
 
 
 def _yaz(yol, metin):
@@ -91,7 +93,19 @@ def _hazirla(kok):
 
 
 def _kontrol(kok):
-    return _calistir(kok, "--kontrol")
+    """Gerçek `make durum-kontrol` girişini geçici kökle çalıştır.
+
+    Doğrudan `durum.py --kontrol` çağırmak, Makefile hedefi `true` veya
+    `--stdout` yapıldığında testi sessizce geçirirdi. Burada hedefin kendisi
+    koşar; `DURUM_KOK` ile üretim kökü geçici fikstüre yönlendirilir.
+    """
+    komut = [
+        "make", "-C", str(KOK), "durum-kontrol",
+        "PY=%s" % sys.executable,
+        "DURUM_KOK=%s" % str(kok),
+    ]
+    return subprocess.run(komut, cwd=str(KOK), capture_output=True, text=True,
+                          timeout=60)
 
 
 def main():
@@ -138,7 +152,8 @@ def main():
         else:
             sayfa.write_text(yeni, encoding="utf-8")
             r = _kontrol(vaka)
-            bekle("yanlis oz-test sayfasi rc=1", r.returncode == 1, _cikti(r))
+            bekle("yanlis oz-test sayfasi make rc=2",
+                  r.returncode == 2, _cikti(r))
             bekle("yanlis oz-test sayfasi BAYAT", "BAYAT" in _cikti(r), _cikti(r))
 
         # 3) Sayfadaki tek bir sayi: yalnizca SKILL.md satir degeri 500 -> 501.
@@ -159,7 +174,8 @@ def main():
             sayfa.write_text(yeni, encoding="utf-8")
             r = _kontrol(vaka)
             cikti = _cikti(r)
-            bekle("tek sayi degisikligi rc=1", r.returncode == 1, cikti)
+            bekle("tek sayi degisikligi make rc=2",
+                  r.returncode == 2, cikti)
             bekle("tek sayi degisikligi BAYAT", "BAYAT" in cikti, cikti)
         bekle("canli DURUM sayfasi degismedi",
               canli_sayfa.read_bytes() == canli_once,

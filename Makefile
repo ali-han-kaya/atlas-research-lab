@@ -76,8 +76,9 @@ olgu-negatif:
 durum-yaz:
 	@$(PY) tools/durum.py --yaz
 
+# DURUM_KOK: durum_selftest'in gecici fikstur kokunu gercek hedefe baglar.
 durum-kontrol:
-	@$(PY) tools/durum.py --kontrol
+	@$(PY) tools/durum.py --kontrol $(if $(DURUM_KOK),--kok "$(DURUM_KOK)",)
 
 durum-selftest:
 	@$(PY) tools/durum_selftest.py
