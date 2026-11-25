@@ -1,5 +1,5 @@
 {
-  "commit": "1eff5832617c48ca6b74bc888b46c74a4967e64f",
+  "commit": "431a629eb38d2def6252e7bf482b8402140bf9f8",
   "file_count": 288,
   "files": [
     {
@@ -1319,7 +1319,7 @@
     {
       "mode": "100644",
       "path": "docs/IDDIA-OZET.md",
-      "sha256": "0b0c3b405e2608b81f21f97ed6f50d6ab20be57f74c1ce7a0551adddbbd69c7a",
+      "sha256": "8dc14985569c613c3629e48092a6c550e39b7a69e4a4039e03167c69474404d1",
       "size": 1244
     },
     {
@@ -1517,8 +1517,8 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "1e47e70fb90c58e137412a0eaaa45b6a5b93b446c19e798ffecc012198989124",
-      "size": 37432
+      "sha256": "93384646568e70b26e2b734c86595c385bd0ac99bacbcc054aa553853819563e",
+      "size": 38282
     },
     {
       "mode": "100644",
@@ -1731,7 +1731,7 @@
       "size": 14827
     }
   ],
-  "generated_at": "2026-11-25T01:50:02Z",
+  "generated_at": "2026-11-25T01:56:06Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1746,6 +1746,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "3cbc008c170b9c8babfa94988a863c97e474d420",
-  "tree_sha256": "80467cf0086cf3ce508db2ad292ca2218df20854a9485fde97459cb482164a9a"
+  "tree": "a3ea03b9f13ead454e8543ca89e1e46611f31841",
+  "tree_sha256": "62842bd5b0e28c63cceb99936bf11933af29c832a587507c2c57f49ba2727cff"
 }
