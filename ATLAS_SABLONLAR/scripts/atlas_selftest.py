@@ -1489,11 +1489,16 @@ def calis(tmp):
             return kos("source_class_check.py", "--dosya", str(yol), cwd=T)
 
         # Tablosuz taban: eski kademeli davranis korunur (sinif sutunu varsa PASS).
-        sc1_saglam_rc, sc1_saglam_o = sc1_kos("saglam", _src01_tablo_sil(src01))
+        # Varyantin gercekten tablosuz oldugunu da olc: yardimci bozulursa
+        # taban fikstur ayni PASS'i verir ve vaka sessizce vacuous kalirdi.
+        sc1_saglam_metin = _src01_tablo_sil(src01)
+        sc1_saglam_rc, sc1_saglam_o = sc1_kos("saglam", sc1_saglam_metin)
         sc1_saglam_ok = (
             sc1_saglam_rc == 0
             and "SOURCE-CLASS-CHECK PASS" in sc1_saglam_o
             and "FAIL SRC-01" not in sc1_saglam_o
+            and not re.search(r"^##\s+KAYNAK\s+SINIFLANDIRMA",
+                              sc1_saglam_metin, re.M)
             and "Traceback" not in sc1_saglam_o
         )
 
@@ -1514,6 +1519,7 @@ def calis(tmp):
             sc1_tablo_rc == 0
             and "SOURCE-CLASS-CHECK PASS" in sc1_tablo_o
             and "FAIL SRC-01" not in sc1_tablo_o
+            and re.search(r"^##\s+KAYNAK\s+SINIFLANDIRMA", src01, re.M)
             and "Traceback" not in sc1_tablo_o
         )
 
@@ -1551,6 +1557,7 @@ def calis(tmp):
             sc1_ek_rc == 0
             and "SOURCE-CLASS-CHECK PASS" in sc1_ek_o
             and "FAIL SRC-02: SC-999" not in sc1_ek_o
+            and "SC-999" in sc1_ek_metin
             and "Traceback" not in sc1_ek_o
         )
 
