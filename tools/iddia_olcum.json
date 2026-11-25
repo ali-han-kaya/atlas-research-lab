@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-25T02:52:30Z",
+  "zaman": "2026-11-25T04:33:56Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -29,7 +29,7 @@
         "--json"
       ],
       "rc": 0,
-      "ham": "OZ-TEST: 146/146 gecti · KANIT commit=b3d2d8f tree=f9f6fa9",
+      "ham": "OZ-TEST: 146/146 gecti · KANIT commit=f91e39c tree=46cec2b",
       "deger": "146/146"
     },
     "IDD-04": {
@@ -147,8 +147,8 @@
         "--json"
       ],
       "rc": 0,
-      "ham": "dogrula H2 PASS 78",
-      "deger": "78"
+      "ham": "dogrula H2 PASS 79",
+      "deger": "79"
     },
     "IDD-16": {
       "komut": [
@@ -336,7 +336,7 @@
         "--kontrol"
       ],
       "rc": 0,
-      "ham": "MODEL KIMLIK: PASS — 1 emekli kimlik · aday=289 dosya · taranan=289 dosya · incelenmedi=0 dosya · onay=1 kayit · aktif=0",
+      "ham": "MODEL KIMLIK: PASS — 1 emekli kimlik · aday=291 dosya · taranan=291 dosya · incelenmedi=0 dosya · onay=1 kayit · aktif=0",
       "deger": "0/1"
     },
     "IDD-48": {
