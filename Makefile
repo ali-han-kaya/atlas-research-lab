@@ -166,6 +166,11 @@ iddia-yaz:
 iddia-selftest:
 	@$(PY) tools/iddia_selftest.py
 
+# Gecici kopyada IDD-04'u bozup gercek kapinin kirmizi yandigini olcer.
+# Push/PR'da KOSMAZ; yalniz elle (ve workflow_dispatch ile) cagrilir.
+iddia-bozma-selftest:
+	@$(PY) tools/iddia_bozma_selftest.py
+
 guvenlik:
 	@$(PY_AUDIT) tools/guvenlik.py
 

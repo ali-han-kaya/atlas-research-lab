@@ -1,0 +1,52 @@
+name: iddia bozma kaniti
+
+# YALNIZ elle tetiklenir. Push/PR'da kosmaz: main gecmisine TEST commit'i
+# birakmadan, gercek defterin bozuldugunda kapiyi kirmizi yaktigini olcmek
+# icin. Is GECICI KOPYADA calisir; ana agac okunur, degistirilmez.
+on:
+  workflow_dispatch:
+    inputs:
+      hizli:
+        description: "Agir vakayi (gercek mutasyon kosusu) atla"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  bozma:
+    name: defter bozulunca kapi kirmizi
+    runs-on: ubuntu-latest
+    # Agir vaka gercek mutasyon bataryasini kosar (~7 dk); pay birakilir.
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bagimliliklar
+        run: python3 -m pip install --quiet -r requirements-dev.txt
+
+      # Araç kendi gecici kopyasini kurar, IDD-04'u bozar, gercek kapiyi kosar
+      # ve sonunda ana agacin `git status` ciktisinin degismedigini olcer.
+      - name: IDD-04 bozma oz-testi
+        run: |
+          if [ "${{ inputs.hizli }}" = "true" ]; then
+            python3 tools/iddia_bozma_selftest.py --hizli
+          else
+            python3 tools/iddia_bozma_selftest.py
+          fi
+
+      # Kopya calismasi ana agaci kirletmediyse bu adim yesil kalir.
+      - name: Ana agac temiz kaldi mi
+        run: |
+          test -z "$(git status --porcelain)" || {
+            echo "::error::ana agac kirli kaldi:"
+            git status --porcelain
+            exit 1
+          }
