@@ -26,7 +26,6 @@ CIKIS: 0 = iki vaka da beklendigi gibi kirmizi · 1 = beklenti tutmadi
 """
 import argparse
 import json
-import os
 import shutil
 import subprocess
 import sys
@@ -36,9 +35,6 @@ from pathlib import Path
 
 KOK = Path(__file__).resolve().parents[1]
 HEDEF = 'IDD-04'
-ATLA = shutil.ignore_patterns('.git', '__pycache__', 'node_modules', '.pytest_cache',
-                              '.ruff_cache', '.mypy_cache', '.tox', '.venv', 'venv',
-                              'build', 'dist', '.DS_Store', 'kanit-paketi')
 
 
 DEFTERLER = ('tools/iddia_defteri.json', 'tools/iddia_olcum.json')
@@ -64,8 +60,24 @@ def _imza():
 
 
 def _kopya(tmp):
+    """Commit'li agacin klonu — CI checkout'uyla ayni gorunum.
+
+    Klasor kopyasi YETMEZ: bazi kapilar (or. `model_kimlik`) git kokunde
+    `git ls-files` kullanir, `.git` olmayan kopyada dosya sistemini tarar ve
+    sayilar tutmaz; o zaman kapi alakasiz bir satirdan kirmizi yanar ve vaka
+    kaniti bulanir. Klon, izlenen agaci birebir getirir; `.gitignore` edilmis
+    calisma dizinleri (or. `kanit-paketi/`) CI'da da yoktur.
+
+    Sonuc: commit edilmemis degisiklikler kapsam disidir; kanit, commit'li
+    agacin kanitidir.
+    """
     hedef = tmp / 'depo'
-    shutil.copytree(KOK, hedef, symlinks=True, ignore=ATLA)
+    hedef.parent.mkdir(parents=True, exist_ok=True)
+    r = subprocess.run(['git', 'clone', '--quiet', '--no-hardlinks',
+                        str(KOK), str(hedef)], capture_output=True, text=True)
+    if r.returncode != 0:
+        raise RuntimeError('klon kurulamadi: %s'
+                           % ((r.stderr or r.stdout).strip()[:200]))
     return hedef
 
 
