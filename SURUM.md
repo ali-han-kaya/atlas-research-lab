@@ -2,7 +2,7 @@
 
 > **Tarihsel kimlik notu (19 Kasım 2026):** 2026-08 kayıtlarındaki eski Nemotron Super free kimliği models.dev'den kaldırılmıştır; güncel allowlist `nvidia/nemotron-3-ultra-550b-a55b:free` kullanır. Tarihsel satırlar değiştirilmedi.
 
-Sürüm: v1.7.421 (güncel: Değişiklik Kaydı'nın ilk satırı) · Tarih: 24 Kasım 2026
+Sürüm: v1.7.422 (güncel: Değişiklik Kaydı'nın ilk satırı) · Tarih: 25 Kasım 2026
 
 > **21 Kasım 2026 düzeltmesi:** Canlı `make katalog-kontrol` ağ gerektirdiği için CI'dan çıkarıldı; CI yalnız çevrimdışı `make dogrula-ci`/`katalog-selftest` koşar. v1.7.411 satırındaki CI kaydı tarihseldir.
 
@@ -37,6 +37,7 @@ taban dosyası yoktur; güncel KOD sayısı da DURUM'dadır.
 
 ## Değişiklik Kaydı
 
+- v1.7.422 (25 Kasım 2026, lab kaydı): **Mutasyon anlatımı katalogdan türetilen CI kapısına bağlandı.** `tools/mutasyon_tarihsel_snapshot.json` 12.128/588082a uyeliğini 109 ID ve `FRZ-01T -> FRZ-01` takma adıyla dondurur. `tools/mutasyon_anlatim_kapisi.py` güncel 140/113/27 ile tarihsel 109/91/18 sayılarını `tools/mutasyon_sonuc.json` sözleşmelerinden türetir; README.tr/en, docs/README, QUICKSTART, DERSLER'deki 10 çıpayı ve iddia defterindeki IDD-04/05/39/52/56'yı karşılaştırır. `140/140`, `109/109` ve "her vaka kırmızı" ifadeleri fail-closed reddedilir. **Ölçülen:** `make mutasyon-anlatim` PASS (10/10 çıpa, 5/5 defter); `make mutasyon-anlatim-selftest` 12/12; `make mutasyon` 140/140 (113 ateşleyen + 27 beklenen) değişmedi; `make dogrula` 8/8; `make kapsam` PASS. DERSLER 12.167.
 - v1.7.421 (24 Kasım 2026, lab kaydı): **Kapı çıktıları sürümlü sözleşmeye bağlandı; itilmemiş 42 commit ve üç CI kırmızısı kapatıldı.** `ATLAS-KAPI-CIKTI/v1` zarfı (`schemas/atlas-kapi-cikti.schema.json`, `tools/kapi_cikti.py`) eklendi: `schema`, `surum`, `kapi`, `hukum`, `rc`, `uretildi`, `kontroller`, `sayilar`, `hata`. `kapsam.py --json` ve `dogrula.py --json` kimlikli kontroller üretiyor (`RAPOR_OZET`, `H2`, `KAPSAM.toplam_dogrulanan` …); metin çıktıları değişmedi. `iddia.py` 17 kapı iddiasını `ayikla` deseni yerine `kapi.kontrol` seçicisiyle okuyor. **Kök neden ölçüldü:** iş kaybolmamıştı, hiç itilmemişti (`origin/main` 17a8a17, `ahead 42`); `dogrula.yml` yalnız `push`ta koştuğu için o aralık denetlenmedi. §4 kuralı artık `## main...origin/main` ve son CI `success` şartlarını da taşıyor. **Ölçülen:** `make kapi-sozlesme-test` 14/14; `make dogrula` 8/8 (ATLAS 146/146, KOD 174/174, T3 45/45); `make iddia` 39/39; `make kapsam` PASS; `iddia_selftest` 35/35; `oztest_mutasyon` 6/6; `taze_klon` PASS; `sir-mutasyon` 4/4; CI 45422804556 success. H2 python dosya sayısı 75 → 77 (iki yeni araç). DERSLER 12.150. Devir: `docs/DEVIR-2026-11-24-1507.md`.
 > **Tarihsel kayıt:** Aşağıdaki `v1.7.x` satırlarındaki sayılar o günkü ölçümdür;
 > güncel öz-test ve envanter durumu `docs/DURUM.md`dir.
