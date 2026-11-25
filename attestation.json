@@ -1,5 +1,5 @@
 {
-  "commit": "3cf447a72dbc3e46da245b05e43dd80c7d5989b5",
+  "commit": "455262da655d8200e8a3d8b6359adde4ffce7e32",
   "file_count": 294,
   "files": [
     {
@@ -1505,8 +1505,8 @@
     {
       "mode": "100644",
       "path": "tools/durum_selftest.py",
-      "sha256": "603d51acbeef210a54b263697e0b8a2e93acfd6a4243876d57ec18fc271909f6",
-      "size": 8615
+      "sha256": "59698767f28997c5896dde89d4408ce6089f390dec63ad2b910ca9ca29db5a66",
+      "size": 9757
     },
     {
       "mode": "100644",
@@ -1767,7 +1767,7 @@
       "size": 14827
     }
   ],
-  "generated_at": "2026-11-25T20:08:24Z",
+  "generated_at": "2026-11-25T20:21:27Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1782,6 +1782,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "e8261f3436bf20cafe48fd3a299f7c2eaac342c2",
-  "tree_sha256": "6d4184c1a4c697071e74745994c49e693c8ce2fcd9c90a5dccee6d9501903e1b"
+  "tree": "affcdf15b9cdcc694ee8fcfc93f3ab0fb9eb6295",
+  "tree_sha256": "a88608b81cb529c66e4c8d102e3d11c82185e945f8dcd5de06c2801b6735b85a"
 }
