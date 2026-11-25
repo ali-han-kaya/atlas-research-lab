@@ -1,9 +1,6 @@
 {
  "schema": "MUTASYON-SONUC/v1",
- "zaman": "2026-11-25T00:15:05Z",
- "head": "e3d89f120030683dbddf73dcc607bb042fef15dd",
- "kirli": true,
- "kaynak_sha256": "d227d84269b90a7425fe0186e0b6f257c3415110e45f08ee5a11a6d074abccb5",
+ "kaynak_sha256": "69969258a333bbaeb8afae2840e84960bd56e8888dae2f170cf5c082e0ff4afd",
  "kisa": false,
  "sayilar": {
   "vaka": 140,

@@ -2241,8 +2241,6 @@ def sonuc_yaz(satirlar, meta, kisa):
     turetir. Tazelik icin HEAD ve kirlilik yazilir: farkli bir agacın
     sonucu kanit sayilmaz.
     """
-    kirli = [s for s in _git_metin('status', '--porcelain').splitlines()
-             if s.strip() and 'tools/mutasyon_sonuc.json' not in s]
     kayitlar = []
     for kimlik, katman, kural, durum, ayrinti in satirlar:
         bilgi = meta.get(kimlik, {})
@@ -2258,12 +2256,11 @@ def sonuc_yaz(satirlar, meta, kisa):
             'gecti': durum in GECEN_DURUMLAR,
             'ayrinti': ayrinti,
         })
+    # DETERMINISTIK cikti: zaman/HEAD gibi uçucu alan YOK. Aksi halde her
+    # kosu dosyayi degistirir, agac hic temiz kalmaz ve attestation/kamu
+    # kollari kirmizi olur. Ayni kaynak + ayni sonuc => ayni bayt.
     veri = {
         'schema': SONUC_SEMA,
-        'zaman': datetime.datetime.now(datetime.timezone.utc)
-                         .strftime('%Y-%m-%dT%H:%M:%SZ'),
-        'head': _git_metin('rev-parse', 'HEAD'),
-        'kirli': bool(kirli),
         'kaynak_sha256': kaynak_imzasi(),
         'kisa': bool(kisa),
         'sayilar': {
