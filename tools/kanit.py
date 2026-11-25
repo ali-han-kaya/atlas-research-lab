@@ -16,7 +16,10 @@ dosyasini kapsamaz; boylece commit/hash dongusu olusmaz.
 
 Paket, attestation yazildiktan SONRA dogrulama komutlarini kosar. Boylece T1
 yeni agac kanitini kullanir; yalniz attestation.json degistigi icin
-`kanit_dogrula`nin agac temizligi kurali bunu dislar. Paket git'e eklenmez
+`kanit_dogrula`nin agac temizligi kurali bunu dislar. Ozel `--cikti` ile paket
+birlikte kullanilirsa komutlar ayni kaniti okusun diye kok `attestation.json`
+komutlar suresince ayni icerikle esitlenir ve sonra bayt bayt geri yuklenir;
+boylece T1/KAMU/iddia ile paket ayni uretimi gosterir. Paket git'e eklenmez
 (`.gitignore`); tasimak icin dizini kopyalamak yeterlidir.
 
 Var olan bir `--paket` hedefi yalniz sonuc/makbuz/attestation semalari ve
@@ -26,7 +29,8 @@ yollar reddedilir; hicbiri silinmez.
 
 Kullanim:
   python3 tools/kanit.py                    # attestation + kanit-paketi
-  python3 tools/kanit.py --cikti <yol>      # attestation'i baska yola yaz
+  python3 tools/kanit.py --cikti <yol>      # attestation'i baska yola yaz;
+                                             # paket komutlari ayni kaniti okur
   python3 tools/kanit.py --paket <dizin>    # paket konumunu degistir; mevcut
                                              # yabanci dizinleri silmez
   python3 tools/kanit.py --komut "make kapsam"  # varsayilan komutlari degistir
@@ -46,6 +50,7 @@ import shutil
 import subprocess
 import sys
 import time
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -266,6 +271,32 @@ def attestation_verisi(commit, tree, dosyalar):
             "note": "Butun izlenen dosyalar; attestation.json kendini kapsamaz.",
         },
     }
+
+
+@contextmanager
+def _attestation_esitle(yol, metin):
+    """Paket komutlari ozel --cikti icerigini okusun; koku sonra geri koy.
+
+    T1/KAMU/iddia varsayilan olarak kok `attestation.json`'i okur. Ozel bir
+    --cikti ile paket birlikte kullanilirsa, komutlarin baska bir kanit
+    okumasi karisik kanit uretir. Komutlar calisirken kok dosyayi ayni
+    icerikle gecici olarak degistir; hata/kesinti olsa da eski baytlari
+    finally icinde geri yukle.
+    """
+    kok = KOK / ATTESTATION
+    if yol.resolve() == kok.resolve():
+        yield
+        return
+    eski = kok.read_bytes() if kok.is_file() else None
+    try:
+        kok.write_bytes(metin.encode("utf-8"))
+        yield
+    finally:
+        if eski is None:
+            if kok.is_file() or kok.is_symlink():
+                kok.unlink()
+        else:
+            kok.write_bytes(eski)
 
 
 def paket_hedef_dogrula(paket):
@@ -568,16 +599,20 @@ def main():
         else:
             komutlar = list(VARSAYILAN_KOMUTLAR)
 
-        sonuclar = []
-        for kimlik, argv in komutlar:
-            print("KANIT: KOMUT %s — %s" % (kimlik, " ".join(argv)))
-            rc, out, err, sure, hata = komut_calistir(argv)
-            sonuclar.append((kimlik, argv, rc, out, err, sure, hata))
-            print("  rc=%d · %d ms · %s" % (
-                rc, sure, "PASS" if hata is None and rc == 0
-                else ("ERROR" if hata else "FAIL")))
+        if yol.resolve() != (KOK / ATTESTATION).resolve():
+            print("KANIT: KOMUTLAR ozel --cikti kanitini geçici olarak "
+                  "kok attestation uzerinden okuyacak")
+        with _attestation_esitle(yol, at_metni):
+            sonuclar = []
+            for kimlik, argv in komutlar:
+                print("KANIT: KOMUT %s — %s" % (kimlik, " ".join(argv)))
+                rc, out, err, sure, hata = komut_calistir(argv)
+                sonuclar.append((kimlik, argv, rc, out, err, sure, hata))
+                print("  rc=%d · %d ms · %s" % (
+                    rc, sure, "PASS" if hata is None and rc == 0
+                    else ("ERROR" if hata else "FAIL")))
 
-        sonuc, manifest = paket_yaz(paket, at_metni, veri, sonuclar)
+            sonuc, manifest = paket_yaz(paket, at_metni, veri, sonuclar)
         print("KANIT: PAKET %s" % paket)
         print("  hüküm=%s · komut=%d · bulgu=%d · manifest=%s"
               % (sonuc["verdict"], sonuc["command_count"],

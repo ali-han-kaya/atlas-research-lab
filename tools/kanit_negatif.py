@@ -246,6 +246,51 @@ def senaryo(klon, head, bekle):
         hata or cikti(sonuc),
     )
 
+    # Ozel --cikti + paket: komutlar ayni attestation'i okumali, kok geri gelmeli.
+    ozel = klon.parent / "ozel-cikti"
+    ozel.mkdir()
+    ozel_att = ozel / "attestation.json"
+    ozel_paket = ozel / "paket"
+    att_once = att_yolu.read_bytes()
+    komut = (
+        'python3 -c "import hashlib; '
+        "print(hashlib.sha256(open('attestation.json', 'rb').read()).hexdigest())"
+        '"'
+    )
+    sonuc, hata = kos([
+        sys.executable, str(klon / "tools/kanit.py"),
+        "--cikti", str(ozel_att),
+        "--paket", str(ozel_paket),
+        "--komut", komut,
+    ], klon, timeout=120)
+    metin = cikti(sonuc)
+    ozel_ok = False
+    ayrinti = hata or metin
+    if sonuc is not None and sonuc.returncode == 0:
+        try:
+            ham = ozel_att.read_bytes()
+            sonuc_veri = json.loads(
+                (ozel_paket / "sonuc.json").read_text(encoding="utf-8"))
+            paket_att = (ozel_paket / ATTESTATION).read_bytes()
+            log = (ozel_paket / sonuc_veri["commands"][0]["stdout"]).read_text(
+                encoding="utf-8").strip()
+            ozel_ok = (
+                paket_att == ham
+                and sonuc_veri.get("attestation_sha256")
+                == hashlib.sha256(ham).hexdigest()
+                and log == hashlib.sha256(ham).hexdigest()
+            )
+            if not ozel_ok:
+                ayrinti = "kok/paket/log ozel ciktiyle eslesmiyor"
+        except (OSError, UnicodeError, ValueError, KeyError, IndexError) as exc:
+            ayrinti = "%s: %s" % (type(exc).__name__, exc)
+    bekle("ozel cikti paketle tutarli", ozel_ok, ayrinti)
+    bekle(
+        "ozel cikti kok attestation'i degistirmedi",
+        att_yolu.read_bytes() == att_once,
+        "kok attestation degisti",
+    )
+
 
 def paket_guvenlik_testleri(bekle):
     """kanit.py --paket: yabanci dizini silmeden reddetmeyi olcer."""
