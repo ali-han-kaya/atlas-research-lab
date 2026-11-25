@@ -274,6 +274,7 @@
     "tools/model_kimlik_istisna.json",
     "tools/mutasyon_bataryasi.py",
     "tools/mutasyon_katalog.json",
+    "tools/mutasyon_sonuc.json",
     "tools/olgu1_negatif.py",
     "tools/oztest_mutasyon.py",
     "tools/oztest_mutasyon_kaniti.json",
