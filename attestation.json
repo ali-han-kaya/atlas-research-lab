@@ -1,6 +1,6 @@
 {
-  "commit": "d8366a2cea600dc7c6af8f05aa8ef68c91d0da25",
-  "file_count": 288,
+  "commit": "895f2ad6f45d1027537e0cca7d9d484fa24fd3e1",
+  "file_count": 290,
   "files": [
     {
       "mode": "100755",
@@ -19,6 +19,12 @@
       "path": ".github/workflows/dogrula.yml",
       "sha256": "b21ea26cd7c56a1634ca9eb174a7c98d5607212f6bc25cb5030ca3daf11547a8",
       "size": 9817
+    },
+    {
+      "mode": "100644",
+      "path": ".github/workflows/iddia-bozma.yml",
+      "sha256": "76bb0dbc9ff6c0adf49282dc5aa31b115be7a0eaa06ef277985c7765dc5da893",
+      "size": 1568
     },
     {
       "mode": "100644",
@@ -1163,8 +1169,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "d979e09176cd46ea65a2ca9c9dfeaf9e22b01d067aa02864b22f6afb333d065a",
-      "size": 6782
+      "sha256": "7f7b7d2fafab1a1e7e422eb9bf53872dd3d899c461240295f8baf28bb0494883",
+      "size": 6985
     },
     {
       "mode": "100644",
@@ -1516,6 +1522,12 @@
     },
     {
       "mode": "100644",
+      "path": "tools/iddia_bozma_selftest.py",
+      "sha256": "e0c52d7fc5f841c2616cfa4dd833a6c0293366ea0156666cb942032967877c06",
+      "size": 7185
+    },
+    {
+      "mode": "100644",
       "path": "tools/iddia_defteri.json",
       "sha256": "1f2765d5af342646f2eebb8cf7b18fd09c47ddd69a2b78b47303f8b5b032d536",
       "size": 38385
@@ -1721,8 +1733,8 @@
     {
       "mode": "100644",
       "path": "tools/yayin_manifest.json",
-      "sha256": "ccb752fb5951accabb53bfccbebfc0ab41ef6fa8956cbfbd9550a290a0fb82ca",
-      "size": 13065
+      "sha256": "c660dad3a2afd0f63108fd114800346291117df0fd5773c1c6fb634ab62cbf3b",
+      "size": 13143
     },
     {
       "mode": "100644",
@@ -1731,7 +1743,7 @@
       "size": 14827
     }
   ],
-  "generated_at": "2026-11-25T03:46:51Z",
+  "generated_at": "2026-11-25T04:28:37Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1746,6 +1758,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "83166b962526b0a91a4729cd36c5a01662ca8c83",
-  "tree_sha256": "e1b198386af70961f0ccc3b1cf1a33e0b229bc934839f5df9e104d50dd101f3b"
+  "tree": "1794c15bd0e5b6a552530644b8e2f687457c993f",
+  "tree_sha256": "20c4643bc15c4e8b76e813b3a0feff8a78208723f4bffa8832ad78133573f2a3"
 }
