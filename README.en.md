@@ -78,6 +78,18 @@ case is checked for leakage and for reversibility**: only its own label may
 fire, and undoing the violation must turn the gate green again. A case that
 turns red for the wrong reason fails the battery.
 
+## Scope ratchet
+
+The historical baseline is **23**. The current allowance is **zero**. A new
+rule must have a mutation case or a reasoned `KAPSAM_ISTISNA` entry; without
+one, `make kapsam` and the CI step fail closed. A closed baseline rule may not
+fall back to a gap, and the tested-rule count may not drop.
+
+The generated [`docs/DURUM.md`](docs/DURUM.md) and
+[`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md#kapsam-ratchet) pages are
+the source of truth for the current counters and per-rule evidence; do not copy
+those numbers into prose.
+
 ## What is measured
 
 | Command | What it proves |
