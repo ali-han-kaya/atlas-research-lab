@@ -5,7 +5,8 @@
 Testler gercek depoyu degistirmez. Her vaka icin gecici bir kok kurulur:
   * `--kontrol` once sayfayi kanonik kayitlarla karsilastirir,
   * sayfa guncelse ATLAS/KOD oz-testlerini alt surec olarak kosar,
-  * sayfa, pin veya canli sonuc saptiginda rc!=0 doner.
+  * sayfa, pin veya canli sonuc saptiginda rc!=0; sayfa tek sayiyla
+    bozuldugunda ise tam olarak rc=1 doner.
 
 Boylece `--kontrol` yalnizca dosya karsilastirmasi yapan bir kisayola
 indirgenirse veya canli testler devre disi kalirsa bu testler kirmizi olur.
@@ -137,10 +138,34 @@ def main():
         else:
             sayfa.write_text(yeni, encoding="utf-8")
             r = _kontrol(vaka)
-            bekle("yanlis oz-test sayfasi rc!=0", r.returncode != 0, _cikti(r))
+            bekle("yanlis oz-test sayfasi rc=1", r.returncode == 1, _cikti(r))
             bekle("yanlis oz-test sayfasi BAYAT", "BAYAT" in _cikti(r), _cikti(r))
 
-        # 3) Pin/envanter sayisi yanlis: kaynak capraz kontrolu rc!=0.
+        # 3) Sayfadaki tek bir sayi: yalnizca SKILL.md satir degeri 500 -> 501.
+        #    Kaynaklar ayni kalir; sayfa karsilastirmasi rc=1 vermeli. Canli
+        #    DURUM sayfasi bu testten etkilenmemeli.
+        canli_sayfa = Path(__file__).resolve().parents[1] / "docs" / "DURUM.md"
+        canli_once = canli_sayfa.read_bytes()
+        vaka = Path(gecici) / "tek-sayi"
+        shutil.copytree(temel, vaka)
+        sayfa = vaka / "docs" / "DURUM.md"
+        eski = sayfa.read_text(encoding="utf-8")
+        aranan = "| `SKILL.md` satır | 500 |"
+        if eski.count(aranan) != 1:
+            bekle("tek sayi testi kurulabildi (SKILL satiri tek)", False,
+                  "SKILL satiri %d kez bulundu" % eski.count(aranan))
+        else:
+            yeni = eski.replace(aranan, "| `SKILL.md` satır | 501 |")
+            sayfa.write_text(yeni, encoding="utf-8")
+            r = _kontrol(vaka)
+            cikti = _cikti(r)
+            bekle("tek sayi degisikligi rc=1", r.returncode == 1, cikti)
+            bekle("tek sayi degisikligi BAYAT", "BAYAT" in cikti, cikti)
+        bekle("canli DURUM sayfasi degismedi",
+              canli_sayfa.read_bytes() == canli_once,
+              "canli docs/DURUM.md degisti")
+
+        # 4) Pin/envanter sayisi yanlis: kaynak capraz kontrolu rc!=0.
         vaka = Path(gecici) / "pin"
         shutil.copytree(temel, vaka)
         taban_yolu = vaka / "ATLAS_SABLONLAR" / "scripts" / "OZTEST-TABAN.json"
@@ -151,7 +176,7 @@ def main():
         r = _kontrol(vaka)
         bekle("yanlis pin/envanter rc!=0", r.returncode != 0, _cikti(r))
 
-        # 4) Canli sonuc kanonik kayittan farkli: `--kontrol` canli testi
+        # 5) Canli sonuc kanonik kayittan farkli: `--kontrol` canli testi
         #    kosmadan gecmemeli. Sahte ATLAS testi 144/144 bildirir; sayfa ve
         #    kanonik kayit 145 der. Yalnizca dosya karsilastiran bir kisayol
         #    bu vakada yanlislikla 0 dondurur ve test kirmizi olur.
