@@ -1,5 +1,5 @@
 {
-  "commit": "4ba9135385d59d7b2287c7a0144d4d282a5a0225",
+  "commit": "01b201b95237ba85fbe1346a45b207bef1866cbf",
   "file_count": 291,
   "files": [
     {
@@ -1283,8 +1283,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "ba9111844a5afdf08507bf2508714c5609372ec36a34ff0ee38a4be4c8cde183",
-      "size": 509780
+      "sha256": "b2174c56fc7eced792b23e68f96ad9b2afa3ecc4811e54464e06d97d11e64ef6",
+      "size": 510761
     },
     {
       "mode": "100644",
@@ -1337,8 +1337,8 @@
     {
       "mode": "100644",
       "path": "docs/KOD_BEDAVA_MODEL_POLITIKASI.md",
-      "sha256": "c2d5aece2b7af778006eaf07b5a02e6adae2733f954582e9ca1080e4f43b3d4a",
-      "size": 15958
+      "sha256": "76505dfc9d1ed8045d985735affe9bb900d1381df69169f9dcf8ca69408c43a4",
+      "size": 15971
     },
     {
       "mode": "100644",
@@ -1535,8 +1535,8 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "6908d537526d77043e7cd20053883afc9cf5cb0d92fa2c732b790fb80981197d",
-      "size": 38385
+      "sha256": "38018992be7f857762e668c833e95fd7f92cdf2bac7fca5b213c048537a0c68b",
+      "size": 38403
     },
     {
       "mode": "100644",
@@ -1749,7 +1749,7 @@
       "size": 14827
     }
   ],
-  "generated_at": "2026-11-25T14:01:34Z",
+  "generated_at": "2026-11-25T14:28:47Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1764,6 +1764,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "33a63a77c7aaf6ba917a94b6cdadf30aa2f72cc0",
-  "tree_sha256": "1a69caa7de44d0c30091146cd505c7be7f6b584308dfa85801c46253a043f9ad"
+  "tree": "cdcc4303134081362e3504db81b7570701826e91",
+  "tree_sha256": "d9d9a6539a7fdd1c4c82ccb2674b8f4c725dbe9cd059bdc5e441d93f947788e9"
 }
