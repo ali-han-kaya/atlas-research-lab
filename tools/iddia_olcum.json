@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-25T02:09:07Z",
+  "zaman": "2026-11-25T02:52:30Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -19,7 +19,7 @@
         "--json"
       ],
       "rc": 0,
-      "ham": "dogrula T2 PASS 174/174",
+      "ham": "KOD OZ-TEST: 174/174 gecti",
       "deger": "174/174"
     },
     "IDD-03": {
@@ -29,7 +29,7 @@
         "--json"
       ],
       "rc": 0,
-      "ham": "dogrula T1 PASS 146/146",
+      "ham": "OZ-TEST: 146/146 gecti · KANIT commit=b3d2d8f tree=f9f6fa9",
       "deger": "146/146"
     },
     "IDD-04": {

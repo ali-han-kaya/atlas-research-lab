@@ -537,7 +537,11 @@ Aktarımın iki mekanik kuralı vardır ve ikisi de ölçülebilir:
 üzerinden yeniden ölçer; her `OLCULDU` satırının son ölçülen ham çıktı satırı
 `tools/iddia_olcum.json` içinde aynı `IDD-*` anahtarıyla saklanır. Ham kanıt güncel
 çıktıyla birebir aynı değilse veya beyanla çelişirse satır kırmızı olur; anlık
-görüntü yalnızca `make iddia-yaz` ile yenilenir. Defter dört dokümanı tarar: kök
+görüntü yalnızca `make iddia-yaz` ile yenilenir. Birebir kural korunur: satırın
+tamamı saklanır ve tamamı karşılaştırılır. Tek dar istisna, doğası gereği her
+commit'te değişen provenance parçasıdır (`commit=<sha>` · `tree=<sha>`); yalnız o
+iki alan normalize edilir. `T1` kanıtı bu yüzden sayısal parça değil, tam
+`OZ-TEST: … KANIT commit=… tree=…` satırıdır. Defter dört dokümanı tarar: kök
 `README.md`, `README.tr.md`, bu dosya ve `docs/EN/QUICKSTART.md`. Tarihli kayıtlar (`OLCUM-*`, `SURUM.md`) ve üretilmiş
 tablolar (`MUTASYON_KAPSAM.md`, `GUVENLIK.md`) kapsam dışıdır: bunlar yeniden
 koşulacak iddia değil, ölçümün o günkü kaydıdır. Kapsam dışı dosyalar yeşil

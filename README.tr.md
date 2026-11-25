@@ -412,7 +412,15 @@ Bu README'deki sayısal ölçümler `tools/iddia_defteri.json` içinde tek tek s
 iddia metni, geçtiği dosya ve **birebir cümle**, onu üreten komut ve son ölçülen
 değer. Son ölçümün **ham çıktı satırı** `tools/iddia_olcum.json` içinde aynı
 `IDD-*` anahtarıyla durur; `make iddia` bu satırın güncel çıktıda birebir aynı
-olmasını, kendi desenine uymasını ve beyanla aynı değeri vermesini ister. Kanıt
+olmasını, kendi desenine uymasını ve beyanla aynı değeri vermesini ister.
+
+Sözleşme **birebirdir**: satırın tamamı saklanır ve tamamı karşılaştırılır.
+Tek dar istisna, satırın kendi doğası gereği her commit'te değişen
+**provenance** parçasıdır (`commit=<sha>` · `tree=<sha>`); karşılaştırmada
+yalnız bu iki alan normalize edilir, satırın geri kalanı harfi harfine aynı
+olmak zorundadır. Sayısal parçaya indirme yoktur: `T1` kanıtı
+`OZ-TEST: <N>/<N> gecti · KANIT commit=… tree=…` satırının tamamıdır, böylece
+hangi ağacın ölçüldüğü kanıtta görünür. Kanıt
 bayatsa veya bozulursa satır kırmızıdır; `make iddia-yaz` anlık görüntüyü yeniler.
 `make iddia-hizli` yalnız hızlı satırları ölçer: `dogrula`/`mutasyon` komutlarını
 koşmaz, bu satırları `ATLANDI` basar ve PASS saymaz; varsayılan `make iddia` tam
