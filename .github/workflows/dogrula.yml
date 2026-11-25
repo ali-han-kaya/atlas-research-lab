@@ -134,6 +134,11 @@ jobs:
       - name: Mutasyon kapsami ve regresyon ratchet
         run: make kapsam
 
+      # Ratchet'in yalnizca mevcut agacta degil, yeni kural eklenen gecici
+      # kopyada da kirmizi/yesil oldugunu olcer; canli agaca yazmaz.
+      - name: Kapsam ratchet negatif testleri
+        run: make kapsam-selftest
+
       # Gelistirme agacindaki .venv veya izlenmeyen bir dosya temiz klonda
       # yoktur. Temiz klonda venv kurulur; demo rc=2, dogrula 8/8 ve kisa
       # mutasyon seti PASS olmadan bu adim yesil donmez.

@@ -269,6 +269,7 @@
     "tools/kapi_cikti.py",
     "tools/kapi_sozlesmesi_selftest.py",
     "tools/kapsam.py",
+    "tools/kapsam_selftest.py",
     "tools/katalog_kontrol.py",
     "tools/katalog_kontrol_selftest.py",
     "tools/kural_katalogu.py",

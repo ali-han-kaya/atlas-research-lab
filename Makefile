@@ -2,7 +2,7 @@ PY ?= python3
 # pip-audit yalniz gelistirme aracidir; varsa yerel sanal ortam kullanilir.
 PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(PY))
 
-.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula makbuz-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon mutasyon-anlatim mutasyon-anlatim-selftest mutasyon-kisa sir-mutasyon oztest-mutasyon oztest-mutasyon-yaz oztest demo demo-selftest temiz-teslim taze-klon fresh-clone kapsam kapsam-yaz kapi-sozlesme-test model-kimlik kamu-lint kamu-selftest kamu-arama kamu-arama-selftest yayin-kapisi katalog-kontrol katalog-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
+.PHONY: dogrula dogrula-ci kanit kanit-dogrula kanit-paket-dogrula makbuz-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon mutasyon-anlatim mutasyon-anlatim-selftest mutasyon-kisa sir-mutasyon oztest-mutasyon oztest-mutasyon-yaz oztest demo demo-selftest temiz-teslim taze-klon fresh-clone kapsam kapsam-yaz kapsam-selftest kapi-sozlesme-test model-kimlik kamu-lint kamu-selftest kamu-arama kamu-arama-selftest yayin-kapisi katalog-kontrol katalog-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giris: hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
@@ -29,6 +29,7 @@ yardim:
 	@echo "make fresh-clone  taze-klon icin Ingilizce alias"
 	@echo "make kapsam    mutasyon kapsam tablosu guncel mi (docs/MUTASYON_KAPSAM.md)"
 	@echo "make kapsam-yaz  kapsam tablosunu yeniden uret"
+	@echo "make kapsam-selftest  kapsam ratchet'inin gecici kopyada kirmizi/yesil testleri"
 	@echo "make kapi-sozlesme-test  ATLAS-KAPI-CIKTI/v1 sema ve sozlesme testleri"
 	@echo "make model-kimlik  emekli model kimligi: kor noktasiz tarama + acik onay listesi"
 	@echo "make kamu-lint  ozel yol/eski alan/sahte hash geri sizma taramasi"
@@ -136,6 +137,9 @@ kapsam:
 
 kapsam-yaz:
 	@$(PY) tools/kapsam.py --yaz
+
+kapsam-selftest:
+	@$(PY) tools/kapsam_selftest.py
 
 kapi-sozlesme-test:
 	@$(PY) tools/kapi_sozlesmesi_selftest.py
