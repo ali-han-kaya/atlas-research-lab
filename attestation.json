@@ -1,6 +1,6 @@
 {
-  "commit": "3aae4f9a3aa6eeb90cd754eea1fc607939cf4c53",
-  "file_count": 295,
+  "commit": "a5719b3c3c29b0f2a0f9aef2282a60f31bde6da6",
+  "file_count": 296,
   "files": [
     {
       "mode": "100755",
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "4c2dc5ce9be8fa9a1f839130317c6f650b4a4646bb8fa6920b732adaf6f13e03",
-      "size": 11095
+      "sha256": "c169b46554b1431fa7f99b3c89dc6bc5460a790d8eca01321d69b155047323ca",
+      "size": 11314
     },
     {
       "mode": "100644",
@@ -1169,8 +1169,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "708989d093ff23ff71c8971aade4e61d14e3bf51382f7f7a161e99380880ee22",
-      "size": 8140
+      "sha256": "64fc82c4f80cebaa03b31a965964953bfcc8f91a657408052b56de8cd631e6db",
+      "size": 8341
     },
     {
       "mode": "100644",
@@ -1582,6 +1582,12 @@
     },
     {
       "mode": "100644",
+      "path": "tools/kanit_paketi_selftest.py",
+      "sha256": "59cf258189bf257e43278aa1967df45bae05959654dc452e3babb8d193e07d7e",
+      "size": 6391
+    },
+    {
+      "mode": "100644",
       "path": "tools/kapi_cikti.py",
       "sha256": "3a12da495f68193419b64e48d6109a6392f42dd14f4c7a25936bf6bf47fae5c8",
       "size": 6453
@@ -1773,7 +1779,7 @@
       "size": 14827
     }
   ],
-  "generated_at": "2026-11-25T22:25:36Z",
+  "generated_at": "2026-11-25T22:40:16Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1788,6 +1794,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "b7a47d968fca4047d7a0ebebc782549cb6829556",
-  "tree_sha256": "9fe03a8af84a323a4819ecea5c8377f958aeaa07eaa09386060356cc5ba877ab"
+  "tree": "0ff3bd71578f9402b3b72970d174efceccf283a6",
+  "tree_sha256": "acd0484a7f3dc7cc78e378fab6f408f58aaf120ee6349fecaf4b7d5c65f08486"
 }
