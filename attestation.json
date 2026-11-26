@@ -1,5 +1,5 @@
 {
-  "commit": "8e3b19887c50728f796c79e4b59f019aed22757c",
+  "commit": "9c3d1fd48ef658025d8d313c03d56f51cc5b9469",
   "file_count": 297,
   "files": [
     {
@@ -1241,7 +1241,7 @@
     {
       "mode": "100644",
       "path": "SURUM.md",
-      "sha256": "55a8c6ea747edaaeec46d1ab92943ba3c5a7d9aa0330f8aae15074c0decdd594",
+      "sha256": "7af0889d5445edd4c4389d30fb508ecaaa5c07210a34c1139cd60bc77617c75a",
       "size": 591206
     },
     {
@@ -1307,7 +1307,7 @@
     {
       "mode": "100644",
       "path": "docs/DEVIR-2026-11-26-1400.md",
-      "sha256": "0313734da40b7a774d9e27d9911291590a6c7c0170c49bd837b23c0cba0d4a22",
+      "sha256": "551b7b1aa4d9913ccf42992a2f23abd59600ac745e7768e22aadcb05bee441cf",
       "size": 8398
     },
     {
@@ -1547,7 +1547,7 @@
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "7d6f44401511efc26a833250c4ea5b974f86316eb85d055876468d7a4e2deb8b",
+      "sha256": "26e821bfbbe1a968bb2c7983d9d0a6e41eac561ea697c3dea4228f67c906a49f",
       "size": 9337
     },
     {
@@ -1785,7 +1785,7 @@
       "size": 14918
     }
   ],
-  "generated_at": "2026-11-26T13:13:25Z",
+  "generated_at": "2026-11-26T13:14:18Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1800,6 +1800,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "4212f13af5e450ba3c46b4e43812de0af2581dc8",
-  "tree_sha256": "1acbef53233f388b83788c1cee903b878d9ac7f9d7ac21cef53ae5a66b11af27"
+  "tree": "03e264a360c62f3dee134d21115b217c7ebbb2e7",
+  "tree_sha256": "295b83a5cba9866e2cede6e0a8869cdfa3027c4e54903ce078613f4c335644c1"
 }
