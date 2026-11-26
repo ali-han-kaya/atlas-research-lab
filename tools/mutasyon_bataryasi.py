@@ -1337,8 +1337,8 @@ def _mk_defter_hash_sil(k):
 def _mk_aktif_sayac_sil(k):
     return degistir(
         k, 'tools/model_kimlik.py',
-        "            'aktif=0'\n",
-        "            ''\n")
+        "            '(onayli=%d · onaysiz=%d) · onay=%d kayit · aktif=0'\n",
+        "            '(onayli=%d · onaysiz=%d) · onay=%d kayit'\n")
 
 
 def taban_ve_bulgu(kok, kapi, argumanlar, mutasyon, iz, cwd=None, env=None,
