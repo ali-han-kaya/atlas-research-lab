@@ -246,6 +246,16 @@ def denetle(defter):
                 if rx.groups < 1:
                     raise DefterHatasi('%s (%s): desende yakalama grubu yok'
                                        % (yer, eid))
+                maske = kayit.get('ham_maske')
+                if maske is not None:
+                    if not isinstance(maske, str) or not maske:
+                        raise DefterHatasi('%s (%s): ham_maske dize degil'
+                                           % (yer, eid))
+                    try:
+                        re.compile(maske, re.MULTILINE)
+                    except re.error as e:
+                        raise DefterHatasi('%s (%s): ham_maske bozuk: %s'
+                                           % (yer, eid, e))
             if not isinstance(kayit.get('beklenen'), str):
                 raise DefterHatasi('%s (%s): beklenen deger yok' % (yer, eid))
         elif not kayit.get('gerekce'):
@@ -634,7 +644,15 @@ def olc(kayit, onbellek, kanit):
     if ham_deger != kayit['beklenen']:
         return False, deger, ('ham kanit beyanla celisiyor: %s != %s'
                               % (ham_deger, kayit['beklenen']))
-    if kanit['ham'] != satir:
+    ham_kanit = kanit['ham']
+    ham_satir = satir
+    if kayit.get('ham_maske'):
+        # Bazi satirlar ortama gore degisen sayac tasir (ornegin ignored
+        # dosya sayisi); yalniz o alan karsilastirmada maskelenir, satirin
+        # geri kalani birebir ayni kalmak zorundadir.
+        ham_kanit = re.sub(kayit['ham_maske'], '<DEGISKEN>', ham_kanit)
+        ham_satir = re.sub(kayit['ham_maske'], '<DEGISKEN>', ham_satir)
+    if ham_kanit != ham_satir:
         return False, deger, ('ham kanit guncel cikti satiriyla ayni degil — '
                               'make iddia-yaz')
     return True, deger, ''

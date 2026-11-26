@@ -1068,7 +1068,8 @@
         "--kontrol"
       ],
       "ayikla": "incelenmedi=(\\d+) dosya \\(onayli=(\\d+) · onaysiz=(\\d+)\\)[^\\n]*onay=(\\d+) kayit",
-      "beklenen": "0/0/0/1"
+      "beklenen": "0/0/0/1",
+      "ham_maske": "gorulmedi=\\d+ dosya \\(\\d+ gerekce\\)"
     },
     {
       "id": "IDD-45",
