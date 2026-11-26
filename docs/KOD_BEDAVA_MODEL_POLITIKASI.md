@@ -24,9 +24,9 @@ taşımaz**; üretim ve karar koşusu `denge` veya `ekonomi` profiliyle yapılı
 günlük ücretsiz kotanın dolu olmadığı ölçülmelidir. Ücretsiz kotanın günlük
 sınırı vardır; `:free` sınırsız erişim demek değildir.
 
-## 2. Seçim koşulları — dördü birden
+## 2. Seçim koşulları — altısı birden
 
-Bir kimlik `bedava` profiline ancak aşağıdaki dört koşulun **tamamı** ölçülerek
+Bir kimlik `bedava` profiline ancak aşağıdaki altı koşulun **tamamı** ölçülerek
 geçer. Koşullardan biri eksikse kimlik seçilmez; "muhtemelen uygundur" kaydı
 yoktur, `OLCULMEDI` yazılır ve karar bekler.
 
@@ -207,15 +207,20 @@ Sırayla, hepsi yeşil olmadan commit yok:
 
 ```bash
 make model-kimlik        # PASS · incelenmedi=0 · onay=1 kayit · aktif=0
-python3 tools/model_kimlik.py --oztest    # 11/11
-make mutasyon            # 113/113 kural + 28/28 beklenen bulgu (141 vaka)
-make dogrula             # 8/8 · H2 65
+                         # onayli okunamaz: PASS · incelenmedi=1 · onay=2 kayit · aktif=0
+python3 tools/model_kimlik.py --oztest    # 15/15
+make mutasyon            # 113/113 kural + 29/29 beklenen bulgu (142 vaka)
+make dogrula             # 8/8 · H2 84
 make kapsam              # ratchet PASS
 make katalog-kontrol     # canli: allowlist + on rol; OLCULMEDI PASS degil
 ```
 
 `make model-kimlik` FAIL verirse aktif atıf kaldırılır; tarihsel satır
-değiştirilmez. Bayat istisna (`BAYAT ISTISNA`) varsa satır hash'i yeniden
+değiştirilmez. Temiz ağaçta PASS satırı `incelenmedi=0 · onay=1` taşır; `onay`
+listesinde gerekçeli bir `okunamaz` kaydı varsa meşru PASS satırı
+`incelenmedi=1 (onayli=1 · onaysiz=0) · onay=2` olur. Bu, atlamanın gizlendiği
+değil, gerekçeli onayla görünür kaldığı durumdur. Bayat istisna
+(`BAYAT ISTISNA`) varsa satır hash'i yeniden
 ölçülür; satır gerçekten değişmişse bu bir tahrifattır ve istisna defteriyle
 gizlenmez.
 
@@ -308,5 +313,5 @@ tutulur; CI artifact'ı yoktur.
 | `make katalog-kontrol` | canlı ölçüm + `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydı |
 | `.github/workflows/dogrula.yml` | `dogrula` ve `iddia` işleri; canlı katalog işi yok |
 | `make model-kimlik` | aktif atıf denetimi (fail-closed ön koşul) |
-| `make mutasyon` | korumaların geri alınamazlığı (116 vaka) |
+| `make mutasyon` | korumaların geri alınamazlığı (142 vaka) |
 | `make dogrula` | sekiz kalemlik ana kapı (MOD-1/MOD-2 dahil) |
