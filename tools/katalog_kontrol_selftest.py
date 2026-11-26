@@ -66,7 +66,8 @@ def canli(*kimlikler, **degisiklik):
         } for k in kimlikler}}}
 
 
-def vaka(yerel_veri, canli_veri, beklenen_rc, iz, profil_veri=None):
+def vaka(yerel_veri, canli_veri, beklenen_rc, iz, profil_veri=None,
+         ek_args=()):
     with tempfile.TemporaryDirectory(prefix='katalog_kontrol_') as tmp:
         yol = Path(tmp)
         katalog = yol / 'katalog.json'
@@ -81,7 +82,7 @@ def vaka(yerel_veri, canli_veri, beklenen_rc, iz, profil_veri=None):
             [sys.executable, str(ARAC),
              '--katalog', str(katalog),
              '--profil-dosya', str(profil_yolu),
-             '--api-dosya', str(api)],
+             '--api-dosya', str(api)] + list(ek_args),
             cwd=str(KOK), capture_output=True, text=True)
         cikti = (r.stdout or '') + (r.stderr or '')
 
@@ -146,11 +147,14 @@ def main():
         ('bozuk yerel katalog', {'openrouter': {}}, canli('m1'), 2,
          'OLCULMEDI', None),
         ('profil 9 rol', yerel('m1'), canli('m1'), 1, 'rol sayisi 9', dokuz),
+        ('profil-only', yerel('m1'), canli('m1'), 0,
+         ('KATALOG KONTROL — yalniz bedava profili', 'BEDAVA: 10/10'),
+         None, '--profil-only'),
     ]
     gecen = 0
-    for ad, y, c, rc, iz, profil_veri in vakalar:
+    for ad, y, c, rc, iz, profil_veri, *ek_args in vakalar:
         try:
-            ok, ayrinti = vaka(y, c, rc, iz, profil_veri)
+            ok, ayrinti = vaka(y, c, rc, iz, profil_veri, tuple(ek_args))
         except Exception as e:  # noqa: BLE001 - test kosucusu hatayi raporlar
             ok, ayrinti = False, 'ISTISNA: %s' % e
         gecen += 1 if ok else 0

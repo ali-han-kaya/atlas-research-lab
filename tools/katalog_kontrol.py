@@ -470,6 +470,8 @@ def main(argv=None):
                     help='routing.profiles.json yolu (varsayilan: KOD_SABLONLAR)')
     ap.add_argument('--kayit',
                     help='olcum kaydini bu JSONL dosyasina ekle (append-only)')
+    ap.add_argument('--profil-only', action='store_true',
+                    help='yalniz bedava profilini denetle; allowlist karsilastirmasini atla')
     kaynak = ap.add_mutually_exclusive_group()
     kaynak.add_argument('--api-dosya',
                         help='ag yerine yerel models.dev api.json kopyasi kullan')
@@ -522,18 +524,23 @@ def main(argv=None):
                    len(roller))
         return 2
 
-    bulgular, toplam, gecerli = karsilastir(yerel, canli)
-    yaz('KATALOG KONTROL — models.dev canli karsilastirma (CI kapisi)')
+    if args.profil_only:
+        bulgular, toplam, gecerli = [], 0, 0
+        yaz('KATALOG KONTROL — yalniz bedava profili (canli models.dev)')
+    else:
+        bulgular, toplam, gecerli = karsilastir(yerel, canli)
+        yaz('KATALOG KONTROL — models.dev canli karsilastirma (CI kapisi)')
     yaz('katalog: %s' % args.katalog)
     yaz('profil: %s -> %s' % (args.profil_dosya, PROFIL_ADI))
     yaz('canli: %s' % api_etiketi)
-    yaz('saglayici=%d · model=%d' % (len(yerel), toplam))
-    yaz()
-    for tur, ad, ayrinti in bulgular:
-        yaz('  %-14s %s — %s' % (tur, ad, ayrinti))
-    if bulgular:
+    if not args.profil_only:
+        yaz('saglayici=%d · model=%d' % (len(yerel), toplam))
         yaz()
-    yaz('SONUC: %d/%d gecerli · %d bulgu' % (gecerli, toplam, len(bulgular)))
+        for tur, ad, ayrinti in bulgular:
+            yaz('  %-14s %s — %s' % (tur, ad, ayrinti))
+        if bulgular:
+            yaz()
+        yaz('SONUC: %d/%d gecerli · %d bulgu' % (gecerli, toplam, len(bulgular)))
 
     bedava_bulgular = []
     model_id = None
@@ -575,7 +582,10 @@ def main(argv=None):
         sebep = 'allowlist/bedava kosulu ihlali'
         rc = 1
     else:
-        yaz('HUKUM: GUNCEL — tum yerel kimlikler canli katalogda.')
+        if args.profil_only:
+            yaz('HUKUM: GUNCEL — bedava profili butun kosullari sagliyor.')
+        else:
+            yaz('HUKUM: GUNCEL — tum yerel kimlikler canli katalogda.')
         sonuc = 'PASS'
         sebep = ''
         rc = 0
