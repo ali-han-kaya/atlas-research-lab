@@ -212,7 +212,14 @@ def uret():
     e('')
     e('| Command | Output |')
     e('|---|---|')
-    e('| `make mutasyon` | `SONUC: 113/113 kural atesledi · 28/28 beklenen bulgu · taban temiz olmayan=0` |')
+    _mod = kapsam.batarya_modu()
+    _vakalar = _mod.vakalar()
+    _sozlesmeler = [_mod.vaka_sozlesmesi(v)[0] for v in _vakalar]
+    _atesleyen = sum(1 for s in _sozlesmeler
+                     if s in (_mod.SOZLESME_HATA, _mod.SOZLESME_TERMINAL))
+    _bulgu = _sozlesmeler.count(_mod.SOZLESME_BULGU)
+    e('| `make mutasyon` | `SONUC: %d/%d kural atesledi · %d/%d beklenen bulgu · taban temiz olmayan=0` |'
+      % (_atesleyen, _atesleyen, _bulgu, _bulgu))
     e('| `make kapsam` | `ratchet PASS (test=%d/%d, bosluk=%d/%d)` |' % (
         test, kapsam.TABAN_TEST_EDILEN, bosluk, kapsam.TABAN_BOSLUK_SAYISI))
     e('| `make dogrula` | `kalem=8 · gecen=8 · kalan=0` |')

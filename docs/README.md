@@ -80,8 +80,8 @@ kopyasında çalışır ve iki sözleşmeden birini ölçer:
    mutasyon sonrası çıktıda görünmelidir.
 
 Temiz taban veya sözleşme eksikse vaka `ATESLEMEDI` / `TABAN_KIRIK` olarak raporlanır
-ve betik `rc=1` ile çıkar. Güncel katalog **141 vaka = 113 ateşleyen (105 HATA + 8 TERMINAL)
-+ 28 beklenen-bulgu**; 117 doğrulanan kuralın 93'ü ateşleyen vakayla, 24'ü yalnız
+ve betik `rc=1` ile çıkar. Güncel katalog **142 vaka = 113 ateşleyen (105 HATA + 8 TERMINAL)
++ 29 beklenen-bulgu**; 118 doğrulanan kuralın 93'ü ateşleyen vakayla, 25'i yalnız
 beklenen-bulgu sözleşmesiyle kapsanır. Ölçülen kurallar ve katmanları çıktıda ada basmadır.
 
 **Neyi ölçmez:** kuralın *doğru tasarlandığını* ölçmez — yalnız kodun o ihlali
@@ -167,10 +167,12 @@ Ayrıntı aşağıdaki bölümdedir.
 ## Ağaç kanıtı — `make kanit`
 
 `make kanit`, bu depodaki **gerçek HEAD commit'ini** ve izlenen dosyaların
-sha256'sını `attestation.json` içine yazar. Aynı üretimde makine-okur bir
-**doğrulama paketi** de oluşturur. Özel ağacı okumaz, ağa bağlanmaz; `OLG-1`'in
-canlı kanıt setine bağımlı değildir. Betik yalnız **temiz izlenen ağaçta**
-çalışır: `attestation.json` dışında commit edilmemiş değişiklik varsa
+sha256'sını varsayılan olarak ignored `kanit-cikti/attestation.json` içine yazar.
+Tracked `attestation.json` yalnız açıkça `make kanit-yaz` (veya
+`--cikti attestation.json`) çağrıldığında yenilenir. Aynı üretimde makine-okur
+bir **doğrulama paketi** de oluşturulur. Özel ağacı okumaz, ağa bağlanmaz;
+`OLG-1`'in canlı kanıt setine bağımlı değildir. Betik yalnız **temiz izlenen
+ağaçta** çalışır: `attestation.json` dışında commit edilmemiş değişiklik varsa
 `KIRLI_AGAC` ile durur.
 
 | Alan | Anlam |
@@ -213,7 +215,7 @@ dış saatle doğrulanmaz.
 
 ### Taşınabilir doğrulama paketi
 
-`make kanit`, attestation'ı yazdıktan sonra sırasıyla `make dogrula`,
+`make kanit`, ignored attestation'ı yazdıktan sonra sırasıyla `make dogrula`,
 `make kapsam` ve `make iddia` komutlarını çalıştırır; çıktıları ve çıkış
 kodlarını `kanit-paketi/` dizinine kaydeder:
 
@@ -237,9 +239,11 @@ kanıtına bağlar; `make makbuz-dogrula` bu bağı `sonuc.json`, attestation ve
 `komutlar/` loglarıyla çapraz denetler (`PAKET-07..10`).
 
 Bir komut başarısız olursa paket yine yazılır, `verdict` `FAIL` olur ve
-`make kanit` sıfır olmayan kodla çıkar. Yalnız attestation üretmek için eski
-davranış `make kanit` yerine `python3 tools/kanit.py --paketsiz` ile alınır;
-komut kümesini de değiştirmek için `--komut` yinelenebilir.
+`make kanit` sıfır olmayan kodla çıkar. Varsayılan `make kanit` tracked
+`attestation.json`ı değiştirmez; tracked kaydı commit etmek için ayrı ve açık
+`make kanit-yaz` hedefi kullanılır. Yalnız attestation üretmek için
+`python3 tools/kanit.py --paketsiz`; komut kümesini değiştirmek için `--komut`
+yinelenebilir.
 
 ### Paketi bağımsız doğrulama
 
@@ -273,8 +277,9 @@ herhangi bir hash tutmuyorsa sıfır olmayan kodla çıkar. `jsonschema` bağım
 `requirements-dev.txt` içinde sabittir; `make kur` sonrası kurulum yeterlidir.
 
 CI bu paketi `dogrula` işinde üretir ve `atlas-kanit-paketi` adıyla artifact
-olarak yükler. CI üretimi `make kanit KANIT_ARGS="--cikti $RUNNER_TEMP/atlas-attestation.json"`
-ile yapılır; böylece izlenen `attestation.json` değişmez. Paket doğrulanmadan
+olarak yükler. CI üretimi varsayılan `make kanit` ile yapılır; çıktı ignored
+`kanit-cikti/attestation.json`a gider, böylece izlenen `attestation.json`
+değişmez. Paket doğrulanmadan
 ve `git status --porcelain --untracked-files=no` temiz görülmeden artifact
 adımına geçilmez. İndirme ve aynı commit'te doğrulama:
 
@@ -309,9 +314,10 @@ eklendi ve `--dersler` PASS verir.
 `atlas_selftest` içinde `KALDI OLG-1` görülür. Bu kontrol CI'da
 `make olgu-negatif` ile geçici bir klonda her koşuda yeniden ölçülür; ana ağaç
 değişmez.
-`make dogrula` bu depoda **8/8** verir; T1 PASS'tir. Kod değişince `make kanit`
-yeniden üretilmelidir; `make kanit-dogrula` ve CI bayat kaydı `KANIT-05` ile
-kırmızıya çevirir. `make kanit-dogrula` CI'da tam geçmişle (`fetch-depth: 0`)
+`make dogrula` bu depoda **8/8** verir; T1 PASS'tir. Kod değişince tracked
+`attestation.json` **`make kanit-yaz`** ile açıkça yenilenmelidir; `make kanit`
+varsayılan olarak yalnız ignored çıktı üretir. `make kanit-dogrula` ve CI bayat
+kaydı `KANIT-05` ile kırmızıya çevirir. `make kanit-dogrula` CI'da tam geçmişle (`fetch-depth: 0`)
 koşar.
 
 ## Sabit model kataloğunu yenileme
@@ -483,22 +489,25 @@ arasında sessiz fark yoktur:** her aday dosyanın ham baytları okunur; UTF-8
 güvenli bayt aramasıyla (UTF-8 + UTF-16LE/BE) ve **boyut sınırı olmadan**
 taranır. Okunamayan bir dosya varsa ve `tools/model_kimlik_istisna.json`
 içindeki `onay` listesinde gerekçesiyle kayıtlı değilse hüküm FAIL olur; PASS
-satırı `aday=… · taranan=… · incelenmedi=0 · onay=1 kayit · aktif=0`
-sayaçlarını taşır.
+satırı `aday=… · taranan=… · incelenmedi=… (onayli=… · onaysiz=…) · onay=… kayit · aktif=0`
+sayaçlarını taşır. `incelenmedi` onaylı atlamaları da kapsar; `onay` defterdeki
+toplam kayıt sayısıdır ve `--envanter` aynı anlamı taşır.
 
 `onay` listesine yalnız istisna defterinin kendisi `tanim` olarak yazılabilir
 (kimliği tanımlamak için onu taşımak zorundadır); defter taranır, eşleşmeleri
 "tanım" sayılır. `okunamaz` kaydı yalnız gerçekten okunamayan dosya içindir ve
 dosya okunabilir hâle gelirse "onay gereksiz" diye FAIL eder; yani hiçbir dosya
-kendi kendini muaf ilan edemez. `--oztest` on bir vakayı kanıtlar: temiz ağaç
+kendi kendini muaf ilan edemez. `--oztest` on iki vakayı kanıtlar: temiz ağaç
 (`incelenmedi=0`), tarihsel satırın muafiyeti, aktif metin, 4 MB üstü metin,
-ikili dosya (UTF-8 + UTF-16LE), onaysız incelenemeyen dosya, gereksiz onay,
-bozulan tarihsel satır, aktif dosyaya tanım onayı, defterin kendi `tanim`
-onayının zorunluluğu ve PASS raporunun `aday/taranan/incelenmedi/onay/aktif`
-sayaçları. Okunamayan dosya yolu gerçek ağaçta da ölçüldü: `chmod 000` →
-`FAIL incelenmedi=1`; aynı dosya `onay` listesine gerekçesiyle eklendiğinde
-`PASS incelenmedi=1 onay=2`; izin geri açıldığında `FAIL ONAY GEREKSIZ`;
-onay kaldırıldığında `PASS incelenmedi=0 onay=1`.
+ikili dosya (UTF-8 + UTF-16LE), onaysız incelenemeyen dosya, onaylı atlama
+(onaylı/onaysız ayrımıyla), gereksiz onay, bozulan tarihsel
+satır, aktif dosyaya tanım onayı, defterin kendi `tanim` onayının zorunluluğu
+ve PASS raporunun `aday/taranan/incelenmedi/onay/aktif` sayaçları.
+Okunamayan dosya yolu gerçek ağaçta da ölçüldü: `chmod 000` →
+`FAIL incelenmedi=1 (onayli=0 · onaysiz=1)`; aynı dosya `onay` listesine
+gerekçesiyle eklendiğinde `PASS incelenmedi=1 (onayli=1 · onaysiz=0) onay=2`;
+izin geri açıldığında `FAIL ONAY GEREKSIZ`; onay kaldırıldığında
+`PASS incelenmedi=0 (onayli=0 · onaysiz=0) onay=1`.
 
 Bu korumaların geri alınamaması `make mutasyon` içindeki yedi adlandırılmış
 mutantla ölçülür: ikili bayt araması, 4 MB üstü sessiz atlama, onaysız

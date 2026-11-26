@@ -29,7 +29,9 @@ KULLANIM
   python3 tools/model_kimlik.py --oztest    # sentetik pozitif/negatif vakalar
   python3 tools/model_kimlik.py --envanter  # mevcut eslesmeleri hash'le listele
 """
+import contextlib
 import hashlib
+import io
 import json
 import os
 import re
@@ -227,6 +229,10 @@ class Tarama(object):
     def aday(self):
         return self.taranan + len(self.incelenmedi)
 
+    def incelenmedi_sayisi(self):
+        """Onayli ve onaysiz tum atlanan dosyalarin toplam sayisi."""
+        return len(self.incelenmeyen) + len(self.onayli)
+
 
 def _satir_tara(sonuc, yol, metin, kimlikler, izinli, tanim):
     for no, satir in enumerate(metin.splitlines(), 1):
@@ -322,14 +328,17 @@ def hukum(sonuc, onay):
 def ozet_satiri(kimlikler, sonuc, onay):
     """PASS rapor satiri — sayaclarin TEK kaynagi; --oztest bunu denetler.
 
-    `incelenmedi` tum incelenemeyen dosyalari sayar (onayli olanlar dahil);
-    boylece onay listesindeki bir dosya raporda kaybolmaz. Temiz agacta 0'dir.
+    `incelenmedi` onayli ve onaysiz tum atlanan dosyalari kapsar. `onay`
+    defterdeki toplam kayit sayisidir; `onayli`/`onaysiz` ise atlanan
+    dosyalarin dagilimidir. Temiz agacta incelenmedi=0, onay=1 (tanim)
+    olur.
     """
     return ('MODEL KIMLIK: PASS — %d emekli kimlik · aday=%d dosya · '
-            'taranan=%d dosya · incelenmedi=%d dosya · onay=%d kayit · '
-            'aktif=0'
+            'taranan=%d dosya · incelenmedi=%d dosya '
+            '(onayli=%d · onaysiz=%d) · onay=%d kayit · aktif=0'
             % (len(kimlikler), sonuc.aday(), sonuc.taranan,
-               len(sonuc.incelenmedi), len(onay)))
+               sonuc.incelenmedi_sayisi(), len(sonuc.onayli),
+               len(sonuc.incelenmeyen), len(onay)))
 
 
 def _oz_agac(kok, dosyalar):
@@ -420,8 +429,36 @@ def oztest():
 
     gecti, sorunlar, sonuc = _oz_kos(taban, veri, kirik=True)
     bekle(not gecti and len(sonuc.incelenmeyen) == 1
+          and sonuc.incelenmedi_sayisi() == 1 and not sonuc.onayli
           and any('INCELENMEDI' in s for s in sorunlar),
           'onaysiz', '; '.join(sorunlar))
+
+    # Onayli atlama: okunamayan dosya onayla atlanir; PASS satiri bunu
+    # incelenmedi icinde sayar, onayli/onaysiz ayrimini ve toplam onay
+    # kaydini gosterir. Envanter ayni anlamlari tasimali.
+    veri_onay = _oz_defter(eski, tarihsel, h)
+    veri_onay['onay'].append({
+        'dosya': 'docs/kirik.md', 'tur': 'okunamaz', 'sha256': None,
+        'gerekce': 'Sentetik okunamaz dosya onayi.'})
+    ek = dict(taban)
+    ek[DEFTER_REL] = json.dumps(veri_onay, ensure_ascii=False)
+    gecti, sorunlar, sonuc = _oz_kos(ek, veri_onay, kirik=True)
+    _, _, onay_sozluk = defter_dogrula(veri_onay)
+    rapor = ozet_satiri([eski], sonuc, onay_sozluk)
+    tampon = io.StringIO()
+    with contextlib.redirect_stdout(tampon):
+        _yaz_envanter(sonuc, onay_sozluk)
+    envanter = tampon.getvalue()
+    bekle(
+        gecti
+        and sonuc.incelenmedi_sayisi() == 1
+        and len(sonuc.onayli) == 1
+        and not sonuc.incelenmeyen
+        and all(x in rapor for x in (
+            'incelenmedi=1', 'onayli=1', 'onaysiz=0', 'onay=2 kayit'))
+        and all(x in envanter for x in (
+            'incelenmedi=1', 'onayli=1', 'onaysiz=0', 'onay=2 kayit')),
+        'onayli-atlama', '; '.join(sorunlar))
 
     veri2 = _oz_defter(eski, tarihsel, h)
     veri2['onay'].append({
@@ -479,16 +516,18 @@ def oztest():
           % (len(vaka), len(vaka), ', '.join(vaka)))
 
 
-def _yaz_envanter(sonuc):
+def _yaz_envanter(sonuc, onay):
     for (yol, h), satirlar in sorted(sonuc.bulunan.items()):
         print('%s\t%s\t%s\t%s' % (
             yol, h, ','.join(str(n) for n in satirlar), 'ISTISNA'))
     for yol, konum, kimlik, tur in sonuc.aktif:
         print('%s\t%s\t%s\tAKTIF (%s)' % (yol, konum, kimlik, tur))
-    print('ENVANTER: aday=%d · taranan=%d · incelenmedi=%d · onay=%d · '
+    print('ENVANTER: aday=%d · taranan=%d · incelenmedi=%d · '
+          'onayli=%d · onaysiz=%d · onay=%d kayit · '
           '%d tarihsel satir · %d tanim · %d aktif · %d bayat'
-          % (sonuc.aday(), sonuc.taranan, len(sonuc.incelenmeyen),
-             len(sonuc.onayli), sum(len(v) for v in sonuc.bulunan.values()),
+          % (sonuc.aday(), sonuc.taranan, sonuc.incelenmedi_sayisi(),
+             len(sonuc.onayli), len(sonuc.incelenmeyen), len(onay),
+             sum(len(v) for v in sonuc.bulunan.values()),
              len(sonuc.tanim), len(sonuc.aktif), len(sonuc.bayat)))
     return 0
 
@@ -504,14 +543,16 @@ def main(argv):
         return 1
     sonuc = tara_kok(KOK, kimlikler, izinli, onay)
     if '--envanter' in argv:
-        return _yaz_envanter(sonuc)
+        return _yaz_envanter(sonuc, onay)
 
     gecti, sorunlar = hukum(sonuc, onay)
     if not gecti:
         print('MODEL KIMLIK: FAIL — aday=%d dosya · taranan=%d · '
-              'incelenmedi=%d · onay=%d kayit · aktif=%d · bayat=%d'
-              % (sonuc.aday(), sonuc.taranan, len(sonuc.incelenmeyen),
-                 len(onay), len(sonuc.aktif), len(sonuc.bayat)))
+              'incelenmedi=%d (onayli=%d · onaysiz=%d) · onay=%d kayit · '
+              'aktif=%d · bayat=%d'
+              % (sonuc.aday(), sonuc.taranan, sonuc.incelenmedi_sayisi(),
+                 len(sonuc.onayli), len(sonuc.incelenmeyen), len(onay),
+                 len(sonuc.aktif), len(sonuc.bayat)))
         for satir in sorunlar:
             print('  %s' % satir)
         print('  Cozum: aktif atfi kaldir; tarihsel ham satiri DEGISTIRME. '

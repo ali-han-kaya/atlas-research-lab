@@ -51,23 +51,32 @@ gecersiz kilmaz, ama kapi kodunu degistirmek kiler.
 |---|---|
 | Taranan betik | 31 |
 | Kural bildiren betik | 20 |
-| Bildirilen kural (envanter) | 117 |
-| — envanter disi: olu kimlik (bildirilir, basilMAZ) | 4 |
+| Bildirilen kural (envanter) | 118 |
+| — envanter disi: olu kimlik (bildirilir, basilMAZ) | 3 |
 | — envanter disi: dis referans | 1 |
 | Kod icinde uretilen, envantere alinmayan kimlik | 41 |
-| Batarya vakasi (toplam) | 141 |
+| — öz-test assertion | 19 |
+| — yalnız tanı kodu (test yok) | 4 |
+| — test yok (veri kimliği) | 18 |
+| — bunlardan yalnız fikstürde geçen | 6 |
+| — bunlardan hiç test referansı olmayan | 12 |
+| Kimliksiz kapi betigi | 11 |
+| — tanı | 2 |
+| — kütüphane | 3 |
+| — kapsam dışı | 6 |
+| Batarya vakasi (toplam) | 142 |
 | — atesleyen (HATA + TERMINAL) | 113 |
 | — HATA (rc=1) | 105 |
 | — TERMINAL (rc=2) | 8 |
-| — beklenen bulgu | 28 |
+| — beklenen bulgu | 29 |
 | Atesleyen vakayla test edilen kural (TEST EDILDI) | 93 |
 | — bunlardan son kosuda GECEN (kanitli) | 93 |
 | — vaka VAR, son kosu kaniti YOK | 0 |
-| Yalniz beklenen-bulgu ile dogrulanan kural (BEKLENEN BULGU) | 24 |
-| — bunlardan son kosuda GECEN (kanitli) | 24 |
+| Yalniz beklenen-bulgu ile dogrulanan kural (BEKLENEN BULGU) | 25 |
+| — bunlardan son kosuda GECEN (kanitli) | 25 |
 | — vaka VAR, son kosu kaniti YOK | 0 |
-| Toplam dogrulanan kural | 117 |
-| Gerekceli kapsam disi | 0 |
+| Toplam dogrulanan kural | 118 |
+| Gerekceli kapsam disi kural | 0 |
 | Bosluk (gerekce yok) | 0 |
 | — bunlardan yalniz oz-testte anilan | 0 |
 | — hicbir testte gecmeyen | 0 |
@@ -124,21 +133,21 @@ saglamlik/etki sirasina gore sabittir. Kapatilan her kural
 | 20 | TST-05 | `test_attest.py` | Kanit/yesil butunlugu — P0 | TEST EDILDI (24.11.2026) | Atlanan test tabandan fazla olamaz; test atlayarak yesil olunmaz. |
 | 21 | TST-06 | `test_attest.py` | Kanit/yesil butunlugu — P0 | BEKLENEN BULGU (24.11.2026) | Kapsam tabanin bir altina kadar korunmali; sessiz kapsam kaybi P1. |
 | 22 | DEP-01 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | Manifest varken kilit anahtari yok, bos ya da kilit dosyasi eksikse bagimlilik surumleri denetimsiz kalir; kapi P0 verir. |
-| 23 | DEP-02 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | ENVANTER DISI (olu kimlik) | Baslikta "Manifestteki paket kilitte yok [P0]" diye bildirilir ama dep_audit kodunda kilit paketlerini manifestle karsilastiran dal yok; yalniz DEP-01/03/04/05/06 dallari uygulanir. |
-| 24 | DEP-06 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | Profilde bagimlilik_manifesti bos birakilirsa bagimlilik yuzeyi hic denetlenmez; kapi CALISTIRILMADI/P1 verir. |
-| 25 | DEP-03 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | Surum sabitlenmezse (*, latest, bos ya da kilitsiz ^/~) ayni manifest farkli paket surumleri kurabilir; P1. |
-| 26 | DEP-04 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | Kilit dosyasi diffte degisirken manifest guncellenmezse beyan edilen bagimlilik ile kilit ayrisir; P1. |
+| 23 | DEP-02 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | ENVANTER DISI (olu kimlik) | OLCULDU: AST string sabiti ve `batarya` vakasi yok. `dep_audit.py` yalniz kilit dosyasinin varligini denetler; kilit paket adlarini manifestle karsilastiran dal yok. Bu bir uygulama boslugu; P0 vaadi karsilanmiyor. |
+| 24 | DEP-06 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | P1: profilde `bagimlilik_manifesti` bos liste ise CALISTIRILMADI + OLCULMEYEN uretir; vaka DEP-06 listeyi bosaltir, rc=0. Bagimlilik denetimi hic kosmaz. |
+| 25 | DEP-03 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | P1: regex `*`, `latest`, `^`, `~` veya bos surumu yakalar; vaka DEP-03 `flask==latest` ekler, rc=0. Bu bir uyari dalidir, P0 degildir. |
+| 26 | DEP-04 | `dep_audit.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | P1: `git diff --name-only HEAD` yalniz kilit dosyasini gorurse uyarir; vaka DEP-04 kilit dosyasina dokunur, manifest sabit kalir, rc=0. |
 | 27 | TSL-03 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | Teslim dosyasinin sha256 degeri manifestten farkliysa artefakt yolda degistirilmistir; P0 tahrifat. |
 | 28 | TSL-04 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | Teslim imzasi gecersizse manifest baska anahtarla imzalanmis veya sonradan degistirilmis olabilir; P0. |
 | 29 | TSL-06 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | Zorunlu teslim artefakti manifestte hic yoksa imza eksik kumeyi dogrular; kapsam boslugu P0. |
 | 30 | TSL-01 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | Teslim manifesti yok veya bozuksa imza dogrulanamaz; kapi fail-closed P0 verir. |
 | 31 | TSL-02 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | Manifestte listelenen dosya diskte yoksa teslim kumesi eksiktir; imza eksik artefakti kurtarmaz, P0. |
-| 32 | TSL-05 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | Teslim imzasi yoksa butunluk yalniz dusuk guvenle kabul edilir; P1 uyari kapiyi kapatmaz. |
+| 32 | TSL-05 | `teslim_imza.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | P1: `teslim_imza.py` imza alani YOKSA veya imza VAR ama anahtar yoksa DUSUK_GUVEN uretir; iki dal da rc=0 dondurur. Vaka TSL-05 imza alanini siler; P0 dali yoktur. |
 | 33 | API-02 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | TEST EDILDI | KFAZ0 envanterindeki disa acik imza kaybolursa mevcut cagiranlar sessizce kirilir; P0. |
-| 34 | API-03 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | ENVANTER DISI (olu kimlik) | Baslikta "imza degismis (parametre/donus) [P0]" diye bildirilir ama api_surface yalniz kayip imza (API-02) ve regex adayi (API-04) dallarini uygular; imza degisimi karsilastirmasi kodda yok. |
-| 35 | API-01 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | KFAZ0 API envanteri yoksa disa acik yuzey karsilastirilamaz; kapi CALISTIRILMADI/P1 verir. |
-| 36 | API-05 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | API kademelerinden hicbiri kosmazsa disa acik yuzey denetimi tamamen korlesir; CALISTIRILMADI/P1. |
-| 37 | API-04 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | Regex taramasi bir adayi kacirirsa disa acik yuzey eksik sayilir; DUSUK_GUVEN/P1. |
+| 34 | API-03 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | ENVANTER DISI (olu kimlik) | OLCULDU: AST string sabiti ve `batarya` vakasi yok. T1 dali `onceki - sonraki` ad kumesiyle yalniz API-02 (kayip) uretir; parametre/donus bilgisi tasinmadigi icin degisen imza ayirt edilemez. Bu bir uygulama boslugu; P0 vaadi karsilanmiyor. |
+| 35 | API-01 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | P1: `api_surface.py` taban.get("dis_imza") None ise CALISTIRILMADI uretir; vaka API-01 bu alani siler, rc=0. Karsilastirma yapilamaz, P0 yolu yoktur. |
+| 36 | API-05 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | P1: `imza_komutu` exit!=0 veya T1/T2 yoksa CALISTIRILMADI uretir; vaka API-05 komutu `false` yapar, rc=0. Hicbir kademe P0 karari uretmez. |
+| 37 | API-04 | `api_surface.py` | Tedarik, teslim ve disa acik yuzey — P0/P1 | BEKLENEN BULGU | P1: T2 regex taramasi `foo` adayini bulamazsa DUSUK_GUVEN uretir; vaka API-04 `def foo` -> `def baz` yapar, rc=0. T2 tek basina P0 uretemez. |
 | 38 | OZT-01 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI | Oz-test taban dosyasi yok veya bozuksa onceki test envanteriyle karsilastirma yapilamaz; fail-closed P0. |
 | 39 | OZT-02 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI | Tabandaki bir test kimligi bu kosuda yoksa test sessizce silinmistir; P0 kapsam kaybi. |
 | 40 | OZT-03 | `oztest_attest.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI | Kosuda hic test yoksa sifir test yesil sayilmamali; fail-closed P0. |
@@ -151,12 +160,45 @@ saglamlik/etki sirasina gore sabittir. Kapatilan her kural
 | 47 | CHK-01 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI (24.11.2026) | Her zorunlu SCOPE-ID MASTER icinde markdown basligi olarak bulunmali; metinde gecmesi yetmez. |
 | 48 | CHK-02 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | TEST EDILDI (24.11.2026) | Her zorunlu ID PROVENANCE tablosunda kapsiyor durumunda olmali. |
 | 49 | CHK-05 | `provenance_check.py` | Test envanteri, olcum ve provenance — P0/P1 | BEKLENEN BULGU (24.11.2026) | Basliklar benzersiz olmali; tekrar eden baslik izlenebilirligi bozar. |
-| 50 | SEC-04 | `secret_scan.py` | Bilgi seviyesi / olu kimlik — P1 | ENVANTER DISI (olu kimlik) | Baslikta "Ikili/kilit dosyasi atlandi [bilgi]" diye bildirilir ama hiçbir dal bu kimligi basmiyor; atlanan dosyalar yalniz sayilir, kimlikli BILGI satiri uretilmez. |
+| 50 | SEC-04 | `secret_scan.py` | Bilgi seviyesi — P0/P1 disi | BEKLENEN BULGU | Ikili veya kilit dosyasi taranmadan atlanirsa icine gomulmus bir sir gorunmez; atlama yalniz BILGI olarak raporlanir. |
+
+## Uc kume: teslim_imza, api_surface, dep_audit
+
+Bu kesim, adi gecen uc betikteki butun canli kurallari ve varsa olu kimlikleri tek tabloda toplar. Kural listesi envanterden turetilir; canli kuralin mutasyon vakasi yoksa `make kapsam` fail-closed durur.
+
+| Kume | Canli kural | TEST EDILDI | BEKLENEN BULGU | OLU KIMLIK |
+|---|---|---|---|---|
+| api_surface | 4 | 1 | 3 | 1 |
+| dep_audit | 5 | 2 | 3 | 1 |
+| teslim_imza | 6 | 5 | 1 | 0 |
+| **Toplam** | **15** | **8** | **7** | **2** |
+
+| Kume | Kural | Durum | Vaka | Kanit / gerekce |
+|---|---|---|---|---|
+| api_surface | API-01 | BEKLENEN BULGU | API-01 | son kosuda gecti: API-01 |
+| api_surface | API-02 | TEST EDILDI | API-02 | son kosuda gecti: API-02 |
+| api_surface | API-04 | BEKLENEN BULGU | API-04 | son kosuda gecti: API-04 |
+| api_surface | API-05 | BEKLENEN BULGU | API-05 | son kosuda gecti: API-05 |
+| api_surface | API-03 | OLU KIMLIK | — | OLCULDU: AST string sabiti ve `batarya` vakasi yok. T1 dali `onceki - sonraki` ad kumesiyle yalniz API-02 (kayip) uretir; parametre/donus bilgisi tasinmadigi icin degisen imza ayirt edilemez. Bu bir uygulama boslugu; P0 vaadi karsilanmiyor. |
+| dep_audit | DEP-01 | TEST EDILDI | DEP-01 | son kosuda gecti: DEP-01 |
+| dep_audit | DEP-03 | BEKLENEN BULGU | DEP-03 | son kosuda gecti: DEP-03 |
+| dep_audit | DEP-04 | BEKLENEN BULGU | DEP-04 | son kosuda gecti: DEP-04 |
+| dep_audit | DEP-05 | TEST EDILDI | DEP-05 | son kosuda gecti: DEP-05 |
+| dep_audit | DEP-06 | BEKLENEN BULGU | DEP-06 | son kosuda gecti: DEP-06 |
+| dep_audit | DEP-02 | OLU KIMLIK | — | OLCULDU: AST string sabiti ve `batarya` vakasi yok. `dep_audit.py` yalniz kilit dosyasinin varligini denetler; kilit paket adlarini manifestle karsilastiran dal yok. Bu bir uygulama boslugu; P0 vaadi karsilanmiyor. |
+| teslim_imza | TSL-01 | TEST EDILDI | TSL-01 | son kosuda gecti: TSL-01 |
+| teslim_imza | TSL-02 | TEST EDILDI | TSL-02 | son kosuda gecti: TSL-02 |
+| teslim_imza | TSL-03 | TEST EDILDI | TSL-03 | son kosuda gecti: TSL-03 |
+| teslim_imza | TSL-04 | TEST EDILDI | TSL-04 | son kosuda gecti: TSL-04 |
+| teslim_imza | TSL-05 | BEKLENEN BULGU | TSL-05 | son kosuda gecti: TSL-05 |
+| teslim_imza | TSL-06 | TEST EDILDI | TSL-06 | son kosuda gecti: TSL-06 |
+
+Ayrintili P1/P0 gerekcesi risk tablosunda; kodda hic basilmayan kimliklerin gerekcesi Envanter disi tablosundadir.
 
 ## Sonraki dilim
 
 24.11.2026 itibariyla kapatilmayan bosluk yok (0). Dokuz eski boslugun her biri
-gercek bir mutasyon vakasiyla kapatildi; 28 beklenen-bulgu vakasi
+gercek bir mutasyon vakasiyla kapatildi; 29 beklenen-bulgu vakasi
 uyari modunda, digerleri kirmizi/terminal hukumle dogrulandi.
 
 
@@ -169,11 +211,10 @@ Olcum yontemi: her kapi betigi AST ile gezilir; kimlik docstring DISINDA bir str
 | Betik | Kimlik | Olcum | Gerekce |
 |---|---|---|---|
 | `oztest_attest.py` | OZT-04 | kodda basilmiyor | Kaldirilmis sayac kurali. Baslikta yalniz "OZT-04 NICIN YOK" aciklamasi olarak gecer; kodda bu kimligi basan dal yok. Kimlik sayisi dususu zaten OZT-02 ile yakalanir. |
-| `api_surface.py` | API-03 | kodda basilmiyor | Baslikta "imza degismis (parametre/donus) [P0]" diye bildirilir ama api_surface yalniz kayip imza (API-02) ve regex adayi (API-04) dallarini uygular; imza degisimi karsilastirmasi kodda yok. |
-| `dep_audit.py` | DEP-02 | kodda basilmiyor | Baslikta "Manifestteki paket kilitte yok [P0]" diye bildirilir ama dep_audit kodunda kilit paketlerini manifestle karsilastiran dal yok; yalniz DEP-01/03/04/05/06 dallari uygulanir. |
-| `secret_scan.py` | SEC-04 | kodda basilmiyor | Baslikta "Ikili/kilit dosyasi atlandi [bilgi]" diye bildirilir ama hiçbir dal bu kimligi basmiyor; atlanan dosyalar yalniz sayilir, kimlikli BILGI satiri uretilmez. |
+| `api_surface.py` | API-03 | kodda basilmiyor | OLCULDU: AST string sabiti ve `batarya` vakasi yok. T1 dali `onceki - sonraki` ad kumesiyle yalniz API-02 (kayip) uretir; parametre/donus bilgisi tasinmadigi icin degisen imza ayirt edilemez. Bu bir uygulama boslugu; P0 vaadi karsilanmiyor. |
+| `dep_audit.py` | DEP-02 | kodda basilmiyor | OLCULDU: AST string sabiti ve `batarya` vakasi yok. `dep_audit.py` yalniz kilit dosyasinin varligini denetler; kilit paket adlarini manifestle karsilastiran dal yok. Bu bir uygulama boslugu; P0 vaadi karsilanmiyor. |
 
-Toplam envanter disi kimlik: **4**; her biri için ölçüm `tools/kapsam.py --oztest` ile her koşuda yeniden alinir.
+Toplam envanter disi kimlik: **3**; her biri için ölçüm `tools/kapsam.py --oztest` ile her koşuda yeniden alinir.
 
 ## Envanter disi dis referanslar
 
@@ -185,6 +226,29 @@ Baska bir kurala/karara yapilan atiflar kural sayilmaz; her biri gerekceli ve ik
 
 Toplam envanter disi dis referans: **1**.
 
+## Kimliksiz kapi betikleri
+
+Asagidaki betiklerde `KURALLAR` basligi veya `# --- KIMLIK` bolum basligi yok. Bu yuzden kural envanterine kural olarak girmezler; ancak tarama disinda da birakilmazlar. Her biri **tanı**, **kütüphane** veya **gerekceli kapsam dışı** sınıflarından birine baglanir. Kimliksiz bir betik **kural** sayılmaz; kural sayılması için envanterde bir KURAL kimliği ve mutasyon/vaka bağı gerekir. Sınıflandırılmamış yeni bir betik veya sonradan kural kimliği kazanan eski bir kayit `make kapsam` tarafından fail-closed durdurulur; bu bolum kural kapsamı sayacina eklenmez ve mevcut ratchet tabanlarini degistirmez.
+
+| Betik | Sinif | Gerekce |
+|---|---|---|
+| `ATLAS_SABLONLAR/scripts/ai_disclosure.py` | tanı | AI beyan uretici/checker; AI-00..04 alt tani kodlari var, bagimsiz KURAL kimligi yok; AI-1 testiyle olculur. |
+| `ATLAS_SABLONLAR/scripts/apply_routing.py` | kütüphane | Yonlendirme profili uygulayici; ORTAK masterinin birebir kopyasi ve RT-1/RT-2 testleri var; kapi kurali degil. |
+| `ATLAS_SABLONLAR/scripts/budget_guard.py` | kapsam dışı | Butce on-kontrol kapisi (--preflight); BG-1..BG-4 testleri var, ancak bagimsiz KURAL kimligi ve kural mutasyon vakasi yok. Envantere alinmadi; betik duzeyinde gerekceli kapsam disi. |
+| `ATLAS_SABLONLAR/scripts/gate_2c.py` | kapsam dışı | Gate-2C pivotal istisna kapisi; G2C-00..05 hata/tani kodlari var, ancak KURAL kimligi yok. Gercek kapi `check_integrity.sh --gate2c` ile harici panel ve Crossref DOI girdisi ister; ag hatasinda BLOCKED doner. Hermetik atlas_selftest G2C matrisi davranisi olcer, kural basina mutasyon vakasi yoktur; envantere alinmadi. |
+| `ATLAS_SABLONLAR/scripts/gate_merge.py` | kapsam dışı | 2A/2B birlestirici; P0/P1 degerlerini ham dizilerden yeniden hesaplar ve GM testleri vardir, ancak bagimsiz KURAL kimligi ve kural mutasyon vakasi yok. Envantere alinmadi. |
+| `ATLAS_SABLONLAR/scripts/review_panel.py` | kapsam dışı | MAIN/REVIEWER/CRITIC panel sema ve hukum dogrulayicisi; HJ-* tani kodlari var, ancak KURAL kimligi yok. HJ-1 matrisi davranisi olcer; kural basina mutasyon vakasi olmadigi icin envantere alinmadi. |
+| `ATLAS_SABLONLAR/scripts/verify_doi.py` | tanı | DOI/UNVERIFIED checker; DEC-027 yalniz karar referansi, KURAL kimligi yok; VD testleriyle olculur. |
+| `KOD_SABLONLAR/scripts/apply_routing.py` | kütüphane | Yonlendirme profili uygulayici; ORTAK masterinin birebir kopyasi ve RT-1/RT-2 testleri var; kapi kurali degil. |
+| `KOD_SABLONLAR/scripts/budget_guard.py` | kapsam dışı | Butce on-kontrol kapisi (--preflight); BG-1..BG-4 testleri var, ancak bagimsiz KURAL kimligi ve kural mutasyon vakasi yok. Envantere alinmadi; betik duzeyinde gerekceli kapsam disi. |
+| `KOD_SABLONLAR/scripts/imzala.py` | kütüphane | BASELINE HMAC imza yardimcisi; freeze_check tarafindan tuketilir, tek basina kapi kurali degil. |
+| `KOD_SABLONLAR/scripts/kod_gate_merge.py` | kapsam dışı | KOD 2-of-2/3-of-3 birlestirici; ORTAK/scripts/ortak_gate.py ilkelerini import eder ve GM testleri vardir, ancak bagimsiz KURAL kimligi ve kural mutasyon vakasi yok. Envantere alinmadi. |
+
+Toplam kimliksiz kapi betigi: **11**.
+Sınıf dağılımı: **2 tanı · 3 kütüphane · 6 kapsam dışı**.
+Bu betik düzeyi sınıflandırma, kural düzeyi `KAPSAM_DISI` sayacına girmez: burada kural kimliği yoktur; sayaç yalnız envanterdeki kuralların gerekçeli istisnalarını sayar.
+
+
 ## Kod icinde uretilen kimlikler
 
 Asagidaki kimlikler `KURALLAR` basliginda veya `# --- KIMLIK`
@@ -192,30 +256,90 @@ bolum basliginda bildirilmez; betik kodu tarafindan string literal
 olarak uretilir. Her biri tek tek denetlendi: bagimsiz bir
 `KURALLAR` sozlesmesi degil, ilgili kapinin alt tanisi veya
 sozlesme bolum verisidir. Bu yuzden envantere kural olarak eklenmez;
-gerekce sessizce dusulmez. Ayni ailede yeni bir kimlik belirse bile
-`make kapsam` fail-closed durur:
+gerekce sessizce dusulmez. Her gerekcede `Kaynak: <dosya>:<satir>`
+referansi vardir; `kod_ici_kaynak_dogrula` dosyanin varligini, satir
+araligini ve kimligin o satirda gectigini her kosuda denetler.
+Ayni gerekce ve kaynak satirini paylasan kimlikler tek tablo satirinda
+gruplanir; kaynak, gruptaki her kimligin gercekten gectigi satiri
+gosterir. Ayni ailede yeni bir kimlik belirse bile `make kapsam`
+fail-closed durur:
 
 | Betik | Sinif | Kimlikler | Gerekce |
 |---|---|---|---|
-| `ai_disclosure.py` | tani-kodu | AI-04 | --check cikti uyusmazligi; AI-1 selftestinde kilitli cikti butunlugu alt tanisi. |
-| `ai_disclosure.py` | tani-kodu | AI-03 | Beyan yazma I/O hatasi; hukum uretmeyen operasyonel tani. |
-| `ai_disclosure.py` | tani-kodu | AI-02 | Entry alan/usage/evidence dogrulamasi; AI-1 selftestinin alt tanisi. |
-| `ai_disclosure.py` | tani-kodu | AI-01 | Manifest kok/schema/scope/entries sozlesmesi; AI-1 selftestinin alt tanisi. |
-| `ai_disclosure.py` | tani-kodu | AI-00 | Manifest veya sema yok/bozuk; AI-1 onkosul tanisi, bagimsiz KURALLAR kurali degil. |
-| `olgu_lint.py` | tani-kodu | OLGU-03 | Ic deger uyusmazligi; OLGU-04..06 kapsamindaki tarihce denetiminin alt tanisi. |
-| `olgu_lint.py` | tani-kodu | OLGU-02 | OLGULAR JSON/sema girdisi gecersiz; onkosul tanisi. |
-| `olgu_lint.py` | tani-kodu | OLGU-01 | OLGULAR kanonu yok; olgu_lint onkosulu, OLGU-04..06 kurallarindan ayri. |
-| `review_panel.py` | tani-kodu | HJ-07 | Attempt/maliyet siniri; HJ-1 selftestinin alt tanisi. |
-| `review_panel.py` | tani-kodu | HJ-03 | Hukum kapsami/yinelenen kimlik/severity; HJ-1 selftestinin alt tanisi. |
-| `review_panel.py` | tani-kodu | HJ-01 | JSON/kapali sema/alan sozlesmesi; HJ-1 selftestinin alt tanisi. |
-| `review_panel.py` | tani-kodu | HJ-06 | Model ailesi/session cesitliligi; HJ-1 selftestinin alt tanisi. |
-| `review_panel.py` | tani-kodu | HJ-08 | Panel ciktisi yazma I/O hatasi; operasyonel tani. |
-| `review_panel.py` | tani-kodu | HJ-00 | Panel semasi okunamadi/kimlik uyusmadi; HJ-1 onkosul tanisi. |
-| `review_panel.py` | tani-kodu | HJ-05 | Rol/session kimligi; HJ-1 selftestinin alt tanisi. |
-| `review_panel.py` | tani-kodu | HJ-02 | Run/input uyusmazligi; HJ-1 selftestinin alt tanisi. |
-| `review_panel.py` | tani-kodu | HJ-04 | Verdict/evidence butunlugu; HJ-1 selftestinin alt tanisi. |
-| `scope_profile_check.py` | veri-kimligi | SC-001, SC-002, SC-003, SC-004, SC-005, SC-006, SC-007, SC-008, SC-009, SC-010, SC-011, SC-012, SC-013, SC-014, SC-015, SC-016, SC-017, SC-018, SC-019, SC-020, SC-021, SC-022, SC-030 | Kapsam sozlesmesindeki zorunlu bolum kimligi; SP-01..07 kuraldir. |
-| `chg_reconcile.py` | tani-kodu | RECK-00 | Ortak girdi/JSON/sema hatasi; RECK-08 sema kurali, RECK-01..09 ayri kurallardir. |
+| `ai_disclosure.py` | tani-kodu | AI-04 | --check cikti uyusmazligi; AI-1 selftestinde kilitli cikti butunlugu alt tanisi. Kaynak: ATLAS_SABLONLAR/scripts/ai_disclosure.py:302 (main). |
+| `ai_disclosure.py` | tani-kodu | AI-03 | Beyan yazma I/O hatasi; hukum uretmeyen operasyonel tani. Kaynak: ATLAS_SABLONLAR/scripts/ai_disclosure.py:314 (main). |
+| `ai_disclosure.py` | tani-kodu | AI-02 | Entry alan/usage/evidence dogrulamasi; AI-1 selftestinin alt tanisi. Kaynak: ATLAS_SABLONLAR/scripts/ai_disclosure.py:131 (_metin_al). |
+| `ai_disclosure.py` | tani-kodu | AI-01 | Manifest kok/schema/scope/entries sozlesmesi; AI-1 selftestinin alt tanisi. Kaynak: ATLAS_SABLONLAR/scripts/ai_disclosure.py:145 (manifest_dogrula). |
+| `ai_disclosure.py` | tani-kodu | AI-00 | Manifest veya sema yok/bozuk; AI-1 onkosul tanisi, bagimsiz KURALLAR kurali degil. Kaynak: ATLAS_SABLONLAR/scripts/ai_disclosure.py:144 (manifest_dogrula). |
+| `olgu_lint.py` | tani-kodu | OLGU-03 | Ic deger uyusmazligi; OLGU-04..06 kapsamindaki tarihce denetiminin alt tanisi. Kaynak: ATLAS_SABLONLAR/scripts/olgu_lint.py:510 (main). |
+| `olgu_lint.py` | tani-kodu | OLGU-02 | OLGULAR JSON/sema girdisi gecersiz; onkosul tanisi. Kaynak: ATLAS_SABLONLAR/scripts/olgu_lint.py:466 (main). |
+| `olgu_lint.py` | tani-kodu | OLGU-01 | OLGULAR kanonu yok; olgu_lint onkosulu, OLGU-04..06 kurallarindan ayri. Kaynak: ATLAS_SABLONLAR/scripts/olgu_lint.py:458 (main). |
+| `review_panel.py` | tani-kodu | HJ-07 | Attempt/maliyet siniri; HJ-1 selftestinin alt tanisi. Kaynak: ATLAS_SABLONLAR/scripts/review_panel.py:93 (maliyet). |
+| `review_panel.py` | tani-kodu | HJ-03 | Hukum kapsami/yinelenen kimlik/severity; HJ-1 selftestinin alt tanisi. Kaynak: ATLAS_SABLONLAR/scripts/review_panel.py:179 (dizi). |
+| `review_panel.py` | tani-kodu | HJ-01 | JSON/kapali sema/alan sozlesmesi; HJ-1 selftestinin alt tanisi. Kaynak: ATLAS_SABLONLAR/scripts/review_panel.py:73 (json_oku). |
+| `review_panel.py` | tani-kodu | HJ-06 | Model ailesi/session cesitliligi; HJ-1 selftestinin alt tanisi. Kaynak: ATLAS_SABLONLAR/scripts/review_panel.py:211 (panel_uret). |
+| `review_panel.py` | tani-kodu | HJ-08 | Panel ciktisi yazma I/O hatasi; operasyonel tani. Kaynak: ATLAS_SABLONLAR/scripts/review_panel.py:397 (main). |
+| `review_panel.py` | tani-kodu | HJ-00 | Panel semasi okunamadi/kimlik uyusmadi; HJ-1 onkosul tanisi. Kaynak: ATLAS_SABLONLAR/scripts/review_panel.py:106 (sema_dogrula). |
+| `review_panel.py` | tani-kodu | HJ-05 | Rol/session kimligi; HJ-1 selftestinin alt tanisi. Kaynak: ATLAS_SABLONLAR/scripts/review_panel.py:121 (ortak_dogrula). |
+| `review_panel.py` | tani-kodu | HJ-02 | Run/input uyusmazligi; HJ-1 selftestinin alt tanisi. Kaynak: ATLAS_SABLONLAR/scripts/review_panel.py:206 (panel_uret). |
+| `review_panel.py` | tani-kodu | HJ-04 | Verdict/evidence butunlugu; HJ-1 selftestinin alt tanisi. Kaynak: ATLAS_SABLONLAR/scripts/review_panel.py:164 (judgment_dogrula). |
+| `scope_profile_check.py` | veri-kimligi | SC-017 | Kapsam sozlesmesindeki DPIA zorunlu bolum kimligi; SP-05 kosulunda denetlenir. Kaynak: ATLAS_SABLONLAR/scripts/scope_profile_check.py:143. |
+| `scope_profile_check.py` | veri-kimligi | SC-001, SC-003, SC-004, SC-005, SC-006, SC-008, SC-011 | Kapsam sozlesmesindeki zorunlu bolum kimligi; SP-01..07 kuraldir. Kaynak: ATLAS_SABLONLAR/scripts/scope_profile_check.py:36. |
+| `scope_profile_check.py` | veri-kimligi | SC-012, SC-013, SC-014, SC-015, SC-016, SC-018, SC-019 | Kapsam sozlesmesindeki zorunlu bolum kimligi; SP-01..07 kuraldir. Kaynak: ATLAS_SABLONLAR/scripts/scope_profile_check.py:37. |
+| `scope_profile_check.py` | veri-kimligi | SC-020, SC-021, SC-022, SC-030 | Kapsam sozlesmesindeki zorunlu bolum kimligi; SP-01..07 kuraldir. Kaynak: ATLAS_SABLONLAR/scripts/scope_profile_check.py:38. |
+| `scope_profile_check.py` | veri-kimligi | SC-002, SC-007, SC-009, SC-010 | Kapsam sozlesmesindeki zorunlu bolum kimligi; SP-01..07 kuraldir. Kaynak: ATLAS_SABLONLAR/scripts/scope_profile_check.py:39. |
+| `chg_reconcile.py` | tani-kodu | RECK-00 | Ortak girdi/JSON/sema hatasi; RECK-08 sema kurali, RECK-01..09 ayri kurallardir. Kaynak: KOD_SABLONLAR/scripts/chg_reconcile.py:90 (makine_blogu). |
+
+## Kod icinde uretilen kimliklerin test kaniti
+
+Her kimlik icin test dosyalari AST ile tarandi; docstring ve yorumlar sayilmaz. **ÖZ-TEST**, kimligi dogrudan denetleyen bir assertion veya test adi varsa yazilir. **YALNIZ TANI**, hicbir test referansi olmayan `tani-kodu` sinifidir. **TEST YOK**, dogrudan test assertion'i olmayan veri kimligidir; yalniz fikstür verisinde gecmek test kaniti sayilmaz. Fikstürde gecen kimlikler `yalnız fikstür` olarak ayrica isaretlenir ve TEST YOK sayilir.
+
+| Betik | Kimlik | Sinif | Test kaniti | Durum |
+|---|---|---|---|---|
+| `ai_disclosure.py` | AI-00 | tani-kodu | `atlas_selftest.py` · AI-1 | ÖZ-TEST |
+| `ai_disclosure.py` | AI-01 | tani-kodu | `atlas_selftest.py` · AI-1 | ÖZ-TEST |
+| `ai_disclosure.py` | AI-02 | tani-kodu | `atlas_selftest.py` · AI-1 | ÖZ-TEST |
+| `ai_disclosure.py` | AI-03 | tani-kodu | — | YALNIZ TANI |
+| `ai_disclosure.py` | AI-04 | tani-kodu | `atlas_selftest.py` · AI-1 | ÖZ-TEST |
+| `olgu_lint.py` | OLGU-01 | tani-kodu | `atlas_selftest.py` · OLG-1 | ÖZ-TEST |
+| `olgu_lint.py` | OLGU-02 | tani-kodu | — | YALNIZ TANI |
+| `olgu_lint.py` | OLGU-03 | tani-kodu | `atlas_selftest.py` · OLG-1 | ÖZ-TEST |
+| `review_panel.py` | HJ-00 | tani-kodu | `atlas_selftest.py` · HJ-1 | ÖZ-TEST |
+| `review_panel.py` | HJ-01 | tani-kodu | `atlas_selftest.py` · HJ-1 | ÖZ-TEST |
+| `review_panel.py` | HJ-02 | tani-kodu | `atlas_selftest.py` · HJ-1 | ÖZ-TEST |
+| `review_panel.py` | HJ-03 | tani-kodu | `atlas_selftest.py` · HJ-1 | ÖZ-TEST |
+| `review_panel.py` | HJ-04 | tani-kodu | `atlas_selftest.py` · HJ-1 | ÖZ-TEST |
+| `review_panel.py` | HJ-05 | tani-kodu | `atlas_selftest.py` · HJ-1 | ÖZ-TEST |
+| `review_panel.py` | HJ-06 | tani-kodu | `atlas_selftest.py` · HJ-1 | ÖZ-TEST |
+| `review_panel.py` | HJ-07 | tani-kodu | `atlas_selftest.py` · HJ-1 | ÖZ-TEST |
+| `review_panel.py` | HJ-08 | tani-kodu | — | YALNIZ TANI |
+| `scope_profile_check.py` | SC-001 | veri-kimligi | `atlas_selftest.py` · yalnız fikstür (temel kapsam fiksturu) | TEST YOK |
+| `scope_profile_check.py` | SC-002 | veri-kimligi | `atlas_selftest.py` · SRC-01/SRC-02 | ÖZ-TEST |
+| `scope_profile_check.py` | SC-003 | veri-kimligi | `mutasyon_bataryasi.py` · yalnız fikstür (REC-01/SP-02 fiksturu) | TEST YOK |
+| `scope_profile_check.py` | SC-004 | veri-kimligi | — | TEST YOK |
+| `scope_profile_check.py` | SC-005 | veri-kimligi | `atlas_selftest.py` · PC-3 | ÖZ-TEST |
+| `scope_profile_check.py` | SC-006 | veri-kimligi | `atlas_selftest.py` · PC-4 | ÖZ-TEST |
+| `scope_profile_check.py` | SC-007 | veri-kimligi | `atlas_selftest.py` · SP-2 | ÖZ-TEST |
+| `scope_profile_check.py` | SC-008 | veri-kimligi | `atlas_selftest.py` · yalnız fikstür (VD bolum capasi) | TEST YOK |
+| `scope_profile_check.py` | SC-009 | veri-kimligi | `atlas_selftest.py` · yalnız fikstür (SP profil fiksturu) | TEST YOK |
+| `scope_profile_check.py` | SC-010 | veri-kimligi | `atlas_selftest.py` · yalnız fikstür (SP profil fiksturu) | TEST YOK |
+| `scope_profile_check.py` | SC-011 | veri-kimligi | — | TEST YOK |
+| `scope_profile_check.py` | SC-012 | veri-kimligi | — | TEST YOK |
+| `scope_profile_check.py` | SC-013 | veri-kimligi | — | TEST YOK |
+| `scope_profile_check.py` | SC-014 | veri-kimligi | — | TEST YOK |
+| `scope_profile_check.py` | SC-015 | veri-kimligi | — | TEST YOK |
+| `scope_profile_check.py` | SC-016 | veri-kimligi | — | TEST YOK |
+| `scope_profile_check.py` | SC-017 | veri-kimligi | — | TEST YOK |
+| `scope_profile_check.py` | SC-018 | veri-kimligi | — | TEST YOK |
+| `scope_profile_check.py` | SC-019 | veri-kimligi | — | TEST YOK |
+| `scope_profile_check.py` | SC-020 | veri-kimligi | — | TEST YOK |
+| `scope_profile_check.py` | SC-021 | veri-kimligi | — | TEST YOK |
+| `scope_profile_check.py` | SC-022 | veri-kimligi | `temiz_teslim_selftest.py` · eksik-kapsam | ÖZ-TEST |
+| `scope_profile_check.py` | SC-030 | veri-kimligi | `atlas_selftest.py` · yalnız fikstür (temel kapsam fiksturu) | TEST YOK |
+| `chg_reconcile.py` | RECK-00 | tani-kodu | — | YALNIZ TANI |
+
+Toplam: **41** kod-ici kimlik · **19** öz-test · **4** yalnız tanı · **18** test yok (bunlardan **6** yalnız fikstür, **12** hiç test referansı yok).
+
 
 Not: `verify_doi.py` tarandi; bildirilen kural kimligi yok.
 Dosyadaki `DEC-027` bir karar referansidir, kural degil; bu
@@ -270,10 +394,10 @@ sessizce yok sayilmaz.
 | `imzala.py` | 0 | 0 | 0 | 0 |
 | `kod_gate_merge.py` | 0 | 0 | 0 | 0 |
 | `perm_lint.py` | 8 | 0 | 0 | 8 |
-| `secret_scan.py` | 4 | 0 | 0 | 4 |
+| `secret_scan.py` | 5 | 0 | 0 | 5 |
 | `test_attest.py` | 12 | 1 | 0 | 12 |
 
-Toplam: 31 betik · 117 tekil kural; her satirda Envanter = Baslikta ∪ Bolum basligi.
+Toplam: 31 betik · 118 tekil kural; her satirda Envanter = Baslikta ∪ Bolum basligi.
 
 ## Referans olarak ayiklanan kimlikler
 
@@ -412,6 +536,7 @@ tip ihlalidir; kopya degil, farkli hata dalidir.
 | `secret_scan.py` | SEC-01 | SEC-01 | TEST EDILDI | son kosuda gecti: SEC-01 |
 | `secret_scan.py` | SEC-02 | KOD-SEC-02 | TEST EDILDI | son kosuda gecti: KOD-SEC-02 |
 | `secret_scan.py` | SEC-03 | SEC-03 | BEKLENEN BULGU | son kosuda gecti: SEC-03 |
+| `secret_scan.py` | SEC-04 | SEC-04 | BEKLENEN BULGU | son kosuda gecti: SEC-04 |
 | `secret_scan.py` | SEC-05 | SEC-05 | BEKLENEN BULGU | son kosuda gecti: SEC-05 |
 | `test_attest.py` | TST-01 | TST-01 | TEST EDILDI | son kosuda gecti: TST-01 |
 | `test_attest.py` | TST-02 | TST-02 | TEST EDILDI | son kosuda gecti: TST-02 |

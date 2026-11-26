@@ -191,10 +191,10 @@ jobs:
           echo "make demo rc=$rc2"
           test "$rc2" -eq 2
 
-      # Tasinabilir kanit paketi. CI'da attestation'i RUNNER_TEMP'e yaz: izlenen
-      # attestation.json degismez, boylece artifact adimi commit'i kirletmez.
+      # Tasinabilir kanit paketi. Varsayilan make kanit ignored kanit-cikti/
+      # yolunu kullanir; izlenen attestation.json degismez.
       - name: Kanit paketi uret
-        run: make kanit KANIT_ARGS="--cikti $RUNNER_TEMP/atlas-attestation.json"
+        run: make kanit
 
       # Paket yalniz dosya var mi diye degil; sema, attestation, manifest ve
       # ham komut kayitlari capraz dogrulanmadan gecmez.

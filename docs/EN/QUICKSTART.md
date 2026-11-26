@@ -7,7 +7,9 @@ mechanism, not the archive: generated papers and corpora are deliberately exclud
 
 Requirements: `python3` (3.9+), `make`, `git`. No model calls, no network at
 verification time, no API keys. Install into an isolated `.venv` inside the
-repository, not into the system Python.
+repository, not into the system Python. A missing required module stops
+`make dogrula` at the `bagimlilik-kontrol` preflight with the venv setup
+commands, before any gate.
 
 ```bash
 git clone https://github.com/ali-han-kaya/atlas-research-lab.git
@@ -79,21 +81,21 @@ after-mutation contract holds. A green baseline alone is not enough; a marker
 in the baseline fails the case before the mutation is even evaluated.
 
 ```text
-SONUC: 113/113 kural atesledi · 28/28 beklenen bulgu dogrulandi · taban temiz olmayan=0
-SOZLESME: 105/105 HATA (rc=1) · 8/8 TERMINAL (rc=2) · 28/28 BEKLENEN_BULGU
+SONUC: 113/113 kural atesledi · 29/29 beklenen bulgu dogrulandi · taban temiz olmayan=0
+SOZLESME: 105/105 HATA (rc=1) · 8/8 TERMINAL (rc=2) · 29/29 BEKLENEN_BULGU
 HUKUM: PASS — her vaka temiz tabanda sessiz, ihlalde kirmizi/beklenen bulgu.
 ```
 
 Exit code 0. Every published gate rule is listed in
-[`../MUTASYON_KAPSAM.md`](../MUTASYON_KAPSAM.md): of 117 rules, **93** are
-firing-tested (HATA or TERMINAL), **24** are verified only by an expected
+[`../MUTASYON_KAPSAM.md`](../MUTASYON_KAPSAM.md): of 118 rules, **93** are
+firing-tested (HATA or TERMINAL), **25** are verified only by an expected
 finding (P1; not added to the coverage count), and **0** are explicit gaps.
-Outside the inventory sit **4** dead identities — header identifiers no code
-branch ever emits (DEP-02, API-03, OZT-04, SEC-04) — and **1** external
+Outside the inventory sit **3** dead identities — header identifiers no code
+branch ever emits (DEP-02, API-03, OZT-04) — and **1** external
 reference (DEC-027); each carries a measured reason in its own table, and none
 of them is counted as a rule. Of the rules that are counted, 0 are mentioned
 only in self-tests and 0 appear in no test at all. All nine previous gaps now
-have mutation cases; the 28 expected-finding cases (including TST-06, CHK-05, FRZ-08-IMZASIZ and the
+have mutation cases; the 29 expected-finding cases (including TST-06, CHK-05, FRZ-08-IMZASIZ and the
 dedicated `QR-02-DENGE` case for the unbalanced-quote warning) are verified by
 a marker after the mutation with a silent clean baseline, not by a red verdict.
 Dead identities are not relabelled as tested and not silently dropped: they are
@@ -214,7 +216,7 @@ README, section *Tek bir iddiayı elle izlemek*.
 | Command | What it proves |
 |---|---|
 | `make kapsam` | `docs/MUTASYON_KAPSAM.md` matches the current gate inventory |
-| `make model-kimlik` | zero retired-ID references in active code/config/tests/docs; every candidate file is inspected (binary-safe, no size cap), the PASS line reports `taranan`/`incelenmedi`/`onay`/`aktif`, an uninspected file without an approval entry fails, and seven named mutants in `make mutasyon` revert each protection |
+| `make model-kimlik` | zero retired-ID references in active code/config/tests/docs; every candidate file is inspected (binary-safe, no size cap), the PASS line reports `taranan`/`incelenmedi` with its approved/unapproved split/`onay`/`aktif`, an approved uninspected file still counts in `incelenmedi`, an uninspected file without an approval entry fails, and `onay` is the same total-record count in the inventory, and seven named mutants in `make mutasyon` revert each protection |
 | `make guvenlik` | `pip-audit` findings, each named in `docs/GUVENLIK.md`; unlisted finding → red |
 | `make dogrula-ci` | runner mode used by GitHub Actions (same rules, no CI-only exemption) |
 | `make katalog-kontrol` | live models.dev gate: fixed allowlist IDs and all ten `profiller.bedava` roles; network required, run manually outside CI; `OLCULMEDI` fails, never passes |

@@ -21,9 +21,9 @@ BEKLENEN KIRMIZI — bu komut bilerek rc=1 doner.
 
 **8/8** gate checks · prior mutation baseline · **174/174** KOD self-tests.
 
-The mutation baseline above is historical. The current battery is **113/113** firing cases plus **28/28** expected findings over **117** verified rules: **93 firing-tested** and **24 expected-finding-only**; `make dogrula` reports **8/8**.
+The mutation baseline above is historical. The current battery is **113/113** firing cases plus **29/29** expected findings over **118** verified rules: **93 firing-tested** and **25 expected-finding-only**; `make dogrula` reports **8/8**.
 
-Gate scripts declare **121** identifiers. **117** of them are rules — **93** proven by a case that turns the gate red and **24** that only emit an expected marker — and **4** are dead identities that no code branch ever prints, plus **1** external decision reference. Zero rules are out of scope with a measured reason, and zero are unexplained gaps. The full per-rule table is generated from code: [`docs/KURAL-KATALOGU.md`](docs/KURAL-KATALOGU.md).
+Gate scripts declare **121** identifiers. **118** of them are rules — **93** proven by a case that turns the gate red and **25** that only emit an expected marker — and **3** are dead identities that no code branch ever prints, plus **1** external decision reference. Zero rules are out of scope with a measured reason, and zero are unexplained gaps. The full per-rule table is generated from code: [`docs/KURAL-KATALOGU.md`](docs/KURAL-KATALOGU.md).
 
 ATLAS ships the production mechanism itself — the academic audit and code pipelines, agents, templates, executable gates, self-tests and a mutation battery — and deliberately excludes the papers, corpora and session handoffs it produces. Its sharpest evidence is a frozen defective run (`DENEME/`): the fix manifest declared every fix applied while only a fraction reached the master text, and the gate of that day still said `PASS`; `./demo` reproduces that false `PASS` and returns a red verdict by design.
 
@@ -33,7 +33,7 @@ ATLAS ships the production mechanism itself — the academic audit and code pipe
 
 Requirements: `python3` (3.9+), `make`, `git`. Verification needs no model calls, no network access and no API keys.
 
-Install dependencies into an isolated `.venv` inside the repository, not into the system Python. `make` uses the active Python; if a required module is missing, `make dogrula` prints the isolated-venv setup commands before any checks run.
+Install dependencies into an isolated `.venv` inside the repository, not into the system Python. `make` uses the active Python; if a required module is missing, `make dogrula` stops at the `bagimlilik-kontrol` preflight, before any catalog or gate checks, and prints the isolated-venv setup commands.
 
 ```bash
 git clone https://github.com/ali-han-kaya/atlas-research-lab.git
@@ -98,14 +98,14 @@ those numbers into prose.
 | `make mutasyon` | Every case starts with a silent clean baseline and injects one violation. Error cases must turn red (`rc=1`) with the expected marker; expected-finding cases must emit the expected warning/finding (`rc=0` is allowed). A finding present in the baseline fails the case. |
 | `./demo` | Reproduces the frozen `DENEME/` contradiction: the manifest claims more fixes than the master text contains, while the frozen gate says `PASS`. The expected result is a red verdict. |
 | `make iddia` | Re-measures the numeric claims printed in the public docs and requires each stored raw output line to match the current output **verbatim**. A mismatch is named by `IDD-*`. It does not change the `make dogrula` verdict. The whole line is stored, never just the numeric part; the only normalisation is the line's own variable provenance (`commit=<sha>` · `tree=<sha>`), so the `T1` evidence is the full `OZ-TEST: … KANIT commit=… tree=…` line. |
-| `make kanit` / `make kanit-paket-dogrula` / `make makbuz-dogrula` | Produces and validates a portable package containing the commit/tree attestation, command exit codes, finding IDs, raw command logs and a SHA-256 manifest. `makbuz.json` binds each command's argv, exit code and raw output line to the commit/tree attestation; `make makbuz-dogrula` cross-checks it against the package logs and manifest. CI uploads it as the `atlas-kanit-paketi` artifact. |
+| `make kanit` / `make kanit-yaz` / `make kanit-paket-dogrula` / `make makbuz-dogrula` | `make kanit` produces the attestation in the ignored `kanit-cikti/` path and a portable package containing the commit/tree attestation, command exit codes, finding IDs, raw command logs and a SHA-256 manifest; tracked `attestation.json` is refreshed only by the explicit `make kanit-yaz` target. `makbuz.json` binds each command's argv, exit code and raw output line to the commit/tree attestation; `make makbuz-dogrula` cross-checks it against the package logs and manifest. CI uploads it as the `atlas-kanit-paketi` artifact. |
 | `tools/yayinla.py` | Publication parity: copies only an explicit allowlist from the private lab tree, refuses out-of-scope artefacts, scans for secrets and reports new/changed/deleted files. |
 
 CI runs the runner form of the checks, the mutation battery, scope freshness, dependency audit and the demo assertion in `.github/workflows/dogrula.yml`.
 
 ## Honest limits
 
-- **OLG-1 (`T1`) runs only against this tree's `attestation.json`.** `olgu_lint` verifies the real commit/tree evidence; there is no historical or private-tree fallback. `make dogrula` reports 8/8 and T1 is a pass. If the attestation is missing or corrupt, OLG-1 fails; it is not reported as not run.
+- **OLG-1 (`T1`) runs only against this tree's `attestation.json`.** `olgu_lint` verifies the real commit/tree evidence; there is no historical or private-tree fallback. `make dogrula` reports 8/8 and T1 is a pass. If the attestation is missing or corrupt, OLG-1 fails; it is not reported as not run. The default `make kanit` writes its generated copy to the ignored `kanit-cikti/` path; use the explicit `make kanit-yaz` target when the tracked record must be refreshed.
 - **The archive is out of scope.** Generated papers, corpora and session handoffs are deliberately not published. This repository is the mechanism; some historical documents cite handoff files that are not published here, but those citations are archive notes, not verification inputs.
 - **Tests measure gate behaviour, not content truth.** They show that a gate fires on a known violation. They do not prove that the content is correct, and an empty test can still pass a gate; the layering reduces that risk but does not eliminate it.
 - **`DENEME/` is frozen on purpose.** It is a deliberately defective run kept as a regression fixture. Do not "fix" it: the defect is the lesson.

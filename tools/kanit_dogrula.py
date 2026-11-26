@@ -141,7 +141,7 @@ def main():
     a = ap.parse_args()
     yol = Path(a.kanit)
     if not yol.is_file():
-        hata("KANIT-00", "KANIT_YOK — %s; once `make kanit`" % yol)
+        hata("KANIT-00", "KANIT_YOK — %s; tracked kayit icin once `make kanit-yaz`" % yol)
         return 2
     try:
         veri = json.loads(yol.read_text(encoding="utf-8"))

@@ -22,6 +22,9 @@ node_modules/
 # make kanit'in taşınabilir çıktısı (üretilir; git'e eklenmez)
 kanit-paketi/
 
+# make kanit'in varsayılan attestation çıktısı (tracked değil)
+kanit-cikti/
+
 # Sırlar — asla commitlenmez
 .env
 .env.*

@@ -11,6 +11,12 @@ kurulur ve gercek `make kapsam` / `make kapsam-yaz` girisleri calistirilir:
      sonra `make kapsam` PASS olur.
   3. Ayni kurala gercek bir mutasyon vakasi eklenince, vaka `make mutasyon-kisa`
      ile kosar; tablo yenilendikten sonra `make kapsam` PASS olur.
+  4. Bir kapi betigine belgelenmemis kod-ici kimlik eklenince `make kapsam`
+     kimligi adlandirarak kirmizi doner; ayni kimlige `KOD_ICI_GEREKCE`
+     gerekcesi eklenip tablo yenilenince PASS olur. Aile oneki tek basina
+     gerekce yerine gecmez; yalniz tam kimlik anahtari kabul edilir.
+  5. Kural kimligi olmayan yeni bir kapi betigi siniflandirilmadan eklenirse
+     `make kapsam` onu adlandirarak durur.
 
 Kopyalar `.git`, `.venv` ve kanit paketi disarida tutulur; canli agac ve
 `docs/MUTASYON_KAPSAM.md` degismeden kalir.
@@ -23,6 +29,9 @@ from pathlib import Path
 
 KOK = Path(__file__).resolve().parents[1]
 GECICI_KURAL = "ATLAS_SABLONLAR/scripts/kapsam_negatif_gecici.py"
+KOD_ICI_BETIK = "ATLAS_SABLONLAR/scripts/ai_disclosure.py"
+GECICI_KOD_ICI = "AI-98"
+GECICI_KIMLIKSIZ = "ATLAS_SABLONLAR/scripts/kapsam_kimliksiz_gecici.py"
 IGNORE = shutil.ignore_patterns(
     ".git", ".venv", ".venv-token", "kanit-paketi", "__pycache__",
     ".pytest_cache", ".ruff_cache", ".mypy_cache", ".tox",
@@ -63,6 +72,90 @@ def _yeni_kural(kok):
         "    sys.exit(1)\n"
         "sys.exit(0)\n",
         encoding="utf-8")
+
+
+def _kod_ici_ekle(kok):
+    """Kapi betigine, envanterde karsiligi olmayan bir kod-ici kimlik ekle."""
+    yol = kok / KOD_ICI_BETIK
+    metin = yol.read_text(encoding="utf-8")
+    if GECICI_KOD_ICI in metin:
+        raise RuntimeError("gecici kod-ici kimlik betikte zaten var")
+    yol.write_text(
+        metin.rstrip() + "\n\n"
+        "# kapsam_selftest: asagidaki string literal bilincli olarak "
+        "belgelenmemis bir kod-ici kimliktir.\n"
+        "KOD_ICI_GECICI = \"%s\"\n" % GECICI_KOD_ICI,
+        encoding="utf-8")
+
+
+def _kimliksiz_ekle(kok):
+    """Kural kimligi bildirmeyen gecici bir kapi betigi ekle."""
+    yol = kok / GECICI_KIMLIKSIZ
+    if yol.exists():
+        raise RuntimeError("gecici kimliksiz betik zaten var")
+    yol.write_text(
+        "#!/usr/bin/env python3\n"
+        "# kapsam_selftest: kural kimligi yok; siniflandirma olmadan gecmemeli.\n"
+        "print('KAPSAM KIMLIKSIZ GECICI KAPI')\n",
+        encoding="utf-8")
+
+
+def _kimliksiz_kural_ekle(kok):
+    """Kimliksiz betigi envanter disi 'kural' diye etiketlemeyi dene."""
+    yol = kok / "tools" / "kapsam.py"
+    metin = yol.read_text(encoding="utf-8")
+    eski = "KIMLIKSIZ_SINIFLAR = {\n"
+    yeni = (
+        "KIMLIKSIZ_SINIFLAR = {\n"
+        "    '%s': ('kural',\n"
+        "         'kapsam_selftest: kimliksiz betik kural sayilamaz; "
+        "envanter baglantisi yok.'),\n" % GECICI_KIMLIKSIZ)
+    if metin.count(eski) != 1:
+        raise RuntimeError("KIMLIKSIZ_SINIFLAR baslangici bulunamadi")
+    yol.write_text(metin.replace(eski, yeni, 1), encoding="utf-8")
+
+
+def _kod_ici_onek_gerekce_ekle(kok):
+    """Gecici kimlige aile oneki anahtarli, tam olmayan gerekce ekle."""
+    yol = kok / "tools" / "kapsam.py"
+    metin = yol.read_text(encoding="utf-8")
+    eski = "KOD_ICI_GEREKCE = {\n"
+    yeni = (
+        "KOD_ICI_GEREKCE = {\n"
+        "    ('%s', '%s'):\n"
+        "        ('tani-kodu',\n"
+        "         'aile oneki; tam kimlik olmadigi icin gerekce olamaz.'),\n"
+        % (KOD_ICI_BETIK, GECICI_KOD_ICI.split("-", 1)[0]))
+    if metin.count(eski) != 1:
+        raise RuntimeError("KOD_ICI_GEREKCE baslangici bulunamadi")
+    yol.write_text(metin.replace(eski, yeni, 1), encoding="utf-8")
+
+
+def _kod_ici_gerekce_ekle(kok):
+    """Gecici kod-ici kimlige tam (betik, kimlik) ve kaynak gerekcesi ekle."""
+    yol = kok / "tools" / "kapsam.py"
+    metin = yol.read_text(encoding="utf-8")
+    kaynak = kok / KOD_ICI_BETIK
+    satir = next(
+        (no for no, metin_satiri in enumerate(
+            kaynak.read_text(encoding="utf-8").splitlines(), 1)
+         if GECICI_KOD_ICI in metin_satiri),
+        None,
+    )
+    if satir is None:
+        raise RuntimeError("gecici kod-ici kimlik kaynakta bulunamadi")
+    eski = "KOD_ICI_GEREKCE = {\n"
+    yeni = (
+        "KOD_ICI_GEREKCE = {\n"
+        "    ('%s', '%s'):\n"
+        "        ('tani-kodu',\n"
+        "         'kapsam_selftest: gecici kod-ici kimlik; gercek kapi kurali '\n"
+        "         'degil, yalniz tarama davranisini olcmek icin eklendi. '"
+        "         'Kaynak: %s:%d.'),\n"
+        % (KOD_ICI_BETIK, GECICI_KOD_ICI, KOD_ICI_BETIK, satir))
+    if metin.count(eski) != 1:
+        raise RuntimeError("KOD_ICI_GEREKCE baslangici bulunamadi")
+    yol.write_text(metin.replace(eski, yeni, 1), encoding="utf-8")
 
 
 def _istisna_ekle(kok):
@@ -177,6 +270,56 @@ def main():
         bekle("mutasyon sonrasi kapsam-yaz PASS", r.returncode == 0, _cikti(r))
         r = _make(vaka, "kapsam")
         bekle("mutasyon sonrasi kapsam PASS",
+              r.returncode == 0 and "KAPSAM: guncel" in _cikti(r), _cikti(r))
+
+        # 5) Kimliksiz yeni kapi siniflandirilmadan gecmez.
+        vaka = Path(gecici) / "kimliksiz"
+        shutil.copytree(temel, vaka, symlinks=True)
+        _kimliksiz_ekle(vaka)
+        r = _make(vaka, "kapsam")
+        cikti = _cikti(r)
+        bekle("kimliksiz betik kapsam rc!=0", r.returncode != 0, cikti)
+        bekle("kimliksiz betik adlandirilir",
+              GECICI_KIMLIKSIZ in cikti and "KIMLIKSIZ KAPSAM" in cikti,
+              cikti)
+
+        # 6) Kimliksiz betik "kural" etiketiyle envanter disi birakilamaz.
+        vaka = Path(gecici) / "kimliksiz-kural"
+        shutil.copytree(temel, vaka, symlinks=True)
+        _kimliksiz_ekle(vaka)
+        _kimliksiz_kural_ekle(vaka)
+        r = _make(vaka, "kapsam")
+        cikti = _cikti(r)
+        bekle("kimliksiz kural etiketi rc!=0", r.returncode != 0, cikti)
+        bekle("kimliksiz kural etiketi reddedilir",
+              "gecersiz sinif" in cikti, cikti)
+
+        # 7) Aile oneki tam kimlik yerine gecmez.
+        vaka = Path(gecici) / "kod-ici-onek"
+        shutil.copytree(temel, vaka, symlinks=True)
+        _kod_ici_ekle(vaka)
+        _kod_ici_onek_gerekce_ekle(vaka)
+        r = _make(vaka, "kapsam")
+        cikti = _cikti(r)
+        bekle("aile oneki kod-ici kapsam rc!=0", r.returncode != 0, cikti)
+        bekle("aile oneki tam kimlik ister", "TAM kimlik" in cikti, cikti)
+
+        # 8) Kod-ici kimlik: belgelenmemis kimlik kirmizi, gerekceyle yesil.
+        vaka = Path(gecici) / "kod-ici"
+        shutil.copytree(temel, vaka, symlinks=True)
+        _kod_ici_ekle(vaka)
+        r = _make(vaka, "kapsam")
+        cikti = _cikti(r)
+        bekle("belgelenmemis kod-ici kimlik kapsam rc!=0",
+              r.returncode != 0, cikti)
+        bekle("belgelenmemis kod-ici kimlik adlandirilir",
+              GECICI_KOD_ICI in cikti and "belgelenmemis kimlik" in cikti
+              and "KOD-ICI KAPSAM" in cikti, cikti)
+        _kod_ici_gerekce_ekle(vaka)
+        r = _make(vaka, "kapsam-yaz")
+        bekle("kod-ici gerekce kapsam-yaz PASS", r.returncode == 0, _cikti(r))
+        r = _make(vaka, "kapsam")
+        bekle("kod-ici gerekce kapsam PASS",
               r.returncode == 0 and "KAPSAM: guncel" in _cikti(r), _cikti(r))
 
     bekle("canli kapsam tablosu degismedi",

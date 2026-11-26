@@ -287,9 +287,19 @@ for p in hedef_dosyalar():
     if not p.exists() or not p.is_file():
         continue
     rel = os.path.relpath(p, KOK)
+    # SEC-04: atlama SESSIZ DEGIL. Ikili/kilit dosyasi taranmadi bilgisi hem
+    # insan ciktisina hem JSON bulgularina duser; P0/P1 sayacina GIRMEZ.
     if (not KISMI) and (p.suffix.lower() in v4.SKIP_BINARY_EXT or p.name in v4.LOCK_NAMES):
+        bulgular.append({"kural": "SEC-04", "siddet": "BILGI", "konum": rel,
+                         "tur": "ikili/kilit dosyasi",
+                         "aciklama": "ikili/kilit dosyasi atlandi — icerik taranmadi "
+                                     "(bilgi; P0/P1 degil)"})
         atlanan.append(rel); continue
     if KISMI and p.suffix.lower() in KISMI_IKILI:
+        bulgular.append({"kural": "SEC-04", "siddet": "BILGI", "konum": rel,
+                         "tur": "ikili dosya (KISMI)",
+                         "aciklama": "ikili dosya atlandi — TAM kalip taramasi "
+                                     "yapilmadi (bilgi; P0/P1 degil)"})
         atlanan.append(rel); continue
     if p.suffix.lower() in ONBELLEK_UZANTILARI and _onbellek_yolu(rel):
         bulgular.append({"kural": "SEC-05", "siddet": "BILGI", "konum": rel,

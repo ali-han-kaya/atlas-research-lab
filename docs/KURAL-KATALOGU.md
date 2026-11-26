@@ -10,10 +10,10 @@ Refresh: `make katalog-kurallar` · Staleness check: `make katalog-kurallar-kont
 |---|---|---|
 | Gate scripts scanned | 31 | `kapsam.DIZINLER` |
 | Identifiers reported in source | 121 | line-start and `# --- ID` section headers |
-| — rules in the inventory | 117 | after excluding dead identities and references |
+| — rules in the inventory | 118 | after excluding dead identities and references |
 | — firing-tested (HATA/TERMINAL) | 93 | mutation case turns the gate red |
-| — expected-finding-only | 24 | case emits a marker, gate stays green |
-| — dead identities (excluded) | 4 | declared but no code branch ever prints them |
+| — expected-finding-only | 25 | case emits a marker, gate stays green |
+| — dead identities (excluded) | 3 | declared but no code branch ever prints them |
 | — external references (excluded) | 1 | a decision id, not a rule |
 | Out-of-scope rules with a measured reason | 0 | `KAPSAM_DISI` (currently empty) |
 | Gaps (no reason, no case) | 0 | must stay 0 |
@@ -57,7 +57,7 @@ does the gate fire (rc/marker), does only *its* label fire (no leakage),
 does the clean baseline stay silent, and does undoing it turn the gate
 green again. The battery asks all four for every case.
 
-## The 117 rules, by gate script
+## The 118 rules, by gate script
 
 Status legend: **firing** = a HATA/TERMINAL case turns the gate red;
 **expected** = the case emits the expected marker and the gate stays green;
@@ -261,6 +261,7 @@ Status legend: **firing** = a HATA/TERMINAL case turns the gate red;
 | SEC-01 | P0 | Gercek `.env` dosyasi diff'te | firing |
 | SEC-02 | P0 | Eslesen sir kalibi (yer tutucu ipucu tasisa bile DUSURULMEZ) | firing |
 | SEC-03 | — | Yer tutucu ipucu tasiyan eslesme [P1 + insan karari] | expected |
+| SEC-04 | bilgi | Ikili/kilit dosyasi atlandi | expected |
 | SEC-05 | bilgi | TAM `__pycache__` dizinindeki .pyc kapsam disi | expected |
 
 ### `KOD_SABLONLAR/scripts/test_attest.py`
@@ -289,9 +290,8 @@ exist, so counting them as covered would inflate the rule count.
 | Identity | Script | Why it is not counted |
 |---|---|---|
 | OZT-04 | `oztest_attest.py` | Kaldirilmis sayac kurali. Baslikta yalniz "OZT-04 NICIN YOK" aciklamasi olarak gecer; kodda bu kimligi basan dal yok. Kimlik sayisi dususu zaten OZT-02 ile yakalanir. |
-| API-03 | `api_surface.py` | Baslikta "imza degismis (parametre/donus) [P0]" diye bildirilir ama api_surface yalniz kayip imza (API-02) ve regex adayi (API-04) dallarini uygular; imza degisimi karsilastirmasi kodda yok. |
-| DEP-02 | `dep_audit.py` | Baslikta "Manifestteki paket kilitte yok [P0]" diye bildirilir ama dep_audit kodunda kilit paketlerini manifestle karsilastiran dal yok; yalniz DEP-01/03/04/05/06 dallari uygulanir. |
-| SEC-04 | `secret_scan.py` | Baslikta "Ikili/kilit dosyasi atlandi [bilgi]" diye bildirilir ama hiçbir dal bu kimligi basmiyor; atlanan dosyalar yalniz sayilir, kimlikli BILGI satiri uretilmez. |
+| API-03 | `api_surface.py` | OLCULDU: AST string sabiti ve `batarya` vakasi yok. T1 dali `onceki - sonraki` ad kumesiyle yalniz API-02 (kayip) uretir; parametre/donus bilgisi tasinmadigi icin degisen imza ayirt edilemez. Bu bir uygulama boslugu; P0 vaadi karsilanmiyor. |
+| DEP-02 | `dep_audit.py` | OLCULDU: AST string sabiti ve `batarya` vakasi yok. `dep_audit.py` yalniz kilit dosyasinin varligini denetler; kilit paket adlarini manifestle karsilastiran dal yok. Bu bir uygulama boslugu; P0 vaadi karsilanmiyor. |
 
 External references — a decision id used by a gate, not a rule it applies:
 
@@ -301,7 +301,7 @@ External references — a decision id used by a gate, not a rule it applies:
 
 ## Why the rest are not "tested" in the strong sense
 
-The 24 expected-finding rules have a case, but their contract is a marker,
+The 25 expected-finding rules have a case, but their contract is a marker,
 not a red verdict: the gate deliberately stays green and reports a warning.
 They are listed as `expected` above and are **not** counted as firing-tested.
 
@@ -318,7 +318,7 @@ Two further limits, stated so they are not mistaken for coverage:
 
 | Command | Output |
 |---|---|
-| `make mutasyon` | `SONUC: 113/113 kural atesledi · 28/28 beklenen bulgu · taban temiz olmayan=0` |
+| `make mutasyon` | `SONUC: 113/113 kural atesledi · 29/29 beklenen bulgu · taban temiz olmayan=0` |
 | `make kapsam` | `ratchet PASS (test=93/93, bosluk=0/0)` |
 | `make dogrula` | `kalem=8 · gecen=8 · kalan=0` |
 

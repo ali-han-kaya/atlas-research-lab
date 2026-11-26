@@ -19,8 +19,11 @@ yeni agac kanitini kullanir; yalniz attestation.json degistigi icin
 `kanit_dogrula`nin agac temizligi kurali bunu dislar. Ozel `--cikti` ile paket
 birlikte kullanilirsa komutlar ayni kaniti okusun diye kok `attestation.json`
 komutlar suresince ayni icerikle esitlenir ve sonra bayt bayt geri yuklenir;
-boylece T1/KAMU/iddia ile paket ayni uretimi gosterir. Paket git'e eklenmez
-(`.gitignore`); tasimak icin dizini kopyalamak yeterlidir.
+boylece T1/KAMU/iddia ile paket ayni uretimi gosterir. Varsayilan cikti
+`kanit-cikti/attestation.json` ignored yoludur; tracked `attestation.json`
+yalniz acikca `--cikti attestation.json` (veya `make kanit-yaz`) ile
+yenilenir. Paket git'e eklenmez (`.gitignore`); tasimak icin dizini kopyalamak
+yeterlidir.
 
 Var olan bir `--paket` hedefi yalniz sonuc/makbuz/attestation semalari ve
 manifest hash'leri bu araç tarafindan uretilmis paketle tutarliysa temizlenir.
@@ -28,7 +31,8 @@ Yabanci, bos, dosya, sembolik baglanti, depo koku/ustu ve `.git` altindaki
 yollar reddedilir; hicbiri silinmez.
 
 Kullanim:
-  python3 tools/kanit.py                    # attestation + kanit-paketi
+  python3 tools/kanit.py                    # ignored attestation + kanit-paketi
+  python3 tools/kanit.py --cikti attestation.json  # tracked kaydi acikca yenile
   python3 tools/kanit.py --cikti <yol>      # attestation'i baska yola yaz;
                                              # paket komutlari ayni kaniti okur
   python3 tools/kanit.py --paket <dizin>    # paket konumunu degistir; mevcut
@@ -64,6 +68,7 @@ MAKBUZ = "makbuz.json"
 SEMA_MAKBUZ = "ATLAS-MAKBUZ/v1"
 LOG_DIZINI = "komutlar"
 VARSAYILAN_PAKET = "kanit-paketi"
+VARSAYILAN_CIKTI = "kanit-cikti/attestation.json"
 VARSAYILAN_KOMUTLAR = [
     ("dogrula", ["make", "dogrula"]),
     ("kapsam", ["make", "kapsam"]),
@@ -548,8 +553,9 @@ def paket_yaz(paket, attestation_metni, attestation_verisi_, komutlar):
 
 def main():
     ap = argparse.ArgumentParser(description="ATLAS agac kaniti ve paketi uret")
-    ap.add_argument("--cikti", default=str(KOK / ATTESTATION),
-                    help="yazilacak attestation JSON yolu")
+    ap.add_argument("--cikti", default=str(KOK / VARSAYILAN_CIKTI),
+                    help="yazilacak attestation JSON yolu (varsayilan: "
+                         "ignored kanit-cikti/attestation.json)")
     ap.add_argument("--paket", default=str(KOK / VARSAYILAN_PAKET),
                     help="tasinabilir kanit paketi dizini; yalniz kendi "
                          "urettigimiz paket temizlenir")

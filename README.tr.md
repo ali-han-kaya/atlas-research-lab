@@ -46,7 +46,7 @@ flowchart LR
 | Üç lens | `ATLAS_SABLONLAR/.opencode/command/atlas-faz1.md` · `atlas-lens-consistency.md` · `atlas-lens-structure.md` · `atlas-lens-editor.md` | Bağımsız bulgu listesi |
 | Hedefli düzeltme | `ATLAS_SABLONLAR/.opencode/command/atlas-faz2.md` · `atlas-writer-master.md` | FIX manifesti ve değişen metin |
 | MASTER + kapı | `ATLAS_SABLONLAR/.opencode/command/atlas-faz3.md` · `atlas-gate-2a.md` · `atlas-gate-2b.md` | MASTER sürümü; kabul/red kararı |
-| Kanıt | `make dogrula` · `make iddia` · `./demo` · `make kanit-dogrula` | Ham komut çıktısı, `attestation.json`, `kanit-paketi/` |
+| Kanıt | `make dogrula` · `make iddia` · `./demo` · `make kanit-dogrula` | Ham komut çıktısı, tracked `attestation.json`, ignored `kanit-cikti/`, `kanit-paketi/` |
 | Public yayın | `tools/yayin_kapisi.py` · `tools/yayinla.py` | Yalnız manifestteki mekanizma; makale/çıktı arşivi değil |
 
 KOD hattı aynı mantığı `KOD_SABLONLAR/00_KOD_OKU_BENI.md` → `kod-faz0` … `kod-teslim`
@@ -102,7 +102,7 @@ visible; evidence levels (`BIRINCIL`/`DIJITAL`/`BEYAN`/`OLCULMEDI`); fail-closed
 (unmeasured is never a pass); and tamper detection (`GATE_TAMPERED` → P0).
 - **How claims are verified.** `make dogrula` (hygiene, syntax, secret scan, secret-gate
 self-test, three self-test suites), `make mutasyon` (ninety-three firing-tested gate rules,
-each exercised by a 141-case battery: silent clean baseline + one violation + a red/terminal
+each exercised by a 142-case battery: silent clean baseline + one violation + a red/terminal
 verdict or expected finding), and `tools/yayinla.py`
 (publish parity: 0 new / 0 changed / 0 deleted). The same commands run in CI on GitHub Actions.
 `make iddia` closes the remaining gap: it re-measures the numbers printed in this README.
@@ -110,7 +110,7 @@ verdict or expected finding), and `tools/yayinla.py`
 exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin
 wrapper and cannot carry 1 vs 2, because GNU make always exits 2 on a failing recipe. `make dogrula` → **8 pass / 0 fail / 0 not run** (T1, `OLG-1`, now
 runs against this tree's `attestation.json`); current self-test and inventory values are generated in
-[`docs/DURUM.md`](docs/DURUM.md). Mutation battery **113/113 firing cases + 28/28 expected findings** over 117 verified rules: **93 firing-tested** and **24 expected-finding-only**. Mutation-tested vs untested gate rules are measured
+[`docs/DURUM.md`](docs/DURUM.md). Mutation battery **113/113 firing cases + 29/29 expected findings** over 118 verified rules: **93 firing-tested** and **25 expected-finding-only**. Mutation-tested vs untested gate rules are measured
 in [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md); dependent-package findings in
 [`docs/GUVENLIK.md`](docs/GUVENLIK.md); CI green. Non-Turkish readers:
 [`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md).
@@ -192,7 +192,7 @@ dosyadır: laboratuvarın kendi birincil koordinatörüdür.
 
 ## Hızlı başlangıç
 
-Bağımlılıklar sistem Python'una değil, depo içindeki izole `.venv` ortamına kurulur. `make` aktif Python'u kullanır; gerekli bir modül eksikse `make dogrula` kalemleri başlatmadan izole venv kurulum komutlarını yazar.
+Bağımlılıklar sistem Python'una değil, depo içindeki izole `.venv` ortamına kurulur. `make` aktif Python'u kullanır; gerekli bir modül eksikse `make dogrula` daha katalog ön testleri başlamadan `bagimlilik-kontrol` ile durur ve izole venv kurulum komutlarını yazar.
 
 ```bash
 git clone https://github.com/ali-han-kaya/atlas-research-lab.git
@@ -297,8 +297,8 @@ tek bir ihlal üretilir ve kapının **kırmızıya döndüğü**
 (`rc=1`, yalnız hedef FAIL) doğrulanır. Beklenen-bulgu vakasında kapı `rc=0`
 kalabilir, ama ihlal sonrası beklenen uyarı/işaret çıktıda **bulunmalıdır**. Her
 iki modda da temiz tabanda bulgunun yokluğu ortak ön koşuldur; taban kirliyse
-veya ihlal sonrası beklenen iz yoksa vaka geçmez. Katalog 141 vakadır:
-113 ateşleyen (105 HATA + 8 TERMINAL) + 28 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,
+veya ihlal sonrası beklenen iz yoksa vaka geçmez. Katalog 142 vakadır:
+113 ateşleyen (105 HATA + 8 TERMINAL) + 29 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,
 `quote_ratio.py` içindeki dengesiz düz tırnak uyarısını ayrı bir vaka olarak
 kilitler; böylece uyarı dalı runner tarafından atlanmaz. Model, ağ ve yerel
 katalog gerekmez.
@@ -332,7 +332,9 @@ SHA-256'sıyla kayıtlıdır (`tools/model_kimlik_istisna.json`); tarihsel satı
 değişirse kontrol kırmızı olur. Denetim hiçbir dosyayı sessizce atlamaz:
 4 MB üstü ve UTF-8 çözülemeyen dosyalar ikili güvenli bayt aramasıyla taranır,
 okunamayan dosya onay listesinde gerekçesiyle yoksa FAIL verir; PASS satırı
-`taranan`, `incelenmedi=0` ve `onay` sayaçlarını gösterir.
+`taranan`, `incelenmedi` (onaylı/onaysız ayrımıyla) ve `onay` sayaçlarını
+gösterir. Onaylı bir atlama da `incelenmedi` toplamına girer; `onay` defterdeki
+toplam kayıt sayısıdır ve envanterde aynı anlamı taşır.
 
 KOD hattının `bedava` profili için bağlayıcı seçim ve emeklilik koşulları
 [`docs/KOD_BEDAVA_MODEL_POLITIKASI.md`](docs/KOD_BEDAVA_MODEL_POLITIKASI.md)
@@ -398,7 +400,7 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 | İddia defteri | `make iddia` → README/docs sayısal iddialarını üreten komutla ve ham kanıt satırıyla yeniden ölçer; tutmayan satır `IDD-*` ile kırmızı |
 | Hızlı iddia | `make iddia-hizli` → `dogrula`/`mutasyon` gibi pahalı satırları atlar; atlananlar `ATLANDI` ve PASS değil, tam koşu değişmez |
 | Ham kanıt yenileme | `make iddia-yaz` → bilinçli değişiklikten sonra `tools/iddia_olcum.json` anlık görüntüsünü yeniler |
-| Kanıt paketi | `make kanit` → `attestation.json` + `kanit-paketi/` (commit, komut çıkışları, bulgu kimlikleri, SHA-256 manifesti) |
+| Kanıt paketi | `make kanit` → ignored `kanit-cikti/attestation.json` + `kanit-paketi/` (commit, komut çıkışları, bulgu kimlikleri, SHA-256 manifesti); tracked kayıt için `make kanit-yaz` |
 | Paket doğrulama | `make kanit-paket-dogrula` → `sonuc.json` şeması, paket attestation'ı, `manifest.sha256` ve ham komut kayıtları |
 | Bağımlılık denetimi | `make guvenlik` → `pip-audit`; her bulgu `docs/GUVENLIK.md` içinde adıyla |
 | Commit/push koruması | `make kur` → `core.hooksPath=.githooks`; canlı DSN commit edilemez |
@@ -566,15 +568,18 @@ make kanit-dogrula
 ```
 
 `make kanit` üç doğrulama komutunu (`dogrula`, `kapsam`, `iddia`) çalıştırır;
-`kanit-paketi/` dizinini ve `attestation.json` dosyasını üretir. Yalnız attestation
-üretmek için `python3 tools/kanit.py --paketsiz` kullanılır. `make kanit` attestation'ı
-izlenen ağaçta yenilediği için, onu commit etmeyecekseniz incelemeden sonra
-geri alabilirsiniz. `make makbuz-dogrula`, `kanit-paketi/makbuz.json` içindeki her
-kalemi `sonuc.json`, attestation ve `komutlar/` loglarıyla birebir karşılaştırır;
-commit/ağaç bağı tutmazsa sıfır olmayan kodla çıkar.
+`kanit-paketi/` dizinini ve **ignored** `kanit-cikti/attestation.json` dosyasını
+üretir. Varsayılan hedef tracked `attestation.json`a dokunmaz. Tracked kaydı
+bilinçli olarak yenilemek için `make kanit-yaz` çalıştırılır; commit edilecek
+attestation bu açık hedefin çıktısıdır. Yalnız attestation üretmek için
+`python3 tools/kanit.py --paketsiz` kullanılır. `make makbuz-dogrula`,
+`kanit-paketi/makbuz.json` içindeki her kalemi `sonuc.json`, attestation ve
+`komutlar/` loglarıyla birebir karşılaştırır; commit/ağaç bağı tutmazsa sıfır
+olmayan kodla çıkar.
 
-CI, aynı paketi `--cikti "$RUNNER_TEMP/atlas-attestation.json"` ile üretir; böylece
-izlenen `attestation.json` kirlenmez. Paket, `make kanit-paket-dogrula` geçmeden ve
+CI, aynı paketi varsayılan `make kanit` ile üretir; çıktı ignored
+`kanit-cikti/attestation.json`a gider, böylece izlenen `attestation.json`
+kirlenmez. Paket, `make kanit-paket-dogrula` geçmeden ve
 `manifest.sha256` doğrulanmadan yüklenmez. GitHub Actions çalışma sayfasında
 **Artifacts → `atlas-kanit-paketi`** olarak indirilir. Komut satırından indirme ve
 doğrulama (aynı commit'te):
@@ -592,7 +597,7 @@ kapısı `KANIT-05` ile kırmızı olur. Ayrıntılı sınırlar ve negatif kont
 
 ## Mutasyon kapsamı
 
-`make mutasyon` 141 vakanın gerçekten ateşlediğini kanıtlar: HATA vakalarında
+`make mutasyon` 142 vakanın gerçekten ateşlediğini kanıtlar: HATA vakalarında
 sessiz temiz taban → tek ihlal → `rc=1`; TERMINAL vakalarında `rc=2` +
 `GATE_TAMPERED`/`TERMINAL FAIL`; beklenen-bulgu vakalarında sessiz temiz taban →
 tek ihlal → işaretli bulgu (`rc=0` olabilir). **Her kuralın** durumu ise
@@ -600,11 +605,11 @@ tek ihlal → işaretli bulgu (`rc=0` olabilir). **Her kuralın** durumu ise
 `tools/kapsam.py` tarafından üretilir (elle yazılmaz) ve üç durum ayırır:
 
 - **TEST EDİLDİ** — 93 kural (ateşleyen HATA/TERMINAL vakasıyla)
-- **BEKLENEN BULGU** — 24 kural (yalnız P1/beklenen-bulgu sözleşmesiyle;
+- **BEKLENEN BULGU** — 25 kural (yalnız P1/beklenen-bulgu sözleşmesiyle;
   kapsam sayısına eklenmez)
-- **ENVANTER DIŞI — ölü kimlik** — 4 kimlik, her biri ölçülmüş bir gerekçeyle:
+- **ENVANTER DIŞI — ölü kimlik** — 3 kimlik, her biri ölçülmüş bir gerekçeyle:
   başlıkta bildirilen ama kodda hiçbir dalın basmadığı kimlikler (DEP-02, API-03,
-  OZT-04, SEC-04). Kural sayılmazlar, envanter sayısına girmezler; ölçüm AST ile
+  OZT-04). Kural sayılmazlar, envanter sayısına girmezler; ölçüm AST ile
   her koşuda yeniden alınır (`tools/kapsam.py --oztest`)
 - **ENVANTER DIŞI — dış referans** — 1 kimlik: `DEC-027` bir karar referansıdır,
   `verify_doi.py` bu kuralı uygulamaz

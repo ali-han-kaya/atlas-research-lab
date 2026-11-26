@@ -110,7 +110,7 @@
         },
         {
           "dosya": "docs/README.md",
-          "alinti": "`make dogrula` bu depoda **8/8** verir; T1 PASS'tir. Kod değişince `make kanit`"
+          "alinti": "`make dogrula` bu depoda **8/8** verir; T1 PASS'tir. Kod değişince tracked"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
@@ -196,23 +196,23 @@
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "Mutation battery **113/113 firing cases + 28/28 expected findings** over 117 verified rules: **93 firing-tested** and **24 expected-finding-only**."
+          "alinti": "Mutation battery **113/113 firing cases + 29/29 expected findings** over 118 verified rules: **93 firing-tested** and **25 expected-finding-only**."
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "SONUC: 113/113 kural atesledi · 28/28 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+          "alinti": "SONUC: 113/113 kural atesledi · 29/29 beklenen bulgu dogrulandi · taban temiz olmayan=0"
         },
         {
           "dosya": "README.tr.md",
-          "alinti": "113 ateşleyen (105 HATA + 8 TERMINAL) + 28 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,"
+          "alinti": "113 ateşleyen (105 HATA + 8 TERMINAL) + 29 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,"
         },
         {
           "dosya": "docs/README.md",
-          "alinti": "Güncel katalog **141 vaka = 113 ateşleyen (105 HATA + 8 TERMINAL)"
+          "alinti": "Güncel katalog **142 vaka = 113 ateşleyen (105 HATA + 8 TERMINAL)"
         },
         {
           "dosya": "README.en.md",
-          "alinti": "The current battery is **113/113** firing cases plus **28/28** expected findings over **117** verified rules: **93 firing-tested** and **24 expected-finding-only**;"
+          "alinti": "The current battery is **113/113** firing cases plus **29/29** expected findings over **118** verified rules: **93 firing-tested** and **25 expected-finding-only**;"
         }
       ],
       "durum": "OLCULDU",
@@ -225,23 +225,23 @@
     },
     {
       "id": "IDD-05",
-      "iddia": "mutasyon bataryasi 28/28 beklenen bulgu",
+      "iddia": "mutasyon bataryasi 29/29 beklenen bulgu",
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "Mutation battery **113/113 firing cases + 28/28 expected findings** over 117 verified rules: **93 firing-tested** and **24 expected-finding-only**."
+          "alinti": "Mutation battery **113/113 firing cases + 29/29 expected findings** over 118 verified rules: **93 firing-tested** and **25 expected-finding-only**."
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "SONUC: 113/113 kural atesledi · 28/28 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+          "alinti": "SONUC: 113/113 kural atesledi · 29/29 beklenen bulgu dogrulandi · taban temiz olmayan=0"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "cases; the 28 expected-finding cases (including TST-06, CHK-05, FRZ-08-IMZASIZ and the"
+          "alinti": "cases; the 29 expected-finding cases (including TST-06, CHK-05, FRZ-08-IMZASIZ and the"
         },
         {
           "dosya": "README.en.md",
-          "alinti": "The current battery is **113/113** firing cases plus **28/28** expected findings over **117** verified rules: **93 firing-tested** and **24 expected-finding-only**;"
+          "alinti": "The current battery is **113/113** firing cases plus **29/29** expected findings over **118** verified rules: **93 firing-tested** and **25 expected-finding-only**;"
         }
       ],
       "durum": "OLCULDU",
@@ -250,7 +250,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "ayikla": "(\\d+/\\d+) beklenen bulgu",
-      "beklenen": "28/28"
+      "beklenen": "29/29"
     },
     {
       "id": "IDD-06",
@@ -262,11 +262,11 @@
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "of 117 rules, **93** are"
+          "alinti": "of 118 rules, **93** are"
         },
         {
           "dosya": "README.en.md",
-          "alinti": "The current battery is **113/113** firing cases plus **28/28** expected findings over **117** veri"
+          "alinti": "The current battery is **113/113** firing cases plus **29/29** expected findings over **118** veri"
         }
       ],
       "durum": "OLCULDU",
@@ -282,11 +282,11 @@
     },
     {
       "id": "IDD-07",
-      "iddia": "bildirilen kapi kurali sayisi 117",
+      "iddia": "bildirilen kapi kurali sayisi 118",
       "kaynaklar": [
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "of 117 rules, **93** are"
+          "alinti": "of 118 rules, **93** are"
         }
       ],
       "durum": "OLCULDU",
@@ -295,18 +295,18 @@
         "tools/kapsam.py",
         "--json"
       ],
-      "beklenen": "117",
+      "beklenen": "118",
       "kapi": {
         "kontrol": "KAPSAM.bildirilen"
       }
     },
     {
       "id": "IDD-08",
-      "iddia": "envanter disi olu kimlik sayisi 4 (gerekceli)",
+      "iddia": "envanter disi olu kimlik sayisi 3 (gerekceli)",
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "- **ENVANTER DIŞI — ölü kimlik** — 4 kimlik, her biri ölçülmüş bir gerekçeyle:"
+          "alinti": "- **ENVANTER DIŞI — ölü kimlik** — 3 kimlik, her biri ölçülmüş bir gerekçeyle:"
         }
       ],
       "durum": "OLCULDU",
@@ -315,7 +315,7 @@
         "tools/kapsam.py",
         "--json"
       ],
-      "beklenen": "4",
+      "beklenen": "3",
       "kapi": {
         "kontrol": "KAPSAM.olu_kimlik"
       }
@@ -941,23 +941,23 @@
     },
     {
       "id": "IDD-39",
-      "iddia": "mutasyon katalogunda 141 vaka (113 atesleyen + 28 beklenen-bulgu)",
+      "iddia": "mutasyon katalogunda 142 vaka (113 atesleyen + 29 beklenen-bulgu)",
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "each exercised by a 141-case battery: silent clean baseline + one violation + a red/terminal"
+          "alinti": "each exercised by a 142-case battery: silent clean baseline + one violation + a red/terminal"
         },
         {
           "dosya": "README.tr.md",
-          "alinti": "veya ihlal sonrası beklenen iz yoksa vaka geçmez. Katalog 141 vakadır:"
+          "alinti": "veya ihlal sonrası beklenen iz yoksa vaka geçmez. Katalog 142 vakadır:"
         },
         {
           "dosya": "docs/README.md",
-          "alinti": "Güncel katalog **141 vaka = 113 ateşleyen (105 HATA + 8 TERMINAL)"
+          "alinti": "Güncel katalog **142 vaka = 113 ateşleyen (105 HATA + 8 TERMINAL)"
         },
         {
           "dosya": "README.tr.md",
-          "alinti": "`make mutasyon` 141 vakanın gerçekten ateşlediğini kanıtlar: HATA vakalarında"
+          "alinti": "`make mutasyon` 142 vakanın gerçekten ateşlediğini kanıtlar: HATA vakalarında"
         }
       ],
       "durum": "OLCULDU",
@@ -967,7 +967,7 @@
         "import sys; sys.path.insert(0, 'tools'); import mutasyon_bataryasi as m; print('VAKA: %d' % len(m.vakalar()))"
       ],
       "ayikla": "VAKA: (\\d+)",
-      "beklenen": "141"
+      "beklenen": "142"
     },
     {
       "id": "IDD-40",
@@ -1046,19 +1046,19 @@
     },
     {
       "id": "IDD-44",
-      "iddia": "model-kimlik PASS satiri incelenmedi=0 dosya · onay=1 kayit",
+      "iddia": "model-kimlik PASS satiri incelenmedi=0 dosya (onayli=0 · onaysiz=0) · onay=1 kayit",
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "`taranan`, `incelenmedi=0` ve `onay` sayaçlarını gösterir."
+          "alinti": "`taranan`, `incelenmedi` (onaylı/onaysız ayrımıyla) ve `onay` sayaçlarını"
         },
         {
           "dosya": "docs/README.md",
-          "alinti": "satırı `aday=… · taranan=… · incelenmedi=0 · onay=1 kayit · aktif=0`"
+          "alinti": "satırı `aday=… · taranan=… · incelenmedi=… (onayli=… · onaysiz=…) · onay=… kayit · aktif=0`"
         },
         {
           "dosya": "docs/README.md",
-          "alinti": "(`incelenmedi=0`), tarihsel satırın muafiyeti, aktif metin, 4 MB üstü metin,"
+          "alinti": "`incelenmedi` onaylı atlamaları da kapsar; `onay` defterdeki"
         }
       ],
       "durum": "OLCULDU",
@@ -1067,12 +1067,12 @@
         "tools/model_kimlik.py",
         "--kontrol"
       ],
-      "ayikla": "incelenmedi=(\\d+) dosya · onay=(\\d+) kayit",
-      "beklenen": "0/1"
+      "ayikla": "incelenmedi=(\\d+) dosya \\(onayli=(\\d+) · onaysiz=(\\d+)\\) · onay=(\\d+) kayit",
+      "beklenen": "0/0/0/1"
     },
     {
       "id": "IDD-45",
-      "iddia": "chmod 000 negatif kontrolu: FAIL incelenmedi=1 → PASS onay=2 → FAIL ONAY GEREKSIZ → PASS incelenmedi=0 onay=1",
+      "iddia": "chmod 000 negatif kontrolu: FAIL incelenmedi=1 (onayli=0 · onaysiz=1) → PASS onayli=1/onaysiz=0 onay=2 → FAIL ONAY GEREKSIZ → PASS incelenmedi=0 (onayli=0 · onaysiz=0) onay=1",
       "kaynaklar": [
         {
           "dosya": "docs/README.md",
@@ -1080,15 +1080,15 @@
         },
         {
           "dosya": "docs/README.md",
-          "alinti": "`FAIL incelenmedi=1`; aynı dosya `onay` listesine gerekçesiyle eklendiğinde"
+          "alinti": "`FAIL incelenmedi=1 (onayli=0 · onaysiz=1)`; aynı dosya `onay` listesine"
         },
         {
           "dosya": "docs/README.md",
-          "alinti": "`PASS incelenmedi=1 onay=2`; izin geri açıldığında `FAIL ONAY GEREKSIZ`;"
+          "alinti": "`PASS incelenmedi=1 (onayli=1 · onaysiz=0) onay=2`;"
         },
         {
           "dosya": "docs/README.md",
-          "alinti": "onay kaldırıldığında `PASS incelenmedi=0 onay=1`."
+          "alinti": "`PASS incelenmedi=0 (onayli=0 · onaysiz=0) onay=1`."
         }
       ],
       "durum": "BEYAN",
@@ -1172,15 +1172,15 @@
         }
       ],
       "durum": "BEYAN",
-      "gerekce": "54/54 is the earlier frozen mutation baseline, retained as a historical snapshot. Current HEAD measures 113/113 firing cases + 28/28 expected findings over 117 verified rules (93 firing-tested, 24 expected-finding-only; 141-case battery); 8/8 and 174/174 are current and measured by IDD-01/IDD-02."
+      "gerekce": "54/54 is the earlier frozen mutation baseline, retained as a historical snapshot. Current HEAD measures 113/113 firing cases + 29/29 expected findings over 118 verified rules (93 firing-tested, 25 expected-finding-only; 142-case battery); 8/8 and 174/174 are current and measured by IDD-01/IDD-02."
     },
     {
       "id": "IDD-52",
-      "iddia": "ayrik sozlesme ozeti 105/105 HATA, 8/8 TERMINAL, 28/28 beklenen-bulgu",
+      "iddia": "ayrik sozlesme ozeti 105/105 HATA, 8/8 TERMINAL, 29/29 beklenen-bulgu",
       "kaynaklar": [
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "SOZLESME: 105/105 HATA (rc=1) · 8/8 TERMINAL (rc=2) · 28/28 BEKLENEN_BULGU"
+          "alinti": "SOZLESME: 105/105 HATA (rc=1) · 8/8 TERMINAL (rc=2) · 29/29 BEKLENEN_BULGU"
         }
       ],
       "durum": "OLCULDU",
@@ -1193,15 +1193,15 @@
     },
     {
       "id": "IDD-53",
-      "iddia": "kapsam: 117 dogrulanan kural = 93 atesleyen + 24 beklenen-bulgu",
+      "iddia": "kapsam: 118 dogrulanan kural = 93 atesleyen + 25 beklenen-bulgu",
       "kaynaklar": [
         {
           "dosya": "docs/README.md",
-          "alinti": "+ 28 beklenen-bulgu**; 117 doğrulanan kuralın 93'ü ateşleyen vakayla, 24'ü yalnız"
+          "alinti": "+ 29 beklenen-bulgu**; 118 doğrulanan kuralın 93'ü ateşleyen vakayla, 25'i yalnız"
         },
         {
           "dosya": "README.tr.md",
-          "alinti": "- **BEKLENEN BULGU** — 24 kural (yalnız P1/beklenen-bulgu sözleşmesiyle;"
+          "alinti": "- **BEKLENEN BULGU** — 25 kural (yalnız P1/beklenen-bulgu sözleşmesiyle;"
         }
       ],
       "durum": "OLCULDU",
@@ -1210,7 +1210,7 @@
         "tools/kapsam.py",
         "--json"
       ],
-      "beklenen": "117",
+      "beklenen": "118",
       "kapi": {
         "kontrol": "KAPSAM.toplam_dogrulanan"
       }
@@ -1237,11 +1237,11 @@
     },
     {
       "id": "IDD-55",
-      "iddia": "kural katalogu ozeti: 121 bildirim = 117 kural + 4 olu kimlik + 1 referans",
+      "iddia": "kural katalogu ozeti: 121 bildirim = 118 kural + 3 olu kimlik + 1 referans",
       "kaynaklar": [
         {
           "dosya": "README.en.md",
-          "alinti": "Gate scripts declare **121** identifiers. **117** of them are rules — **93** proven by a case that turns the gate red and **24** that only emit an expected marker — and **4** are dead identities that no code branch ever prints, plus **1** external decision reference."
+          "alinti": "Gate scripts declare **121** identifiers. **118** of them are rules — **93** proven by a case that turns the gate red and **25** that only emit an expected marker — and **3** are dead identities that no code branch ever prints, plus **1** external decision reference."
         }
       ],
       "durum": "OLCULDU",
@@ -1250,7 +1250,7 @@
         "tools/kapsam.py",
         "--json"
       ],
-      "beklenen": "117",
+      "beklenen": "118",
       "kapi": {
         "kontrol": "KAPSAM.bildirilen"
       }

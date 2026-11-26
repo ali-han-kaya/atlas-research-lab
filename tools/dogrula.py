@@ -56,7 +56,8 @@ degil. Sahte canak (commit, tarihce) uretilmez.
 
 BAGIMLILIK ON KONTROLU: gerekli bir modul eksikse kalemler baslamadan izole
 venv kurulum komutlari basilir ve rc=2 ile durulur; test paketi yarida ham
-ModuleNotFoundError ile cokmez.
+ModuleNotFoundError ile cokmez. Makefile bu kontrolu `--bagimlilik-kontrol`
+ile katalog on kosullarindan da once kosar.
 """
 import contextlib
 import hashlib
@@ -78,7 +79,8 @@ JSON = '--json' in sys.argv
 JSON_RAPOR = None
 
 ATLA_DIZIN = {'.git', '__pycache__', 'node_modules', '.pytest_cache',
-              '.ruff_cache', '.venv', '.venv-token', 'kanit-paketi'}
+              '.ruff_cache', '.venv', '.venv-token', 'kanit-paketi',
+              'kanit-cikti'}
 ATLA_UZANTI = {'.pyc', '.pyo'}
 KURULUM_HATASI = False
 
@@ -1176,6 +1178,8 @@ def main():
 
 
 if __name__ == '__main__':
+    if '--bagimlilik-kontrol' in sys.argv:
+        sys.exit(0 if bagimlilik_kontrolu() else 2)
     if JSON:
         tampon = io.StringIO()
         with contextlib.redirect_stdout(tampon):

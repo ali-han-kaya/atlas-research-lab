@@ -36,7 +36,18 @@ BOLUM = re.compile(r'^\s*#+\s*-{2,}\s*([A-Z]{2,8}(?:-[A-Z0-9]{1,8}){0,2}-\d{2,3}
 # Kod icinde string literal olarak uretilen kimlikler (or. AI-00, HJ-01).
 # Bunlar KURALLAR basligi veya bolum basligi degildir; envantere kural olarak
 # eklenmezler ama asagidaki KOD_ICI_GEREKCE ile sessizce gizlenmeleri engellenir.
+KOD_ICI_TAM = re.compile(r'[A-Z]{2,8}(?:-[A-Z0-9]{1,8}){0,2}-\d{2,3}')
 KOD_ICI = re.compile(r'''["']([A-Z]{2,8}(?:-[A-Z0-9]{1,8}){0,2}-\d{2,3})["']''')
+# Ayni kimligi kelime ici ve uzun sayili varyantlardan ayirir; test kaniti
+# taramasinda `SC-0010` gibi bir kimlik `SC-001` sayilmaz.
+KOD_ICI_REFERANS = re.compile(
+    r'(?<![\w-])(' + KOD_ICI_TAM.pattern + r')(?![\w-])')
+# Her kod-ici dislama gerekcesi kaynak dosyayi ve satir araligini tasir.
+# Fonksiyon referansi istege baglidir; varsa gercek bir fonksiyon olmalidir.
+KOD_ICI_KAYNAK = re.compile(
+    r'Kaynak:\s+(?P<yol>[A-Za-z0-9_./-]+\.py):(?P<ilk>[1-9][0-9]*)'
+    r'(?:-(?P<son>[1-9][0-9]*))?'
+    r'(?:\s+\((?P<fonksiyon>[A-Za-z_][A-Za-z0-9_]*)\))?')
 # OLCUM-* bir kapi kurali degil, olcum kaydinin referansidir.
 YOKSAY_PREFIX = {'OLCUM'}
 
@@ -73,7 +84,7 @@ TABAN_BOSLUK_SAYISI = 0
 #
 # OLCUM (`tools/kapsam.py --oztest`, AST): her kapi betigi gezilir; kimlik
 # docstring DISINDA bir string sabiti olarak kodda akiyorsa basilabilir sayilir.
-# Bu dort kimlikte akmaz. Envanter onlari SAYMAZ (`bildirilen` 121 -> 117);
+# Bu uc kimlikte akmaz. Envanter onlari SAYMAZ (`bildirilen` 121 -> 118);
 # gerekce burada ve `docs/MUTASYON_KAPSAM.md` tablosunda gorunur.
 # Iki yonlu fail-closed: (a) olculen her olu kimlik burada gerekceli olmali,
 # (b) buradaki her kayit hala olculen bir olu kimlik olmali. Dal eklenip kimlik
@@ -84,25 +95,32 @@ OLU_KIMLIK = {
         'aciklamasi olarak gecer; kodda bu kimligi basan dal yok. Kimlik '
         'sayisi dususu zaten OZT-02 ile yakalanir.',
     ('KOD_SABLONLAR/scripts/api_surface.py', 'API-03'):
-        'Baslikta "imza degismis (parametre/donus) [P0]" diye bildirilir '
-        'ama api_surface yalniz kayip imza (API-02) ve regex adayi (API-04) '
-        'dallarini uygular; imza degisimi karsilastirmasi kodda yok.',
+        'OLCULDU: AST string sabiti ve `batarya` vakasi yok. T1 dali '
+        '`onceki - sonraki` ad kumesiyle yalniz API-02 (kayip) uretir; '
+        'parametre/donus bilgisi tasinmadigi icin degisen imza ayirt edilemez. '
+        'Bu bir uygulama boslugu; P0 vaadi karsilanmiyor.',
     ('KOD_SABLONLAR/scripts/dep_audit.py', 'DEP-02'):
-        'Baslikta "Manifestteki paket kilitte yok [P0]" diye bildirilir ama '
-        'dep_audit kodunda kilit paketlerini manifestle karsilastiran dal yok; '
-        'yalniz DEP-01/03/04/05/06 dallari uygulanir.',
-    ('KOD_SABLONLAR/scripts/secret_scan.py', 'SEC-04'):
-        'Baslikta "Ikili/kilit dosyasi atlandi [bilgi]" diye bildirilir ama '
-        'hiçbir dal bu kimligi basmiyor; atlanan dosyalar yalniz sayilir, '
-        'kimlikli BILGI satiri uretilmez.',
+        'OLCULDU: AST string sabiti ve `batarya` vakasi yok. `dep_audit.py` '
+        'yalniz kilit dosyasinin varligini denetler; kilit paket adlarini '
+        'manifestle karsilastiran dal yok. Bu bir uygulama boslugu; P0 vaadi '
+        'karsilanmiyor.',
 }
 # Kolaylik: kimlik -> (betik, gerekce). RISK tablosu kimlikle arar.
 OLU_KIMLIKLER = {k: (b, g) for (b, k), g in OLU_KIMLIK.items()}
 
-# Betik duzeyinde kapsam-disi gerekce. OLCULDU: bos — dort kapsam-disi kaydin
-# hepsi OLU_KIMLIK sinifina tasindi cunku hicbiri kodda basilmiyor.
+# Betik duzeyinde kapsam-disi gerekce. OLCULDU: bos — kalan uc olu kimlik
+# OLU_KIMLIK sinifinda; SEC-04 artik kodda basilip kural envanterine girdi.
 KAPSAM_DISI = {}
 TABAN_KAPSAM_DISI = frozenset()
+
+# Uc mutasyon kumesi: her canli kuralin bir vakasi olmali; olu kimlik ise
+# yalniz gerekceli olarak ayri tutulur. Kural listesi envanterden turetilir;
+# burada kimlik listesi tekrarlanmaz.
+KAPSAM_KUMELERI = {
+    'teslim_imza': 'ATLAS_SABLONLAR/scripts/teslim_imza.py',
+    'api_surface': 'KOD_SABLONLAR/scripts/api_surface.py',
+    'dep_audit': 'KOD_SABLONLAR/scripts/dep_audit.py',
+}
 
 # Yeni bir kural gercekten test edilemiyorsa gerekcesi buraya ACIKCA yazilir:
 #   ('KOD_SABLONLAR/scripts/ornek.py', 'ORN-07'): 'olculmus gerekce',
@@ -120,70 +138,265 @@ REFERANS = {
         'bolum-farkindaligi politikasina atif yapar',
 }
 
+# Kural kimligi bildirmeyen ama kapi gorevi goren betikler. Bunlar kural
+# envanterine giremez (kimlikleri yok), fakat tarama disinda da birakilamaz:
+# her biri tanı, kutuphane veya gerekceli kapsam disi siniflarindan biriyle ve
+# olculmus gerekceyle kaydedilir. Kimliksiz bir betik "kural" diye
+# etiketlenemez: kural sayilabilmesi icin envanterde bir KURAL kimligi ve
+# mutasyon/vaka bagi gerekir. Yeni bir kimliksiz betik eklenirse `make kapsam`
+# fail-closed durur; betik sonradan kural kimligi kazanirsa eski siniflandirma
+# bayat sayilir.
+KIMLIKSIZ_SINIFLAR = {
+    'ATLAS_SABLONLAR/scripts/ai_disclosure.py': (
+        'tani',
+        'AI beyan uretici/checker; AI-00..04 alt tani kodlari var, '
+        'bagimsiz KURAL kimligi yok; AI-1 testiyle olculur.'),
+    'ATLAS_SABLONLAR/scripts/apply_routing.py': (
+        'kutuphane',
+        'Yonlendirme profili uygulayici; ORTAK masterinin birebir kopyasi '
+        've RT-1/RT-2 testleri var; kapi kurali degil.'),
+    'ATLAS_SABLONLAR/scripts/budget_guard.py': (
+        'kapsam-disi',
+        'Butce on-kontrol kapisi (--preflight); BG-1..BG-4 testleri var, '
+        'ancak bagimsiz KURAL kimligi ve kural mutasyon vakasi yok. '
+        'Envantere alinmadi; betik duzeyinde gerekceli kapsam disi.'),
+    'ATLAS_SABLONLAR/scripts/gate_2c.py': (
+        'kapsam-disi',
+        'Gate-2C pivotal istisna kapisi; G2C-00..05 hata/tani kodlari var, '
+        'ancak KURAL kimligi yok. Gercek kapi `check_integrity.sh --gate2c` '
+        'ile harici panel ve Crossref DOI girdisi ister; ag hatasinda '
+        'BLOCKED doner. Hermetik atlas_selftest G2C matrisi davranisi '
+        'olcer, kural basina mutasyon vakasi yoktur; envantere alinmadi.'),
+    'ATLAS_SABLONLAR/scripts/gate_merge.py': (
+        'kapsam-disi',
+        '2A/2B birlestirici; P0/P1 degerlerini ham dizilerden yeniden '
+        'hesaplar ve GM testleri vardir, ancak bagimsiz KURAL kimligi ve '
+        'kural mutasyon vakasi yok. Envantere alinmadi.'),
+    'ATLAS_SABLONLAR/scripts/review_panel.py': (
+        'kapsam-disi',
+        'MAIN/REVIEWER/CRITIC panel sema ve hukum dogrulayicisi; HJ-* '
+        'tani kodlari var, ancak KURAL kimligi yok. HJ-1 matrisi davranisi '
+        'olcer; kural basina mutasyon vakasi olmadigi icin envantere alinmadi.'),
+    'ATLAS_SABLONLAR/scripts/verify_doi.py': (
+        'tani',
+        'DOI/UNVERIFIED checker; DEC-027 yalniz karar referansi, KURAL '
+        'kimligi yok; VD testleriyle olculur.'),
+    'KOD_SABLONLAR/scripts/apply_routing.py': (
+        'kutuphane',
+        'Yonlendirme profili uygulayici; ORTAK masterinin birebir kopyasi '
+        've RT-1/RT-2 testleri var; kapi kurali degil.'),
+    'KOD_SABLONLAR/scripts/budget_guard.py': (
+        'kapsam-disi',
+        'Butce on-kontrol kapisi (--preflight); BG-1..BG-4 testleri var, '
+        'ancak bagimsiz KURAL kimligi ve kural mutasyon vakasi yok. '
+        'Envantere alinmadi; betik duzeyinde gerekceli kapsam disi.'),
+    'KOD_SABLONLAR/scripts/imzala.py': (
+        'kutuphane',
+        'BASELINE HMAC imza yardimcisi; freeze_check tarafindan tuketilir, '
+        'tek basina kapi kurali degil.'),
+    'KOD_SABLONLAR/scripts/kod_gate_merge.py': (
+        'kapsam-disi',
+        'KOD 2-of-2/3-of-3 birlestirici; ORTAK/scripts/ortak_gate.py '
+        'ilkelerini import eder ve GM testleri vardir, ancak bagimsiz '
+        'KURAL kimligi ve kural mutasyon vakasi yok. Envantere alinmadi.'),
+}
+
+KIMLIKSIZ_ETIKETLER = {
+    'tani': 'tanı',
+    'kutuphane': 'kütüphane',
+    'kapsam-disi': 'kapsam dışı',
+}
+
 # Baslikta bildirilmeyen ama betik kodunda string literal olarak uretilen
 # kimlikler. Anahtar (betik, TAM kimlik); yeni bir kimlik ayni ailede bile
-# otomatik kabul edilmez. Bunlar bagimsiz kapi kurali degil, tani/veri
-# kimligidir; bu yuzden 121'lik kural envanterine ve mutasyon ratchet'ine
-# sayilmazlar. Her kaydin gerekcesi burada, tek makine-okunur kaynaktadir.
+# otomatik kabul edilmez. Aile oneki anahtar olarak kabul edilmez; aksi halde
+# yeni bir kimlik sessizce ayni gerekceye duserdi. Bunlar bagimsiz kapi kurali
+# degil, tani/veri kimligidir; bu yuzden 118'lik kural envanterine ve mutasyon
+# ratchet'ine sayilmazlar. Her kaydin gerekcesi burada, tek makine-okunur
+# kaynaktadir.
 KOD_ICI_GEREKCE = {
     ('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI-00'):
         ('tani-kodu', 'Manifest veya sema yok/bozuk; AI-1 onkosul tanisi, '
-                      'bagimsiz KURALLAR kurali degil.'),
+                      'bagimsiz KURALLAR kurali degil. Kaynak: '
+                      'ATLAS_SABLONLAR/scripts/ai_disclosure.py:144 '
+                      '(manifest_dogrula).'),
     ('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI-01'):
         ('tani-kodu', 'Manifest kok/schema/scope/entries sozlesmesi; '
-                      'AI-1 selftestinin alt tanisi.'),
+                      'AI-1 selftestinin alt tanisi. Kaynak: '
+                      'ATLAS_SABLONLAR/scripts/ai_disclosure.py:145 '
+                      '(manifest_dogrula).'),
     ('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI-02'):
         ('tani-kodu', 'Entry alan/usage/evidence dogrulamasi; AI-1 '
-                      'selftestinin alt tanisi.'),
+                      'selftestinin alt tanisi. Kaynak: '
+                      'ATLAS_SABLONLAR/scripts/ai_disclosure.py:131 '
+                      '(_metin_al).'),
     ('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI-03'):
         ('tani-kodu', 'Beyan yazma I/O hatasi; hukum uretmeyen operasyonel '
-                      'tani.'),
+                      'tani. Kaynak: '
+                      'ATLAS_SABLONLAR/scripts/ai_disclosure.py:314 (main).'),
     ('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI-04'):
         ('tani-kodu', '--check cikti uyusmazligi; AI-1 selftestinde kilitli '
-                      'cikti butunlugu alt tanisi.'),
+                      'cikti butunlugu alt tanisi. Kaynak: '
+                      'ATLAS_SABLONLAR/scripts/ai_disclosure.py:302 (main).'),
     ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-00'):
         ('tani-kodu', 'Panel semasi okunamadi/kimlik uyusmadi; HJ-1 '
-                      'onkosul tanisi.'),
+                      'onkosul tanisi. Kaynak: '
+                      'ATLAS_SABLONLAR/scripts/review_panel.py:106 '
+                      '(sema_dogrula).'),
     ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-01'):
         ('tani-kodu', 'JSON/kapali sema/alan sozlesmesi; HJ-1 selftestinin '
-                      'alt tanisi.'),
+                      'alt tanisi. Kaynak: '
+                      'ATLAS_SABLONLAR/scripts/review_panel.py:73 (json_oku).'),
     ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-02'):
-        ('tani-kodu', 'Run/input uyusmazligi; HJ-1 selftestinin alt tanisi.'),
+        ('tani-kodu', 'Run/input uyusmazligi; HJ-1 selftestinin alt tanisi. '
+                      'Kaynak: ATLAS_SABLONLAR/scripts/review_panel.py:206 '
+                      '(panel_uret).'),
     ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-03'):
         ('tani-kodu', 'Hukum kapsami/yinelenen kimlik/severity; HJ-1 '
-                      'selftestinin alt tanisi.'),
+                      'selftestinin alt tanisi. Kaynak: '
+                      'ATLAS_SABLONLAR/scripts/review_panel.py:179 (dizi).'),
     ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-04'):
         ('tani-kodu', 'Verdict/evidence butunlugu; HJ-1 selftestinin alt '
-                      'tanisi.'),
+                      'tanisi. Kaynak: '
+                      'ATLAS_SABLONLAR/scripts/review_panel.py:164 '
+                      '(judgment_dogrula).'),
     ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-05'):
-        ('tani-kodu', 'Rol/session kimligi; HJ-1 selftestinin alt tanisi.'),
+        ('tani-kodu', 'Rol/session kimligi; HJ-1 selftestinin alt tanisi. '
+                      'Kaynak: ATLAS_SABLONLAR/scripts/review_panel.py:121 '
+                      '(ortak_dogrula).'),
     ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-06'):
         ('tani-kodu', 'Model ailesi/session cesitliligi; HJ-1 selftestinin '
-                      'alt tanisi.'),
+                      'alt tanisi. Kaynak: '
+                      'ATLAS_SABLONLAR/scripts/review_panel.py:211 '
+                      '(panel_uret).'),
     ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-07'):
-        ('tani-kodu', 'Attempt/maliyet siniri; HJ-1 selftestinin alt tanisi.'),
+        ('tani-kodu', 'Attempt/maliyet siniri; HJ-1 selftestinin alt tanisi. '
+                      'Kaynak: ATLAS_SABLONLAR/scripts/review_panel.py:93 '
+                      '(maliyet).'),
     ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-08'):
-        ('tani-kodu', 'Panel ciktisi yazma I/O hatasi; operasyonel tani.'),
+        ('tani-kodu', 'Panel ciktisi yazma I/O hatasi; operasyonel tani. '
+                      'Kaynak: ATLAS_SABLONLAR/scripts/review_panel.py:397 '
+                      '(main).'),
     ('ATLAS_SABLONLAR/scripts/olgu_lint.py', 'OLGU-01'):
         ('tani-kodu', 'OLGULAR kanonu yok; olgu_lint onkosulu, OLGU-04..06 '
-                      'kurallarindan ayri.'),
+                      'kurallarindan ayri. Kaynak: '
+                      'ATLAS_SABLONLAR/scripts/olgu_lint.py:458 (main).'),
     ('ATLAS_SABLONLAR/scripts/olgu_lint.py', 'OLGU-02'):
-        ('tani-kodu', 'OLGULAR JSON/sema girdisi gecersiz; onkosul tanisi.'),
+        ('tani-kodu', 'OLGULAR JSON/sema girdisi gecersiz; onkosul tanisi. '
+                      'Kaynak: ATLAS_SABLONLAR/scripts/olgu_lint.py:466 '
+                      '(main).'),
     ('ATLAS_SABLONLAR/scripts/olgu_lint.py', 'OLGU-03'):
         ('tani-kodu', 'Ic deger uyusmazligi; OLGU-04..06 kapsamindaki tarihce '
-                      'denetiminin alt tanisi.'),
+                      'denetiminin alt tanisi. Kaynak: '
+                      'ATLAS_SABLONLAR/scripts/olgu_lint.py:510 (main).'),
     ('KOD_SABLONLAR/scripts/chg_reconcile.py', 'RECK-00'):
         ('tani-kodu', 'Ortak girdi/JSON/sema hatasi; RECK-08 sema kurali, '
-                      'RECK-01..09 ayri kurallardir.'),
+                      'RECK-01..09 ayri kurallardir. Kaynak: '
+                      'KOD_SABLONLAR/scripts/chg_reconcile.py:90 '
+                      '(makine_blogu).'),
 }
 # SC kimlikleri kapsam sozlesmesinin zorunlu BOLUM numaralaridir; kapi
 # kurali degildir. Tam liste: yeni bir SC kimligi kendiliginden gecmesin.
-for _sc in ('SC-%03d' % i for i in list(range(1, 23)) + [30]):
+# Her kimlik icin kaynak satiri ayridir; tablo gruplama yapmadan 41 kaydi
+# gosterir ve `kod_ici_kaynak_dogrula` bu satirin kimligi tasidigini sınar.
+SC_KAYNAK_SATIRLARI = {
+    'SC-001': 36, 'SC-002': 39, 'SC-003': 36, 'SC-004': 36,
+    'SC-005': 36, 'SC-006': 36, 'SC-007': 39, 'SC-008': 36,
+    'SC-009': 39, 'SC-010': 39, 'SC-011': 36, 'SC-012': 37,
+    'SC-013': 37, 'SC-014': 37, 'SC-015': 37, 'SC-016': 37,
+    'SC-017': 143, 'SC-018': 37, 'SC-019': 37, 'SC-020': 38,
+    'SC-021': 38, 'SC-022': 38, 'SC-030': 38,
+}
+for _sc, _sc_satir in SC_KAYNAK_SATIRLARI.items():
+    if _sc == 'SC-017':
+        _sc_gerekce = (
+            'Kapsam sozlesmesindeki DPIA zorunlu bolum kimligi; SP-05 '
+            'kosulunda denetlenir. Kaynak: '
+            'ATLAS_SABLONLAR/scripts/scope_profile_check.py:%d.' % _sc_satir
+        )
+    else:
+        _sc_gerekce = (
+            'Kapsam sozlesmesindeki zorunlu bolum kimligi; SP-01..07 kuraldir. '
+            'Kaynak: ATLAS_SABLONLAR/scripts/scope_profile_check.py:%d.'
+            % _sc_satir
+        )
     KOD_ICI_GEREKCE[('ATLAS_SABLONLAR/scripts/scope_profile_check.py', _sc)] = (
-        'veri-kimligi',
-        'Kapsam sozlesmesindeki zorunlu bolum kimligi; SP-01..07 kuraldir.',
-    )
-del _sc
+        'veri-kimligi', _sc_gerekce)
+del _sc, _sc_satir, _sc_gerekce
+
+# 41 kod-ici kimligin test kaniti. Anahtar (betik, tam kimlik); durum:
+#   oz-test : kimligi dogrudan denetleyen bir assertion/test adi var
+#   fikstur : yalniz test girdisi/verisi; bagimsiz assertion yok, TEST YOK
+#   yok     : hicbir test dosyasinda gecmiyor
+# Fiksturde gecmek test kaniti sayilmaz; bu yuzden fikstur satirlari tabloda
+# TEST YOK olarak gorunur. Varsayilan `yok`tur: yeni bir test referansi
+# belirirse asagidaki kayit guncellenmeden `kod_ici_kanit_dogrula` durur.
+KOD_ICI_TEST_KANITI = {
+    anahtar: ('yok', '', '') for anahtar in KOD_ICI_GEREKCE
+}
+KOD_ICI_TEST_KANITI.update({
+    ('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI-00'):
+        ('oz-test', 'AI-1', 'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI-01'):
+        ('oz-test', 'AI-1', 'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI-02'):
+        ('oz-test', 'AI-1', 'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI-04'):
+        ('oz-test', 'AI-1', 'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-00'):
+        ('oz-test', 'HJ-1', 'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-01'):
+        ('oz-test', 'HJ-1', 'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-02'):
+        ('oz-test', 'HJ-1', 'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-03'):
+        ('oz-test', 'HJ-1', 'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-04'):
+        ('oz-test', 'HJ-1', 'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-05'):
+        ('oz-test', 'HJ-1', 'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-06'):
+        ('oz-test', 'HJ-1', 'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/review_panel.py', 'HJ-07'):
+        ('oz-test', 'HJ-1', 'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+
+    ('ATLAS_SABLONLAR/scripts/olgu_lint.py', 'OLGU-01'):
+        ('oz-test', 'OLG-1', 'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/olgu_lint.py', 'OLGU-03'):
+        ('oz-test', 'OLG-1', 'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+
+    ('ATLAS_SABLONLAR/scripts/scope_profile_check.py', 'SC-002'):
+        ('oz-test', 'SRC-01/SRC-02',
+         'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/scope_profile_check.py', 'SC-005'):
+        ('oz-test', 'PC-3', 'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/scope_profile_check.py', 'SC-006'):
+        ('oz-test', 'PC-4', 'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/scope_profile_check.py', 'SC-007'):
+        ('oz-test', 'SP-2', 'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/scope_profile_check.py', 'SC-022'):
+        ('oz-test', 'eksik-kapsam', 'tools/temiz_teslim_selftest.py'),
+
+    ('ATLAS_SABLONLAR/scripts/scope_profile_check.py', 'SC-001'):
+        ('fikstur', 'temel kapsam fiksturu',
+         'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/scope_profile_check.py', 'SC-003'):
+        ('fikstur', 'REC-01/SP-02 fiksturu',
+         'tools/mutasyon_bataryasi.py'),
+    ('ATLAS_SABLONLAR/scripts/scope_profile_check.py', 'SC-008'):
+        ('fikstur', 'VD bolum capasi',
+         'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/scope_profile_check.py', 'SC-009'):
+        ('fikstur', 'SP profil fiksturu',
+         'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/scope_profile_check.py', 'SC-010'):
+        ('fikstur', 'SP profil fiksturu',
+         'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+    ('ATLAS_SABLONLAR/scripts/scope_profile_check.py', 'SC-030'):
+        ('fikstur', 'temel kapsam fiksturu',
+         'ATLAS_SABLONLAR/scripts/atlas_selftest.py'),
+})
 
 # Risk sirasi — 19.11.2026'daki 51 mutation-kapsamsiz kuralin tamami.
 # Siralama ilkesi: once sahte yesil/tamper (P0), sonra tedarik/teslim/yuzey,
@@ -198,7 +411,7 @@ RISK_GRUPLARI = {
     'KAPSAM': 'Kapsam/degisiklik butunlugu — P0',
     'TEDARIK': 'Tedarik, teslim ve disa acik yuzey — P0/P1',
     'ENVANTER': 'Test envanteri, olcum ve provenance — P0/P1',
-    'BILGI': 'Bilgi seviyesi / olu kimlik — P1',
+    'BILGI': 'Bilgi seviyesi — P0/P1 disi',
 }
 RISK_SIRASI = [
     ('TST-08', 'KANIT'), ('RECK-06', 'KAPSAM'), ('DEP-05', 'TEDARIK'),
@@ -271,21 +484,21 @@ RISK_NOT = {
 # her kuralin somut riskini tek cumlede tutar; yeni kural icin kayit zorunludur.
 RISK_NOT.update({
     'DEP-01': 'Manifest varken kilit anahtari yok, bos ya da kilit dosyasi eksikse bagimlilik surumleri denetimsiz kalir; kapi P0 verir.',
-    'DEP-02': 'Baslikta bildirilir; dep_audit kodunda kilit paketlerini manifestle karsilastiran dal yok, bu yuzden kimlik olu. Uygulanirsa kilit bayatligi P0 olur.',
-    'DEP-06': 'Profilde bagimlilik_manifesti bos birakilirsa bagimlilik yuzeyi hic denetlenmez; kapi CALISTIRILMADI/P1 verir.',
-    'DEP-03': 'Surum sabitlenmezse (*, latest, bos ya da kilitsiz ^/~) ayni manifest farkli paket surumleri kurabilir; P1.',
-    'DEP-04': 'Kilit dosyasi diffte degisirken manifest guncellenmezse beyan edilen bagimlilik ile kilit ayrisir; P1.',
+    'DEP-02': 'OLU KIMLIK: `dep_audit.py` yalniz kilit dosyasi varligini denetler; kilit paketlerini manifestle karsilastiran dal ve string sabiti yok. Ayrintili olcum Envanter disi tablosunda.',
+    'DEP-06': 'P1: profilde `bagimlilik_manifesti` bos liste ise CALISTIRILMADI + OLCULMEYEN uretir; vaka DEP-06 listeyi bosaltir, rc=0. Bagimlilik denetimi hic kosmaz.',
+    'DEP-03': 'P1: regex `*`, `latest`, `^`, `~` veya bos surumu yakalar; vaka DEP-03 `flask==latest` ekler, rc=0. Bu bir uyari dalidir, P0 degildir.',
+    'DEP-04': 'P1: `git diff --name-only HEAD` yalniz kilit dosyasini gorurse uyarir; vaka DEP-04 kilit dosyasina dokunur, manifest sabit kalir, rc=0.',
     'TSL-01': 'Teslim manifesti yok veya bozuksa imza dogrulanamaz; kapi fail-closed P0 verir.',
     'TSL-02': 'Manifestte listelenen dosya diskte yoksa teslim kumesi eksiktir; imza eksik artefakti kurtarmaz, P0.',
     'TSL-03': 'Teslim dosyasinin sha256 degeri manifestten farkliysa artefakt yolda degistirilmistir; P0 tahrifat.',
     'TSL-04': 'Teslim imzasi gecersizse manifest baska anahtarla imzalanmis veya sonradan degistirilmis olabilir; P0.',
-    'TSL-05': 'Teslim imzasi yoksa butunluk yalniz dusuk guvenle kabul edilir; P1 uyari kapiyi kapatmaz.',
+    'TSL-05': 'P1: `teslim_imza.py` imza alani YOKSA veya imza VAR ama anahtar yoksa DUSUK_GUVEN uretir; iki dal da rc=0 dondurur. Vaka TSL-05 imza alanini siler; P0 dali yoktur.',
     'TSL-06': 'Zorunlu teslim artefakti manifestte hic yoksa imza eksik kumeyi dogrular; kapsam boslugu P0.',
-    'API-01': 'KFAZ0 API envanteri yoksa disa acik yuzey karsilastirilamaz; kapi CALISTIRILMADI/P1 verir.',
+    'API-01': 'P1: `api_surface.py` taban.get("dis_imza") None ise CALISTIRILMADI uretir; vaka API-01 bu alani siler, rc=0. Karsilastirma yapilamaz, P0 yolu yoktur.',
     'API-02': 'KFAZ0 envanterindeki disa acik imza kaybolursa mevcut cagiranlar sessizce kirilir; P0.',
-    'API-03': 'Baslikta bildirilir; api_surface yalniz kayip imza ve regex adayi dallarini uygular, imza degisimi karsilastirmasi kodda yok; P0 vaadi olu kimliktir.',
-    'API-04': 'Regex taramasi bir adayi kacirirsa disa acik yuzey eksik sayilir; DUSUK_GUVEN/P1.',
-    'API-05': 'API kademelerinden hicbiri kosmazsa disa acik yuzey denetimi tamamen korlesir; CALISTIRILMADI/P1.',
+    'API-03': 'OLU KIMLIK: `api_surface.py` kodunda API-03 string sabiti yok; T1 yalniz ad kumesi karsilastirir, parametre/donus tasimaz. Ayrintili olcum Envanter disi tablosunda.',
+    'API-04': 'P1: T2 regex taramasi `foo` adayini bulamazsa DUSUK_GUVEN uretir; vaka API-04 `def foo` -> `def baz` yapar, rc=0. T2 tek basina P0 uretemez.',
+    'API-05': 'P1: `imza_komutu` exit!=0 veya T1/T2 yoksa CALISTIRILMADI uretir; vaka API-05 komutu `false` yapar, rc=0. Hicbir kademe P0 karari uretmez.',
     'OZT-01': 'Oz-test taban dosyasi yok veya bozuksa onceki test envanteriyle karsilastirma yapilamaz; fail-closed P0.',
     'OZT-02': 'Tabandaki bir test kimligi bu kosuda yoksa test sessizce silinmistir; P0 kapsam kaybi.',
     'OZT-03': 'Kosuda hic test yoksa sifir test yesil sayilmamali; fail-closed P0.',
@@ -502,8 +715,13 @@ def kod_ici_sinifla(yol, kimlik):
     """Tek kod-ici kimligi (sinif, gerekce) olarak cozer; yoksa fail-closed.
 
     Anahtar TAM (betik, kimlik) ciftidir. Boylece ayni oneke sahip yeni bir
-    kimlik (or. AI-99) aile gerekcesiyle sessizce gecemez.
+    kimlik (or. AI-99) aile gerekcesiyle sessizce gecemez. Onek anahtarlari
+    burada ve kaynak dogrulamasinda reddedilir.
     """
+    if not KOD_ICI_TAM.fullmatch(str(kimlik)):
+        raise SystemExit(
+            'KOD-ICI KAPSAM: tam kimlik bekleniyor: %r · %s; '
+            'aile oneki anahtar olarak kullanilamaz' % (kimlik, yol))
     anahtar = (yol, kimlik)
     if anahtar not in KOD_ICI_GEREKCE:
         raise SystemExit(
@@ -514,8 +732,17 @@ def kod_ici_sinifla(yol, kimlik):
 
 
 def kod_ici_kaynak_dogrula():
-    """Her dislama kaydinin sinif ve bos olmayan gerekce tasidigini sinar."""
+    """Her dislama kaydinin tam kimlik, sinif, gerekce ve kaynak tasidigini sinar.
+
+    Kaynak referansi yalniz metin degildir: dosya gercekten var olmali,
+    satir araligi dosya sinirinda olmali ve aralikta kimlik gecmelidir.
+    Boylece tablodaki her dislama gerekcesi denetlenebilir bir koda baglanir.
+    """
     for (yol, kimlik), (sinif, gerekce) in KOD_ICI_GEREKCE.items():
+        if not KOD_ICI_TAM.fullmatch(str(kimlik)):
+            raise SystemExit(
+                'KOD-ICI KAPSAM: gerekce anahtari TAM kimlik olmali: %r · %s; '
+                'aile oneki anahtar olarak kabul edilmez' % (kimlik, yol))
         if sinif not in ('tani-kodu', 'veri-kimligi'):
             raise SystemExit(
                 'KOD-ICI KAPSAM: gecersiz sinif %r · %s · %s' % (sinif, kimlik, yol))
@@ -523,11 +750,59 @@ def kod_ici_kaynak_dogrula():
             raise SystemExit(
                 'KOD-ICI KAPSAM: gerekcesiz kimlik %s · %s; '
                 'KOD_ICI_GEREKCEye gerekce yaz' % (kimlik, yol))
+        m = KOD_ICI_KAYNAK.search(gerekce)
+        if not m:
+            raise SystemExit(
+                'KOD-ICI KAYNAK: gerekcede kaynak yok: %s · %s; '
+                '"Kaynak: <dosya>:<satir>" ekleyin' % (kimlik, yol))
+        kaynak_yolu = m.group('yol')
+        kaynak = KOK / kaynak_yolu
+        if not kaynak.is_file():
+            raise SystemExit(
+                'KOD-ICI KAYNAK: dosya yok: %s · %s' % (kaynak_yolu, kimlik))
+        satirlar = kaynak.read_text(encoding='utf-8').splitlines()
+        ilk = int(m.group('ilk'))
+        son = int(m.group('son') or ilk)
+        if ilk > son or son > len(satirlar):
+            raise SystemExit(
+                'KOD-ICI KAYNAK: satir araligi gecersiz: %s:%s-%s · %s'
+                % (kaynak_yolu, ilk, son, kimlik))
+        if not any(kimlik in satir for satir in satirlar[ilk - 1:son]):
+            raise SystemExit(
+                'KOD-ICI KAYNAK: %s:%s-%s kimligi icermiyor · %s'
+                % (kaynak_yolu, ilk, son, kimlik))
+        fonksiyon = m.group('fonksiyon')
+        if fonksiyon:
+            import ast
+            agac = ast.parse(kaynak.read_text(encoding='utf-8'))
+            adlar = {dugum.name for dugum in ast.walk(agac)
+                     if isinstance(dugum, (ast.FunctionDef, ast.AsyncFunctionDef))}
+            if fonksiyon not in adlar:
+                raise SystemExit(
+                    'KOD-ICI KAYNAK: fonksiyon yok: %s · %s · %s'
+                    % (fonksiyon, kaynak_yolu, kimlik))
 
 
 def kod_ici_oztest():
-    """Sahte bir kod-ici kimligin tarama + siniflamada reddedildigini sinar."""
+    """Sahte kimligin, aile onekinin ve kaynaksiz gerekcenin reddedildigini sinar."""
     kod_ici_kaynak_dogrula()
+    # Kaynak referansi zorunlu; gerekceden cikarilinca fail-closed olmali.
+    yedek = dict(KOD_ICI_GEREKCE)
+    try:
+        anahtar = sorted(KOD_ICI_GEREKCE)[0]
+        sinif, _gerekce = KOD_ICI_GEREKCE[anahtar]
+        KOD_ICI_GEREKCE[anahtar] = (
+            sinif, 'kapsam_selftest: kaynak referansi olmayan gerekce.')
+        try:
+            kod_ici_kaynak_dogrula()
+        except SystemExit as exc:
+            if 'kaynak yok' not in str(exc):
+                raise
+        else:
+            raise SystemExit('KOD-ICI OZTEST: FAIL — kaynaksiz gerekce kabul edildi')
+    finally:
+        KOD_ICI_GEREKCE.clear()
+        KOD_ICI_GEREKCE.update(yedek)
     sahte = 'x = "AI-99"\n'
     try:
         for kimlik in KOD_ICI.findall(sahte):
@@ -538,6 +813,34 @@ def kod_ici_oztest():
     else:
         raise SystemExit('KOD-ICI OZTEST: FAIL — sahte AI-99 kabul edildi')
     kod_ici_sinifla('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI-00')
+
+    try:
+        kod_ici_sinifla('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI')
+    except SystemExit as exc:
+        if 'tam kimlik' not in str(exc):
+            raise
+    else:
+        raise SystemExit('KOD-ICI OZTEST: FAIL — aile oneki lookup kabul etti')
+
+    # Aile oneki tek basina anahtar olamaz: AI-99'u AI-00'in gerekcesine
+    # dusurmek fail-closed engellenir.
+    yedek = dict(KOD_ICI_GEREKCE)
+    try:
+        KOD_ICI_GEREKCE[('ATLAS_SABLONLAR/scripts/ai_disclosure.py', 'AI')] = (
+            'tani-kodu', 'aile oneki; tam kimlik degil, gerekce olamaz.')
+        try:
+            kod_ici_kaynak_dogrula()
+        except SystemExit as exc:
+            if 'TAM kimlik' not in str(exc):
+                raise
+        else:
+            raise SystemExit('KOD-ICI OZTEST: FAIL — aile oneki kabul edildi')
+    finally:
+        KOD_ICI_GEREKCE.clear()
+        KOD_ICI_GEREKCE.update(yedek)
+    # Gerekce ve test kaniti ayni kaynaktan okunur; biri guncellenip digeri
+    # unutulursa burada fail-closed durur.
+    kod_ici_kanit_dogrula()
 
 
 def tarama_oztest():
@@ -687,6 +990,140 @@ def kod_ici_kimlikler():
     return sonuc
 
 
+def test_dosyalari():
+    """Kod-ici kimlik kaniti tasiyan selftest ve fikstur dosyalari."""
+    for d in DIZINLER + ('tools',):
+        for p in sorted((KOK / d).glob('*_selftest.py')):
+            # kapsam_selftest gecici AI-98 gibi kimlikleri kendi kaynaginda
+            # tasir; bu bir urun testi degil, kapsam mekanizmasinin meta-testidir.
+            if p.name == 'kapsam_selftest.py':
+                continue
+            yield p
+    p = KOK / 'tools' / 'mutasyon_bataryasi.py'
+    if p.is_file():
+        yield p
+
+
+def test_referanslari():
+    """{kimlik: [test/fikstur dosyasi]} — docstring ve yorumlar haric.
+
+    Yalniz AST string sabitleri taranir. Boylece bir kimligin testte yalniz
+    yorumda gecmesi kanit sayilmaz; fikstur verisi ise ayri bir tur olarak
+    gorunur ve `kod_ici_kanit_dogrula` tarafindan assertion'tan ayrilir.
+    """
+    sonuc = {}
+    for p in test_dosyalari():
+        yol = str(p.relative_to(KOK))
+        try:
+            sabitler = _kod_sabitleri(p.read_text(encoding='utf-8'))
+        except (OSError, SyntaxError) as exc:
+            raise SystemExit(
+                'KOD-ICI KANIT: test dosyasi okunamadi: %s (%s)' % (yol, exc))
+        for sabit in sabitler:
+            for kimlik in KOD_ICI_REFERANS.findall(sabit):
+                sonuc.setdefault(kimlik, set()).add(yol)
+    return {k: sorted(v) for k, v in sonuc.items()}
+
+
+def kod_ici_kanit_dogrula():
+    """Test kaniti kaydi ile gercek test referanslarini iki yonlu denetle.
+
+    - Her KOD_ICI_GEREKCE anahtarinin bir kanit kaydi olmali; stale kayit yok.
+    - `yok` bir kimlik hicbir test dosyasinda gecmemeli.
+    - `oz-test` ve `fikstur` kaynagi gercekten kimligi icermeli; oz-test
+      kaynagi bir `*_selftest.py` olmali ve test adi kaynakta bulunmali.
+    Bu, fixture metnini yanlislikla "test edildi" diye saymayi engeller.
+    """
+    eksik = sorted(set(KOD_ICI_GEREKCE) - set(KOD_ICI_TEST_KANITI))
+    if eksik:
+        raise SystemExit(
+            'KOD-ICI KANIT: kayit yok: %s' %
+            ', '.join('%s·%s' % (b.split('/')[-1], k) for b, k in eksik))
+    bayat = sorted(set(KOD_ICI_TEST_KANITI) - set(KOD_ICI_GEREKCE))
+    if bayat:
+        raise SystemExit(
+            'KOD-ICI KANIT: bayat kayit: %s' %
+            ', '.join('%s·%s' % (b.split('/')[-1], k) for b, k in bayat))
+    referanslar = test_referanslari()
+    for (betik, kimlik), (sinif, _gerekce) in sorted(KOD_ICI_GEREKCE.items()):
+        tur, test, kaynak = KOD_ICI_TEST_KANITI[(betik, kimlik)]
+        if tur not in ('oz-test', 'fikstur', 'yok'):
+            raise SystemExit(
+                'KOD-ICI KANIT: gecersiz tur %r · %s' % (tur, kimlik))
+        if tur == 'yok':
+            if referanslar.get(kimlik):
+                raise SystemExit(
+                    'KOD-ICI KANIT: %s testte geciyor (%s); kaydi '
+                    'oz-test/fikstur olarak guncelle'
+                    % (kimlik, ', '.join(referanslar[kimlik])))
+            continue
+        if not kaynak or not test:
+            raise SystemExit(
+                'KOD-ICI KANIT: %s icin kaynak/test adi bos' % kimlik)
+        if kaynak not in referanslar.get(kimlik, []):
+            raise SystemExit(
+                'KOD-ICI KANIT: %s · %s kaynagi kimligi icermiyor'
+                % (kimlik, kaynak))
+        if tur == 'oz-test':
+            if not kaynak.endswith('_selftest.py'):
+                raise SystemExit(
+                    'KOD-ICI KANIT: %s oz-test kaynagi selftest degil: %s'
+                    % (kimlik, kaynak))
+            metin = (KOK / kaynak).read_text(encoding='utf-8')
+            for ad in test.split('/'):
+                if ad and ad not in metin:
+                    raise SystemExit(
+                        'KOD-ICI KANIT: %s test adi kaynakta yok: %s · %s'
+                        % (kimlik, ad, kaynak))
+        elif tur != 'fikstur':
+            raise SystemExit(
+                'KOD-ICI KANIT: %s icin bilinmeyen tur %r' % (kimlik, tur))
+
+
+def kod_ici_kanitlari():
+    """41 kimligi kanit turu, kaynagi ve uc durumdan biriyle listele."""
+    kod_ici_kanit_dogrula()
+    satirlar = []
+    for (betik, kimlik), (sinif, _gerekce) in sorted(
+            KOD_ICI_GEREKCE.items()):
+        tur, test, kaynak = KOD_ICI_TEST_KANITI[(betik, kimlik)]
+        if tur == 'oz-test':
+            durum = 'ÖZ-TEST'
+            kanit = '`%s` · %s' % (kaynak.split('/')[-1], test)
+        elif tur == 'fikstur':
+            durum = 'YALNIZ TANI' if sinif == 'tani-kodu' else 'TEST YOK'
+            kanit = '`%s` · yalnız fikstür (%s)' % (
+                kaynak.split('/')[-1], test)
+        else:
+            durum = 'YALNIZ TANI' if sinif == 'tani-kodu' else 'TEST YOK'
+            kanit = '—'
+        satirlar.append((betik, kimlik, sinif, kanit, durum))
+    return satirlar
+
+
+def kod_ici_kanit_tablosu(satirlar):
+    out = ['| Betik | Kimlik | Sinif | Test kaniti | Durum |',
+           '|---|---|---|---|---|']
+    for betik, kimlik, sinif, kanit, durum in satirlar:
+        out.append('| `%s` | %s | %s | %s | %s |' % (
+            betik.split('/')[-1], kimlik, sinif, kanit, durum))
+    return out
+
+
+def kod_ici_kanit_sayilari(satirlar):
+    """Durum dagilimi; fikstur ve hic referans olmayan veri ayrica sayilir."""
+    sayilar = {'ÖZ-TEST': 0, 'YALNIZ TANI': 0, 'TEST YOK': 0}
+    fikstur = referanssiz = 0
+    for betik, kimlik, sinif, _kanit, durum in satirlar:
+        sayilar[durum] += 1
+        tur = KOD_ICI_TEST_KANITI[(betik, kimlik)][0]
+        if tur == 'fikstur':
+            fikstur += 1
+        elif tur == 'yok' and sinif == 'veri-kimligi':
+            referanssiz += 1
+    return sayilar, fikstur, referanssiz
+
+
 def kod_ici_tablosu(kimlikler):
     gruplar = {}
     for betik, kimlik, sinif, gerekce in kimlikler:
@@ -719,6 +1156,57 @@ def tarama():
         sonuc.append((str(p.relative_to(KOK)), sorted(baslik), sorted(bolum),
                       sorted(baslik | bolum)))
     return sonuc
+
+
+def kimliksiz_betikler():
+    """Kural kimligi bildirmeyen, fakat kapi taramasinda kalan betikler.
+
+    Kapsam envanteri yalniz kural kimligi tasiyan satirlari sayar. Bu fonksiyon
+    envanterde karsiligi olmayan dosyalari kaybetmez: her biri asagidaki uc
+    siniftan biriyle ve gerekceyle eslesmek zorundadir. Eslesme yoksa
+    `make kapsam` fail-closed durur.
+    """
+    sonuc = []
+    for p in kapi_betikleri():
+        baslik, bolum = _kimlikler(p)
+        if baslik or bolum:
+            continue
+        yol = str(p.relative_to(KOK))
+        kayit = KIMLIKSIZ_SINIFLAR.get(yol)
+        if kayit is None:
+            raise SystemExit(
+                'KIMLIKSIZ KAPSAM: siniflandirilmamis betik %s; '
+                'KIMLIKSIZ_SINIFLAR icin tani/kutuphane/kapsam-disi '
+                'gerekcesi yaz' % yol)
+        kategori, gerekce = kayit
+        sonuc.append((yol, kategori, gerekce))
+    return sonuc
+
+
+def kimliksiz_dogrula():
+    """Kimliksiz betik siniflandirmasini iki yonlu fail-closed denetle."""
+    olculen = {yol for yol, _kategori, _gerekce in kimliksiz_betikler()}
+    bayat = sorted(set(KIMLIKSIZ_SINIFLAR) - olculen)
+    if bayat:
+        raise SystemExit(
+            'KIMLIKSIZ KAPSAM: siniflandirma bayat %s; betik artik kural '
+            'kimligi bildiriyor veya dosya yok' % ', '.join(bayat))
+    for yol, (kategori, gerekce) in sorted(KIMLIKSIZ_SINIFLAR.items()):
+        if kategori not in KIMLIKSIZ_ETIKETLER:
+            raise SystemExit(
+                'KIMLIKSIZ KAPSAM: gecersiz sinif %r · %s' % (kategori, yol))
+        if not isinstance(gerekce, str) or len(gerekce.strip()) < 40:
+            raise SystemExit(
+                'KIMLIKSIZ KAPSAM: gerekce cok kisa · %s' % yol)
+
+
+def kimliksiz_tablosu():
+    """Kimliksiz betikleri sinif ve olculmus gerekceyle listele."""
+    out = ['| Betik | Sinif | Gerekce |', '|---|---|---|']
+    for yol, kategori, gerekce in kimliksiz_betikler():
+        out.append('| `%s` | %s | %s |' % (
+            yol, KIMLIKSIZ_ETIKETLER[kategori], gerekce))
+    return out
 
 
 def batarya_modu():
@@ -1051,10 +1539,70 @@ def rec_tablosu(vakalar):
     return out
 
 
+def kume_kanitlari(satirlar):
+    """TSL/API/DEP kumelerinde her canli kuralin vaka kanitini denetler.
+
+    Kural kimlikleri elle tekrarlanmaz: envanterden ve `OLU_KIMLIK`ten gelir.
+    Canli bir kuralin vakasi yoksa fail-closed; olu kimlik ise vakasiz kalabilir
+    ama gerekcesi `OLU_KIMLIK`te zorunludur. Donus: (ayrinti, ozet) satirlari.
+    """
+    durum = {(b, k): (v, d, g) for b, k, v, d, g in satirlar}
+    ayrinti = []
+    ozet = []
+    for kume, betik in sorted(KAPSAM_KUMELERI.items()):
+        canli = sorted((b, k) for b, k, _v, _d, _g in satirlar if b == betik)
+        olu = sorted((b, k) for b, k in OLU_KIMLIK if b == betik)
+        if not canli and not olu:
+            raise SystemExit('KUME KAPSAM: betikte kural yok: %s' % betik)
+        test = beklenen = 0
+        for b, k in canli:
+            vaka, d, gerekce = durum[(b, k)]
+            temel = d.split('\u00b7')[0]
+            if temel == 'TEST EDILDI':
+                test += 1
+            elif temel == 'BEKLENEN BULGU':
+                beklenen += 1
+            elif temel == 'BOSLUK' or temel == 'KAPSAM DISI':
+                raise SystemExit('KUME KAPSAM: %s/%s durum=%s; once vaka veya '
+                                 'olculmus istisna gerekir' % (kume, k, temel))
+            if not vaka:
+                raise SystemExit('KUME KAPSAM: %s/%s canli kuralin vakasi yok'
+                                 % (kume, k))
+            ayrinti.append((kume, k, temel, vaka, gerekce))
+        for _b, k in olu:
+            ayrinti.append((kume, k, 'OLU KIMLIK', '—',
+                            OLU_KIMLIK[(_b, k)]))
+        ozet.append((kume, len(canli), test, beklenen, len(olu)))
+    return ayrinti, ozet
+
+
+def kume_tablosu(ayrinti, ozet):
+    """Kume ozeti ve her kuralin vakasini tek yerde gosterir."""
+    out = ['| Kume | Canli kural | TEST EDILDI | BEKLENEN BULGU | OLU KIMLIK |',
+           '|---|---|---|---|---|']
+    for kume, canli, test, beklenen, olu in ozet:
+        out.append('| %s | %d | %d | %d | %d |'
+                   % (kume, canli, test, beklenen, olu))
+    out.append('| **Toplam** | **%d** | **%d** | **%d** | **%d** |'
+               % (sum(o[1] for o in ozet), sum(o[2] for o in ozet),
+                  sum(o[3] for o in ozet), sum(o[4] for o in ozet)))
+    out += ['', '| Kume | Kural | Durum | Vaka | Kanit / gerekce |',
+            '|---|---|---|---|---|']
+    for kume, k, durum, vaka, kanit in ayrinti:
+        out.append('| %s | %s | %s | %s | %s |'
+                   % (kume, k, durum, vaka or '—',
+                      str(kanit).replace('|', '\\|')))
+    return out
+
+
 def markdown():
     satirlar, envan, (test, disi, bosluk, oz_anilan, beklenen_test) = olc()
     yeni, geri, test_eksik, bosluk_fazla = ratchet(satirlar)
     kod_ici = kod_ici_kimlikler()
+    kanit_satirlari = kod_ici_kanitlari()
+    (kanit_sayilari, fikstur_sayisi,
+     referanssiz_sayisi) = kod_ici_kanit_sayilari(kanit_satirlari)
+    kimliksiz = kimliksiz_betikler()
     mod = batarya_modu()
     vakalar = mod.vakalar()
     toplam_vaka = len(vakalar)
@@ -1108,6 +1656,15 @@ def markdown():
            % len(OLU_KIMLIK),
            '| — envanter disi: dis referans | %d |' % len(REFERANS),
            '| Kod icinde uretilen, envantere alinmayan kimlik | %d |' % len(kod_ici),
+           '| — öz-test assertion | %d |' % kanit_sayilari['ÖZ-TEST'],
+           '| — yalnız tanı kodu (test yok) | %d |' % kanit_sayilari['YALNIZ TANI'],
+           '| — test yok (veri kimliği) | %d |' % kanit_sayilari['TEST YOK'],
+           '| — bunlardan yalnız fikstürde geçen | %d |' % fikstur_sayisi,
+           '| — bunlardan hiç test referansı olmayan | %d |' % referanssiz_sayisi,
+           '| Kimliksiz kapi betigi | %d |' % len(kimliksiz),
+           '| — tanı | %d |' % sum(1 for _y, k, _g in kimliksiz if k == 'tani'),
+           '| — kütüphane | %d |' % sum(1 for _y, k, _g in kimliksiz if k == 'kutuphane'),
+           '| — kapsam dışı | %d |' % sum(1 for _y, k, _g in kimliksiz if k == 'kapsam-disi'),
            '| Batarya vakasi (toplam) | %d |' % toplam_vaka,
            '| — atesleyen (HATA + TERMINAL) | %d |' % atesleyen_vaka,
            '| — HATA (rc=1) | %d |' % hata_vaka,
@@ -1126,7 +1683,7 @@ def markdown():
            % sum(1 for _b, _k, _v, d, _g in satirlar
                  if d == 'BEKLENEN BULGU\u00b7KANITSIZ'),
            '| Toplam dogrulanan kural | %d |' % (test + beklenen_test),
-           '| Gerekceli kapsam disi | %d |' % disi,
+           '| Gerekceli kapsam disi kural | %d |' % disi,
            '| Bosluk (gerekce yok) | %d |' % bosluk,
            '| — bunlardan yalniz oz-testte anilan | %d |' % oz_anilan,
            '| — hicbir testte gecmeyen | %d |' % (bosluk - oz_anilan),
@@ -1162,6 +1719,15 @@ def markdown():
            '%s itibariyla vaka aldi; durum sutunu guncel envanterden okunur.'
            % KAPSAM_TARIHI, '']
     out += risk_tablosu(satirlar)
+    kume_ayrinti, kume_ozet = kume_kanitlari(satirlar)
+    out += ['', '## Uc kume: teslim_imza, api_surface, dep_audit', '',
+            'Bu kesim, adi gecen uc betikteki butun canli kurallari ve varsa '
+            'olu kimlikleri tek tabloda toplar. Kural listesi envanterden '
+            'turetilir; canli kuralin mutasyon vakasi yoksa `make kapsam` '
+            'fail-closed durur.', '']
+    out += kume_tablosu(kume_ayrinti, kume_ozet)
+    out += ['', 'Ayrintili P1/P0 gerekcesi risk tablosunda; kodda hic '
+            'basilmayan kimliklerin gerekcesi Envanter disi tablosundadir.']
     if bosluk:
         out += ['', '## Sonraki dilim', '',
                 'Asagidaki kural(lar) %s itibariyla kapatilmadi; kalan %d boslugun risk'
@@ -1202,15 +1768,55 @@ def markdown():
                 'Gerekceler tahmin degil; her satir betigin kodundaki '
                 'bagimliliga dayanir (asagida betik adiyla birlikte yazili).', '']
         out += sinif_tablosu(satirlar)
+    out += ['', '## Kimliksiz kapi betikleri', '',
+            'Asagidaki betiklerde `KURALLAR` basligi veya `# --- KIMLIK` '
+            'bolum basligi yok. Bu yuzden kural envanterine kural olarak '
+            'girmezler; ancak tarama disinda da birakilmazlar. Her biri '
+            '**tanı**, **kütüphane** veya **gerekceli kapsam dışı** '
+            'sınıflarından birine baglanir. Kimliksiz bir betik **kural** '
+            'sayılmaz; kural sayılması için envanterde bir KURAL kimliği ve '
+            'mutasyon/vaka bağı gerekir. Sınıflandırılmamış yeni bir betik '
+            'veya sonradan kural kimliği kazanan eski bir kayit `make kapsam` '
+            'tarafından fail-closed durdurulur; bu bolum kural kapsamı sayacina '
+            'eklenmez ve mevcut ratchet tabanlarini degistirmez.', '']
+    out += kimliksiz_tablosu()
+    out += ['', 'Toplam kimliksiz kapi betigi: **%d**.' % len(kimliksiz),
+            'Sınıf dağılımı: **%d tanı · %d kütüphane · %d kapsam dışı**.'
+            % (sum(1 for _y, k, _g in kimliksiz if k == 'tani'),
+               sum(1 for _y, k, _g in kimliksiz if k == 'kutuphane'),
+               sum(1 for _y, k, _g in kimliksiz if k == 'kapsam-disi')),
+            'Bu betik düzeyi sınıflandırma, kural düzeyi `KAPSAM_DISI` sayacına '
+            'girmez: burada kural kimliği yoktur; sayaç yalnız envanterdeki '
+            'kuralların gerekçeli istisnalarını sayar.', '']
     out += ['', '## Kod icinde uretilen kimlikler', '',
             'Asagidaki kimlikler `KURALLAR` basliginda veya `# --- KIMLIK`',
             'bolum basliginda bildirilmez; betik kodu tarafindan string literal',
             'olarak uretilir. Her biri tek tek denetlendi: bagimsiz bir',
             '`KURALLAR` sozlesmesi degil, ilgili kapinin alt tanisi veya',
             'sozlesme bolum verisidir. Bu yuzden envantere kural olarak eklenmez;',
-            'gerekce sessizce dusulmez. Ayni ailede yeni bir kimlik belirse bile',
-            '`make kapsam` fail-closed durur:', '']
+            'gerekce sessizce dusulmez. Her gerekcede `Kaynak: <dosya>:<satir>`',
+            'referansi vardir; `kod_ici_kaynak_dogrula` dosyanin varligini, satir',
+            'araligini ve kimligin o satirda gectigini her kosuda denetler.',
+            'Ayni gerekce ve kaynak satirini paylasan kimlikler tek tablo satirinda',
+            'gruplanir; kaynak, gruptaki her kimligin gercekten gectigi satiri',
+            'gosterir. Ayni ailede yeni bir kimlik belirse bile `make kapsam`',
+            'fail-closed durur:', '']
     out += kod_ici_tablosu(kod_ici)
+    out += ['', '## Kod icinde uretilen kimliklerin test kaniti', '',
+            'Her kimlik icin test dosyalari AST ile tarandi; docstring ve '
+            'yorumlar sayilmaz. **ÖZ-TEST**, kimligi dogrudan denetleyen bir '
+            'assertion veya test adi varsa yazilir. **YALNIZ TANI**, hicbir '
+            'test referansi olmayan `tani-kodu` sinifidir. **TEST YOK**, '
+            'dogrudan test assertion\'i olmayan veri kimligidir; yalniz fikstür '
+            'verisinde gecmek test kaniti sayilmaz. Fikstürde gecen kimlikler '
+            '`yalnız fikstür` olarak ayrica isaretlenir ve TEST YOK sayilir.', '']
+    out += kod_ici_kanit_tablosu(kanit_satirlari)
+    out += ['', 'Toplam: **%d** kod-ici kimlik · **%d** öz-test · '
+            '**%d** yalnız tanı · **%d** test yok '
+            '(bunlardan **%d** yalnız fikstür, **%d** hiç test referansı yok).'
+            % (len(kanit_satirlari), kanit_sayilari['ÖZ-TEST'],
+               kanit_sayilari['YALNIZ TANI'], kanit_sayilari['TEST YOK'],
+               fikstur_sayisi, referanssiz_sayisi), '']
     if not envan.get('ATLAS_SABLONLAR/scripts/verify_doi.py'):
         out += ['', 'Not: `verify_doi.py` tarandi; bildirilen kural kimligi yok.',
                 'Dosyadaki `DEC-027` bir karar referansidir, kural degil; bu',
@@ -1265,8 +1871,11 @@ def json_rapor():
             tarama_oztest()
             olu_kimlik_oztest()
             olu_kimlik_dogrula()
+            kimliksiz_dogrula()
+            _kume_ayrinti, _kume_ozet = kume_kanitlari(olc()[0])
     except SystemExit:
         oztest_gecti = False
+        _kume_ozet = []
     satirlar, envan, (test, disi, bosluk, oz_anilan, beklenen) = olc()
     yeni, geri, test_eksik, bosluk_fazla = ratchet(satirlar)
     testte_gecmeyen = max(0, bosluk - oz_anilan)
@@ -1282,6 +1891,12 @@ def json_rapor():
                            deger='PASS' if oztest_gecti else 'FAIL',
                            ham='kapsam oz-testleri %s' % (
                                'PASS' if oztest_gecti else 'FAIL')),
+        kapi_cikti.kontrol('KAPSAM.kume', 'TSL/API/DEP canli kural kapsami',
+                           'PASS' if _kume_ozet else 'FAIL',
+                           deger='%d canli / %d olu'
+                           % (sum(o[1] for o in _kume_ozet),
+                              sum(o[4] for o in _kume_ozet)),
+                           ham='kume_ozet=%s' % (_kume_ozet,)),
         kapi_cikti.kontrol('KAPSAM.ratchet', 'kapsam regresyon ratchet',
                            'PASS' if ratchet_gecti else 'FAIL',
                            deger='PASS' if ratchet_gecti else 'FAIL',
@@ -1350,13 +1965,19 @@ def main(argv):
         tarama_oztest()
         olu_kimlik_oztest()
         olu_kimlik_dogrula()
-        print('KAPSAM OZTEST: PASS — kimlik fail-closed · sozlesme ayrik · '
+        kimliksiz_dogrula()
+        kume_ayrinti, kume_ozet = kume_kanitlari(olc()[0])
+        print('KUME KAPSAM: PASS — %d kume · %d canli kural · %d olu kimlik'
+              % (len(KAPSAM_KUMELERI), sum(o[1] for o in kume_ozet),
+                 sum(o[4] for o in kume_ozet)))
+        print('KAPSAM OZTEST: PASS — kimlik ve kaynak fail-closed · sozlesme ayrik · '
               'ratchet iki yonlu · FRZ-08 >100 · DEC-027 referans · '
-              'olu kimlik %d gerekceli' % len(OLU_KIMLIK))
+              'olu kimlik %d gerekceli · kimliksiz %d siniflandirilmis'
+              % (len(OLU_KIMLIK), len(KIMLIKSIZ_SINIFLAR)))
         return 0
     if '--kontrol' in argv or '--yaz' in argv:
         kod_ici_oztest()
-        print('KOD-ICI OZTEST: PASS — bilinmeyen kimlik fail-closed')
+        print('KOD-ICI OZTEST: PASS — kaynak, bilinmeyen kimlik ve aile oneki fail-closed')
         sozlesme_oztest()
         print('SOZLESME OZTEST: PASS — HATA/TERMINAL/BEKLENEN_BULGU ayrik')
         ratchet_oztest()
@@ -1366,8 +1987,13 @@ def main(argv):
         print('TARAMA OZTEST: PASS — >100 kural bulunur · dis referans sayilmaz')
         olu_kimlik_oztest()
         olu_kimlik_dogrula()
+        kimliksiz_dogrula()
+        kume_kanitlari(olc()[0])
+        print('KUME KAPSAM: PASS — TSL/API/DEP canli kurallarin tamami vakali')
         print('OLU KIMLIK: PASS — %d envanter disi kimlik · hepsi olculen ve '
               'gerekceli · %d dis referans' % (len(OLU_KIMLIK), len(REFERANS)))
+        print('KIMLIKSIZ KAPSAM: PASS — %d betik uc siniftan biriyle '
+              'gerekceli' % len(KIMLIKSIZ_SINIFLAR))
     satirlar, _envan, (test, _disi, bosluk, _ozanilan, _beklenen_test) = olc()
     yeni, geri, test_eksik, bosluk_fazla = ratchet(satirlar)
     if '--kontrol' in argv or '--yaz' in argv:

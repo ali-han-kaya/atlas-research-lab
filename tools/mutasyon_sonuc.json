@@ -1,10 +1,10 @@
 {
  "schema": "MUTASYON-SONUC/v1",
- "kaynak_sha256": "6c7e31286d626e26f3d78cabb88d3ee09a71335cf82cd299edeb77b494550c7d",
+ "kaynak_sha256": "d125522552acfd1676c99d7d492c8046db3ffc3bb647fe4bb9dc998c4d90a50b",
  "kisa": false,
  "sayilar": {
-  "vaka": 141,
-  "gecti": 141,
+  "vaka": 142,
+  "gecti": 142,
   "kalan": 0
  },
  "vakalar": [
@@ -1183,6 +1183,18 @@
    "durum": "GECTI-BULGU",
    "gecti": true,
    "ayrinti": "taban sessiz · mutasyon bulgusu=SEC-03 (rc=0) · kontrol rc=0 · FAIL iz yok"
+  },
+  {
+   "id": "SEC-04",
+   "katman": "KOD",
+   "aciklama": "atlanan ikili dosya loglanir",
+   "kural": "SEC-04",
+   "kural_onek": "",
+   "betik": "KOD_SABLONLAR/scripts/secret_scan.py",
+   "sozlesme": "BEKLENEN_BULGU",
+   "durum": "GECTI-BULGU",
+   "gecti": true,
+   "ayrinti": "taban sessiz · mutasyon bulgusu=SEC-04 (rc=0) · kontrol rc=0 · FAIL iz yok"
   },
   {
    "id": "SEC-05",

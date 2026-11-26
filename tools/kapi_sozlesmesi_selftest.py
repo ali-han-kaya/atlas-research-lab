@@ -139,7 +139,7 @@ def main():
     try:
         k = kapi_cikti.oku(kapsam.stdout)
         kapsam_ok = (kapsam.returncode == 0 and k["kapi"] == "kapsam"
-                     and kapi_cikti.sec(k, "KAPSAM.toplam_dogrulanan") == "117")
+                     and kapi_cikti.sec(k, "KAPSAM.toplam_dogrulanan") == "118")
         kapsam_hata = "" if kapsam_ok else kapsam.stderr.strip()[:300]
     except Exception as e:
         kapsam_ok = False
