@@ -1340,7 +1340,7 @@ def _mk_aktif_sayac_sil(k):
     return degistir(
         k, 'tools/model_kimlik.py',
         "            '(%d gerekce) · onay=%d kayit · aktif=0'\n",
-        "            '(onayli=%d · onaysiz=%d) · onay=%d kayit'\n")
+        "            '(%d gerekce) · onay=%d kayit'\n")
 
 
 def taban_ve_bulgu(kok, kapi, argumanlar, mutasyon, iz, cwd=None, env=None,
