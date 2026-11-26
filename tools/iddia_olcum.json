@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-25T22:54:16Z",
+  "zaman": "2026-11-26T00:54:28Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -38,7 +38,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 113/113 kural atesledi · 27/27 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "ham": "SONUC: 113/113 kural atesledi · 28/28 beklenen bulgu dogrulandi · taban temiz olmayan=0",
       "deger": "113/113"
     },
     "IDD-05": {
@@ -47,8 +47,8 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 113/113 kural atesledi · 27/27 beklenen bulgu dogrulandi · taban temiz olmayan=0",
-      "deger": "27/27"
+      "ham": "SONUC: 113/113 kural atesledi · 28/28 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "deger": "28/28"
     },
     "IDD-06": {
       "komut": [
@@ -290,8 +290,8 @@
         "import sys; sys.path.insert(0, 'tools'); import mutasyon_bataryasi as m; print('VAKA: %d' % len(m.vakalar()))"
       ],
       "rc": 0,
-      "ham": "VAKA: 140",
-      "deger": "140"
+      "ham": "VAKA: 141",
+      "deger": "141"
     },
     "IDD-40": {
       "komut": [
@@ -365,7 +365,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SOZLESME: 105/105 HATA (rc=1) · 8/8 TERMINAL (rc=2) · 27/27 BEKLENEN_BULGU",
+      "ham": "SOZLESME: 105/105 HATA (rc=1) · 8/8 TERMINAL (rc=2) · 28/28 BEKLENEN_BULGU",
       "deger": "105/105"
     },
     "IDD-53": {
@@ -405,7 +405,7 @@
         "--json"
       ],
       "rc": 0,
-      "ham": "{\"capa\": 10, \"guncel\": \"140/113/27\", \"guncel_ayrinti\": {\"atesleyen\": 113, \"bulgu\": 27, \"hata\": 105, \"terminal\": 8, \"vaka\": 140}, \"iddia\": 5, \"schema\": \"MUTASYON-ANLATIM/v1\", \"tarihsel\": \"109/91/18\", \"tarihsel_ayrinti\": {\"atesleyen\": 91, \"bulgu\": 18, \"hata\": 84, \"terminal\": 7, \"vaka\": 109}}",
+      "ham": "{\"capa\": 10, \"guncel\": \"141/113/28\", \"guncel_ayrinti\": {\"atesleyen\": 113, \"bulgu\": 28, \"hata\": 105, \"terminal\": 8, \"vaka\": 141}, \"iddia\": 5, \"schema\": \"MUTASYON-ANLATIM/v1\", \"tarihsel\": \"109/91/18\", \"tarihsel_ayrinti\": {\"atesleyen\": 91, \"bulgu\": 18, \"hata\": 84, \"terminal\": 7, \"vaka\": 109}}",
       "deger": "109/91/18"
     }
   }
