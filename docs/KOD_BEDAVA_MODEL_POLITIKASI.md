@@ -208,7 +208,7 @@ Sırayla, hepsi yeşil olmadan commit yok:
 ```bash
 make model-kimlik        # PASS · incelenmedi=0 · onay=1 kayit · aktif=0
 python3 tools/model_kimlik.py --oztest    # 11/11
-make mutasyon            # 113/113 kural + 27/27 beklenen bulgu (140 vaka)
+make mutasyon            # 113/113 kural + 28/28 beklenen bulgu (141 vaka)
 make dogrula             # 8/8 · H2 65
 make kapsam              # ratchet PASS
 make katalog-kontrol     # canli: allowlist + on rol; OLCULMEDI PASS degil

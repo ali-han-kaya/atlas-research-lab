@@ -21,7 +21,7 @@ BEKLENEN KIRMIZI — bu komut bilerek rc=1 doner.
 
 **8/8** gate checks · prior mutation baseline · **174/174** KOD self-tests.
 
-The mutation baseline above is historical. The current battery is **113/113** firing cases plus **27/27** expected findings over **117** verified rules: **93 firing-tested** and **24 expected-finding-only**; `make dogrula` reports **8/8**.
+The mutation baseline above is historical. The current battery is **113/113** firing cases plus **28/28** expected findings over **117** verified rules: **93 firing-tested** and **24 expected-finding-only**; `make dogrula` reports **8/8**.
 
 Gate scripts declare **121** identifiers. **117** of them are rules — **93** proven by a case that turns the gate red and **24** that only emit an expected marker — and **4** are dead identities that no code branch ever prints, plus **1** external decision reference. Zero rules are out of scope with a measured reason, and zero are unexplained gaps. The full per-rule table is generated from code: [`docs/KURAL-KATALOGU.md`](docs/KURAL-KATALOGU.md).
 

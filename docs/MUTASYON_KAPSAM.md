@@ -55,11 +55,11 @@ gecersiz kilmaz, ama kapi kodunu degistirmek kiler.
 | — envanter disi: olu kimlik (bildirilir, basilMAZ) | 4 |
 | — envanter disi: dis referans | 1 |
 | Kod icinde uretilen, envantere alinmayan kimlik | 41 |
-| Batarya vakasi (toplam) | 140 |
+| Batarya vakasi (toplam) | 141 |
 | — atesleyen (HATA + TERMINAL) | 113 |
 | — HATA (rc=1) | 105 |
 | — TERMINAL (rc=2) | 8 |
-| — beklenen bulgu | 27 |
+| — beklenen bulgu | 28 |
 | Atesleyen vakayla test edilen kural (TEST EDILDI) | 93 |
 | — bunlardan son kosuda GECEN (kanitli) | 93 |
 | — vaka VAR, son kosu kaniti YOK | 0 |
@@ -156,7 +156,7 @@ saglamlik/etki sirasina gore sabittir. Kapatilan her kural
 ## Sonraki dilim
 
 24.11.2026 itibariyla kapatilmayan bosluk yok (0). Dokuz eski boslugun her biri
-gercek bir mutasyon vakasiyla kapatildi; 27 beklenen-bulgu vakasi
+gercek bir mutasyon vakasiyla kapatildi; 28 beklenen-bulgu vakasi
 uyari modunda, digerleri kirmizi/terminal hukumle dogrulandi.
 
 
@@ -400,7 +400,7 @@ tip ihlalidir; kopya degil, farkli hata dalidir.
 | `freeze_check.py` | FRZ-05 | FRZ-05 | TEST EDILDI | son kosuda gecti: FRZ-05 |
 | `freeze_check.py` | FRZ-06 | FRZ-06 | TEST EDILDI | son kosuda gecti: FRZ-06 |
 | `freeze_check.py` | FRZ-07 | FRZ-07 | TEST EDILDI | son kosuda gecti: FRZ-07 |
-| `freeze_check.py` | FRZ-08 | FRZ-08, FRZ-08-IMZA, FRZ-08-GECERSIZ-IMZA, FRZ-08-P1 | TEST EDILDI | son kosuda gecti: FRZ-08, FRZ-08-IMZA, FRZ-08-GECERSIZ-IMZA, FRZ-08-P1 |
+| `freeze_check.py` | FRZ-08 | FRZ-08, FRZ-08-IMZA, FRZ-08-GECERSIZ-IMZA, FRZ-08-P1, FRZ-08-IMZASIZ | TEST EDILDI | son kosuda gecti: FRZ-08, FRZ-08-IMZA, FRZ-08-GECERSIZ-IMZA, FRZ-08-P1, FRZ-08-IMZASIZ |
 | `perm_lint.py` | PERM-01 | KOD-PERM-01 | TEST EDILDI | son kosuda gecti: KOD-PERM-01 |
 | `perm_lint.py` | PERM-02 | PERM-02 | TEST EDILDI | son kosuda gecti: PERM-02 |
 | `perm_lint.py` | PERM-03 | PERM-03 | BEKLENEN BULGU | son kosuda gecti: PERM-03 |

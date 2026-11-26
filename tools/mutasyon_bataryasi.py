@@ -545,6 +545,17 @@ def _frz08_p1(k):
                          lambda v: v.__setitem__('temiz_agac', True))
 
 
+def _frz08_imza_sil(k):
+    """Tek ihlal: gecerli imzali tabandan yalniz imza alanini sil.
+
+    `temiz_agac:true` kalir; imza alani kaldirilinca FRZ-08 imzasiz dala
+    duser ve P1 DUSUK_GUVEN uretir. Boylece imza alaninin YOKLUGU, gecersiz
+    imza terminal daliyla karistirilmaz.
+    """
+    return _json_duzenle(k, '_KOSU/gate/BASELINE.json',
+                         lambda v: v.pop('temiz_agac_imzasi', None))
+
+
 def _frz01_kayip(k):
     """FRZ-01 kayip dali: profil dosyasi silinir; terminal GATE_TAMPERED."""
     (k / 'kod_profil.json').unlink()
@@ -1702,6 +1713,14 @@ def vakalar():
          _frz08_p1,
          'FRZ-08 DUSUK_GUVEN', 'BULGU', {'sozlesme': SOZLESME_BULGU,
                                           'kur': _frz08_hazirla}),
+        ('FRZ-08-IMZASIZ', 'KOD',
+         'imzali tabandan imza alani silinince dusuk guven',
+         'KOD_SABLONLAR/scripts/freeze_check.py',
+         lambda k: ['--taban', str(k / '_KOSU' / 'gate' / 'BASELINE.json')],
+         _frz08_imza_sil,
+         'FRZ-08 DUSUK_GUVEN', 'BULGU', {'sozlesme': SOZLESME_BULGU,
+                                          'kur': _frz08_imza_hazirla,
+                                          'env': _frz08_env()}),
         ('DEP-01', 'KOD', 'manifest varken kilit beyani zorunlu',
          'KOD_SABLONLAR/scripts/dep_audit.py',
          lambda k: [],

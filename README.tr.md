@@ -102,7 +102,7 @@ visible; evidence levels (`BIRINCIL`/`DIJITAL`/`BEYAN`/`OLCULMEDI`); fail-closed
 (unmeasured is never a pass); and tamper detection (`GATE_TAMPERED` → P0).
 - **How claims are verified.** `make dogrula` (hygiene, syntax, secret scan, secret-gate
 self-test, three self-test suites), `make mutasyon` (ninety-three firing-tested gate rules,
-each exercised by a 140-case battery: silent clean baseline + one violation + a red/terminal
+each exercised by a 141-case battery: silent clean baseline + one violation + a red/terminal
 verdict or expected finding), and `tools/yayinla.py`
 (publish parity: 0 new / 0 changed / 0 deleted). The same commands run in CI on GitHub Actions.
 `make iddia` closes the remaining gap: it re-measures the numbers printed in this README.
@@ -110,7 +110,7 @@ verdict or expected finding), and `tools/yayinla.py`
 exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin
 wrapper and cannot carry 1 vs 2, because GNU make always exits 2 on a failing recipe. `make dogrula` → **8 pass / 0 fail / 0 not run** (T1, `OLG-1`, now
 runs against this tree's `attestation.json`); current self-test and inventory values are generated in
-[`docs/DURUM.md`](docs/DURUM.md). Mutation battery **113/113 firing cases + 27/27 expected findings** over 117 verified rules: **93 firing-tested** and **24 expected-finding-only**. Mutation-tested vs untested gate rules are measured
+[`docs/DURUM.md`](docs/DURUM.md). Mutation battery **113/113 firing cases + 28/28 expected findings** over 117 verified rules: **93 firing-tested** and **24 expected-finding-only**. Mutation-tested vs untested gate rules are measured
 in [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md); dependent-package findings in
 [`docs/GUVENLIK.md`](docs/GUVENLIK.md); CI green. Non-Turkish readers:
 [`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md).
@@ -297,8 +297,8 @@ tek bir ihlal üretilir ve kapının **kırmızıya döndüğü**
 (`rc=1`, yalnız hedef FAIL) doğrulanır. Beklenen-bulgu vakasında kapı `rc=0`
 kalabilir, ama ihlal sonrası beklenen uyarı/işaret çıktıda **bulunmalıdır**. Her
 iki modda da temiz tabanda bulgunun yokluğu ortak ön koşuldur; taban kirliyse
-veya ihlal sonrası beklenen iz yoksa vaka geçmez. Katalog 140 vakadır:
-113 ateşleyen (105 HATA + 8 TERMINAL) + 27 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,
+veya ihlal sonrası beklenen iz yoksa vaka geçmez. Katalog 141 vakadır:
+113 ateşleyen (105 HATA + 8 TERMINAL) + 28 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,
 `quote_ratio.py` içindeki dengesiz düz tırnak uyarısını ayrı bir vaka olarak
 kilitler; böylece uyarı dalı runner tarafından atlanmaz. Model, ağ ve yerel
 katalog gerekmez.
@@ -592,7 +592,7 @@ kapısı `KANIT-05` ile kırmızı olur. Ayrıntılı sınırlar ve negatif kont
 
 ## Mutasyon kapsamı
 
-`make mutasyon` 140 vakanın gerçekten ateşlediğini kanıtlar: HATA vakalarında
+`make mutasyon` 141 vakanın gerçekten ateşlediğini kanıtlar: HATA vakalarında
 sessiz temiz taban → tek ihlal → `rc=1`; TERMINAL vakalarında `rc=2` +
 `GATE_TAMPERED`/`TERMINAL FAIL`; beklenen-bulgu vakalarında sessiz temiz taban →
 tek ihlal → işaretli bulgu (`rc=0` olabilir). **Her kuralın** durumu ise

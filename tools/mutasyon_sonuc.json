@@ -1,10 +1,10 @@
 {
  "schema": "MUTASYON-SONUC/v1",
- "kaynak_sha256": "919d3450269b2be4983e9ec71d8ad5adb88232f837dacd9831e03db2a30b1e5e",
+ "kaynak_sha256": "6c7e31286d626e26f3d78cabb88d3ee09a71335cf82cd299edeb77b494550c7d",
  "kisa": false,
  "sayilar": {
-  "vaka": 140,
-  "gecti": 140,
+  "vaka": 141,
+  "gecti": 141,
   "kalan": 0
  },
  "vakalar": [
@@ -732,6 +732,18 @@
    "id": "FRZ-08-P1",
    "katman": "KOD",
    "aciklama": "imzasiz temiz taban dusuk guven",
+   "kural": "FRZ-08",
+   "kural_onek": "",
+   "betik": "KOD_SABLONLAR/scripts/freeze_check.py",
+   "sozlesme": "BEKLENEN_BULGU",
+   "durum": "GECTI-BULGU",
+   "gecti": true,
+   "ayrinti": "taban sessiz · mutasyon bulgusu=FRZ-08 DUSUK_GUVEN (rc=0) · kontrol rc=0 · FAIL iz yok"
+  },
+  {
+   "id": "FRZ-08-IMZASIZ",
+   "katman": "KOD",
+   "aciklama": "imzali tabandan imza alani silinince dusuk guven",
    "kural": "FRZ-08",
    "kural_onek": "",
    "betik": "KOD_SABLONLAR/scripts/freeze_check.py",

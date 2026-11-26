@@ -79,8 +79,8 @@ after-mutation contract holds. A green baseline alone is not enough; a marker
 in the baseline fails the case before the mutation is even evaluated.
 
 ```text
-SONUC: 113/113 kural atesledi · 27/27 beklenen bulgu dogrulandi · taban temiz olmayan=0
-SOZLESME: 105/105 HATA (rc=1) · 8/8 TERMINAL (rc=2) · 27/27 BEKLENEN_BULGU
+SONUC: 113/113 kural atesledi · 28/28 beklenen bulgu dogrulandi · taban temiz olmayan=0
+SOZLESME: 105/105 HATA (rc=1) · 8/8 TERMINAL (rc=2) · 28/28 BEKLENEN_BULGU
 HUKUM: PASS — her vaka temiz tabanda sessiz, ihlalde kirmizi/beklenen bulgu.
 ```
 
@@ -93,7 +93,7 @@ branch ever emits (DEP-02, API-03, OZT-04, SEC-04) — and **1** external
 reference (DEC-027); each carries a measured reason in its own table, and none
 of them is counted as a rule. Of the rules that are counted, 0 are mentioned
 only in self-tests and 0 appear in no test at all. All nine previous gaps now
-have mutation cases; the 27 expected-finding cases (including TST-06, CHK-05 and the
+have mutation cases; the 28 expected-finding cases (including TST-06, CHK-05, FRZ-08-IMZASIZ and the
 dedicated `QR-02-DENGE` case for the unbalanced-quote warning) are verified by
 a marker after the mutation with a silent clean baseline, not by a red verdict.
 Dead identities are not relabelled as tested and not silently dropped: they are
@@ -119,8 +119,10 @@ baseline and gets one mutated run;
 FRZ-01 and FRZ-02 each have terminal-contract and missing-file reruns, plus a
 combined terminal check. FRZ-08 has three terminal cases (an invalid signature,
 a validly signed baseline whose content is changed afterwards, and a validly
-signed baseline re-signed with a different key) plus an expected-finding case
-for an unsigned `temiz_agac:true` baseline (P1 `DUSUK_GUVEN`). REC-01..06 cases
+signed baseline re-signed with a different key) plus two expected-finding cases
+for an unsigned `temiz_agac:true` baseline: one built from an unsigned base and
+one reached by deleting only the signature field from a validly signed base
+(P1 `DUSUK_GUVEN`). REC-01..06 cases
 also restore the fixture and rerun green as a
 no-op control; their alternatives cover duplicate FIX-IDs, malformed Gate 2B
 JSON/schema and multiple ghost IDs.

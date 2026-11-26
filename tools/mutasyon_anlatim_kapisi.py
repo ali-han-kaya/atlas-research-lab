@@ -5,8 +5,8 @@
 NEDEN VAR
   Mutasyon bataryasi iki sozlesmeli: kirmizi atesleyen vakalar (HATA/TERMINAL)
   ve beklenen-bulgu vakalari. Tarihsel 12.128 snapshot'i 109 vaka = 91
-  atesleyen + 18 beklenen-bulgu; guncel katalog 140 vaka = 113 atesleyen
-  (105 HATA + 8 TERMINAL) + 27 beklenen-bulgu. Bu sayilar README, docs ve
+  atesleyen + 18 beklenen-bulgu; guncel katalog 141 vaka = 113 atesleyen
+  (105 HATA + 8 TERMINAL) + 28 beklenen-bulgu. Bu sayilar README, docs ve
   iddia defterine elle yazilir; biri guncellenmezse anlati sessizce tek
   sozlesmeli "hepsi kirmizi" bicimine geri kayabilir.
 
@@ -16,7 +16,7 @@ NEDEN VAR
       katalogdaki sozlesme (FRZ-01T -> FRZ-01 takma adiyla).
   Sonra README.tr.md, README.en.md, docs/README.md, docs/EN/QUICKSTART.md,
   docs/DERSLER_v1_2026-08-30.md ve tools/iddia_defteri.json icindeki sayilari
-  birebir karsilastirir. Tek-sozlesmeli ifadeler (140/140, 109/109, "her vaka
+  birebir karsilastirir. Tek-sozlesmeli ifadeler (141/141, 140/140, 109/109, "her vaka
   kirmizi") ve guncel baglamda tarihsel 109 toplami fail-closed reddedilir.
 
 NE OLCMEZ
@@ -154,6 +154,7 @@ CAPALAR = (
 # Tek-sozlesmeli anlatimin dogrudan imzalari. Tarihsel DERSLER satirlari bu
 # taramaya girmez; orada gecmis bir uygulamanin kaydi mesru olabilir.
 YASAK_IFADELER = (
+    (r'\b141/141\b', '141/141 (tum guncel vakalar kirmizi)'),
     (r'\b140/140\b', '140/140 (tum guncel vakalar kirmizi)'),
     (r'\b109/109\b', '109/109 (tum tarihsel vakalar kirmizi)'),
     (r'\bher vaka(?:sı|si)?\s+kırmızı\b', 'her vaka kirmizi'),

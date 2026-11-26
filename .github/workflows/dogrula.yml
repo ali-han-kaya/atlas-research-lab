@@ -104,8 +104,8 @@ jobs:
         run: make mutasyon
 
       # Mutasyon sayilari kamu anlatimina elle yazilir. Kapi 109/91/18 ve
-      # guncel 140/113/27 sayilarini vaka katalogundan turetir; README, docs
-      # ve iddia defteri ayrisirsa ya da tek-sozlesmeli (140/140) ifade
+      # guncel 141/113/28 sayilarini vaka katalogundan turetir; README, docs
+      # ve iddia defteri ayrisirsa ya da tek-sozlesmeli (141/141) ifade
       # girerse kirmizi olur. Bataryadan SONRA kosar: kayit taze olsun.
       - name: Mutasyon anlatimi katalogla tutarli mi
         run: make mutasyon-anlatim
