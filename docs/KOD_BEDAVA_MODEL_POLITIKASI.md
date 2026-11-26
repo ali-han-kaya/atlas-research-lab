@@ -61,9 +61,13 @@ tabanın altına düşerse `LIMIT_YETERSIZ` ile reddedilir, tahmin edilmez.
 ```bash
 python3 tools/katalog_kontrol.py     # kanonik rc
 make katalog-kontrol                 # sarmalayıcı + append-only kayıt; GNU make hatayı 2'ye çevirir
+make bedava-kontrol                  # yalniz bedava profili; CI'ya baglanmaz
 ```
 
 - Kaynak: `https://models.dev/api.json`.
+- `make bedava-kontrol` yalnız `profiller.bedava` sözleşmesini denetler: on rol,
+  tek kimlik, canlı `cost` 0, `reasoning`/`tool_call` true. Ağ yoksa `rc=2` ve
+  `OLCULMEDI` döner; bu hedef CI'ya bağlanmaz.
 - **Canlı ölçüm CI dışındadır.** `make katalog-kontrol` ağ gerektirir; elle
   veya yerel zamanlanmış bir işle çalıştırılır. CI yalnız çevrimdışı
   `make katalog-selftest` testini `make dogrula-ci` üzerinden koşar.
@@ -313,6 +317,7 @@ tutulur; CI artifact'ı yoktur.
 | `tools/model_kimlik.py` | emekli kimlik taraması, `--oztest`, `--envanter` |
 | `tools/model_kimlik_istisna.json` | emekli kimlik + satır hash'leri + `onay` |
 | `make katalog-kontrol` | canlı ölçüm + `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydı |
+| `make bedava-kontrol` | yalnız bedava profili: on rol, tek kimlik, canlı cost/reasoning/tool_call; CI'ya bağlanmaz |
 | `.github/workflows/dogrula.yml` | `dogrula` ve `iddia` işleri; canlı katalog işi yok |
 | `make model-kimlik` | aktif atıf denetimi (fail-closed ön koşul) |
 | `make mutasyon` | korumaların geri alınamazlığı; güncel vaka sayısı komut çıktısında |
