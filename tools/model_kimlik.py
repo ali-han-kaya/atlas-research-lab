@@ -24,12 +24,18 @@ KOR NOKTASIZ TARAMA
   muafiyet de ayni `onay` listesinde kayitlidir. Boylece kontrol, bulamadigi
   icin degil bakamadigi icin de PASS veremez.
 
+  Git'in yok saydigi dosyalar ayri bir kumede tutulur. Her biri defterdeki
+  `gorulmedi` desenlerinden biriyle gerekcesine baglanmalidir; eslesmeyen tek
+  dosya FAIL eder. Boylece `.gitignore` arkasina saklanan kimlik sessizce PASS
+  veremez; raporda `gorulmedi` dosya ve gerekce sayisi birlikte gorunur.
+
 KULLANIM
   python3 tools/model_kimlik.py --kontrol   # aday dosyalarin tamami + defter
   python3 tools/model_kimlik.py --oztest    # sentetik pozitif/negatif vakalar
   python3 tools/model_kimlik.py --envanter  # mevcut eslesmeleri hash'le listele
 """
 import contextlib
+import fnmatch
 import hashlib
 import io
 import json
@@ -75,19 +81,46 @@ def defter_tanim_sha256(veri):
     return hashlib.sha256(ham).hexdigest()
 
 
-def _git_dosyalar(kok):
-    """Izlenen + yeni (yok sayilmayan) dosyalar; kok bir git koku degilse None."""
+def _git_kok(kok):
+    """Kok gercek bir git koku ise None; degilse hata metni dondurur."""
     try:
         ust = subprocess.run(['git', '-C', str(kok), 'rev-parse',
                               '--show-toplevel'],
                              capture_output=True, check=True)
         if (os.path.realpath(ust.stdout.decode('utf-8').strip())
                 != os.path.realpath(str(kok))):
-            return None
+            return 'kok git ust dizini degil'
+        return None
+    except (OSError, subprocess.CalledProcessError, UnicodeDecodeError) as e:
+        return 'git kok bulunamadi: %s' % (e,)
+
+
+def _git_dosyalar(kok):
+    """Izlenen + yeni (yok sayilmayan) dosyalar; kok bir git koku degilse None."""
+    if _git_kok(kok) is not None:
+        return None
+    try:
         r = subprocess.run(['git', '-C', str(kok), 'ls-files', '-z',
                             '--cached', '--others', '--exclude-standard'],
                            capture_output=True, check=True)
         return [p for p in r.stdout.decode('utf-8').split('\0') if p]
+    except (OSError, subprocess.CalledProcessError, UnicodeDecodeError):
+        return None
+
+
+def _git_ignored_dosyalar(kok):
+    """Yalniz gitignore'un yok saydigi dosyalar; git yoksa None.
+
+    Bu kume taranmaz. Raporda gorunmesi ve defterdeki bir gerekceye baglanmasi
+    zorunludur; aksi halde `hukum` FAIL verir.
+    """
+    if _git_kok(kok) is not None:
+        return None
+    try:
+        r = subprocess.run(['git', '-C', str(kok), 'ls-files', '-z',
+                            '--others', '--ignored', '--exclude-standard'],
+                           capture_output=True, check=True)
+        return sorted(p for p in r.stdout.decode('utf-8').split('\0') if p)
     except (OSError, subprocess.CalledProcessError, UnicodeDecodeError):
         return None
 
@@ -117,7 +150,7 @@ def _gerekce(veri, alan, en_az, baglam):
 
 
 def defter_dogrula(veri):
-    """Defteri fail-closed dogrular; (kimlikler, izinli, onay) dondurur."""
+    """Defteri fail-closed dogrular; (kimlikler, izinli, onay, gorulmedi) dondurur."""
     if not isinstance(veri, dict):
         raise DefterHatasi('kok nesne degil')
     kayitlar = veri.get('emekli_kimlikler')
@@ -201,7 +234,27 @@ def defter_dogrula(veri):
     if onay[DEFTER_REL]['sha256'] != defter_tanim_sha256(veri):
         raise DefterHatasi('defter tanim hash tutmuyor: onay[0].sha256 '
                            'guncel degil (icerik degismis)')
-    return kimlikler, izinli, onay
+
+    gorulmedi_listesi = veri.get('gorulmedi', [])
+    if not isinstance(gorulmedi_listesi, list):
+        raise DefterHatasi('gorulmedi listesi liste degil')
+    gorulmedi = []
+    gorulmedi_desenleri = set()
+    for i, kayit in enumerate(gorulmedi_listesi):
+        if not isinstance(kayit, dict):
+            raise DefterHatasi('gorulmedi[%d] nesne degil' % i)
+        desen = kayit.get('desen')
+        if (not isinstance(desen, str) or not desen.strip()
+                or desen.startswith('/') or '..' in desen.split('/')
+                or desen in ('*', '**', '*/**', '**/*')):
+            raise DefterHatasi('gorulmedi[%d].desen goreli ve yeterince '
+                               'dar degil: %r' % (i, desen))
+        if desen in gorulmedi_desenleri:
+            raise DefterHatasi('yinelenen gorulmedi deseni: %s' % desen)
+        gerekce = _gerekce(kayit, 'gerekce', 24, 'gorulmedi[%d]' % i)
+        gorulmedi_desenleri.add(desen)
+        gorulmedi.append({'desen': desen, 'gerekce': gerekce})
+    return kimlikler, izinli, onay, gorulmedi
 
 
 def defter_oku(yol=DEFTER):
@@ -224,14 +277,23 @@ class Tarama(object):
         self.incelenmeyen = []
         self.onayli = []
         self.onay_kullanildi = set()
+        self.gorulmedi = []
+        self.gorulmedi_onaysiz = []
         self.bayat = []
 
     def aday(self):
-        return self.taranan + len(self.incelenmedi)
+        return self.taranan + self.incelenmedi_sayisi() + self.gorulmedi_sayisi()
 
     def incelenmedi_sayisi(self):
         """Onayli ve onaysiz tum atlanan dosyalarin toplam sayisi."""
         return len(self.incelenmeyen) + len(self.onayli)
+
+    def gorulmedi_sayisi(self):
+        """Gitignore'un yok saydigi, bagli oldugu gerekceyle gorulmeyen dosyalar."""
+        return len(self.gorulmedi) + len(self.gorulmedi_onaysiz)
+
+    def gorulmedi_gerekce_sayisi(self):
+        return len({gerekce for _yol, _desen, gerekce in self.gorulmedi})
 
 
 def _satir_tara(sonuc, yol, metin, kimlikler, izinli, tanim):
@@ -264,11 +326,14 @@ def _bayt_tara(sonuc, yol, ham, kimlikler, tanim):
                 bas = ham.find(dizi, bas + 1)
 
 
-def tara_kok(kok, kimlikler, izinli, onay, defter_rel=DEFTER_REL):
+def tara_kok(kok, kimlikler, izinli, onay, gorulmedi=None,
+             defter_rel=DEFTER_REL):
     """Aday dosyalarin TAMAMINI inceler; okunamayanlar onay listesine bakar."""
     sonuc = Tarama()
     kok = Path(kok)
-    for rel in aday_dosyalar(kok):
+    gorulmedi = gorulmedi or []
+    adaylar = aday_dosyalar(kok)
+    for rel in adaylar:
         p = kok / rel
         try:
             if not p.is_file():
@@ -293,6 +358,19 @@ def tara_kok(kok, kimlikler, izinli, onay, defter_rel=DEFTER_REL):
             _bayt_tara(sonuc, rel, ham, kimlikler, tanim)
         else:
             _satir_tara(sonuc, rel, metin, kimlikler, izinli, tanim)
+
+    # Gitignore'un yok saydigi dosyalar taranmaz; ancak gorunmez de degildir.
+    # Her biri defterdeki bir desen + gerekceye baglanir. Baglanmayan tek dosya
+    # hukmu FAIL eder; boylece yeni bir ignored dosya sessizce gecemez.
+    ignored = set(_git_ignored_dosyalar(kok) or []) - set(adaylar)
+    for rel in sorted(ignored):
+        kayit = next((k for k in gorulmedi
+                      if fnmatch.fnmatchcase(rel, k['desen'])), None)
+        if kayit is not None:
+            sonuc.gorulmedi.append((rel, kayit['desen'], kayit['gerekce']))
+        else:
+            sonuc.gorulmedi_onaysiz.append(
+                (rel, 'gitignore; gorulmedi listesinde gerekceli desen yok'))
     for rel, sebep in sonuc.incelenmedi:
         kayit = onay.get(rel)
         if kayit and kayit['tur'] == 'okunamaz':
@@ -313,6 +391,9 @@ def hukum(sonuc, onay):
     for yol, sebep in sonuc.incelenmeyen:
         sorunlar.append('INCELENMEDI %s — %s (onay listesinde yok)'
                         % (yol, sebep))
+    for yol, sebep in sonuc.gorulmedi_onaysiz:
+        sorunlar.append('GORULMEDI %s — %s (gorulmedi listesinde yok)'
+                        % (yol, sebep))
     for yol, h in sonuc.bayat:
         sorunlar.append('BAYAT ISTISNA %s — satir sha256=%s…'
                         % (yol, h[:16]))
@@ -328,17 +409,20 @@ def hukum(sonuc, onay):
 def ozet_satiri(kimlikler, sonuc, onay):
     """PASS rapor satiri — sayaclarin TEK kaynagi; --oztest bunu denetler.
 
-    `incelenmedi` onayli ve onaysiz tum atlanan dosyalari kapsar. `onay`
-    defterdeki toplam kayit sayisidir; `onayli`/`onaysiz` ise atlanan
-    dosyalarin dagilimidir. Temiz agacta incelenmedi=0, onay=1 (tanim)
-    olur.
+    `incelenmedi` onayli ve onaysiz tum okunamayan adaylari kapsar;
+    `gorulmedi` ise gitignore'un yok saydigi, defterdeki bir gerekceye bagli
+    dosyalari kapsar. `onay` defterdeki toplam kayit sayisidir;
+    `onayli`/`onaysiz` ise atlanan dosyalarin dagilimidir. Temiz agacta
+    incelenmedi=0, gorulmedi defterdeki ignored kume kadar olabilir.
     """
     return ('MODEL KIMLIK: PASS — %d emekli kimlik · aday=%d dosya · '
             'taranan=%d dosya · incelenmedi=%d dosya '
-            '(onayli=%d · onaysiz=%d) · onay=%d kayit · aktif=0'
+            '(onayli=%d · onaysiz=%d) · gorulmedi=%d dosya '
+            '(%d gerekce) · onay=%d kayit · aktif=0'
             % (len(kimlikler), sonuc.aday(), sonuc.taranan,
                sonuc.incelenmedi_sayisi(), len(sonuc.onayli),
-               len(sonuc.incelenmeyen), len(onay)))
+               len(sonuc.incelenmeyen), sonuc.gorulmedi_sayisi(),
+               sonuc.gorulmedi_gerekce_sayisi(), len(onay)))
 
 
 def _oz_agac(kok, dosyalar):
@@ -373,13 +457,16 @@ def _oz_defter(kimlik, tarihsel, satir_hashi):
     return veri
 
 
-def _oz_kos(dosyalar, defter_veri, kirik=False):
+def _oz_kos(dosyalar, defter_veri, kirik=False, git=False):
     with tempfile.TemporaryDirectory() as kok:
         _oz_agac(kok, dosyalar)
         if kirik:
             os.symlink('yok.md', os.path.join(kok, 'docs', 'kirik.md'))
-        kimlikler, izinli, onay = defter_dogrula(defter_veri)
-        sonuc = tara_kok(kok, kimlikler, izinli, onay)
+        if git:
+            subprocess.run(['git', '-C', kok, 'init', '-q'],
+                           capture_output=True, check=True)
+        kimlikler, izinli, onay, gorulmedi = defter_dogrula(defter_veri)
+        sonuc = tara_kok(kok, kimlikler, izinli, onay, gorulmedi)
         gecti, sorunlar = hukum(sonuc, onay)
         return gecti, sorunlar, sonuc
 
@@ -433,6 +520,52 @@ def oztest():
           and any('INCELENMEDI' in s for s in sorunlar),
           'onaysiz', '; '.join(sorunlar))
 
+    # Gitignore'lu dosya aday kumesine girmez; defterdeki gorulmedi
+    # desenlerinden biriyle gerekcesine baglanmazsa sessizce gecmemeli.
+    ek = dict(taban)
+    ek['.gitignore'] = 'gizli/\n'
+    ek['gizli/sakli.md'] = satir + '\n'
+    gecti, sorunlar, sonuc = _oz_kos(ek, veri, git=True)
+    bekle(not gecti and not sonuc.gorulmedi
+          and len(sonuc.gorulmedi_onaysiz) == 1
+          and sonuc.gorulmedi_sayisi() == 1
+          and any('GORULMEDI' in s for s in sorunlar),
+          'gorulmedi-onaysiz', '; '.join(sorunlar))
+
+    veri_g = _oz_defter(eski, tarihsel, h)
+    veri_g['gorulmedi'] = [{
+        'desen': 'gizli/*',
+        'gerekce': 'Sentetik gitignore dosyasi; gerekceye bagli gorulmedi.'}]
+    veri_g['onay'][0]['sha256'] = defter_tanim_sha256(veri_g)
+    ek[DEFTER_REL] = json.dumps(veri_g, ensure_ascii=False)
+    gecti, sorunlar, sonuc = _oz_kos(ek, veri_g, git=True)
+    _, _, onay_g, _gorulmedi_g = defter_dogrula(veri_g)
+    rapor = ozet_satiri([eski], sonuc, onay_g)
+    tampon = io.StringIO()
+    with contextlib.redirect_stdout(tampon):
+        _yaz_envanter(sonuc, onay_g)
+    envanter = tampon.getvalue()
+    bekle(
+        gecti and len(sonuc.gorulmedi) == 1
+        and not sonuc.gorulmedi_onaysiz
+        and sonuc.gorulmedi_sayisi() == 1
+        and all(x in rapor for x in (
+            'gorulmedi=1 dosya', '1 gerekce', 'onay=1 kayit'))
+        and all(x in envanter for x in (
+            'gorulmedi=1', 'gorulmedi-gerekce=1', 'GORULMEDI')),
+        'gorulmedi-onayli', '; '.join(sorunlar))
+
+    veri_h = _oz_defter(eski, tarihsel, h)
+    veri_h['gorulmedi'] = [{'desen': 'gizli/*'}]
+    veri_h['onay'][0]['sha256'] = defter_tanim_sha256(veri_h)
+    try:
+        defter_dogrula(veri_h)
+    except DefterHatasi:
+        pass
+    else:
+        raise SystemExit('MODEL KIMLIK OZTEST: FAIL — gorulmedi-tanim')
+    vaka.append('gorulmedi-tanim')
+
     # Onayli atlama: okunamayan dosya onayla atlanir; PASS satiri bunu
     # incelenmedi icinde sayar, onayli/onaysiz ayrimini ve toplam onay
     # kaydini gosterir. Envanter ayni anlamlari tasimali.
@@ -443,7 +576,7 @@ def oztest():
     ek = dict(taban)
     ek[DEFTER_REL] = json.dumps(veri_onay, ensure_ascii=False)
     gecti, sorunlar, sonuc = _oz_kos(ek, veri_onay, kirik=True)
-    _, _, onay_sozluk = defter_dogrula(veri_onay)
+    _, _, onay_sozluk, _gorulmedi = defter_dogrula(veri_onay)
     rapor = ozet_satiri([eski], sonuc, onay_sozluk)
     tampon = io.StringIO()
     with contextlib.redirect_stdout(tampon):
@@ -507,7 +640,7 @@ def oztest():
         raise SystemExit('MODEL KIMLIK OZTEST: FAIL — defter-onay')
     vaka.append('defter-onay')
 
-    _, _, onay_sozluk = defter_dogrula(veri)
+    _, _, onay_sozluk, _gorulmedi = defter_dogrula(veri)
     rapor = ozet_satiri([eski], temiz_sonuc, onay_sozluk)
     bekle(all(x in rapor for x in ('aday=3', 'taranan=3', 'incelenmedi=0',
                                    'onay=1', 'aktif=0')), 'rapor', rapor)
@@ -522,11 +655,22 @@ def _yaz_envanter(sonuc, onay):
             yol, h, ','.join(str(n) for n in satirlar), 'ISTISNA'))
     for yol, konum, kimlik, tur in sonuc.aktif:
         print('%s\t%s\t%s\tAKTIF (%s)' % (yol, konum, kimlik, tur))
+    gruplar = {}
+    for _yol, desen, gerekce in sonuc.gorulmedi:
+        adet, _g = gruplar.get(desen, (0, gerekce))
+        gruplar[desen] = (adet + 1, gerekce)
+    for desen, (adet, gerekce) in sorted(gruplar.items()):
+        print('GORULMEDI\t%s\t%d dosya\t%s' % (desen, adet, gerekce))
+    for yol, sebep in sonuc.gorulmedi_onaysiz:
+        print('%s\tGORULMEDI-ONAYSIZ\t%s' % (yol, sebep))
     print('ENVANTER: aday=%d · taranan=%d · incelenmedi=%d · '
-          'onayli=%d · onaysiz=%d · onay=%d kayit · '
+          'onayli=%d · onaysiz=%d · gorulmedi=%d · '
+          'gorulmedi-gerekce=%d · onay=%d kayit · '
           '%d tarihsel satir · %d tanim · %d aktif · %d bayat'
           % (sonuc.aday(), sonuc.taranan, sonuc.incelenmedi_sayisi(),
-             len(sonuc.onayli), len(sonuc.incelenmeyen), len(onay),
+             len(sonuc.onayli), len(sonuc.incelenmeyen),
+             sonuc.gorulmedi_sayisi(), sonuc.gorulmedi_gerekce_sayisi(),
+             len(onay),
              sum(len(v) for v in sonuc.bulunan.values()),
              len(sonuc.tanim), len(sonuc.aktif), len(sonuc.bayat)))
     return 0
@@ -537,28 +681,33 @@ def main(argv):
         oztest()
         return 0
     try:
-        kimlikler, izinli, onay = defter_oku()
+        kimlikler, izinli, onay, gorulmedi = defter_oku()
     except DefterHatasi as e:
         print('MODEL KIMLIK: FAIL — istisna defteri: %s' % e)
         return 1
-    sonuc = tara_kok(KOK, kimlikler, izinli, onay)
+    sonuc = tara_kok(KOK, kimlikler, izinli, onay, gorulmedi)
     if '--envanter' in argv:
         return _yaz_envanter(sonuc, onay)
 
     gecti, sorunlar = hukum(sonuc, onay)
     if not gecti:
         print('MODEL KIMLIK: FAIL — aday=%d dosya · taranan=%d · '
-              'incelenmedi=%d (onayli=%d · onaysiz=%d) · onay=%d kayit · '
+              'incelenmedi=%d (onayli=%d · onaysiz=%d) · '
+              'gorulmedi=%d (%d gerekce) · onay=%d kayit · '
               'aktif=%d · bayat=%d'
               % (sonuc.aday(), sonuc.taranan, sonuc.incelenmedi_sayisi(),
-                 len(sonuc.onayli), len(sonuc.incelenmeyen), len(onay),
+                 len(sonuc.onayli), len(sonuc.incelenmeyen),
+                 sonuc.gorulmedi_sayisi(), sonuc.gorulmedi_gerekce_sayisi(),
+                 len(onay),
                  len(sonuc.aktif), len(sonuc.bayat)))
         for satir in sorunlar:
             print('  %s' % satir)
         print('  Cozum: aktif atfi kaldir; tarihsel ham satiri DEGISTIRME. '
               'Istisna degistiyse defteri bilincli olarak guncelle. '
               'Okunamayan dosyayi taranabilir hale getir; gercekten '
-              'okunamiyorsa onay listesine gerekcesiyle yaz.')
+              "okunamiyorsa onay listesine gerekcesiyle yaz. Gitignore'da "
+              'kalan dosyayi gorulmedi listesine gerekcesiyle bagla veya '
+              'izlemeye al.')
         return 1
 
     tekil = len(sonuc.bulunan)

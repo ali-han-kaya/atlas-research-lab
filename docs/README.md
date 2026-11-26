@@ -483,13 +483,21 @@ make kamu-selftest  # kamu lint negatif fiksturleri
 Kontrol `make dogrula`nın ön koşuludur (sayılan sekiz kaleme eklenmez): aktif
 tek bir atıf veya bayat bir istisna hükmü FAIL eder. Tarama
 `git ls-files --cached --others --exclude-standard` ile izlenen ve henüz
-izlenmeyen (yok sayılmayan) dosyaları gezer. **Gördüğü küme ile incelediği küme
-arasında sessiz fark yoktur:** her aday dosyanın ham baytları okunur; UTF-8
-çözülen dosyalar satır satır, çözülemeyen veya NUL içeren dosyalar ikili
-güvenli bayt aramasıyla (UTF-8 + UTF-16LE/BE) ve **boyut sınırı olmadan**
-taranır. Okunamayan bir dosya varsa ve `tools/model_kimlik_istisna.json`
-içindeki `onay` listesinde gerekçesiyle kayıtlı değilse hüküm FAIL olur; PASS
-satırı `aday=… · taranan=… · incelenmedi=… (onayli=… · onaysiz=…) · onay=… kayit · aktif=0`
+izlenmeyen (yok sayılmayan) dosyaları gezer. **Taranan adaylarda sessiz fark
+yoktur:** her aday dosyanın ham baytları okunur; UTF-8 çözülen dosyalar satır
+satır, çözülemeyen veya NUL içeren dosyalar ikili güvenli bayt aramasıyla
+(UTF-8 + UTF-16LE/BE) ve **boyut sınırı olmadan** taranır. Okunamayan bir
+dosya varsa ve `tools/model_kimlik_istisna.json` içindeki `onay` listesinde
+gerekçesiyle kayıtlı değilse hüküm FAIL olur.
+
+Gitignore'un yok saydığı dosyalar ayrı `--others --ignored --exclude-standard`
+kümesiyle listelenir ve sessizce düşmez. Her biri aynı defterdeki `gorulmedi`
+listesinde bir **desen + gerekçe** ile eşleşmelidir; eşleşmeyen tek dosya
+`GORULMEDI … (gorulmedi listesinde yok)` ile FAIL eder. Eşleşen dosyalar
+taranmış sayılmaz; `gorulmedi` olarak sayılır ve gerekçe sayısı raporda görünür.
+Böylece "gördüğü küme" ile "incelediği küme" arasındaki fark ya açık bir
+gerekçeye bağlıdır ya da hüküm kırmızıdır. PASS satırı
+`aday=… · taranan=… · incelenmedi=… (onayli=… · onaysiz=…) · gorulmedi=… dosya (… gerekce) · onay=… kayit · aktif=0`
 sayaçlarını taşır. `incelenmedi` onaylı atlamaları da kapsar; `onay` defterdeki
 toplam kayıt sayısıdır ve `--envanter` aynı anlamı taşır.
 
@@ -497,12 +505,14 @@ toplam kayıt sayısıdır ve `--envanter` aynı anlamı taşır.
 (kimliği tanımlamak için onu taşımak zorundadır); defter taranır, eşleşmeleri
 "tanım" sayılır. `okunamaz` kaydı yalnız gerçekten okunamayan dosya içindir ve
 dosya okunabilir hâle gelirse "onay gereksiz" diye FAIL eder; yani hiçbir dosya
-kendi kendini muaf ilan edemez. `--oztest` on iki vakayı kanıtlar: temiz ağaç
+kendi kendini muaf ilan edemez. `--oztest` on beş vakayı kanıtlar: temiz ağaç
 (`incelenmedi=0`), tarihsel satırın muafiyeti, aktif metin, 4 MB üstü metin,
-ikili dosya (UTF-8 + UTF-16LE), onaysız incelenemeyen dosya, onaylı atlama
+ikili dosya (UTF-8 + UTF-16LE), onaysız incelenemeyen dosya, gitignore'lu
+dosyanın gerekçesiz görülmedi sayılmaması, gerekçeli görülmedi sayacı,
+gerekçesiz `gorulmedi` kaydının defterde reddi, onaylı atlama
 (onaylı/onaysız ayrımıyla), gereksiz onay, bozulan tarihsel
 satır, aktif dosyaya tanım onayı, defterin kendi `tanim` onayının zorunluluğu
-ve PASS raporunun `aday/taranan/incelenmedi/onay/aktif` sayaçları.
+ve PASS raporunun `aday/taranan/incelenmedi/gorulmedi/onay/aktif` sayaçları.
 Okunamayan dosya yolu gerçek ağaçta da ölçüldü: `chmod 000` →
 `FAIL incelenmedi=1 (onayli=0 · onaysiz=1)`; aynı dosya `onay` listesine
 gerekçesiyle eklendiğinde `PASS incelenmedi=1 (onayli=1 · onaysiz=0) onay=2`;

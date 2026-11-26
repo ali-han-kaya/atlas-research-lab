@@ -334,7 +334,10 @@ değişirse kontrol kırmızı olur. Denetim hiçbir dosyayı sessizce atlamaz:
 okunamayan dosya onay listesinde gerekçesiyle yoksa FAIL verir; PASS satırı
 `taranan`, `incelenmedi` (onaylı/onaysız ayrımıyla) ve `onay` sayaçlarını
 gösterir. Onaylı bir atlama da `incelenmedi` toplamına girer; `onay` defterdeki
-toplam kayıt sayısıdır ve envanterde aynı anlamı taşır.
+toplam kayıt sayısıdır ve envanterde aynı anlamı taşır. Gitignore'un yok
+saydığı dosyalar ayrı bir kümede listelenir: her biri `gorulmedi` listesindeki
+bir desen + gerekçeyle eşleşmezse FAIL eder; eşleşenler `gorulmedi` sayacında
+ve gerekçe sayısıyla raporda görünür, taranmış sayılmaz.
 
 KOD hattının `bedava` profili için bağlayıcı seçim ve emeklilik koşulları
 [`docs/KOD_BEDAVA_MODEL_POLITIKASI.md`](docs/KOD_BEDAVA_MODEL_POLITIKASI.md)

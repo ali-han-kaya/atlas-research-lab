@@ -4,8 +4,8 @@
  "kisa": false,
  "sayilar": {
   "vaka": 142,
-  "gecti": 142,
-  "kalan": 0
+  "gecti": 138,
+  "kalan": 4
  },
  "vakalar": [
   {
@@ -1492,9 +1492,9 @@
    "kural_onek": "",
    "betik": "tools/model_kimlik.py",
    "sozlesme": "HATA",
-   "durum": "GECTI",
-   "gecti": true,
-   "ayrinti": "taban rc=0 · FAIL iz yok · mutasyon rc=1 · FAIL iz=FAIL — rapor (yalniz) · kontrol rc=0 · FAIL iz yok"
+   "durum": "MUTASYON_UYGULANMADI",
+   "gecti": false,
+   "ayrinti": "HATA: tools/model_kimlik.py icinde desen 0 kez gecti (1 bekleniyordu)"
   },
   {
    "id": "DEP-03",
@@ -1684,9 +1684,9 @@
    "kural_onek": "",
    "betik": "ATLAS_SABLONLAR/scripts/olgu_lint.py",
    "sozlesme": "HATA",
-   "durum": "GECTI",
-   "gecti": true,
-   "ayrinti": "taban rc=0 · FAIL iz yok · mutasyon rc=1 · FAIL iz=OLGU-04 (yalniz) · kontrol rc=0 · FAIL iz yok"
+   "durum": "TABAN_KIRIK",
+   "gecti": false,
+   "ayrinti": "taban rc=1 (beklenen 0) · PASS OLGU-06 devir=docs/DEVIR-2026-09-03-1945-AUD-06-07.md baslangic=1048b6f mekanizma=0"
   },
   {
    "id": "OLGU-05",
@@ -1696,9 +1696,9 @@
    "kural_onek": "",
    "betik": "ATLAS_SABLONLAR/scripts/olgu_lint.py",
    "sozlesme": "HATA",
-   "durum": "GECTI",
-   "gecti": true,
-   "ayrinti": "taban rc=0 · FAIL iz yok · mutasyon rc=1 · FAIL iz=OLGU-05 (yalniz) · kontrol rc=0 · FAIL iz yok"
+   "durum": "TABAN_KIRIK",
+   "gecti": false,
+   "ayrinti": "taban rc=1 (beklenen 0) · PASS OLGU-06 devir=docs/DEVIR-2026-09-03-1945-AUD-06-07.md baslangic=dd4a80d mekanizma=0"
   },
   {
    "id": "OLGU-06",
@@ -1708,9 +1708,9 @@
    "kural_onek": "",
    "betik": "ATLAS_SABLONLAR/scripts/olgu_lint.py",
    "sozlesme": "HATA",
-   "durum": "GECTI",
-   "gecti": true,
-   "ayrinti": "taban rc=0 · FAIL iz yok · mutasyon rc=1 · FAIL iz=OLGU-06 (yalniz) · kontrol rc=0 · FAIL iz yok"
+   "durum": "TABAN_KIRIK",
+   "gecti": false,
+   "ayrinti": "taban rc=1 (beklenen 0) · PASS OLGU-06 devir=docs/DEVIR-2026-09-03-1945-AUD-06-07.md baslangic=275c384 mekanizma=0"
   }
  ]
 }

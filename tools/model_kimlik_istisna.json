@@ -67,8 +67,82 @@
   {
    "dosya": "tools/model_kimlik_istisna.json",
    "tur": "tanim",
-   "sha256": "14e21cf6d7df134e4e18c00eae646436b66eb29bc72853c96866ba2182ff0d5f",
+   "sha256": "89761cc8baaeca3da71add976e7fe52712ff5ba0883470d35e038b94dd42d034",
    "gerekce": "Kimligi tanimlayan tek resmi kaynak; taranir, kendi eslesmeleri tanim sayilir."
+  }
+ ],
+ "gorulmedi": [
+  {
+   "desen": ".venv/*",
+   "gerekce": "Yerel Python sanal ortami; requirements dosyasindan yeniden uretilir, depo icerigi degildir."
+  },
+  {
+   "desen": "*/.venv/*",
+   "gerekce": "Yerel Python sanal ortami; requirements dosyasindan yeniden uretilir, depo icerigi degildir."
+  },
+  {
+   "desen": ".ruff_cache/*",
+   "gerekce": "ruff onbellegi; lint calismasinin urettigi gecici cikti, depo icerigi degildir."
+  },
+  {
+   "desen": "*/.ruff_cache/*",
+   "gerekce": "ruff onbellegi; lint calismasinin urettigi gecici cikti, depo icerigi degildir."
+  },
+  {
+   "desen": ".opencode/*",
+   "gerekce": "opencode calisma-zamani artefakti; nested .gitignore ile bilerek depo disinda tutulur."
+  },
+  {
+   "desen": "*/.opencode/*",
+   "gerekce": "opencode calisma-zamani artefakti; nested .gitignore ile bilerek depo disinda tutulur."
+  },
+  {
+   "desen": "kanit-paketi/*",
+   "gerekce": "make kanit tarafindan uretilen gecici kanit paketi; tracked attestation degildir."
+  },
+  {
+   "desen": "kanit-cikti/*",
+   "gerekce": "make kanitin varsayilan ignored attestation ciktisi; tracked agac degildir."
+  },
+  {
+   "desen": "__pycache__/*",
+   "gerekce": "Python bayt-kod onbellegi; kaynaktan yeniden uretilir, depo icerigi degildir."
+  },
+  {
+   "desen": "*/__pycache__/*",
+   "gerekce": "Python bayt-kod onbellegi; kaynaktan yeniden uretilir, depo icerigi degildir."
+  },
+  {
+   "desen": ".pytest_cache/*",
+   "gerekce": "pytest onbellegi; test calismasinin urettigi gecici cikti, depo icerigi degildir."
+  },
+  {
+   "desen": "*/.pytest_cache/*",
+   "gerekce": "pytest onbellegi; test calismasinin urettigi gecici cikti, depo icerigi degildir."
+  },
+  {
+   "desen": "node_modules/*",
+   "gerekce": "node_modules bagimlilik agaci; kilit dosyasindan yeniden kurulur, depo icerigi degildir."
+  },
+  {
+   "desen": "*/node_modules/*",
+   "gerekce": "node_modules bagimlilik agaci; kilit dosyasindan yeniden kurulur, depo icerigi degildir."
+  },
+  {
+   "desen": "*.pyc",
+   "gerekce": "Python derlenmis bayt-kodu; kaynaktan yeniden uretilir, depo icerigi degildir."
+  },
+  {
+   "desen": "*.pyo",
+   "gerekce": "Python derlenmis bayt-kodu; kaynaktan yeniden uretilir, depo icerigi degildir."
+  },
+  {
+   "desen": "*.DS_Store",
+   "gerekce": "macOS Finder meta verisi; isletim sistemi artefakti, depo icerigi degildir."
+  },
+  {
+   "desen": "*.coverage",
+   "gerekce": "Python coverage ciktisi; test calismasinin urettigi gecici olcumdur."
   }
  ]
 }

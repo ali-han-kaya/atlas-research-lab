@@ -216,7 +216,7 @@ README, section *Tek bir iddiayı elle izlemek*.
 | Command | What it proves |
 |---|---|
 | `make kapsam` | `docs/MUTASYON_KAPSAM.md` matches the current gate inventory |
-| `make model-kimlik` | zero retired-ID references in active code/config/tests/docs; every candidate file is inspected (binary-safe, no size cap), the PASS line reports `taranan`/`incelenmedi` with its approved/unapproved split/`onay`/`aktif`, an approved uninspected file still counts in `incelenmedi`, an uninspected file without an approval entry fails, and `onay` is the same total-record count in the inventory, and seven named mutants in `make mutasyon` revert each protection |
+| `make model-kimlik` | zero retired-ID references in active code/config/tests/docs; every candidate file is inspected (binary-safe, no size cap), gitignored files are enumerated separately and must match a reasoned `gorulmedi` pattern or fail, the PASS line reports `taranan`/`incelenmedi` with its approved/unapproved split/`gorulmedi` with its reason count/`onay`/`aktif`, an approved uninspected file still counts in `incelenmedi`, an uninspected file without an approval entry fails, and `onay` is the same total-record count in the inventory, and seven named mutants in `make mutasyon` revert each protection |
 | `make guvenlik` | `pip-audit` findings, each named in `docs/GUVENLIK.md`; unlisted finding → red |
 | `make dogrula-ci` | runner mode used by GitHub Actions (same rules, no CI-only exemption) |
 | `make katalog-kontrol` | live models.dev gate: fixed allowlist IDs and all ten `profiller.bedava` roles; network required, run manually outside CI; `OLCULMEDI` fails, never passes |

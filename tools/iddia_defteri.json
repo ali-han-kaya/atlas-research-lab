@@ -1046,7 +1046,7 @@
     },
     {
       "id": "IDD-44",
-      "iddia": "model-kimlik PASS satiri incelenmedi=0 dosya (onayli=0 · onaysiz=0) · onay=1 kayit",
+      "iddia": "model-kimlik PASS satiri incelenmedi=0 dosya (onayli=0 · onaysiz=0) · gorulmedi sayaci · onay=1 kayit",
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
@@ -1054,7 +1054,7 @@
         },
         {
           "dosya": "docs/README.md",
-          "alinti": "satırı `aday=… · taranan=… · incelenmedi=… (onayli=… · onaysiz=…) · onay=… kayit · aktif=0`"
+          "alinti": "aday=… · taranan=… · incelenmedi=… (onayli=… · onaysiz=…) · gorulmedi=… dosya (… gerekce) · onay=… kayit · aktif=0"
         },
         {
           "dosya": "docs/README.md",
@@ -1067,7 +1067,7 @@
         "tools/model_kimlik.py",
         "--kontrol"
       ],
-      "ayikla": "incelenmedi=(\\d+) dosya \\(onayli=(\\d+) · onaysiz=(\\d+)\\) · onay=(\\d+) kayit",
+      "ayikla": "incelenmedi=(\\d+) dosya \\(onayli=(\\d+) · onaysiz=(\\d+)\\)[^\\n]*onay=(\\d+) kayit",
       "beklenen": "0/0/0/1"
     },
     {
