@@ -1,5 +1,5 @@
 {
-  "commit": "4f58d88a1f61bb93e5bd8514455189520f8d0b9c",
+  "commit": "0a73826cd003137bda55ccfe4262c666e04ded28",
   "file_count": 296,
   "files": [
     {
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "c49844a226cceddb2c194f342edd14e1032a9ed1cc25dca1b210ea0d89631213",
-      "size": 11314
+      "sha256": "d0d77bc24223db00c180e6b8d709021184035a43d83a116eebce440d8151b8fe",
+      "size": 11235
     },
     {
       "mode": "100644",
@@ -35,8 +35,8 @@
     {
       "mode": "100644",
       "path": ".gitignore",
-      "sha256": "2d01bd4c6cf37827e30a2372a202eebb32508f50c1415711b3f7017005696b59",
-      "size": 360
+      "sha256": "cf2304a1269332853d9afc9a07eb05f6882d146649406890306a2cf9c7770b6d",
+      "size": 443
     },
     {
       "mode": "120000",
@@ -923,8 +923,8 @@
     {
       "mode": "100755",
       "path": "KOD_SABLONLAR/scripts/secret_scan.py",
-      "sha256": "1c3433aef759c5d74372229293b726bd747f4e0e74535558ecd80d08e290f81d",
-      "size": 18288
+      "sha256": "b6806fbc57e9351b29fc8e7cababbe72d4ffa07949d278721018795d3a30eb5b",
+      "size": 19008
     },
     {
       "mode": "100755",
@@ -1169,8 +1169,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "4a651d2881429bfc7afdf7cc6fa31bd4a390543a600b7544bb6fd6945afa23c9",
-      "size": 8368
+      "sha256": "b579b3c516c60e7802be783ee7b43ffeff3ffcdd793541127d4050357b57d526",
+      "size": 9045
     },
     {
       "mode": "100644",
@@ -1217,8 +1217,8 @@
     {
       "mode": "100644",
       "path": "README.en.md",
-      "sha256": "8a66c3287f858483d0802de5b2f0c56ed4299192fd9e022eccf08cac2a6be02c",
-      "size": 9332
+      "sha256": "645f004d6fbb8e6c931af67f49f98ed3666dcb41a1b29a87a79cfef0994cfded",
+      "size": 9724
     },
     {
       "mode": "100644",
@@ -1229,8 +1229,8 @@
     {
       "mode": "100644",
       "path": "README.tr.md",
-      "sha256": "a4903caab0a7553335cf6ba055b1b49a230622cd9cb4c828456ecd21984c76ef",
-      "size": 37647
+      "sha256": "1f1ba7ec5e4b3f55822f5cab02f8755fc29ace75323e74944a296ee6588ffe48",
+      "size": 38077
     },
     {
       "mode": "100644",
@@ -1283,8 +1283,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "0fa902ad216ec06768a56bc0b5dea617782d7d7a1ad3fc1c24add49779bb2567",
-      "size": 513748
+      "sha256": "e919e76b80c08d27f4f7f8e1797a5ec44afe92522fdcaf6da93e1bb2e50a7cf7",
+      "size": 514859
     },
     {
       "mode": "100644",
@@ -1313,8 +1313,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "f39332ca02775e26e2d0fe52908e3f874fdd80c5df832e602fa89e8c1c667853",
-      "size": 13496
+      "sha256": "feaaa0eb1d2f472a142196bab98ea2791d0e184712c8d0ec09f10b0aa35c703e",
+      "size": 13775
     },
     {
       "mode": "100644",
@@ -1343,14 +1343,14 @@
     {
       "mode": "100644",
       "path": "docs/KURAL-KATALOGU.md",
-      "sha256": "2f2cfc80db744847270c9088920dc232e267b8425699d04edcd3ba11e0c794f0",
-      "size": 18021
+      "sha256": "d084de7bad4734cd52e1da01a6019d7af610e251fce4c761c0210ae88f5490bc",
+      "size": 17966
     },
     {
       "mode": "100644",
       "path": "docs/MUTASYON_KAPSAM.md",
-      "sha256": "f3958c3d497afc1416ad373a083d43e58bec3831b8426940dee56904733566a5",
-      "size": 33288
+      "sha256": "db40ed6a53b0db4c3134df0d0265dadc19b0b9268a4d21778e4a8ba5583381f7",
+      "size": 46190
     },
     {
       "mode": "100644",
@@ -1415,8 +1415,8 @@
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "8d839b816d8a8534541d463f79c0437da064030f06571d5c4b1f9bfbfd6758dd",
-      "size": 32025
+      "sha256": "90e9ca6b8c1435624b3b5f34355b4943a2bb712e9608e812154e96ff315281c6",
+      "size": 32703
     },
     {
       "mode": "100644",
@@ -1493,8 +1493,8 @@
     {
       "mode": "100644",
       "path": "tools/dogrula.py",
-      "sha256": "f0b6c1ed923f0ff9cba9a4587bfffef5971b32d804ae3bed4d265746a5a44411",
-      "size": 47417
+      "sha256": "7f5f4ecf85a8ab6618ed328f1829e42b8043e82225edcaadd2d604d141728559",
+      "size": 47629
     },
     {
       "mode": "100644",
@@ -1535,14 +1535,14 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "bfdb6efe6a4e7d445d20fc94c8725496f4588bf86fb009b2bcefdee0cdc3ad18",
-      "size": 38916
+      "sha256": "050fcb4523cf4042cf56885fe710a38be4033ffbb7a941e7ccd53330fd7e1fea",
+      "size": 39044
     },
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "b381e67c228e5663422a13c63936972eb12f73b685793ed2918b9c724f9d2d1b",
-      "size": 9272
+      "sha256": "605b4d9d86b58263a8fe8d95dba4a75ee16f06d3547db6fecaa64fe4c7592d2b",
+      "size": 9300
     },
     {
       "mode": "100644",
@@ -1559,14 +1559,14 @@
     {
       "mode": "100644",
       "path": "tools/kanit.py",
-      "sha256": "4dbde0dc5dd404a3a8d53872e910afe28d3ec5ce191c497c6e6be465fd2eec99",
-      "size": 24314
+      "sha256": "4cae6494184d10825e93cbb9575057e477436b7286a73813f25d0b43b711cd2b",
+      "size": 24709
     },
     {
       "mode": "100644",
       "path": "tools/kanit_dogrula.py",
-      "sha256": "9a45b0860181dc53e1caf87684bfe8c2793fce38cc680b165b58e8d88b0082e9",
-      "size": 11123
+      "sha256": "67995b90a43675a2d6f1836ce99f844d770eb38761241490a71ba632cd2e1bbc",
+      "size": 11146
     },
     {
       "mode": "100644",
@@ -1595,20 +1595,20 @@
     {
       "mode": "100644",
       "path": "tools/kapi_sozlesmesi_selftest.py",
-      "sha256": "81ce56640f085ff1f29616a233b5204681c007422e69261a82302f607f501f9c",
+      "sha256": "36ca95905704d614fcedf1813c3e4c247a9302222df143b97c4c68b694e83fa7",
       "size": 5532
     },
     {
       "mode": "100644",
       "path": "tools/kapsam.py",
-      "sha256": "54ee0b95d25fc1e6ecb78661c22ca6cb954682f756112cbe24329a5081252e56",
-      "size": 70483
+      "sha256": "948e236a68021f8d813e650c650d4c1e3e3103c73fec94dba726dfc5678f367c",
+      "size": 102247
     },
     {
       "mode": "100644",
       "path": "tools/kapsam_selftest.py",
-      "sha256": "08fdb1bb4f2952d3ee045fa95081cdfe74d80b9363ab403aa38a0f57d868b26a",
-      "size": 7333
+      "sha256": "d9916838090158abee718404361c40871b6a73eb7ffc6f2ee8dae4e3a457b82a",
+      "size": 13408
     },
     {
       "mode": "100644",
@@ -1625,8 +1625,8 @@
     {
       "mode": "100644",
       "path": "tools/kural_katalogu.py",
-      "sha256": "bc60f68f51193460f4145d141039b3b6911fafccbf3cd5cc7e511ca8288c94a1",
-      "size": 11281
+      "sha256": "0feef757ec7e2656f30c7efc86e48983cc7b1b81d65e0a6214c86cc2896170c9",
+      "size": 11630
     },
     {
       "mode": "100644",
@@ -1649,8 +1649,8 @@
     {
       "mode": "100644",
       "path": "tools/model_kimlik.py",
-      "sha256": "cfacd602d8a12d7e6f718a17aa61a9492467b38779e59ea1b1a5fe4cccdb369c",
-      "size": 21412
+      "sha256": "74fd26a18580cac7169df0af7300eb12d435237446762f5e02427971c67173ad",
+      "size": 23249
     },
     {
       "mode": "100644",
@@ -1673,8 +1673,8 @@
     {
       "mode": "100644",
       "path": "tools/mutasyon_bataryasi.py",
-      "sha256": "dff5d072d8cbd41aa38cf9996e3b17fea0c90fd370f5a734f8e9e2b631b31fca",
-      "size": 115520
+      "sha256": "85bc25559d199f174340899551d4d1b7c99f677f1921b207360a64f236d39484",
+      "size": 115952
     },
     {
       "mode": "100644",
@@ -1685,8 +1685,8 @@
     {
       "mode": "100644",
       "path": "tools/mutasyon_sonuc.json",
-      "sha256": "d1801960f0411181cdf1e0b0a8a34243f1d6663ee3d80c08e8885fe1d53abd0a",
-      "size": 52858
+      "sha256": "88efa43135f4d514f2237a08d9c96addabfb7ac4008ff37867e029fba34f87d4",
+      "size": 53220
     },
     {
       "mode": "100644",
@@ -1779,7 +1779,7 @@
       "size": 14827
     }
   ],
-  "generated_at": "2026-11-26T00:54:35Z",
+  "generated_at": "2026-11-26T11:19:10Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1794,6 +1794,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "1ba7edf3db8e9078b0dea799edcf889180e7ef06",
-  "tree_sha256": "b5571031562bf33925bfcccc6bbcf3f1cd92c1402330ff0ac4bad29a19ddc751"
+  "tree": "c4ae97fa5486eac5d0667f27c9410a2a25468465",
+  "tree_sha256": "cbc86ac0185b09d330f70dc8a5ea6c022112fdf00db1dee43d99a257ddaa6d60"
 }
