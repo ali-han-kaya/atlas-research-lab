@@ -1,6 +1,6 @@
 {
-  "commit": "d254bfec0b0004779a760d3eac38257218482d7d",
-  "file_count": 296,
+  "commit": "c2f62e1f4cd6f20127c094378bfd14d33179fddd",
+  "file_count": 297,
   "files": [
     {
       "mode": "100755",
@@ -1241,8 +1241,8 @@
     {
       "mode": "100644",
       "path": "SURUM.md",
-      "sha256": "f5a132440af4d9433469e559ed27c7a58bef04c67527500795f17f4544911c9f",
-      "size": 591157
+      "sha256": "55a8c6ea747edaaeec46d1ab92943ba3c5a7d9aa0330f8aae15074c0decdd594",
+      "size": 591206
     },
     {
       "mode": "100755",
@@ -1283,8 +1283,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "44d7b55ac4cb4de5131fbc91bfb983d6734a0732a073d036b56b8b5532d14a71",
-      "size": 516345
+      "sha256": "6e205cc5bbb30769392b15bbe33a75e1358d483ea342595bfb8e404dd4566d03",
+      "size": 517837
     },
     {
       "mode": "100644",
@@ -1303,6 +1303,12 @@
       "path": "docs/DEVIR-2026-11-24-1507.md",
       "sha256": "a85549d96c4a397d9e92c380c4a454586da7d9e6b1827fecd8a0fa19aceb9529",
       "size": 8288
+    },
+    {
+      "mode": "100644",
+      "path": "docs/DEVIR-2026-11-26-1400.md",
+      "sha256": "0313734da40b7a774d9e27d9911291590a6c7c0170c49bd837b23c0cba0d4a22",
+      "size": 8398
     },
     {
       "mode": "100644",
@@ -1775,11 +1781,11 @@
     {
       "mode": "100644",
       "path": "tools/yayinla.py",
-      "sha256": "d72e6fab8201554dc84c7665e926d26fe1a0de7e71ed542e2673638e134de7a7",
-      "size": 14827
+      "sha256": "7fb9d5cd9fa0ce54c24e4041b6f19ce4ea58ab4c9c620db6a27e46b55325a68f",
+      "size": 14918
     }
   ],
-  "generated_at": "2026-11-26T12:49:05Z",
+  "generated_at": "2026-11-26T13:11:04Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1794,6 +1800,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "e15bab0a65edf09b2e4f55c8a8864db704a9d3e6",
-  "tree_sha256": "cc863640da622c3bbf028b566671b3923b5a2ed724bd57254b918830b4b094ff"
+  "tree": "53ae466d143b49e3b537b0a1920d40a9c3db3c4b",
+  "tree_sha256": "8fa445d842613dc479eb5a951f4f40f40d549e4417de801481928882dfa08003"
 }
