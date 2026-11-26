@@ -1,5 +1,5 @@
 {
-  "commit": "820ec2e390ae908f9f3e71fcf2db462ccd104e91",
+  "commit": "d8ae9fd0c0af61c3b2d840f263fcd99ed3ff3baa",
   "file_count": 297,
   "files": [
     {
@@ -1343,8 +1343,8 @@
     {
       "mode": "100644",
       "path": "docs/KOD_BEDAVA_MODEL_POLITIKASI.md",
-      "sha256": "fa9bb7a19e2a47a281836a5c6bf6732bb96538b71321cd1470f7a16fba16fa7b",
-      "size": 15971
+      "sha256": "819576117741910a7d668958255ed2ffb92ec9055e949f2060e390325301e9e1",
+      "size": 16348
     },
     {
       "mode": "100644",
@@ -1785,7 +1785,7 @@
       "size": 14918
     }
   ],
-  "generated_at": "2026-11-26T13:33:19Z",
+  "generated_at": "2026-11-26T13:54:07Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1800,6 +1800,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "42047d46f3a0a9d8274eab2dce391d191e1381fe",
-  "tree_sha256": "eb640d6f6bbfa2f684f6e46ae9807bda53bf121c0074bbe8e28d39cc5c75f482"
+  "tree": "b312e15c323c6b3e9f82dca9a453174bf59a47c1",
+  "tree_sha256": "dfc7dcd19d3dadd75e003d787d244dc0171da92bc08fcf3743bcf7a28c364a0a"
 }
