@@ -208,15 +208,17 @@ Sırayla, hepsi yeşil olmadan commit yok:
 ```bash
 make model-kimlik        # PASS · incelenmedi=0 · onay=1 kayit · aktif=0
                          # onayli okunamaz: PASS · incelenmedi=1 · onay=2 kayit · aktif=0
-python3 tools/model_kimlik.py --oztest    # 15/15
-make mutasyon            # 113/113 kural + 29/29 beklenen bulgu (142 vaka)
-make dogrula             # 8/8 · H2 84
+python3 tools/model_kimlik.py --oztest    # PASS; vaka sayisi komut ciktisinda
+make mutasyon            # PASS; kural/vaka sayilari komut ciktisinda
+make dogrula             # PASS; kalem/oz-test sayilari komut ciktisinda
 make kapsam              # ratchet PASS
 make katalog-kontrol     # canli: allowlist + on rol; OLCULMEDI PASS degil
 ```
 
 `make model-kimlik` FAIL verirse aktif atıf kaldırılır; tarihsel satır
-değiştirilmez. Temiz ağaçta PASS satırı `incelenmedi=0 · onay=1` taşır; `onay`
+değiştirilmez. P6'daki vaka/kural/öz-test sayaçları burada sabitlenmez; güncel
+değer ilgili komutun çıktısındadır, böylece belge sessizce bayatlamaz. Temiz
+ağaçta PASS satırı `incelenmedi=0 · onay=1` taşır; `onay`
 listesinde gerekçeli bir `okunamaz` kaydı varsa meşru PASS satırı
 `incelenmedi=1 (onayli=1 · onaysiz=0) · onay=2` olur. Bu, atlamanın gizlendiği
 değil, gerekçeli onayla görünür kaldığı durumdur. Bayat istisna
@@ -313,5 +315,5 @@ tutulur; CI artifact'ı yoktur.
 | `make katalog-kontrol` | canlı ölçüm + `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydı |
 | `.github/workflows/dogrula.yml` | `dogrula` ve `iddia` işleri; canlı katalog işi yok |
 | `make model-kimlik` | aktif atıf denetimi (fail-closed ön koşul) |
-| `make mutasyon` | korumaların geri alınamazlığı (142 vaka) |
+| `make mutasyon` | korumaların geri alınamazlığı; güncel vaka sayısı komut çıktısında |
 | `make dogrula` | sekiz kalemlik ana kapı (MOD-1/MOD-2 dahil) |
