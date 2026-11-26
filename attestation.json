@@ -1,5 +1,5 @@
 {
-  "commit": "0a73826cd003137bda55ccfe4262c666e04ded28",
+  "commit": "209932f4039459e9edb363c42622d8b693aa38b5",
   "file_count": 296,
   "files": [
     {
@@ -1229,8 +1229,8 @@
     {
       "mode": "100644",
       "path": "README.tr.md",
-      "sha256": "1f1ba7ec5e4b3f55822f5cab02f8755fc29ace75323e74944a296ee6588ffe48",
-      "size": 38077
+      "sha256": "7ae9c183205b7e3132063c0418426bf34b5f75d9f9d07a5dfdc36bfe2301a29e",
+      "size": 38328
     },
     {
       "mode": "100644",
@@ -1241,8 +1241,8 @@
     {
       "mode": "100644",
       "path": "SURUM.md",
-      "sha256": "a00e87b9bf2ec8b1280344df7097adbabe761d97c251e06d583f7adbd2d46a40",
-      "size": 589873
+      "sha256": "62a5611d74ad9964212256dbdd8d52255560474682fb692076438a25a20f3aba",
+      "size": 591059
     },
     {
       "mode": "100755",
@@ -1283,8 +1283,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "e919e76b80c08d27f4f7f8e1797a5ec44afe92522fdcaf6da93e1bb2e50a7cf7",
-      "size": 514859
+      "sha256": "748c1bd40a2baab490db3d5357809bea18ed44dbccc751e8843184c43cc3cdb0",
+      "size": 516255
     },
     {
       "mode": "100644",
@@ -1313,8 +1313,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "feaaa0eb1d2f472a142196bab98ea2791d0e184712c8d0ec09f10b0aa35c703e",
-      "size": 13775
+      "sha256": "b65e20c6428188898b0f9d4b1ac062051ae0576511076479982179d84c9e1528",
+      "size": 13907
     },
     {
       "mode": "100644",
@@ -1415,8 +1415,8 @@
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "90e9ca6b8c1435624b3b5f34355b4943a2bb712e9608e812154e96ff315281c6",
-      "size": 32703
+      "sha256": "aa29cb69c462c51b778db3caaf749f781bd992f04bee96d4c0cb1670d33d9b83",
+      "size": 33415
     },
     {
       "mode": "100644",
@@ -1535,8 +1535,8 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "050fcb4523cf4042cf56885fe710a38be4033ffbb7a941e7ccd53330fd7e1fea",
-      "size": 39044
+      "sha256": "74c601a704d122e464dd2580960e74e1665b87d9a3a5336f44ef6e565fd61327",
+      "size": 39093
     },
     {
       "mode": "100644",
@@ -1649,14 +1649,14 @@
     {
       "mode": "100644",
       "path": "tools/model_kimlik.py",
-      "sha256": "74fd26a18580cac7169df0af7300eb12d435237446762f5e02427971c67173ad",
-      "size": 23249
+      "sha256": "350380a1c76ad964a569c1f47f34a8b1fd7d12a88b8c34687c49eee537a28a13",
+      "size": 30061
     },
     {
       "mode": "100644",
       "path": "tools/model_kimlik_istisna.json",
-      "sha256": "e84682184385935aec1899d51e042c884516c71f05cfcd345604452db9a27822",
-      "size": 3522
+      "sha256": "446fc834e68f2ac246875592dde9fe1de0dc675b836dc766bdf0b63d5935261b",
+      "size": 5973
     },
     {
       "mode": "100644",
@@ -1673,8 +1673,8 @@
     {
       "mode": "100644",
       "path": "tools/mutasyon_bataryasi.py",
-      "sha256": "85bc25559d199f174340899551d4d1b7c99f677f1921b207360a64f236d39484",
-      "size": 115952
+      "sha256": "233ed86a095bbd9c2b4479785fc7ec60a49e16bd977a73ae2aee010e09f66d72",
+      "size": 115939
     },
     {
       "mode": "100644",
@@ -1685,8 +1685,8 @@
     {
       "mode": "100644",
       "path": "tools/mutasyon_sonuc.json",
-      "sha256": "88efa43135f4d514f2237a08d9c96addabfb7ac4008ff37867e029fba34f87d4",
-      "size": 53220
+      "sha256": "2b1cf4e7bd0bb6af0ca82896e7695fbfc3d74a166f5a5be915b4855f4f512db6",
+      "size": 53260
     },
     {
       "mode": "100644",
@@ -1779,7 +1779,7 @@
       "size": 14827
     }
   ],
-  "generated_at": "2026-11-26T11:19:10Z",
+  "generated_at": "2026-11-26T11:46:44Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1794,6 +1794,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "c4ae97fa5486eac5d0667f27c9410a2a25468465",
-  "tree_sha256": "cbc86ac0185b09d330f70dc8a5ea6c022112fdf00db1dee43d99a257ddaa6d60"
+  "tree": "4880c7ed8d9b45da0ca60115ed82e163d7aaa8b3",
+  "tree_sha256": "4b468a37b5a2219bac42e1f756a228408d893a8d7471fa5a3f342f440616cabf"
 }
