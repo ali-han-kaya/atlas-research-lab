@@ -800,7 +800,8 @@ def _olgu_hazirla(k):
     _git_komut(k, 'add', '-A')
     _git_komut(k, 'commit', '-qm', 'OLGU tabani')
     r = subprocess.run(
-        [sys.executable, str(k / 'tools' / 'kanit.py'), '--paketsiz'],
+        [sys.executable, str(k / 'tools' / 'kanit.py'), '--paketsiz',
+         '--cikti', 'attestation.json'],
         cwd=str(k), capture_output=True, text=True, timeout=300)
     if r.returncode != 0:
         raise RuntimeError('OLGU attestation uretilemedi: %s' % (
@@ -868,7 +869,8 @@ def _olgu06(k):
         _git_komut(k, 'add', 'SURUM.md')
         _git_komut(k, 'commit', '-qm', 'OLGU-06 mutasyonu')
         r = subprocess.run(
-            [sys.executable, str(k / 'tools' / 'kanit.py'), '--paketsiz'],
+            [sys.executable, str(k / 'tools' / 'kanit.py'), '--paketsiz',
+             '--cikti', 'attestation.json'],
             cwd=str(k), capture_output=True, text=True, timeout=300)
     except RuntimeError as e:
         return 'HATA: %s' % e
