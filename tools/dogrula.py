@@ -257,6 +257,21 @@ def demo_oztesti():
     return rc == 0, son, ([] if rc == 0 else satirlar[-8:])
 
 
+def temiz_teslim():
+    """Sentetik temiz teslimi ve bes kenar fiksturunu on kontrol olarak kosar.
+
+    Sayilan sekiz kaleme dahil degildir; demo gibi bir on kosuldur. Temiz kok
+    iki gercek kapidan rc=0 ile gecmezse veya bir kenar beklenen rc'yi vermezse
+    dogrula yesil donmez. Boylece `make temiz-teslim` kaniti yalniz CI'da
+    kalmaz; yerel `make dogrula` ayni yolu kosar.
+    """
+    rc, cikti, _ = kos([sys.executable,
+                        os.path.join(KOK, 'tools', 'temiz_teslim_selftest.py')])
+    satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
+    son = satirlar[-1][:150] if satirlar else '(bos cikti)'
+    return rc == 0, son, ([] if rc == 0 else satirlar[-10:])
+
+
 def model_kimlik():
     """Emekli model kimligi taramasini on kosul olarak kosar.
 
@@ -913,6 +928,20 @@ def main():
                         'demo 0/1/2 oz-testi FAIL')
         print()
         print('  HUKUM: FAIL — DEMO 0/1/2 OZ-TESTI')
+        return 1
+    print()
+
+    temiz_gecti, temiz_ozet, temiz_detay = temiz_teslim()
+    print('  %-24s %-7s %s' % ('temiz teslim',
+                                'PASS' if temiz_gecti else 'FAIL', temiz_ozet))
+    for satir in temiz_detay:
+        print('        | %s' % satir[:400])
+    if not temiz_gecti:
+        if JSON:
+            _json_erken('ONKOSUL.TEMIZ', 'temiz teslim', temiz_ozet,
+                        'temiz teslim FAIL')
+        print()
+        print('  HUKUM: FAIL — TEMIZ TESLIM (sentetik temiz kok/kenar fiksturu)')
         return 1
     print()
 
