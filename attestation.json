@@ -1,5 +1,5 @@
 {
-  "commit": "51004f80193212d71a3d50643dbe6c0d3625716c",
+  "commit": "b0787832350bcad7e1937202799185ef0bd4b1bc",
   "file_count": 297,
   "files": [
     {
@@ -1169,8 +1169,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "b579b3c516c60e7802be783ee7b43ffeff3ffcdd793541127d4050357b57d526",
-      "size": 9045
+      "sha256": "5061fe79237e97e750ff8ad946773948a3ab006abd7dd831b3ad60ff33a7e4ea",
+      "size": 9378
     },
     {
       "mode": "100644",
@@ -1343,8 +1343,8 @@
     {
       "mode": "100644",
       "path": "docs/KOD_BEDAVA_MODEL_POLITIKASI.md",
-      "sha256": "73f9ff11298bd2735fd29266c0917459816e8c1fdd7704e919acde322b596b3a",
-      "size": 16584
+      "sha256": "11784951a29d635d6d04d84886ebda53af92a916006075325b9e0787c6f035cb",
+      "size": 16998
     },
     {
       "mode": "100644",
@@ -1619,14 +1619,14 @@
     {
       "mode": "100644",
       "path": "tools/katalog_kontrol.py",
-      "sha256": "80713581f63e93cbebd432e35fbdc93543ae4f7008a641f336ac13cfbbdd334d",
-      "size": 22975
+      "sha256": "70e126c6bf6d32c72de8046dd10c24123b16b1890e180c6e908b1035a0ae3d86",
+      "size": 23473
     },
     {
       "mode": "100644",
       "path": "tools/katalog_kontrol_selftest.py",
-      "sha256": "eb22d49eb78ad948c382ba09c4d27e09c34733e52f3f15cb71703d710f77264a",
-      "size": 6532
+      "sha256": "b2a39d9bde434d38a6917b49c5685a953af094459e27c2d8a9adc1fb15c14728",
+      "size": 6754
     },
     {
       "mode": "100644",
@@ -1785,7 +1785,7 @@
       "size": 14918
     }
   ],
-  "generated_at": "2026-11-26T14:12:22Z",
+  "generated_at": "2026-11-26T14:34:12Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1800,6 +1800,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "4da66d089239694960e101871dc13731a89cd7e7",
-  "tree_sha256": "b044d4134f678f57a500393d8903f196bd76dc0ed09d3e61499507c126a48bfc"
+  "tree": "50faffac0f2c43c6952bd70bd4317370bd96d13e",
+  "tree_sha256": "3ca470a4e6524894ea7a78696c8618ac890f0e74bd95c742bc77bb8d969a052f"
 }
