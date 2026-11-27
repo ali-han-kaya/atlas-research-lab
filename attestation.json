@@ -1,5 +1,5 @@
 {
-  "commit": "8f40ce4b9fdebc3e4c9490c96012052078afcb36",
+  "commit": "4de73bca186a40c62235b09c92164f6a64e426d1",
   "file_count": 303,
   "files": [
     {
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "0f60d7390653e50bd778b76a7b5fcccd2575af183b8b843cc438b8b2c91f5af5",
-      "size": 11878
+      "sha256": "3f9acef00a7eb4c69ce5a5ee557aca0cafc240f87a9e8b9219c4e5e927277c1a",
+      "size": 11951
     },
     {
       "mode": "100644",
@@ -1187,8 +1187,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "1284771556d2f0b4e978ed2cb4292bc7ca112d1b91669770129adeffad711cd8",
-      "size": 9864
+      "sha256": "d5870f7ee385453e21c0bb68efd74ed4a7f2a943579f71e6ab9ec1e8c82c5e8c",
+      "size": 9884
     },
     {
       "mode": "100644",
@@ -1319,8 +1319,8 @@
     {
       "mode": "100644",
       "path": "docs/DEVIR-2026-11-24-1507.md",
-      "sha256": "a85549d96c4a397d9e92c380c4a454586da7d9e6b1827fecd8a0fa19aceb9529",
-      "size": 8288
+      "sha256": "8edb90a0eaa3418640c5d682c019296852edb45206323b02ea1ae5b2a2c61e79",
+      "size": 8304
     },
     {
       "mode": "100644",
@@ -1793,8 +1793,8 @@
     {
       "mode": "100644",
       "path": "tools/taze_klon.py",
-      "sha256": "aaa8f9042a3e353d03411c093f62d8901f59d234745a87f2f4d492b68872f618",
-      "size": 7678
+      "sha256": "2dce4a407ea1c5c0bc4455a6388e1e4d55fe7e63c749f47e9a4998d613949d64",
+      "size": 10675
     },
     {
       "mode": "100644",
@@ -1821,7 +1821,7 @@
       "size": 16100
     }
   ],
-  "generated_at": "2026-11-27T12:25:42Z",
+  "generated_at": "2026-11-27T12:42:56Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1836,6 +1836,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "a6f911d9d31247e3b6f24f435c9f44f94166f08a",
-  "tree_sha256": "d8e8bbfa4f7628bc7c274822768bfa90225cac1b2d5c095122c0fa3899f08ff0"
+  "tree": "c9fa9872ba365b7f13544162deaf78aa8dad7bd5",
+  "tree_sha256": "b97e47f6d3e3cb338024a013f9c18f1c9b7f893c6538e28499842e0308dc51a6"
 }
