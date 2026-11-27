@@ -1,6 +1,16 @@
 #!/bin/sh
-# Commit kapisi: canli sir + kapsam ates duvari. Ikisi de fail-closed'dur.
-# Kapsam kontrolu staged yollarda makale/korpus/PDF/DOCX/veri ve 5 MB ustunu
-# durdurur; manifest okunamazsa commit de durur.
+# Commit kapisi: canli sir + kapsam ates duvari + hizli iddia. Ucu de
+# fail-closed'dur. Kapsam kontrolu staged yollarda makale/korpus/PDF/DOCX/veri
+# ve 5 MB ustunu durdurur; manifest okunamazsa commit de durur.
 python3 tools/sir_kapisi.py --staged || exit $?
-exec python3 tools/yayin_kapisi.py --staged
+python3 tools/yayin_kapisi.py --staged || exit $?
+
+# Yerel geri bildirim: yalniz hizli iddia satirlari. Agir satirlar ATLANDI
+# basilir ve PASS sayilmaz; tam `make iddia` CI'da kosmaya devam eder.
+# Minimal fikstur/kopyalarda Makefile veya arac yoksa bu adim atlanir.
+if [ -f Makefile ] && [ -f tools/iddia.py ] && command -v make >/dev/null 2>&1; then
+  make iddia-hizli || exit $?
+else
+  echo 'IDDIA-HIZLI: atlandi — Makefile, tools/iddia.py veya make yok'
+fi
+exit 0
