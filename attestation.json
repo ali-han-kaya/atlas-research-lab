@@ -1,5 +1,5 @@
 {
-  "commit": "bf2353f257ba9899b84e5f332bbf854b9ef53b94",
+  "commit": "5788a65553b2571ca2088bfdef2cce8d026169f2",
   "file_count": 298,
   "files": [
     {
@@ -1235,8 +1235,8 @@
     {
       "mode": "100644",
       "path": "README.tr.md",
-      "sha256": "d49eca80d6184101e395a41cf305c7f8623159fb2e1fa6270957310bd6394b80",
-      "size": 38651
+      "sha256": "93307c7f21873673297b88b02240d3ade52bce5f7c22512f1f27ece7550dc84f",
+      "size": 38947
     },
     {
       "mode": "100644",
@@ -1247,8 +1247,8 @@
     {
       "mode": "100644",
       "path": "SURUM.md",
-      "sha256": "7af0889d5445edd4c4389d30fb508ecaaa5c07210a34c1139cd60bc77617c75a",
-      "size": 591206
+      "sha256": "42554b58554804e68dd3ba96bab8293ffff155b0314a23ddb23415218402ee85",
+      "size": 592100
     },
     {
       "mode": "100755",
@@ -1349,8 +1349,8 @@
     {
       "mode": "100644",
       "path": "docs/KOD_BEDAVA_MODEL_POLITIKASI.md",
-      "sha256": "a6db318c84ac4427877e0379828db1a6ffa19b5ebdf55c41c48d017ef7853d2c",
-      "size": 17241
+      "sha256": "88a9b9c0eef1db141e4fd3cc9444c3d37f042fb79c2606044ac30d00ea4decd6",
+      "size": 21453
     },
     {
       "mode": "100644",
@@ -1421,7 +1421,7 @@
     {
       "mode": "100644",
       "path": "docs/OLGULAR.md",
-      "sha256": "8b493c229d4d7df29c0e2d96867683330aa18c4e887070689c1a348b641a1dbc",
+      "sha256": "b49f8896fe43193f632a6aff33678ed006e0203bf6b70aca37df9aa50e9b84b7",
       "size": 3201
     },
     {
@@ -1791,7 +1791,7 @@
       "size": 14918
     }
   ],
-  "generated_at": "2026-11-27T06:39:35Z",
+  "generated_at": "2026-11-27T07:12:23Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1806,6 +1806,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "8859f0534cd0cd129adb78d9a253c50c49830477",
-  "tree_sha256": "da2c3ba0e67942ec772e8bee3c6d42dbff8177ca579b91a6d9e3c4b549dc9a52"
+  "tree": "8284c4590e5f264ef5f01431af395d7395b42f2d",
+  "tree_sha256": "7dbbc3903ad30dbcf98c2a1220a9670e7e2763ddc6f2b986b4798ddbd4cf8137"
 }
