@@ -1,5 +1,5 @@
 {
-  "commit": "a8d2b1b099bb7bcfa8fa56c4911405d34ecad6bf",
+  "commit": "211cf1492472b1d50a029190fdc9915050e3bb12",
   "file_count": 298,
   "files": [
     {
@@ -839,8 +839,8 @@
     {
       "mode": "100644",
       "path": "KOD_SABLONLAR/routing.profiles.json",
-      "sha256": "928797baebafe606663a5582fe8c79877e7e469b7d335435ee333db74b08e335",
-      "size": 5768
+      "sha256": "706e917d74e7561cb54b913df98416b24075eccfd8f1275a5608a34988a15070",
+      "size": 5897
     },
     {
       "mode": "100644",
@@ -1325,8 +1325,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "00b54f1560923d54e9e963fc4e8aa3ccfa208eacfb1ddecf653728a539508e8e",
-      "size": 13973
+      "sha256": "63234df71381994be2378a2928c5b24ae510756b2e08ca02c1d98863cfb76acb",
+      "size": 14025
     },
     {
       "mode": "100644",
@@ -1349,8 +1349,8 @@
     {
       "mode": "100644",
       "path": "docs/KOD_BEDAVA_MODEL_POLITIKASI.md",
-      "sha256": "88a9b9c0eef1db141e4fd3cc9444c3d37f042fb79c2606044ac30d00ea4decd6",
-      "size": 21453
+      "sha256": "83c6926500458d7c525341fb18929e924a12b680d64d0d77ca1f32d881fa4b35",
+      "size": 21883
     },
     {
       "mode": "100644",
@@ -1625,14 +1625,14 @@
     {
       "mode": "100644",
       "path": "tools/katalog_kontrol.py",
-      "sha256": "589067e0885dc12c85e36c4707a9f7e375f942ce1a4a3c04198778d434683227",
-      "size": 24953
+      "sha256": "d18b3b24bc7db8d522fec72565d2915a43dc324df11ed4494061027746a923ad",
+      "size": 25460
     },
     {
       "mode": "100644",
       "path": "tools/katalog_kontrol_selftest.py",
-      "sha256": "20ec8ef34f742b1a6d8fd3dcec9c6fd363d2c87ef50dd75bdf1251fbfc02ceb8",
-      "size": 9670
+      "sha256": "4f0fb98a8ba582a9f2e0529220fdd7e1ec45d4c55e0e727f74c49f16d6416c5b",
+      "size": 10583
     },
     {
       "mode": "100644",
@@ -1791,7 +1791,7 @@
       "size": 14918
     }
   ],
-  "generated_at": "2026-11-27T08:00:36Z",
+  "generated_at": "2026-11-27T08:25:36Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1806,6 +1806,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "a6af7b81d7661205056b0aaea23c3f70e9d6c0e9",
-  "tree_sha256": "027185ca5fa02e4ba842b2486728b59597a014816b25808c905f519617aaae0b"
+  "tree": "752efcfb68c2d8d1c50df289a7c237288e8c2ace",
+  "tree_sha256": "af34395282e92bc5600a13e6d4e37b0443c5e4deb1103a5f98b7c284763b1739"
 }
