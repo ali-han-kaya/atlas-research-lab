@@ -113,8 +113,7 @@ def vaka_eski_commit_sir(tmp):
             and any('config/eski.txt' in b.get('konum', '')
                     for b in p0(rapor, 'SEC-02')),
             'rc=%d p0=%d' % (rc, len(p0(rapor, 'SEC-02'))))
-    kontrol('sir degeri ciktiya sizmaz', SIR not in cikti,
-            'ham sır stdout/stderr icinde')
+    kontrol('sir degeri ciktiya sizmaz', SIR not in cikti)
 
 
 def vaka_bolunmus_sir(tmp):
@@ -130,8 +129,7 @@ def vaka_bolunmus_sir(tmp):
                     or ':' in b.get('konum', '') and '-' in b.get('konum', '')
                     for b in kayit),
             'rc=%d p0=%d' % (rc, len(kayit)))
-    kontrol('bolunmus sir degeri ciktiya sizmaz', SIR not in cikti,
-            'ham sır stdout/stderr icinde')
+    kontrol('bolunmus sir degeri ciktiya sizmaz', SIR not in cikti)
 
 
 def vaka_eski_kisisel_eposta(tmp):
@@ -148,8 +146,7 @@ def vaka_eski_kisisel_eposta(tmp):
             rc == 1 and rapor is not None and bool(kayit)
             and any(b.get('konum', '').startswith('commit/') for b in kayit),
             'rc=%d p0=%d' % (rc, len(kayit)))
-    kontrol('kisisel e-posta ciktiya sizmaz', EPOSTA_GUVENSIZ not in cikti,
-            'ham adres stdout/stderr icinde')
+    kontrol('kisisel e-posta ciktiya sizmaz', EPOSTA_GUVENSIZ not in cikti)
 
 
 def vaka_bolunmus_eposta(tmp):
