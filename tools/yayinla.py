@@ -87,7 +87,8 @@ KORUNAN = {'SECURITY.md', 'README.md', 'LICENSE', 'Makefile', '.gitignore', 'doc
            'docs/DURUM.md', 'docs/IDDIA-OZET.md',
            'docs/ATLAS-KISA-TUR.md', 'docs/YAYIN-SOZLESMESI.md',
            'docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl',
-           'docs/EN/QUICKSTART.md', 'docs/assets/demo-red.gif'}
+           'docs/EN/ARCHITECTURE.md', 'docs/EN/QUICKSTART.md',
+           'docs/assets/demo-red.gif'}
 KORUNAN_KOKLER = ('.github', 'tools')
 
 SIR_KALIPLARI = [
