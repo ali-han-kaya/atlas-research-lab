@@ -1,11 +1,11 @@
 {
   "schema": "ATLAS-SIR-MUTASYON/v1",
   "surum": "v1.7.424",
-  "kod_commit": "a8de2fe5f65658bc4ee49efbbf1d3eeeaaed0921",
+  "kod_commit": "03c46add5516e42abe1d508fccf7ae23f3b65c7f",
   "kaynak": "tools/sir_kapisi.py",
   "kaynak_sha256": "cae55f145ba5faf877b2c952ce22a84aaf527e66997b62615c3cc142576c9f1b",
   "selftest": "tools/sir_kapisi_selftest.py",
-  "selftest_sha256": "1d5aceb89ff49f155ce115ad3435718ac7b5f2030ca895b884be57e0c5a8049f",
+  "selftest_sha256": "54bf23c87340d81358047d591684a639699bb55232436c6a4549a57e29b66214",
   "hermetik": {
     "HOME": "gecici",
     "GIT_CONFIG_NOSYSTEM": "1",
@@ -27,7 +27,7 @@
       "mutasyon": "git show komutundan --first-parent kaldirildi",
       "fail_rc": 1,
       "fail_test_sayisi": "18/19",
-      "fail_satiri": "merge commit canliyi yakalar FAIL rc=0 (beklenen 1) · SIR-KAPISI: aralik temiz (e45b3da435692ee9388345719f9bdd4be7ebf1e3..HEAD)",
+      "fail_satiri": "merge commit canliyi yakalar FAIL rc=0 (beklenen 1) · SIR-KAPISI: aralik temiz (c84063206351083bfd9b4e3c7c5e22f8c14a7daf..HEAD)",
       "pass_rc": 0,
       "pass_test_sayisi": "19/19",
       "pass_satiri": "merge commit canliyi yakalar PASS rc=1 · canli-dsn"
