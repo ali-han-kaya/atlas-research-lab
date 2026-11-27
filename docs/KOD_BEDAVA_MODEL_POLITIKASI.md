@@ -24,6 +24,16 @@ taşımaz**; üretim ve karar koşusu `denge` veya `ekonomi` profiliyle yapılı
 günlük ücretsiz kotanın dolu olmadığı ölçülmelidir. Ücretsiz kotanın günlük
 sınırı vardır; `:free` sınırsız erişim demek değildir.
 
+**27.11.2026 ayrı ölçümü (`SURUCU-01`, `KOTA-01`).** Birincil sürücü
+`openrouter/deepseek/deepseek-v4-flash` canlı models.dev kaydında
+`cost={input:0.09, output:0.18, cache_read:0.018}` taşıyor; sürücü **$0 değil**.
+Ücretsiz modele yapılan tek istek HTTP 200 ve `usage.cost=0` verdi, anahtar
+kullanımı değişmedi; kota açıktı, ancak günlük tavan ve kalan istek sayısı
+ölçülmedi. Ayrıntılı adlandırılmış kayıt:
+[§6.2](#62-sınır-ölçümleri--surucu-01-ve-kota-01). Bu nedenle
+bugünkü yapılandırmada sürücüyü de kapsayan uçtan uca $0 iddiası **yoktur**;
+$0 yalnız `PROFIL-01`deki on role bağlıdır.
+
 ## 2. Seçim koşulları — altısı birden
 
 Bir kimlik `bedava` profiline ancak aşağıdaki altı koşulun **tamamı** ölçülerek
@@ -308,6 +318,96 @@ yazılmaz. Bir satırın `sonuc` alanı `FAIL` veya `OLCULMEDI` ise bu, sonraki
 `PASS` tarafından gizlenmez; P0–P8 izi olarak kalır. Kayıt yerel dosyada
 tutulur; CI artifact'ı yoktur.
 
+### 6.2 Sınır ölçümleri — `SURUCU-01` ve `KOTA-01`
+
+Bu bölüm **append-only**dir; yeni ölçüm yeni satır açar, eski satır değişmez.
+Ölçüm 27.11.2026'da macOS 27.2 arm64 · Python 3.9.6 · OpenCode 2.2.4
+ortamında alındı. `PROFIL-01` on rolün sınırını, `SURUCU-01` birincil sürücüyü,
+`KOTA-01` ücretsiz kotayı ayrı ölçer.
+
+#### `PROFIL-01` — on rolün $0 sınırı
+
+```bash
+make bedava-kontrol
+```
+
+```text
+BEDAVA: 10/10 rol · tek kimlik openrouter/nvidia/nemotron-3-ultra-550b-a55b:free · cost 0/0 · reasoning/tool_call true · limit 1000000/65536 >= 200000/32768
+HUKUM: GUNCEL — bedava profili butun kosullari sagliyor.
+rc=0
+```
+
+`bedava` profili `KOD_SABLONLAR/opencode.json` birincil sürücüsünü içermez;
+`PROFIL-01` yalnız on role bağlıdır.
+
+#### `SURUCU-01` — birincil sürücü $0 mı?
+
+Yapılandırma: `KOD_SABLONLAR/opencode.json` →
+`openrouter/deepseek/deepseek-v4-flash`. Canlı models.dev kaydı:
+
+| Alan | Değer |
+|---|---|
+| `id` | `deepseek/deepseek-v4-flash` |
+| `cost.input` | `0.09` |
+| `cost.output` | `0.18` |
+| `cost.cache_read` | `0.018` |
+| `reasoning` / `tool_call` | `true` / `true` |
+| `limit.context` / `limit.output` | `1048576` / `393216` |
+
+**Hüküm: `SURUCU-01 = ÜCRETLİ`.** Üç `cost` alanı da sıfır değil. Bu
+sürücüyle canlı çağrı **yapılmadı**; çağrı ücret doğuracağı için ölçüm
+models.dev fiyat kaydıyla sınırlandı. Sürücüyü de kapsayan uçtan uca $0
+iddiası bugünkü yapılandırmada **yanlıştır**.
+
+#### `KOTA-01` — ücretsiz kota gerçekten $0 mı?
+
+Ücretsiz modele tek, küçük ve sınırlı bir istek gönderildi:
+
+```text
+model: nvidia/nemotron-3-ultra-550b-a55b:free
+POST https://openrouter.ai/api/v1/chat/completions
+max_tokens: 8 · temperature: 0
+```
+
+Kimlik, `opencode auth export` çıktısından yalnız süreç içinde okundu; depoya,
+komut satırına veya bu kayda yazılmadı. Ham yanıt:
+
+```text
+HTTP 200
+model = nvidia/nemotron-3-ultra-550b-a55b:free
+usage.prompt_tokens = 21
+usage.completion_tokens = 8
+usage.total_tokens = 29
+usage.cost = 0
+usage.cost_details.upstream_inference_cost = 0
+usage.cost_details.upstream_inference_prompt_cost = 0
+usage.cost_details.upstream_inference_completions_cost = 0
+```
+
+Aynı anahtarın hesap durumu istekten önce ve sonra okundu:
+
+| Alan | Önce | Sonra |
+|---|---:|---:|
+| `usage` | `238.625812384` | `238.625812384` |
+| `limit` | `240` | `240` |
+| `limit_remaining` | `1.374187616` | `1.374187616` |
+| `is_free_tier` | `false` | `false` |
+
+**Hüküm: `KOTA-01 = BU İSTEK $0 · KOTA AÇIK`.** Sağlayıcı `usage.cost=0`
+bildirdi, upstream maliyetin üç bileşeni de sıfır, anahtar kullanımı
+değişmedi; `free-models-per-day` hatası görülmedi. Bu, o anda ücretsiz kotanın
+kullanılabilir olduğunu gösterir.
+
+**Ölçülmeyen:** günlük ücretsiz kotanın sayısal tavanı ve kalan istek sayısı.
+Sağlayıcı bu endpoint'te bu sayacı vermedi; `KOTA-01` "kota sınırsız" veya
+"günün geri kalanında yeter" hükmü vermez. Geçmişte aynı modelin günlük kotası
+tükenmişti; bu kayıt o sınırın kalktığını da iddia etmez.
+
+**Yöntem sınırı:** `opencode run` ile iki kota sondası 120 ve 90 saniyede
+çıktı vermeden zaman aşımına düştü; bu, kota yokluğu kanıtı değildir. Bu
+nedenle `KOTA-01` doğrudan HTTPS API ile ölçüldü. Sürücü ve kota dışındaki
+`denge`, `kalite`, `ekonomi` profilleri bu kaydın kapsamı dışındadır.
+
 ## 7. İlgili komutlar ve dosyalar
 
 | Yol / komut | İşlev |
@@ -320,6 +420,7 @@ tutulur; CI artifact'ı yoktur.
 | `tools/model_kimlik_istisna.json` | emekli kimlik + satır hash'leri + `onay` |
 | `make katalog-kontrol` | canlı ölçüm + `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydı |
 | `make bedava-kontrol` | yalnız bedava profili: on rol, tek kimlik, canlı cost/reasoning/tool_call; CI'ya bağlanmaz |
+| bu dosya §6.2 | `PROFIL-01` / `SURUCU-01` / `KOTA-01` ayrı sınır ölçümü |
 | `.github/workflows/dogrula.yml` | `dogrula` ve `iddia` işleri; canlı katalog işi yok |
 | `make model-kimlik` | aktif atıf denetimi (fail-closed ön koşul) |
 | `make mutasyon` | korumaların geri alınamazlığı; güncel vaka sayısı komut çıktısında |

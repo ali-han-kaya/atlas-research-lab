@@ -2,7 +2,7 @@
 
 > **Tarihsel kimlik notu (19 Kasım 2026):** 2026-08 kayıtlarındaki eski Nemotron Super free kimliği models.dev'den kaldırılmıştır; güncel allowlist `nvidia/nemotron-3-ultra-550b-a55b:free` kullanır. Tarihsel satırlar değiştirilmedi.
 
-Sürüm: v1.7.423 (güncel: Değişiklik Kaydı'nın ilk satırı) · Tarih: 26 Kasım 2026
+Sürüm: v1.7.424 (güncel: Değişiklik Kaydı'nın ilk satırı) · Tarih: 27 Kasım 2026
 
 > **21 Kasım 2026 düzeltmesi:** Canlı `make katalog-kontrol` ağ gerektirdiği için CI'dan çıkarıldı; CI yalnız çevrimdışı `make dogrula-ci`/`katalog-selftest` koşar. v1.7.411 satırındaki CI kaydı tarihseldir.
 
@@ -36,6 +36,8 @@ taban dosyası yoktur; güncel KOD sayısı da DURUM'dadır.
 > sayılar o günkü ölçümdür.
 
 ## Değişiklik Kaydı
+
+- v1.7.424 (27 Kasım 2026, ölçüm kaydı): **Birincil sürücü ve günlük ücretsiz kota, on rolün $0 iddiasından ayrıldı.** `SURUCU-01`: `KOD_SABLONLAR/opencode.json` sürücüsü `openrouter/deepseek/deepseek-v4-flash`; canlı models.dev `cost={input:0.09, output:0.18, cache_read:0.018}` → **$0 değil**. Sürücüyle ücretli çağrı yapılmadı; ölçüm fiyat kaydıdır. `KOTA-01`: `nvidia/nemotron-3-ultra-550b-a55b:free` ile tek istek HTTP 200; `usage.cost=0`, upstream maliyetin üç bileşeni 0; anahtar kullanımı önce/sonra `238.625812384` (değişmedi) → **bu istek $0, kota açık**; günlük tavan/kalan istek sayısı **ölçülmedi**. `PROFIL-01`: `make bedava-kontrol` 10/10 rol, tek kimlik, `cost 0/0` → $0 yalnız bu on rol. Ayrıntı `docs/KOD_BEDAVA_MODEL_POLITIKASI.md` §6.2; politika §1 de güncellendi. Sürücüyle uçtan uca $0 iddiası yoktur.
 
 - v1.7.423 (26 Kasım 2026, lab kaydı): **Gitignore'lu dosyalar artık sessizce taranmıyor; "görülmedi" kümesi gerekçeye bağlandı.** Tarama `git ls-files --cached --others --exclude-standard` ile yalnız izlenen/yeni dosyaları görüyordu; bir kimlik `.gitignore` arkasına konursa denetim PASS verebiliyordu. Yeni `--others --ignored --exclude-standard` kümesi her ignored dosyayı defterdeki `gorulmedi` desenine bağlar; eşleşmeyen tek dosya `GORULMEDI … (gorulmedi listesinde yok)` ile FAIL eder. Eşleşenler taranmış sayılmaz, `gorulmedi` sayacında ve gerekçe sayısıyla raporda görünür. `.venv`, `.ruff_cache`, `.opencode`, `kanit-paketi`, önbellekler ve macOS artefaktları gerekçeli desenlerle kayıtlı; `.env*`, `*.key` ve keyfi geçici dosyalar muaf değil. **Ölçülen:** `make model-kimlik` → `PASS — 1 emekli kimlik · aday=1926 dosya · taranan=298 dosya · incelenmedi=0 dosya (onayli=0 · onaysiz=0) · gorulmedi=1628 dosya (4 gerekce) · onay=1 kayit · aktif=0`; `--oztest` 15/15 (üç yeni gitignore vakası); gerekçesiz ignored dosya FAIL, gerekçeli desen PASS; `make mutasyon` 142/142 (113 ateşleyen + 29 beklenen); `make dogrula` 8/8 (T1 146/146, T2 174/174, T3 51/51); `make iddia` 42/42; `make kapsam` PASS. DERSLER 12.171–12.173. Devir: `docs/DEVIR-2026-11-26-1400.md`.
 

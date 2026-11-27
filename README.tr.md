@@ -343,7 +343,10 @@ ve gerekçe sayısıyla raporda görünür, taranmış sayılmaz.
 KOD hattının `bedava` profili için bağlayıcı seçim ve emeklilik koşulları
 [`docs/KOD_BEDAVA_MODEL_POLITIKASI.md`](docs/KOD_BEDAVA_MODEL_POLITIKASI.md)
 içindedir: aynı aile, sıfır maliyet, `reasoning`/`tool_call`, canlı models.dev
-kanıtı ve emekli kimlik değişim prosedürü.
+kanıtı ve emekli kimlik değişim prosedürü. Ayrı sınır ölçümü: on rolün sıfır
+maliyeti geçerli, birincil sürücü ücretli; ücretsiz kotada bir istek sıfır
+maliyetli ama günlük tavan sınırlı ve ölçülmedi. Ayrıntı:
+[politika §6.2](docs/KOD_BEDAVA_MODEL_POLITIKASI.md#62-sınır-ölçümleri--surucu-01-ve-kota-01).
 
 ### Bir projede ATLAS hattını kullanmak
 
