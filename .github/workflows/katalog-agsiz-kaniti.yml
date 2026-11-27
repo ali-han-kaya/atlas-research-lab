@@ -1,0 +1,57 @@
+name: katalog agsiz kaniti
+
+# Yalniz elle tetiklenir. Canli katalog kapisinin agsiz dalinin
+# OLCULMEDI/rc=2 verdigini kanitlar; push/PR/haftalik cron hukmune girmez.
+# Is yesil kalir cunku beklenen kirmizi dogru olusmustur; kapi beklenen
+# kirmiziyi vermezse asagidaki sozlesme adimi kirmizi olur.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  agsiz:
+    name: katalog agsiz dal kaniti (elle)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Agsiz katalog kapisi (beklenen kirmizi)
+        id: agsiz
+        shell: bash
+        run: |
+          set +e
+          python3 tools/katalog_kontrol.py --profil-only \
+            --api-url http://127.0.0.1:9 --timeout 1 \
+            > katalog-agsiz.log 2>&1
+          rc=$?
+          set -e
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          cat katalog-agsiz.log
+          {
+            echo "## Katalog agsiz dal kaniti"
+            echo
+            echo "- **Beklenen:** rc=2 · OLCULMEDI · PASS degil"
+            echo "- **Olculen:** rc=$rc"
+            echo "- **Adres:** http://127.0.0.1:9 (erisilemez)"
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
+      - name: OLCULMEDI sozlesmesini dogrula
+        shell: bash
+        env:
+          RC: ${{ steps.agsiz.outputs.rc }}
+        run: |
+          set -euo pipefail
+          test "$RC" = "2"
+          grep -q "KATALOG KONTROL: OLCULMEDI" katalog-agsiz.log
+          grep -q "BEDAVA: OLCULMEDI" katalog-agsiz.log
+          ! grep -q "BEDAVA: 10/10" katalog-agsiz.log
+          ! grep -q "HUKUM: GUNCEL" katalog-agsiz.log
+          echo "PASS: katalog kapisi agsiz dalda OLCULMEDI/rc=2 verdi; yesil hukum yok."

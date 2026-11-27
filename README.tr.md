@@ -400,7 +400,8 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 | Mutasyon kapsamı | `make kapsam` → `docs/MUTASYON_KAPSAM.md` güncel mi (üretilmiş tablo) |
 | Kamu temizliği | `make kamu-lint` → özel mutlak yol, kaldırılmış alan ve sahte hash taraması; `make kamu-selftest` → negatif fikstürler PASS; `make dogrula` ön koşulu |
 | Kanıt kapısı negatifi | `make kanit-negatif` → KANIT-00..06 kodlarının her biri gerçek bozulmayla; ana ağaç değişmez |
-| Bedava canlı katalog kanaryası | `.github/workflows/katalog-canary.yml` → haftalık, required değil; yalnız `python3 tools/katalog_kontrol.py`; bulgu varsa issue açar. Elle koşu: `make katalog-kontrol` |
+| Bedava canlı katalog kanaryası | `.github/workflows/katalog-canary.yml` → haftalık, required değil; canlı `python3 tools/katalog_kontrol.py`; bulgu varsa issue açar. Elle koşu: `make katalog-kontrol` |
+| Ağsız katalog negatifi | `.github/workflows/katalog-agsiz-kaniti.yml` → yalnız `workflow_dispatch`; erişilemeyen `--api-url` ile `OLCULMEDI`/`rc=2` beklenir. Kapi kırmızı döner; iş, bu kırmızının doğru oluştuğunu doğrularsa yeşil kalır |
 | İddia defteri | `make iddia` → README/docs sayısal iddialarını üreten komutla ve ham kanıt satırıyla yeniden ölçer; tutmayan satır `IDD-*` ile kırmızı |
 | Hızlı iddia | `make iddia-hizli` → `dogrula`/`mutasyon` gibi pahalı satırları atlar; atlananlar `ATLANDI` ve PASS değil, tam koşu değişmez |
 | Ham kanıt yenileme | `make iddia-yaz` → bilinçli değişiklikten sonra `tools/iddia_olcum.json` anlık görüntüsünü yeniler |
