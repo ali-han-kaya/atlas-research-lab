@@ -199,6 +199,11 @@ KIMLIKSIZ_SINIFLAR = {
         'KOD 2-of-2/3-of-3 birlestirici; ORTAK/scripts/ortak_gate.py '
         'ilkelerini import eder ve GM testleri vardir, ancak bagimsiz '
         'KURAL kimligi ve kural mutasyon vakasi yok. Envantere alinmadi.'),
+    'KOD_SABLONLAR/scripts/katalog_kontrol.py': (
+        'kapsam-disi',
+        'Canli models.dev katalog kapisi; allowlist ve bedava profili '
+        'testleriyle olculur, ancak bagimsiz KURAL kimligi ve kural '
+        'mutasyon vakasi yok. Envantere alinmadi.'),
 }
 
 KIMLIKSIZ_ETIKETLER = {
