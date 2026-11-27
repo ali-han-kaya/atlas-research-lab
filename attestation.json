@@ -1,5 +1,5 @@
 {
-  "commit": "b0787832350bcad7e1937202799185ef0bd4b1bc",
+  "commit": "d2da37e06417b0b5e223c70fcffa4f96999a5e1e",
   "file_count": 297,
   "files": [
     {
@@ -1229,8 +1229,8 @@
     {
       "mode": "100644",
       "path": "README.tr.md",
-      "sha256": "7ae9c183205b7e3132063c0418426bf34b5f75d9f9d07a5dfdc36bfe2301a29e",
-      "size": 38328
+      "sha256": "b055b1cb898c6e755a5451d6d02fd0386b741027c212bdbd6644f69bfeede236",
+      "size": 38391
     },
     {
       "mode": "100644",
@@ -1319,8 +1319,8 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "a05296351b160e778d008c7b84fc545ce40715883eb7b4a832de71ba258e2f43",
-      "size": 13907
+      "sha256": "00b54f1560923d54e9e963fc4e8aa3ccfa208eacfb1ddecf653728a539508e8e",
+      "size": 13973
     },
     {
       "mode": "100644",
@@ -1343,8 +1343,8 @@
     {
       "mode": "100644",
       "path": "docs/KOD_BEDAVA_MODEL_POLITIKASI.md",
-      "sha256": "11784951a29d635d6d04d84886ebda53af92a916006075325b9e0787c6f035cb",
-      "size": 16998
+      "sha256": "a6db318c84ac4427877e0379828db1a6ffa19b5ebdf55c41c48d017ef7853d2c",
+      "size": 17241
     },
     {
       "mode": "100644",
@@ -1619,14 +1619,14 @@
     {
       "mode": "100644",
       "path": "tools/katalog_kontrol.py",
-      "sha256": "70e126c6bf6d32c72de8046dd10c24123b16b1890e180c6e908b1035a0ae3d86",
-      "size": 23473
+      "sha256": "bd74aa612239a90c2372e31e1334fecba0199accef2b18eb6071d5ad919faa4c",
+      "size": 25119
     },
     {
       "mode": "100644",
       "path": "tools/katalog_kontrol_selftest.py",
-      "sha256": "b2a39d9bde434d38a6917b49c5685a953af094459e27c2d8a9adc1fb15c14728",
-      "size": 6754
+      "sha256": "94d0aa4b6c8263f1bd2f7ce903db7e1c99a2dcffff0af9d927ae23df3cb197a2",
+      "size": 7262
     },
     {
       "mode": "100644",
@@ -1785,7 +1785,7 @@
       "size": 14918
     }
   ],
-  "generated_at": "2026-11-26T14:34:12Z",
+  "generated_at": "2026-11-27T05:19:12Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1800,6 +1800,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "50faffac0f2c43c6952bd70bd4317370bd96d13e",
-  "tree_sha256": "3ca470a4e6524894ea7a78696c8618ac890f0e74bd95c742bc77bb8d969a052f"
+  "tree": "8cf4d71eaa6b9ea08369e7cb6210d33ba10f76b9",
+  "tree_sha256": "c97014f53cf76baa58124a6c579421cf035f8e8f33d15b3a3735923c51059170"
 }
