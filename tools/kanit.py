@@ -39,6 +39,7 @@ Kullanim:
                                              # yabanci dizinleri silmez
   python3 tools/kanit.py --komut "make kapsam"  # varsayilan komutlari degistir
   python3 tools/kanit.py --paketsiz         # yalniz attestation (eski davranis)
+  python3 tools/kanit.py --proof             # PROOF.md'yi kanit + uc canli komut + CI'dan uret
 
 CIKIS: 0 = attestation ve paket yazildi, butun komutlar PASS
        1 = kirli agac/git hatasi veya dogrulama komutu FAIL
@@ -72,6 +73,12 @@ VARSAYILAN_CIKTI = "kanit-cikti/attestation.json"
 VARSAYILAN_KOMUTLAR = [
     ("dogrula", ["make", "dogrula"]),
     ("kapsam", ["make", "kapsam"]),
+    ("iddia", ["make", "iddia"]),
+]
+PROOF = "PROOF.md"
+PROOF_KOMUTLAR = [
+    ("dogrula", ["make", "dogrula"]),
+    ("kanit-dogrula", ["make", "kanit-dogrula"]),
     ("iddia", ["make", "iddia"]),
 ]
 BULGU_SATIRI = re.compile(
@@ -203,6 +210,173 @@ def ham_satir(out, err):
         if satirlar:
             return satirlar[-1]
     return ""
+
+
+def _sure_metni(ms):
+    if ms >= 1000:
+        return "%.1f s" % (ms / 1000.0)
+    return "%d ms" % ms
+
+
+def _hucre(metin):
+    """Markdown tablo hucresine guvenli metin."""
+    return (metin or "").replace("|", "\\|").replace("`", "'").strip()
+
+
+def _ci_son_kosu():
+    """Son dogrula.yml kosusunu gh'den oku; (kosu, hata) dondur."""
+    komut = ["gh", "run", "list", "--workflow=dogrula.yml", "--branch=main",
+             "--limit=1", "--json",
+             "databaseId,status,conclusion,headSha,createdAt,url,workflowName"]
+    try:
+        r = subprocess.run(komut, cwd=str(KOK), capture_output=True, text=True,
+                           timeout=30)
+    except (OSError, subprocess.SubprocessError) as exc:
+        return None, "%s: %s" % (type(exc).__name__, exc)
+    if r.returncode != 0:
+        return None, "gh rc=%d: %s" % (
+            r.returncode, (r.stderr or "").strip()[:200])
+    try:
+        veri = json.loads(r.stdout or "[]")
+    except ValueError as exc:
+        return None, "gh JSON: %s" % exc
+    if not isinstance(veri, list) or not veri or not isinstance(veri[0], dict):
+        return None, "gh: dogrula.yml kosusu yok"
+    return veri[0], None
+
+
+def proof_yaz():
+    """PROOF.md'yi attestation, canli komutlar ve CI durumundan uret."""
+    at_yolu = KOK / ATTESTATION
+    try:
+        at = json.loads(at_yolu.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError) as exc:
+        raise RuntimeError("attestation okunamadi: %s" % exc)
+    if not isinstance(at, dict) or at.get("schema") != SEMA:
+        raise RuntimeError("attestation semasi %s degil" % SEMA)
+    commit = at.get("commit")
+    tree = at.get("tree")
+    agac_sha = at.get("tree_sha256")
+    dosya = at.get("file_count")
+    uretildi = at.get("generated_at")
+    if not isinstance(commit, str) or not re.fullmatch(r"[0-9a-f]{40}", commit):
+        raise RuntimeError("attestation commit gecersiz")
+    if not isinstance(tree, str) or not re.fullmatch(r"[0-9a-f]{40}", tree):
+        raise RuntimeError("attestation tree gecersiz")
+    if not isinstance(agac_sha, str) or not re.fullmatch(
+            r"[0-9a-f]{64}", agac_sha):
+        raise RuntimeError("attestation tree_sha256 gecersiz")
+    if type(dosya) is not int or dosya < 0:
+        raise RuntimeError("attestation file_count gecersiz")
+    if not isinstance(uretildi, str) or not uretildi:
+        raise RuntimeError("attestation generated_at gecersiz")
+
+    head = git_metin("rev-parse", "HEAD").strip()
+    if head != commit:
+        raise RuntimeError(
+            "attestation HEAD ile ayni degil (HEAD=%s, kanit=%s); once "
+            "`make kanit-yaz`" % (head[:12], commit[:12]))
+    kirli = [satir for satir in kirli_dosyalar()
+             if not satir.endswith(PROOF)]
+    if kirli:
+        raise RuntimeError("izlenen dosyalarda commit edilmemis degisiklik "
+                           "var; once commit veya geri al")
+
+    sonuclar = []
+    for kimlik, argv in PROOF_KOMUTLAR:
+        print("PROOF: KOMUT %s — %s" % (kimlik, " ".join(argv)))
+        rc, out, err, sure, hata = komut_calistir(argv)
+        durum = "ERROR" if hata else ("PASS" if rc == 0 else "FAIL")
+        print("  rc=%d · %s · %s" % (rc, _sure_metni(sure), durum))
+        sonuclar.append({
+            "id": kimlik,
+            "argv": argv,
+            "rc": rc,
+            "status": durum,
+            "duration_ms": sure,
+            "raw": ham_satir(out, err),
+        })
+
+    ci, ci_hata = _ci_son_kosu()
+    ci_kapsar = bool(ci and ci.get("headSha") == commit)
+    satirlar = [
+        "# PROOF — ATLAS KANIT ÖZETİ",
+        "",
+        "> Bu dosya üretilmiştir; elle düzenlenmez. Kaynak: `attestation.json`,",
+        "> canlı doğrulama komutları ve son `dogrula.yml` CI koşusu.",
+        "> Yenile: `make proof`.",
+        "",
+        "## Kanıtlanan ağaç",
+        "",
+        "| Alan | Değer |",
+        "|---|---|",
+        "| Commit | `%s` |" % commit,
+        "| Tree | `%s` |" % tree,
+        "| Tree SHA-256 | `%s` |" % agac_sha,
+        "| İzlenen dosya | %d |" % dosya,
+        "| Kanıt zamanı | `%s` |" % uretildi,
+        "",
+        "> Üretim anındaki HEAD: `%s` — attestation ile aynı."
+        % head[:12],
+        "",
+        "## Doğrulama komutları",
+        "",
+        "| Komut | Hüküm | Süre | Özet |",
+        "|---|---|---|---|",
+    ]
+    for kayit in sonuclar:
+        satirlar.append("| `%s` | **%s** (rc=%d) | %s | %s |" % (
+            " ".join(kayit["argv"]), kayit["status"], kayit["rc"],
+            _sure_metni(kayit["duration_ms"]),
+            _hucre(kayit["raw"]) or "(çıktı yok)"))
+
+    satirlar += ["", "## CI durumu", ""]
+    if ci:
+        satirlar += [
+            "| Alan | Değer |",
+            "|---|---|",
+            "| İş akışı | `%s` |" % str(ci.get("workflowName") or "dogrula"),
+            "| Hüküm | **%s** |" % str(ci.get("conclusion") or
+                                         ci.get("status") or "bilinmiyor"),
+            "| Koşu | [`%s`](%s) |" % (
+                str(ci.get("databaseId") or "?"),
+                str(ci.get("url") or "")),
+            "| Commit | `%s` |" % str(ci.get("headSha") or "?"),
+            "| Zaman | `%s` |" % str(ci.get("createdAt") or "?"),
+            "| Bu kanıt commit'ini kapsıyor | **%s** |"
+            % ("EVET" if ci_kapsar else "HAYIR"),
+        ]
+    else:
+        satirlar += ["**ÖLÇÜLMEDİ** — `%s`" % _hucre(ci_hata or "CI okunamadı")]
+
+    satirlar += ["", "## Neyin ölçüldüğü", ""]
+    basarili = [k for k in sonuclar if k["status"] == "PASS"]
+    if len(basarili) == len(sonuclar):
+        satirlar.append("- Yukarıdaki doğrulama komutlarının tamamı canlı "
+                        "koşuldu ve `PASS` döndü.")
+    else:
+        satirlar.append("- Doğrulama komutlarından `PASS` dönmeyenler "
+                        "tabloda işaretli; bu sayfa hüküm olarak onları "
+                        "gizlemez.")
+    satirlar.append("- `attestation.json`, %d izlenen dosyayı ve ağaç "
+                    "SHA-256'sını kapsıyor." % dosya)
+    if ci and ci_kapsar:
+        satirlar.append("- Son CI koşusu kanıtlanan commit'i kapsıyor.")
+
+    satirlar += ["", "## Neyin ölçülmediği", ""]
+    if not ci:
+        satirlar.append("- CI durumu okunamadı; CI kapsamı ölçülmedi.")
+    elif not ci_kapsar:
+        satirlar.append("- Son CI koşusu bu commit'i kapsamıyor; koşu "
+                        "`%s` commit'ine ait." % str(ci.get("headSha") or "?"))
+    satirlar.append("- Bu komutlar tarayıcı/UI, harici ağ servisleri, farklı "
+                    "işletim sistemleri veya temiz klon kurulumunu ölçmez.")
+    satirlar.append("")
+
+    yol = KOK / PROOF
+    yol.write_text("\n".join(satirlar) + "\n", encoding="utf-8")
+    print("PROOF: YAZILDI %s" % yol)
+    return 0 if all(k["status"] == "PASS" for k in sonuclar) else 1
 
 
 def bulgu_kimlikleri(metin):
@@ -561,11 +735,15 @@ def main():
                          "urettigimiz paket temizlenir")
     ap.add_argument("--komut", action="append", default=None,
                     help="varsayilan dogrulama komutunun yerine komut ekle")
+    ap.add_argument("--proof", action="store_true",
+                    help="PROOF.md'yi attestation, canli komutlar ve CI'dan uret")
     ap.add_argument("--paketsiz", action="store_true",
                     help="yalniz attestation yaz; paket ve komutlari atla")
     a = ap.parse_args()
 
     try:
+        if a.proof:
+            return proof_yaz()
         paket = Path(a.paket)
         if not paket.is_absolute():
             paket = KOK / paket

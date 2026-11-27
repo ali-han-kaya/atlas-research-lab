@@ -2,7 +2,7 @@ PY ?= python3
 # pip-audit yalniz gelistirme aracidir; varsa yerel sanal ortam kullanilir.
 PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(PY))
 
-.PHONY: dogrula dogrula-ci bagimlilik-kontrol kanit kanit-yaz kanit-dogrula kanit-paket-dogrula kanit-paket-selftest makbuz-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon mutasyon-anlatim mutasyon-anlatim-selftest mutasyon-kisa sir-mutasyon oztest-mutasyon oztest-mutasyon-yaz oztest demo demo-selftest temiz-teslim taze-klon fresh-clone kapsam kapsam-yaz kapsam-selftest kapi-sozlesme-test model-kimlik kamu-lint kamu-selftest kamu-arama kamu-arama-selftest yayin-kapisi katalog-kontrol bedava-kontrol katalog-selftest ci-katalog-denetim katalog-kayit-dogrula katalog-kayit-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
+.PHONY: dogrula dogrula-ci bagimlilik-kontrol kanit kanit-yaz proof kanit-dogrula kanit-paket-dogrula kanit-paket-selftest makbuz-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon mutasyon-anlatim mutasyon-anlatim-selftest mutasyon-kisa sir-mutasyon oztest-mutasyon oztest-mutasyon-yaz oztest demo demo-selftest temiz-teslim taze-klon fresh-clone kapsam kapsam-yaz kapsam-selftest kapi-sozlesme-test model-kimlik kamu-lint kamu-selftest kamu-arama kamu-arama-selftest yayin-kapisi katalog-kontrol bedava-kontrol katalog-selftest ci-katalog-denetim katalog-kayit-dogrula katalog-kayit-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giris: bagimlilik on kontrolu + temiz teslim on kontrolu + hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
@@ -10,6 +10,7 @@ yardim:
 	@echo "make dogrula-ci  runner kipi: olculebilen kalemler hukme girer, oz-testler rapor"
 	@echo "make kanit     commit + sha256 kanitini ignored yola ve dogrulama paketini yaz (kanit-cikti/ + kanit-paketi/; tracked attestation'a dokunmaz)"
 	@echo "make kanit-yaz  tracked attestation.json'i acikca yenile (commit oncesi)"
+	@echo "make proof  PROOF.md'yi attestation, canli komutlar ve CI durumundan uret"
 	@echo "make kanit-dogrula  attestation.json'i gercek commit/agac ile dogrula"
 	@echo "make kanit-negatif  KANIT-00..06 kodlarinin her birini gercek bozulmayla sinar"
 	@echo "make kanit-paket-dogrula  kanit-paketi/ icindeki sema, attestation, manifest ve ham kayitlari dogrula"
@@ -74,6 +75,9 @@ kanit:
 
 kanit-yaz:
 	@$(PY) tools/kanit.py --cikti attestation.json $(KANIT_ARGS)
+
+proof:
+	@$(PY) tools/kanit.py --proof
 
 kanit-dogrula:
 	@$(PY) tools/kanit_dogrula.py
