@@ -2,7 +2,7 @@
 
 [![dogrula](https://github.com/ali-han-kaya/atlas-research-lab/actions/workflows/dogrula.yml/badge.svg)](https://github.com/ali-han-kaya/atlas-research-lab/actions/workflows/dogrula.yml)
 
-[**English README**](README.en.md) · [**Türkçe README**](README.tr.md) · [**English quickstart**](docs/EN/QUICKSTART.md)
+[**English README**](README.en.md) · [**Türkçe README**](README.tr.md) · [**English quickstart**](docs/EN/QUICKSTART.md) · [**Architecture & gate demo**](docs/EN/ARCHITECTURE.md)
 
 ```console
 $ ./demo

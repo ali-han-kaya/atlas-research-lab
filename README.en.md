@@ -6,7 +6,7 @@
 
 **A verification-first, multi-agent research lab.** A delivery is judged by fail-closed gates that run over its own bytes—never by a model's confidence.
 
-[**Türkçe**](README.tr.md) · [**Language gateway**](README.md) · [**English quickstart**](docs/EN/QUICKSTART.md)
+[**Türkçe**](README.tr.md) · [**Language gateway**](README.md) · [**English quickstart**](docs/EN/QUICKSTART.md) · [**Architecture & gate demo**](docs/EN/ARCHITECTURE.md)
 
 ```console
 $ ./demo
