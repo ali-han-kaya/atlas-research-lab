@@ -79,6 +79,11 @@ jobs:
       - name: Katalog kapisi oz-testi (negatif dallar)
         run: make katalog-selftest
 
+      # Canli models.dev/katalog hedefi zorunlu CI'ya geri donmemeli. Denetim
+      # yalniz push/PR workflow'larini tarar; schedule/manual canary disaridadir.
+      - name: Canli katalog CI'ya sizmadi mi
+        run: make ci-katalog-denetim
+
       # JSONL kanit kaydi yalniz eklenir; sema/sira/commit/tree/tanim hash'leri
       # ve git gecmisi denetlenir. Elle duzenlenmis satir burada kirmizi olur.
       - name: Katalog kanit kaydi (append-only / sema)
