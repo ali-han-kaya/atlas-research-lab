@@ -1117,7 +1117,7 @@
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "`bedava_politika.asgari_limit` (200.000/32.768) alt sınırı. İhlal `rc=1`;"
+          "alinti": "(200.000/32.768) alt sınırı. İhlal `rc=1`;"
         },
         {
           "dosya": "README.tr.md",
