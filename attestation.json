@@ -1,5 +1,5 @@
 {
-  "commit": "4de73bca186a40c62235b09c92164f6a64e426d1",
+  "commit": "f8d8ba1185180e730a9ba5cb0342e46bcb4da6e0",
   "file_count": 303,
   "files": [
     {
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "3f9acef00a7eb4c69ce5a5ee557aca0cafc240f87a9e8b9219c4e5e927277c1a",
-      "size": 11951
+      "sha256": "17ef2b7a47fd086d1ee20267e3fa02dd2c4bb8bb2d2e5a610c202986a3e5fd0e",
+      "size": 12194
     },
     {
       "mode": "100644",
@@ -1187,8 +1187,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "d5870f7ee385453e21c0bb68efd74ed4a7f2a943579f71e6ab9ec1e8c82c5e8c",
-      "size": 9884
+      "sha256": "1649971239a34f408cac4fb1222f219c74682dd8346c0f60980d86f71c6c081f",
+      "size": 10150
     },
     {
       "mode": "100644",
@@ -1661,8 +1661,8 @@
     {
       "mode": "100644",
       "path": "tools/katalog_kontrol_selftest.py",
-      "sha256": "4f0fb98a8ba582a9f2e0529220fdd7e1ec45d4c55e0e727f74c49f16d6416c5b",
-      "size": 10583
+      "sha256": "9535d53b1ade8b94c00dbaa11799c49530b98ce3fcf5cb473ba3da210f1d9ae0",
+      "size": 19013
     },
     {
       "mode": "100644",
@@ -1821,7 +1821,7 @@
       "size": 16100
     }
   ],
-  "generated_at": "2026-11-27T12:42:56Z",
+  "generated_at": "2026-11-27T13:08:02Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1836,6 +1836,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "c9fa9872ba365b7f13544162deaf78aa8dad7bd5",
-  "tree_sha256": "b97e47f6d3e3cb338024a013f9c18f1c9b7f893c6538e28499842e0308dc51a6"
+  "tree": "2d91c4cd3f3c792a7873b9bbf4c7a9333720cccc",
+  "tree_sha256": "294b5e4bfa1ea650714a12994b7bd5161a2cf4026c68389e370263a365f2b0cc"
 }
