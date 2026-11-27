@@ -1,6 +1,6 @@
 {
-  "commit": "19e89f873414f46b9cf4e60b0f3116c3785bd764",
-  "file_count": 298,
+  "commit": "acd82a16cf887a82634527a069fd4ee141421bae",
+  "file_count": 300,
   "files": [
     {
       "mode": "100755",
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "11d411a9f8b6d4ee7dc064f3239838a8a5e7509378db94b745c5d3d85ff9f824",
-      "size": 11623
+      "sha256": "0f60d7390653e50bd778b76a7b5fcccd2575af183b8b843cc438b8b2c91f5af5",
+      "size": 11878
     },
     {
       "mode": "100644",
@@ -1175,8 +1175,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "5061fe79237e97e750ff8ad946773948a3ab006abd7dd831b3ad60ff33a7e4ea",
-      "size": 9378
+      "sha256": "1284771556d2f0b4e978ed2cb4292bc7ca112d1b91669770129adeffad711cd8",
+      "size": 9864
     },
     {
       "mode": "100644",
@@ -1289,8 +1289,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "a15d068b45dd0716207e24feda97f88916c6a863fbd66261724664df9b6e0256",
-      "size": 518759
+      "sha256": "48f4cf41b75fe794296a8d5dcd992aa2a350b3408e75712958f11a08cff64364",
+      "size": 519775
     },
     {
       "mode": "100644",
@@ -1349,8 +1349,8 @@
     {
       "mode": "100644",
       "path": "docs/KOD_BEDAVA_MODEL_POLITIKASI.md",
-      "sha256": "83c6926500458d7c525341fb18929e924a12b680d64d0d77ca1f32d881fa4b35",
-      "size": 21883
+      "sha256": "bf68328381d6d3eb668024ac13614021545a5c3d553d5c8019fa2c4b97f5c54e",
+      "size": 22539
     },
     {
       "mode": "100644",
@@ -1624,6 +1624,18 @@
     },
     {
       "mode": "100644",
+      "path": "tools/katalog_kayit_dogrula.py",
+      "sha256": "6c061f69a8e2c782a12d14860a3b6aee8d5d136aedb25fcac62a24c8efd758be",
+      "size": 18992
+    },
+    {
+      "mode": "100644",
+      "path": "tools/katalog_kayit_dogrula_selftest.py",
+      "sha256": "b61e44bf43d2ba890e8e1f6f55c104e8bc9a164887e79f0d70c3bf42fdefd104",
+      "size": 8482
+    },
+    {
+      "mode": "100644",
       "path": "tools/katalog_kontrol.py",
       "sha256": "d18b3b24bc7db8d522fec72565d2915a43dc324df11ed4494061027746a923ad",
       "size": 25460
@@ -1781,8 +1793,8 @@
     {
       "mode": "100644",
       "path": "tools/yayin_manifest.json",
-      "sha256": "65a480d7b3745fe48f77260ffa8f2c8cd2c78028c5823ffacc82c39ded75a2f8",
-      "size": 13476
+      "sha256": "67888d78b4bf9544ac9c52269eacfe9195b26cb24207b9295d52e1e4089bd4a1",
+      "size": 13561
     },
     {
       "mode": "100644",
@@ -1791,7 +1803,7 @@
       "size": 14918
     }
   ],
-  "generated_at": "2026-11-27T08:32:28Z",
+  "generated_at": "2026-11-27T08:54:20Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1806,6 +1818,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "83250676b7e7574b97c78cadbeb462d0967b0d3e",
-  "tree_sha256": "b58aa7ef9faa498f4f6b1c40cb6794a69e41c8fc069ae17f84911a32232bc8da"
+  "tree": "a8b6edb3f632aaed13ffa0e81d0e46135dcd6992",
+  "tree_sha256": "68481f668f2fe1bfea309610b018028c517aebdf8bc05c55666a7a11ea129c36"
 }
