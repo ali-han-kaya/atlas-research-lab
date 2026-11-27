@@ -49,7 +49,7 @@ gecersiz kilmaz, ama kapi kodunu degistirmek kiler.
 
 | Olcum | Deger |
 |---|---|
-| Taranan betik | 31 |
+| Taranan betik | 32 |
 | Kural bildiren betik | 20 |
 | Bildirilen kural (envanter) | 118 |
 | — envanter disi: olu kimlik (bildirilir, basilMAZ) | 3 |
@@ -60,10 +60,10 @@ gecersiz kilmaz, ama kapi kodunu degistirmek kiler.
 | — test yok (veri kimliği) | 18 |
 | — bunlardan yalnız fikstürde geçen | 6 |
 | — bunlardan hiç test referansı olmayan | 12 |
-| Kimliksiz kapi betigi | 11 |
+| Kimliksiz kapi betigi | 12 |
 | — tanı | 2 |
 | — kütüphane | 3 |
-| — kapsam dışı | 6 |
+| — kapsam dışı | 7 |
 | Batarya vakasi (toplam) | 142 |
 | — atesleyen (HATA + TERMINAL) | 113 |
 | — HATA (rc=1) | 105 |
@@ -242,10 +242,11 @@ Asagidaki betiklerde `KURALLAR` basligi veya `# --- KIMLIK` bolum basligi yok. B
 | `KOD_SABLONLAR/scripts/apply_routing.py` | kütüphane | Yonlendirme profili uygulayici; ORTAK masterinin birebir kopyasi ve RT-1/RT-2 testleri var; kapi kurali degil. |
 | `KOD_SABLONLAR/scripts/budget_guard.py` | kapsam dışı | Butce on-kontrol kapisi (--preflight); BG-1..BG-4 testleri var, ancak bagimsiz KURAL kimligi ve kural mutasyon vakasi yok. Envantere alinmadi; betik duzeyinde gerekceli kapsam disi. |
 | `KOD_SABLONLAR/scripts/imzala.py` | kütüphane | BASELINE HMAC imza yardimcisi; freeze_check tarafindan tuketilir, tek basina kapi kurali degil. |
+| `KOD_SABLONLAR/scripts/katalog_kontrol.py` | kapsam dışı | Canli models.dev katalog kapisi; allowlist ve bedava profili testleriyle olculur, ancak bagimsiz KURAL kimligi ve kural mutasyon vakasi yok. Envantere alinmadi. |
 | `KOD_SABLONLAR/scripts/kod_gate_merge.py` | kapsam dışı | KOD 2-of-2/3-of-3 birlestirici; ORTAK/scripts/ortak_gate.py ilkelerini import eder ve GM testleri vardir, ancak bagimsiz KURAL kimligi ve kural mutasyon vakasi yok. Envantere alinmadi. |
 
-Toplam kimliksiz kapi betigi: **11**.
-Sınıf dağılımı: **2 tanı · 3 kütüphane · 6 kapsam dışı**.
+Toplam kimliksiz kapi betigi: **12**.
+Sınıf dağılımı: **2 tanı · 3 kütüphane · 7 kapsam dışı**.
 Bu betik düzeyi sınıflandırma, kural düzeyi `KAPSAM_DISI` sayacına girmez: burada kural kimliği yoktur; sayaç yalnız envanterdeki kuralların gerekçeli istisnalarını sayar.
 
 
@@ -392,12 +393,13 @@ sessizce yok sayilmaz.
 | `dep_audit.py` | 5 | 0 | 0 | 5 |
 | `freeze_check.py` | 7 | 3 | 1 | 8 |
 | `imzala.py` | 0 | 0 | 0 | 0 |
+| `katalog_kontrol.py` | 0 | 0 | 0 | 0 |
 | `kod_gate_merge.py` | 0 | 0 | 0 | 0 |
 | `perm_lint.py` | 8 | 0 | 0 | 8 |
 | `secret_scan.py` | 5 | 0 | 0 | 5 |
 | `test_attest.py` | 12 | 1 | 0 | 12 |
 
-Toplam: 31 betik · 118 tekil kural; her satirda Envanter = Baslikta ∪ Bolum basligi.
+Toplam: 32 betik · 118 tekil kural; her satirda Envanter = Baslikta ∪ Bolum basligi.
 
 ## Referans olarak ayiklanan kimlikler
 
