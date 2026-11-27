@@ -55,6 +55,7 @@ KULLANIM
   python3 tools/iddia.py --ag             # ag gerektiren satirlari da olc
   python3 tools/iddia.py --sadece IDD-01,IDD-24
   python3 tools/iddia.py --yaz            # ham kanit anlik goruntusunu yenile
+  python3 tools/iddia.py --dokuman        # README/docs make + CI job sozlesmesi
 """
 import concurrent.futures
 import datetime
@@ -685,7 +686,190 @@ def _kisa(metin, sinir=64):
     return metin if len(metin) <= sinir else metin[:sinir - 1] + '…'
 
 
+DOKUMAN_HEDEF = re.compile(r'^([A-Za-z0-9_.-]+):(?!=)', re.M)
+DOKUMAN_JOB = re.compile(
+    r'(?<![\w-])(job(?:s)?|iş(?:ler[iı]?|i)?)(?![\w-])', re.I)
+DOKUMAN_TARIH = re.compile(
+    r'^(DERSLER|DEVIR|OLCUM|DENETIM)', re.I)
+
+
+def _dokuman_dosyalari(kok):
+    """Denetlenecek guncel belgeler; tarihli kayitlar yalniz komut icin."""
+    dosyalar = [kok / 'README.md', kok / 'README.en.md',
+                kok / 'README.tr.md', kok / 'PROOF.md']
+    for dizin in (kok / 'docs', kok / 'docs' / 'EN'):
+        if dizin.is_dir():
+            dosyalar.extend(sorted(dizin.glob('*.md')))
+    return [p for p in dosyalar if p.is_file()]
+
+
+def _make_hedefleri(kok):
+    try:
+        metin = (kok / 'Makefile').read_text(encoding='utf-8')
+    except OSError as exc:
+        raise DefterHatasi('Makefile okunamadi: %s' % exc)
+    hedefler = set()
+    for m in DOKUMAN_HEDEF.finditer(metin):
+        if m.group(1) != '.PHONY':
+            hedefler.add(m.group(1))
+    if not hedefler:
+        raise DefterHatasi('Makefile: hic hedef bulunamadi')
+    return hedefler
+
+
+def _workflow_joblari(kok):
+    """Workflow job anahtarlari ve gorunen name etiketleri."""
+    anahtarlar, adlar = set(), set()
+    for p in sorted((kok / '.github' / 'workflows').glob('*.yml')):
+        try:
+            satirlar = p.read_text(encoding='utf-8').splitlines()
+        except OSError as exc:
+            raise DefterHatasi('%s okunamadi: %s' % (p, exc))
+        jobs = False
+        for satir in satirlar:
+            if satir.strip() == 'jobs:':
+                jobs = True
+                continue
+            if jobs and satir and not satir.startswith(' '):
+                jobs = False
+            if not jobs:
+                continue
+            m = re.match(r'^  ([A-Za-z0-9_-]+):\s*$', satir)
+            if m:
+                anahtarlar.add(m.group(1))
+            m = re.match(r'^    name:\s*(.*?)\s*$', satir)
+            if m:
+                adlar.add(m.group(1).strip('"\' '))
+    if not anahtarlar:
+        raise DefterHatasi('workflow: hic job bulunamadi')
+    return anahtarlar, adlar
+
+
+def _make_komutu(satir):
+    """Bir shell satirindan ilk make hedefini cikar; yoksa None."""
+    s = satir.strip()
+    if s.startswith('$ '):
+        s = s[2:].lstrip()
+    if not re.match(r'^make(?:\s|$)', s):
+        return None
+    parcalar = s.split()[1:]
+    i = 0
+    while i < len(parcalar):
+        parca = parcalar[i]
+        if parca.startswith('-'):
+            if parca in ('-C', '-f', '--file', '--directory') \
+                    and i + 1 < len(parcalar):
+                i += 2
+            else:
+                i += 1
+            continue
+        if re.match(r'^[A-Za-z_][A-Za-z0-9_]*=', parca):
+            i += 1
+            continue
+        if parca.startswith('$') or parca.startswith('('):
+            return None
+        return parca.strip('`')
+    return None
+
+
+def _inline_make(metin):
+    """Bir inline code span'indeki make komutunu hedefe indir."""
+    m = re.search(r'(?:^|[;&|]\s*)make\b(.*)$', metin)
+    return _make_komutu('make' + (m.group(1) if m else '')) if m else None
+
+
+def dokuman_sozlesmesi(kok=KOK):
+    """README/docs make hedeflerini ve CI job iddialarini gercek kaynakla sinar."""
+    hedefler = _make_hedefleri(kok)
+    joblar, job_adlari = _workflow_joblari(kok)
+    dosyalar = _dokuman_dosyalari(kok)
+    bulgular = []
+    make_sayisi = 0
+    job_sayisi = 0
+    for p in dosyalar:
+        try:
+            metin = p.read_text(encoding='utf-8')
+        except OSError as exc:
+            raise DefterHatasi('%s okunamadi: %s' % (p.relative_to(kok), exc))
+        # Fenced bloklarda yalniz satir basindaki make komutu; aciklamali
+        # orneklerdeki devam metni hedef sanilmaz.
+        for fm in re.finditer(r'```[^\n]*\n(.*?)```', metin, re.S):
+            bas = fm.start(1)
+            for lm in re.finditer(r'^[ \t]*\$?[ \t]*make\b.*$',
+                                  fm.group(1), re.M):
+                hedef = _make_komutu(lm.group(0))
+                if hedef is None:
+                    continue
+                make_sayisi += 1
+                if hedef not in hedefler:
+                    satir = metin[:bas + lm.start()].count('\n') + 1
+                    bulgular.append(
+                        'DOC-MAKE-01 %s:%d `make %s` — Makefile hedefi yok'
+                        % (p.relative_to(kok), satir, hedef))
+        # Inline code span: yalniz kendi basindaki make; boylece "GNU make
+        # hatasi" gibi duz metin komut sayilmaz.
+        for im in re.finditer(r'(?<!`)`([^`\n]+)`(?!`)', metin):
+            hedef = _inline_make(im.group(1))
+            if hedef is None:
+                continue
+            make_sayisi += 1
+            if hedef not in hedefler:
+                satir = metin[:im.start()].count('\n') + 1
+                bulgular.append(
+                    'DOC-MAKE-01 %s:%d `make %s` — Makefile hedefi yok'
+                    % (p.relative_to(kok), satir, hedef))
+        # Tarihli kayitlar tarihsel sozlesmeyi tasir; guncel job iddiasi
+        # sayilmaz. Guncel belgelerde job anahtarini/gorunen adini ara.
+        if DOKUMAN_TARIH.match(p.name):
+            continue
+        for no, satir in enumerate(metin.splitlines(), 1):
+            m = DOKUMAN_JOB.search(satir)
+            if not m:
+                continue
+            adaylar = []
+            for tm in re.finditer(r'`([a-z][a-z0-9-]+)`', satir):
+                ad = tm.group(1)
+                if tm.end() <= m.start():
+                    if m.start() - tm.end() <= 100:
+                        adaylar.append(ad)
+                elif tm.start() >= m.end():
+                    # Yalniz job sozcugunun hemen ardindan gelen etiket;
+                    # "... isinde uretir ve `artifact` adiyla" gibi uzak
+                    # nesneler job adi sayilmaz.
+                    ara = satir[m.end():tm.start()]
+                    if re.fullmatch(r'[\s:!=()\[\],.\-]*', ara):
+                        adaylar.append(ad)
+            for ad in dict.fromkeys(adaylar):
+                job_sayisi += 1
+                if ad not in joblar and ad not in job_adlari:
+                    bulgular.append(
+                        'DOC-CI-01 %s:%d `%s` — workflow job adi yok'
+                        % (p.relative_to(kok), no, ad))
+    print('DOKUMAN SOZLESMESI — make hedefleri + CI job adlari')
+    print('  Makefile hedefi=%d · workflow job=%d · belge=%d · '
+          'make referansi=%d · job iddiasi=%d'
+          % (len(hedefler), len(joblar), len(dosyalar), make_sayisi,
+             job_sayisi))
+    for bulgu in bulgular:
+        print('FAIL ' + bulgu)
+    if bulgular:
+        print('DOKUMAN: FAIL — %d bulgu' % len(bulgular))
+        return 1
+    print('DOKUMAN: PASS — 0 bulgu')
+    return 0
+
+
 def main(argv):
+    if '--dokuman' in argv:
+        kok = KOK
+        for i, arg in enumerate(argv):
+            if arg == '--kok' and i + 1 < len(argv):
+                kok = Path(argv[i + 1])
+        try:
+            return dokuman_sozlesmesi(kok)
+        except DefterHatasi as exc:
+            print('DOKUMAN: FAIL — %s' % exc)
+            return 2
     ag = '--ag' in argv
     yaz = '--yaz' in argv
     hizli = '--hizli' in argv

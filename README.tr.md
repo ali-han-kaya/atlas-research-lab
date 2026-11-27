@@ -413,6 +413,7 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 | Bağımlılık denetimi | `make guvenlik` → `pip-audit`; her bulgu `docs/GUVENLIK.md` içinde adıyla |
 | Commit/push koruması | `make kur` → `core.hooksPath=.githooks`; canlı DSN commit edilemez |
 | Runner doğrulaması | `make dogrula-ci` — yalnız o ortamda ölçülebilen kalemler hükme girer, öz-testler rapor |
+| Doküman sözleşmesi | `make dokuman-sozlesmesi` — README/docs make hedefleri ve CI job adları gerçek `Makefile`/workflow ile karşılaştırılır; bayat hedef veya ad kırmızı |
 | Sürekli doğrulama | `.github/workflows/dogrula.yml` — `dogrula` ve `iddia` job'ları; her push/PR ve haftalık |
 | Dış labdan aktarım | `tools/yayinla.py --lab <yol>` (kuru koşu) · `--uygula` (yazar) |
 

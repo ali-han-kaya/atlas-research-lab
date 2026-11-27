@@ -266,6 +266,11 @@ jobs:
 
       # README/docs sayilari iddia defterinden olculur; bayat sayi yesil CI ile
       # yayilanamaz. FAIL satiri hangi beyanin hangi kaynakla uyusmadigini basar.
+      # README/docs icindeki make hedefleri ve CI job adlari da gercek
+      # Makefile/workflow ile karsilastirilir; bayat hedef/ad kirmizi olur.
+      - name: Dokuman sozlesmesi (make + CI job)
+        run: make dokuman-sozlesmesi
+
       - name: make iddia
         run: make iddia
 

@@ -2,7 +2,7 @@ PY ?= python3
 # pip-audit yalniz gelistirme aracidir; varsa yerel sanal ortam kullanilir.
 PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(PY))
 
-.PHONY: dogrula dogrula-ci bagimlilik-kontrol kanit kanit-yaz proof kanit-dogrula kanit-paket-dogrula kanit-paket-selftest makbuz-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon mutasyon-anlatim mutasyon-anlatim-selftest mutasyon-kisa sir-mutasyon oztest-mutasyon oztest-mutasyon-yaz oztest demo demo-selftest temiz-teslim taze-klon fresh-clone kapsam kapsam-yaz kapsam-selftest kapi-sozlesme-test model-kimlik kamu-lint kamu-selftest kamu-arama kamu-arama-selftest yayin-kapisi katalog-kontrol bedava-kontrol katalog-selftest ci-katalog-denetim katalog-kayit-dogrula katalog-kayit-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
+.PHONY: dogrula dogrula-ci bagimlilik-kontrol kanit kanit-yaz proof dokuman-sozlesmesi kanit-dogrula kanit-paket-dogrula kanit-paket-selftest makbuz-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon mutasyon-anlatim mutasyon-anlatim-selftest mutasyon-kisa sir-mutasyon oztest-mutasyon oztest-mutasyon-yaz oztest demo demo-selftest temiz-teslim taze-klon fresh-clone kapsam kapsam-yaz kapsam-selftest kapi-sozlesme-test model-kimlik kamu-lint kamu-selftest kamu-arama kamu-arama-selftest yayin-kapisi katalog-kontrol bedava-kontrol katalog-selftest ci-katalog-denetim katalog-kayit-dogrula katalog-kayit-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giris: bagimlilik on kontrolu + temiz teslim on kontrolu + hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
@@ -50,6 +50,7 @@ yardim:
 	@echo "make iddia-hizli  dogrula/mutasyon gibi pahali satirlari atla; atlananlar PASS degil"
 	@echo "make iddia-ag  ag gerektiren iddialari da olc"
 	@echo "make iddia-yaz  ham kanit anlik goruntusunu yenile (tools/iddia_olcum.json)"
+	@echo "make dokuman-sozlesmesi  README/docs make hedefleri ve CI job adlari gercek Makefile/workflow ile uyusuyor mu"
 	@echo "make iddia-selftest  hizli kip ve atlama sozlesmesinin negatif testleri"
 	@echo "make guvenlik  pip-audit: bilinen CVE taramasi (requirements-dev.txt)"
 	@echo "make kur       commit/push korumasini bu klonda etkinlestir"
@@ -61,7 +62,7 @@ yardim:
 dogrula: bagimlilik-kontrol katalog-selftest ci-katalog-denetim
 	@$(PY) tools/dogrula.py
 
-dogrula-ci: bagimlilik-kontrol katalog-selftest ci-katalog-denetim
+dogrula-ci: bagimlilik-kontrol katalog-selftest ci-katalog-denetim dokuman-sozlesmesi
 	@$(PY) tools/dogrula.py --ci
 
 # Katalog oz-testlerinden de once kosar; eksik modul varsa kapilar baslamaz.
@@ -213,6 +214,9 @@ katalog-kayit-dogrula:
 
 iddia:
 	@$(PY) tools/iddia.py
+
+dokuman-sozlesmesi:
+	@$(PY) tools/iddia.py --dokuman
 
 iddia-hizli:
 	@$(PY) tools/iddia.py --hizli

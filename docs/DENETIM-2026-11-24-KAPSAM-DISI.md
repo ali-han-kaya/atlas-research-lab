@@ -168,7 +168,7 @@ bildirilmesinden).
 - **Sol sütundaki 18 kuralın HATA sözleşmesine çevrilebilirliği** ölçülmedi;
   her biri için fikstür yazmak gerekir.
 - **`PAKET-00…10`** için tek bir negatif vaka koşulmadı: paket üretimi
-  (`make kanit-paketi`) ayrı bir koşu gerektiriyor.
+  (`make kanit`) ayrı bir koşu gerektiriyor.
 - **`KAMU/KANIT/YAYIN`** kurallarının fikstür koşucuları PASS veriyor; bunların
   *mutasyonla* ateşlendiği (kaynağı bozunca kırmızı olduğu) ölçülmedi.
 - **26 sayısının kaynağı** bulunamadı: repoda ne `docs/`, ne `tools/`, ne git
