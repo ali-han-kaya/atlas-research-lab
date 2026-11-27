@@ -176,6 +176,8 @@ def _kopya(tmp):
     (tmp / 'home').mkdir()
     shutil.copy2(KOK / KAPI, tmp / KAPI)
     shutil.copy2(KOK / SELFTEST, tmp / SELFTEST)
+    shutil.copy2(KOK / 'tools' / 'yayin_kapisi.py',
+                 tmp / 'tools' / 'yayin_kapisi.py')
     for ad in ('pre-commit', 'pre-push'):
         shutil.copy2(KOK / '.githooks' / ad, tmp / '.githooks' / ad)
     cfg = tmp / 'home' / '.gitconfig'
