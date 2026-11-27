@@ -1,6 +1,6 @@
 {
-  "commit": "32df1ddde018835a34316772db49978b1119a076",
-  "file_count": 300,
+  "commit": "ed687407c733d33eb6792f48492dd32726c8e628",
+  "file_count": 301,
   "files": [
     {
       "mode": "100755",
@@ -1223,14 +1223,14 @@
     {
       "mode": "100644",
       "path": "README.en.md",
-      "sha256": "645f004d6fbb8e6c931af67f49f98ed3666dcb41a1b29a87a79cfef0994cfded",
-      "size": 9724
+      "sha256": "8ee8f2dfc1bbae7da9a558c0492dfaf8aa687d3ca004f0ce8a29d9968c0a31d1",
+      "size": 9783
     },
     {
       "mode": "100644",
       "path": "README.md",
-      "sha256": "79d2ed6bae890068dfc5e65b1fa9cdcda2d399e06bd90d5ae17f709ff7cc17c7",
-      "size": 595
+      "sha256": "c80b5b580ab329799af73c6a433387b859f1352be4243f6d1b813a40ff1fc9e9",
+      "size": 654
     },
     {
       "mode": "100644",
@@ -1289,8 +1289,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "48f4cf41b75fe794296a8d5dcd992aa2a350b3408e75712958f11a08cff64364",
-      "size": 519775
+      "sha256": "6f6740e2a898c372678424bb0aea06c8792241e2d8b298889e63963a3a9eabcd",
+      "size": 520570
     },
     {
       "mode": "100644",
@@ -1321,6 +1321,12 @@
       "path": "docs/DURUM.md",
       "sha256": "3e297c1fc9af931b138ccafe797c544f390df15b04a5dfab7e3e16f1a8984a35",
       "size": 1489
+    },
+    {
+      "mode": "100644",
+      "path": "docs/EN/ARCHITECTURE.md",
+      "sha256": "3ef4f11f1f4e366769f01ca915145b204b49bca94ddc076a2fb1746db7cd110a",
+      "size": 6179
     },
     {
       "mode": "100644",
@@ -1793,8 +1799,8 @@
     {
       "mode": "100644",
       "path": "tools/yayin_manifest.json",
-      "sha256": "67888d78b4bf9544ac9c52269eacfe9195b26cb24207b9295d52e1e4089bd4a1",
-      "size": 13561
+      "sha256": "e1e73764a7b99aefab8d4bd9941297711886e6877e8405c63f1b668412b4b917",
+      "size": 13592
     },
     {
       "mode": "100644",
@@ -1803,7 +1809,7 @@
       "size": 14918
     }
   ],
-  "generated_at": "2026-11-27T09:37:52Z",
+  "generated_at": "2026-11-27T09:59:01Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1818,6 +1824,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "646557d330139763e169e26792251dfc404bc76d",
-  "tree_sha256": "ff54f8cf4f6a9cb5d605ece0e150fde54dfcf36609b061abec740095be362a8a"
+  "tree": "b960201a625e8f4d6719f2cc45d273c3242385b9",
+  "tree_sha256": "57166a5bd5eeaab1b3210e8b27a0c040d2b323546d250a92be83d1210bf9806b"
 }
