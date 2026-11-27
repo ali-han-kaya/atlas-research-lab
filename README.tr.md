@@ -315,9 +315,10 @@ varsa issue açar; `make dogrula` ile mevcut CI hükmü değişmez. CI yalnız
 çevrimdışı `make katalog-selftest` testini `make dogrula-ci` üzerinden
 çalıştırır. Canlı kapı yalnız allowlist'i değil,
 `profiller.bedava` altındaki **on rolü** de canlı kayıtla karşılaştırır: tek
-kimlik, sıfır `cost.input`/`cost.output`, canlı ve yerel
-`reasoning`/`tool_call`, `deprecated` olmayan `status` ve
-`bedava_politika.asgari_limit` (200.000/32.768) alt sınırı. İhlal `rc=1`;
+kimlik, canlı `name`/`family`/`nvidia` aile denetimi (`AILE_FARKLI`), sıfır
+`cost.input`/`cost.output`, canlı ve yerel `reasoning`/`tool_call`,
+`deprecated` olmayan `status` ve `bedava_politika.asgari_limit`
+(200.000/32.768) alt sınırı. İhlal `rc=1`;
 ağ/JSON okunamazsa `rc=2` ve **`OLCULMEDI`** — PASS sayılmaz. Her koşu
 commit/tree/tree_sha256 ve tanım SHA-256'larıyla append-only
 `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydına eklenir; istenirse

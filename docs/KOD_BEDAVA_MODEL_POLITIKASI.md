@@ -32,16 +32,17 @@ yoktur, `OLCULMEDI` yazılır ve karar bekler.
 
 | # | Koşul | Kanıt alanı | Geçme ölçütü |
 |---|---|---|---|
-| 1 | **Aynı aile** | models.dev `name`, `family`; `tools/model_kimlik_istisna.json` gerekçesi | `name` `Nemotron 3` ile başlar, sağlayıcı `nvidia`dır; `family` değeri kayda geçirilir; emekli kimliğin aile aidiyeti defter gerekçesinde yazılıdır |
+| 1 | **Aynı aile** | models.dev `name`, `family`; `tools/model_kimlik_istisna.json` gerekçesi | `name` `Nemotron 3` ile başlar, `family` `nemotron` ile başlar, sağlayıcı `nvidia`dır; sapma `AILE_FARKLI`; emekli kimliğin aile aidiyeti defter gerekçesinde yazılıdır |
 | 2 | **Sıfır maliyet** | models.dev `cost.input`, `cost.output`, varsa diğer `cost.*` alanları | hepsi `0`; `:free` soneki **tek başına kanıt değildir** |
 | 3 | **reasoning** | models.dev `reasoning` + `tools/model_katalog.json` aynı alan | canlı ve yerel değer ikisi de `true` |
 | 4 | **tool_call** | models.dev `tool_call` + `tools/model_katalog.json` aynı alan | canlı ve yerel değer ikisi de `true` |
 | 5 | **Canlı kayıt** | models.dev `status` | alan yok/`null` ya da `deprecated` değil |
 | 6 | **Bağlam** | models.dev `limit.context`, `limit.output`; `bedava_politika.asgari_limit` | 200.000 bağlam / 32.768 çıktı tabanının altına düşmez |
 
-**Aynı aile ölçütü.** Aile, model adındaki `Nemotron 3` kuşağı ve `nvidia`
-sağlayıcısıdır; canlı `family` alanı (ölçümde `nemotron-ultra-free`) ayrıca
-kaydedilir. Eski kimliğin tam değeri `tools/model_kimlik_istisna.json`
+**Aynı aile ölçütü.** Aile, model adındaki `Nemotron 3` kuşağı, `nemotron`
+aileden gelen canlı `family` alanı ve `nvidia` sağlayıcısıdır; canlı `family`
+(ölçümde `nemotron-ultra-free`) ayrıca kaydedilir. Kapı üçünden biri saparsa
+`AILE_FARKLI` ile kırmızı olur. Eski kimliğin tam değeri `tools/model_kimlik_istisna.json`
 içindedir ve canlı katalogda artık bulunmadığı için eski kaydın canlı `family`
 alanıyla karşılaştırılması **OLCULMEDI**dir. Farklı bir aileye geçiş emeklilik
 değil, **yeni model ailesi kararıdır**: prosedür durur ve lab sahibinin yazılı
@@ -66,8 +67,8 @@ make bedava-kontrol                  # yalniz bedava profili; CI'ya baglanmaz
 
 - Kaynak: `https://models.dev/api.json`.
 - `make bedava-kontrol` yalnız `profiller.bedava` sözleşmesini denetler: on rol,
-  tek kimlik, canlı `cost` 0, `reasoning`/`tool_call` true. Ağ yoksa `rc=2` ve
-  `OLCULMEDI` döner; bu hedef CI'ya bağlanmaz.
+  tek kimlik, canlı `name`/`family`/`nvidia`, `cost` 0, `reasoning`/`tool_call`
+  true. Ağ yoksa `rc=2` ve `OLCULMEDI` döner; bu hedef CI'ya bağlanmaz.
 - **Canlı ölçüm CI dışındadır.** `make katalog-kontrol` ağ gerektirir; elle
   veya yerel zamanlanmış bir işle çalıştırılır. CI yalnız çevrimdışı
   `make katalog-selftest` testini `make dogrula-ci` üzerinden koşar.
@@ -77,7 +78,8 @@ make bedava-kontrol                  # yalniz bedava profili; CI'ya baglanmaz
 - `rc=0`, `SONUC: 9/9 gecerli · 0 bulgu` **ve** `BEDAVA: 10/10 rol ... cost 0/0
   ... reasoning/tool_call true` zorunludur.
 - `rc=1` → allowlist sapması veya bedava koşulu ihlali. Adlandırılmış bulgular:
-  `MODEL_YOK`, `SAGLAYICI_YOK`, `DURUM` (`deprecated`), `MALIYET`
+  `MODEL_YOK`, `SAGLAYICI_YOK`, `DURUM` (`deprecated`), `AILE_FARKLI`
+  (`name`/`family`/sağlayıcı sapması), `MALIYET`
   (`cost.input`/`cost.output` veya diğer sayısal alan ≠ 0), `YETENEK_FARKLI`
   (canlı `reasoning`/`tool_call` true değil veya yerel allowlist ile çelişiyor),
   `LIMIT_YETERSIZ` (`limit.context`/`limit.output` < `asgari_limit`),
@@ -313,7 +315,7 @@ tutulur; CI artifact'ı yoktur.
 | `KOD_SABLONLAR/routing.profiles.json` | `profiller.bedava` — on rolün model eşlemesi |
 | `KOD_SABLONLAR/opencode.json` | birincil sürücü ve `_model_notu` |
 | `tools/model_katalog.json` | hermetik allowlist (MOD-1/MOD-2) |
-| `tools/katalog_kontrol.py` | canlı models.dev kapısı: allowlist + on rol + append-only kayıt (ağ) |
+| `tools/katalog_kontrol.py` | canlı models.dev kapısı: allowlist + on rol + aile (`name`/`family`/`nvidia`) + append-only kayıt (ağ) |
 | `tools/model_kimlik.py` | emekli kimlik taraması, `--oztest`, `--envanter` |
 | `tools/model_kimlik_istisna.json` | emekli kimlik + satır hash'leri + `onay` |
 | `make katalog-kontrol` | canlı ölçüm + `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydı |

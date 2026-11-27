@@ -58,6 +58,8 @@ def yerel(*kimlikler, **degisiklik):
 def canli(*kimlikler, **degisiklik):
     return {'openrouter': {'models': {
         k: {
+            'name': 'Nemotron 3 Ultra (free)',
+            'family': 'nemotron-ultra-free',
             'reasoning': True,
             'tool_call': True,
             'cost': {'input': 0, 'output': 0},
@@ -107,6 +109,7 @@ def main():
     print('KATALOG KONTROL OZ-TESTI — ag yok, yerel api.json + profil fiksturu')
     dokuz = profil()
     del dokuz['profiller']['bedava']['kod-tester']
+    meta = {rol: 'openrouter/meta/m1' for rol in ROLLER}
     vakalar = [
         ('guncel katalog', yerel('m1'), canli('m1'), 0,
          'BEDAVA: 10/10', None),
@@ -126,6 +129,13 @@ def main():
          'ALAN_YOK', None),
         ('deprecated model', yerel('m1'),
          canli('m1', m1={'status': 'deprecated'}), 1, 'DURUM', None),
+        ('aile adi drifti', yerel('m1'),
+         canli('m1', m1={'name': 'Baska Model'}), 1, 'AILE_FARKLI', None),
+        ('aile family drifti', yerel('m1'),
+         canli('m1', m1={'family': 'other-family'}), 1,
+         'AILE_FARKLI', None),
+        ('aile saglayici drifti', yerel('meta/m1'), canli('meta/m1'), 1,
+         'AILE_FARKLI', profil(meta)),
         ('kimlik drifti', yerel('m1', 'm2'), canli('m1', 'm2'), 1,
          'TEK_KIMLIK_DEGIL',
          profil({'kod-tester': 'openrouter/m2'})),

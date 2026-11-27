@@ -14,6 +14,8 @@ NEDEN VAR
 
   KOSULLAR (bedava profili, politika: docs/KOD_BEDAVA_MODEL_POLITIKASI.md)
     - on rolun tamami ayni kimlige bakar (tek kimlik),
+    - canli `name` `Nemotron 3` ile baslar, `family` `nemotron` ile baslar ve
+      saglayici `nvidia`dir; sapma `AILE_FARKLI`dir,
     - kimlik canli kayitta vardir, `status` deprecated degildir,
     - `cost.input` ve `cost.output` (varsa diger sayisal cost alanlari) 0'dir,
     - `reasoning` ve `tool_call` canlida true, yerel allowlist'te de true'dur,
@@ -55,6 +57,9 @@ VARSAYILAN_API = 'https://models.dev/api.json'
 YETENEKLER = ('reasoning', 'tool_call')
 PROFIL_ADI = 'bedava'
 BEKLENEN_ROL = 10
+AILE_AD_ONEK = 'Nemotron 3'
+AILE_FAMILY_ONEK = 'nemotron'
+AILE_SAGLAYICI = 'nvidia'
 TANIM_DOSYALARI = (
     'tools/model_katalog.json',
     'KOD_SABLONLAR/routing.profiles.json',
@@ -232,6 +237,34 @@ def _canli_kayit(canli, mid):
     return kayit if isinstance(kayit, dict) else None
 
 
+def _aile_denetle(kayit, mid, tam):
+    """Canli kaydin ayni Nemotron 3/nvidia ailesinde kaldigini denetle."""
+    sorunlar = []
+    ad = kayit.get('name')
+    if not (isinstance(ad, str) and ad.startswith(AILE_AD_ONEK)):
+        sorunlar.append('name=%r; %r ile baslamali'
+                        % (ad, AILE_AD_ONEK))
+    aile = kayit.get('family')
+    if not (isinstance(aile, str)
+            and aile.casefold().startswith(AILE_FAMILY_ONEK)):
+        sorunlar.append('family=%r; %r ailesi bekleniyor'
+                        % (aile, AILE_FAMILY_ONEK))
+    # Sentetik test kimlikleri saglayici oneki tasimayabilir; gercek profil
+    # `nvidia/<model>` bicimindedir ve onek varsa nvidia olmak zorundadir.
+    if '/' in mid and not mid.startswith(AILE_SAGLAYICI + '/'):
+        sorunlar.append('saglayici=%r; %s bekleniyor'
+                        % (mid, AILE_SAGLAYICI))
+    canli_id = kayit.get('id')
+    if isinstance(canli_id, str) and not (
+            canli_id.startswith(AILE_SAGLAYICI + '/') or
+            canli_id.startswith('openrouter/' + AILE_SAGLAYICI + '/')):
+        sorunlar.append('canli id=%r; %s bekleniyor'
+                        % (canli_id, AILE_SAGLAYICI))
+    if sorunlar:
+        return [('AILE_FARKLI', tam, ' · '.join(sorunlar))]
+    return []
+
+
 def _bedava_denetle(roller, asgari, canli, yerel):
     """Bedava profilini olcer; (bulgular, model_id, canli_kayit, gecen, toplam)."""
     bulgular = []
@@ -270,6 +303,11 @@ def _bedava_denetle(roller, asgari, canli, yerel):
             canli_model = kayit
 
         ok = True
+
+        aile_bulgulari = _aile_denetle(kayit, mid, tam)
+        if aile_bulgulari:
+            bulgular.extend(aile_bulgulari)
+            ok = False
 
         maliyet = kayit.get('cost')
         if not isinstance(maliyet, dict):
