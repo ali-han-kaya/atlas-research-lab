@@ -1,5 +1,5 @@
 {
-  "commit": "add599182cdd6c615ded60f67b19afb8aa81ca7f",
+  "commit": "043e9aa61c3664bc0703ec797c34fcfbd66f63b6",
   "file_count": 303,
   "files": [
     {
@@ -1821,7 +1821,7 @@
       "size": 14956
     }
   ],
-  "generated_at": "2026-11-27T11:31:51Z",
+  "generated_at": "2026-11-27T11:53:19Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1836,6 +1836,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "1075d42babac7b3757370e1961c89f3631c86800",
+  "tree": "38693fd34214ca46b3b7f680b1640b42284efd10",
   "tree_sha256": "5156a95dbf6845119261dddb1f29eb181ead1809384bc53dc0778a778dcbd285"
 }
