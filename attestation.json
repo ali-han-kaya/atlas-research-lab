@@ -1,6 +1,6 @@
 {
-  "commit": "f8d8ba1185180e730a9ba5cb0342e46bcb4da6e0",
-  "file_count": 303,
+  "commit": "b03018c07bec49301340bd355518baffff3770d4",
+  "file_count": 304,
   "files": [
     {
       "mode": "100755",
@@ -1187,8 +1187,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "1649971239a34f408cac4fb1222f219c74682dd8346c0f60980d86f71c6c081f",
-      "size": 10150
+      "sha256": "e112a8af423e8655795f89760cb48cbd7b538bfa7703f3b58005d8b7df1bc9bd",
+      "size": 10278
     },
     {
       "mode": "100644",
@@ -1207,6 +1207,12 @@
       "path": "ORTAK/scripts/ortak_gate.py",
       "sha256": "f59ff596725c2a6ac90b04c76378614b08d48ba309a616588f797d99dd4b4fb4",
       "size": 13507
+    },
+    {
+      "mode": "100644",
+      "path": "PROOF.md",
+      "sha256": "4f3bec169688f5b7e91407f1ec828cecb83f21372327a330d48bf3ba6765e4e5",
+      "size": 1881
     },
     {
       "mode": "100644",
@@ -1571,7 +1577,7 @@
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "d34994d3a7387cff57c371abd3973b3a0ed71916ae61f2528a4de217a33674d1",
+      "sha256": "8e750667f63702802db6026837276bf0ef6ff71dea2643155075b9f28bdfe898",
       "size": 9337
     },
     {
@@ -1589,8 +1595,8 @@
     {
       "mode": "100644",
       "path": "tools/kanit.py",
-      "sha256": "4cae6494184d10825e93cbb9575057e477436b7286a73813f25d0b43b711cd2b",
-      "size": 24709
+      "sha256": "a207aa438232fb23bcff2f27bd79e1c8ca48456bc3d223344dea72cc87ac0d2f",
+      "size": 32402
     },
     {
       "mode": "100644",
@@ -1811,8 +1817,8 @@
     {
       "mode": "100644",
       "path": "tools/yayin_manifest.json",
-      "sha256": "d18c18e40448ffbae394ffd382483de33a04746d21a971ebf547af575a17a4d6",
-      "size": 14320
+      "sha256": "d8f105b1abc1baf49ea27d7a3bce51028c7d5fc9940fa6183e533d19ff635562",
+      "size": 14336
     },
     {
       "mode": "100644",
@@ -1821,7 +1827,7 @@
       "size": 16100
     }
   ],
-  "generated_at": "2026-11-27T13:08:02Z",
+  "generated_at": "2026-11-27T14:10:05Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1836,6 +1842,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "2d91c4cd3f3c792a7873b9bbf4c7a9333720cccc",
-  "tree_sha256": "294b5e4bfa1ea650714a12994b7bd5161a2cf4026c68389e370263a365f2b0cc"
+  "tree": "c52af09d06a5af616b14d4020a2e9100c4d403a7",
+  "tree_sha256": "ceb691e1010134270b276d515942f23195bff71f3ca03ab487b448e880f98e54"
 }
