@@ -273,6 +273,8 @@
     "tools/kapi_sozlesmesi_selftest.py",
     "tools/kapsam.py",
     "tools/kapsam_selftest.py",
+    "tools/katalog_kayit_dogrula.py",
+    "tools/katalog_kayit_dogrula_selftest.py",
     "tools/katalog_kontrol.py",
     "tools/katalog_kontrol_selftest.py",
     "tools/kural_katalogu.py",

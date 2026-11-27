@@ -2,7 +2,7 @@ PY ?= python3
 # pip-audit yalniz gelistirme aracidir; varsa yerel sanal ortam kullanilir.
 PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(PY))
 
-.PHONY: dogrula dogrula-ci bagimlilik-kontrol kanit kanit-yaz kanit-dogrula kanit-paket-dogrula kanit-paket-selftest makbuz-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon mutasyon-anlatim mutasyon-anlatim-selftest mutasyon-kisa sir-mutasyon oztest-mutasyon oztest-mutasyon-yaz oztest demo demo-selftest temiz-teslim taze-klon fresh-clone kapsam kapsam-yaz kapsam-selftest kapi-sozlesme-test model-kimlik kamu-lint kamu-selftest kamu-arama kamu-arama-selftest yayin-kapisi katalog-kontrol bedava-kontrol katalog-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
+.PHONY: dogrula dogrula-ci bagimlilik-kontrol kanit kanit-yaz kanit-dogrula kanit-paket-dogrula kanit-paket-selftest makbuz-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon mutasyon-anlatim mutasyon-anlatim-selftest mutasyon-kisa sir-mutasyon oztest-mutasyon oztest-mutasyon-yaz oztest demo demo-selftest temiz-teslim taze-klon fresh-clone kapsam kapsam-yaz kapsam-selftest kapi-sozlesme-test model-kimlik kamu-lint kamu-selftest kamu-arama kamu-arama-selftest yayin-kapisi katalog-kontrol bedava-kontrol katalog-selftest katalog-kayit-dogrula katalog-kayit-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giris: bagimlilik on kontrolu + temiz teslim on kontrolu + hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
@@ -42,7 +42,8 @@ yardim:
 	@echo "make yayin-kapisi  yayin manifesti + makale/sir/ozel yol kapisi (dogrula on kosulu)"
 	@echo "make katalog-kontrol  canli models.dev kapisi: allowlist + bedava profili + append-only kanit (KAYIT_ARGS ile yol)"
 	@echo "make bedava-kontrol  yalniz bedava profili: 10 rol + canli models.dev; elle, CI'ya baglanmaz"
-	@echo "make katalog-selftest  katalog kapisi ve uretici oz-testleri (ag yok; dogrula on kosulu)"
+	@echo "make katalog-selftest  katalog kapisi, uretici ve kayit-dogrulayici oz-testleri (ag yok; dogrula on kosulu)"
+	@echo "make katalog-kayit-dogrula  JSONL kanit kaydi: sema + sira + commit/tree/hash + append-only"
 	@echo "make iddia    README/docs sayisal iddialarini ureten komutla yeniden olc (ag haric)"
 	@echo "make iddia-hizli  dogrula/mutasyon gibi pahali satirlari atla; atlananlar PASS degil"
 	@echo "make iddia-ag  ag gerektiren iddialari da olc"
@@ -192,6 +193,15 @@ bedava-kontrol:
 katalog-selftest:
 	@$(PY) tools/katalog_kontrol_selftest.py
 	@$(PY) tools/model_katalog_uret_selftest.py
+	@$(PY) tools/katalog_kayit_dogrula_selftest.py
+
+katalog-kayit-selftest:
+	@$(PY) tools/katalog_kayit_dogrula_selftest.py
+
+# Kayit dosyasi yalniz eklenir; dogrulayici mevcut agacta HEAD'i ve tam git
+# gecmisini ister. CI checkout'u fetch-depth: 0 ile calisir.
+katalog-kayit-dogrula:
+	@$(PY) tools/katalog_kayit_dogrula.py
 
 iddia:
 	@$(PY) tools/iddia.py

@@ -121,7 +121,11 @@ Her ölçüm kaydı şunları taşır; kayıt **append-only**dir, eski satır si
 Makine kaydı `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` (satır başına bir JSON) ve
 insan özeti §6'dır. `make katalog-kontrol` temiz ağaçta bu dosyaya ekler; ağaç
 kirliyse kayıt `OLCULMEDI` olur ve PASS sayılmaz, çünkü `commit`/`tree` ölçülen
-dosyalarla eşleşmez. CI aynı şemayı `$RUNNER_TEMP/bedava-katalog.jsonl` altına
+dosyalarla eşleşmez. `make katalog-kayit-dogrula` bu dosyanın şemasını, satır
+sırasını, her satırın commit/tree/tree_sha256 ve tanım SHA-256'larını ve Git
+geçmişindeki append-only zinciri denetler; çalışma ağacı HEAD'den farklıysa ya
+da bir satır sonradan değiştirilmişse **FAIL** verir. CI bu adımı tam geçmişle
+(`fetch-depth: 0`) koşar. CI aynı şemayı `$RUNNER_TEMP/bedava-katalog.jsonl` altına
 yazar, `$GITHUB_STEP_SUMMARY`'ye basar ve `bedava-katalog-kaniti` artifact'ı
 olarak yükler. Depodaki append-only kayda bu artifact'ın JSON satırı eklenir;
 böylece depo kaydı CI koşusunun kendi commit/tree/hash'lerini taşır. CI belirteci salt-okunur olduğu için satırı bot commit etmez; depoya girişi ayrı
@@ -321,7 +325,11 @@ okunamazsa kayıt `OLCULMEDI` olur; PASS sayılmaz.
 alanlar §3.2'dedir. Kayıt yalnız eklenir: eski satır silinmez, yeniden
 yazılmaz. Bir satırın `sonuc` alanı `FAIL` veya `OLCULMEDI` ise bu, sonraki
 `PASS` tarafından gizlenmez; P0–P8 izi olarak kalır. Kayıt yerel dosyada
-tutulur; CI artifact'ı yoktur.
+tutulur; CI artifact'ı yoktur. `make katalog-kayit-dogrula` her satırı kendi
+commit'ine bağlar; commit/tree/tree_sha256 veya tanım hash'i yeniden
+üretilemezse ya da Git geçmişi append-only değilse kayıt yeşil sayılmaz.
+Dogrulayicinin negatif vakaları `make katalog-selftest` içindedir; CI'da ayrı
+bir adım olarak da koşar.
 
 ### 6.2 Sınır ölçümleri — `SURUCU-01` ve `KOTA-01`
 

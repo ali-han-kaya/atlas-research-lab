@@ -79,6 +79,11 @@ jobs:
       - name: Katalog kapisi oz-testi (negatif dallar)
         run: make katalog-selftest
 
+      # JSONL kanit kaydi yalniz eklenir; sema/sira/commit/tree/tanim hash'leri
+      # ve git gecmisi denetlenir. Elle duzenlenmis satir burada kirmizi olur.
+      - name: Katalog kanit kaydi (append-only / sema)
+        run: make katalog-kayit-dogrula
+
       - name: make dogrula-ci
         run: make dogrula-ci
 
