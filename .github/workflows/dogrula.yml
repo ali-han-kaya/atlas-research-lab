@@ -152,8 +152,9 @@ jobs:
         run: make kapsam-selftest
 
       # Gelistirme agacindaki .venv veya izlenmeyen bir dosya temiz klonda
-      # yoktur. Temiz klonda venv kurulur; demo rc=2, dogrula 8/8 ve kisa
-      # mutasyon seti PASS olmadan bu adim yesil donmez.
+      # yoktur. Temiz klonda venv kurulur; dogrula 8/8, kanit-dogrula temiz,
+      # demo rc=2 ve agsiz iddia PASS olmadan bu adim yesil donmez. Eksik
+      # izlenen dosya veya kirli agac da kirmizidir.
       - name: Taze klon yeniden uretim
         run: make taze-klon
 

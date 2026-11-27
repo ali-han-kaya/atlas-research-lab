@@ -8,26 +8,27 @@ NEDEN VAR
   komutlarin calisip calismadigini yalnizca temiz bir klon gosterir.
 
 NE YAPAR
-  1. Git deposunun commit'lenmis HEAD'inden gecici bir klon uretir.
+  1. Git deposunun commit'lenmis HEAD'ini gecici bir klona sabitler.
   2. Klonun temiz oldugunu (untracked dahil) ve .venv tasimadigini denetler.
   3. Kendi .venv'ini kurup requirements-dev.txt'i kurar.
-  4. `make demo` -> beklenen rc=2 ve BEKLENEN KIRMIZI.
-  5. `make dogrula` -> rc=0 ve 8/8 PASS.
-  6. `make mutasyon-kisa` -> rc=0 ve KISA SET PASS.
-  7. Klonun izlenen agacinda degisiklik kalmadigini denetler.
+  4. `make dogrula` -> rc=0 ve 8/8 PASS.
+  5. `make kanit-dogrula` -> rc=0 ve KANIT: TEMIZ.
+  6. `make demo` -> beklenen rc=2 ve BEKLENEN KIRMIZI.
+  7. `make iddia` -> agsiz tam iddia defteri rc=0 ve HUKUM: PASS.
+  8. Klonun izlenen dosyalarinin eksiksiz ve agacin temiz kaldigini denetler.
 
 NE OLCMEZ
   Uzak sunucudaki public URL'nin erisilebilirligini olcmez; varsayilan kaynak
-  bu depodur. `--kaynak <git-url>` ile uzak depo da verilebilir. Tam mutasyon
-  bataryasi bu kontrolun yerine gecmez; `--kisa` setinin disinda kalan 117
-  vaka icin `make mutasyon` ayrica kosulmalidir.
+  bu depodur. `--kaynak <git-url>` ile uzak depo da verilebilir. Komutlarin
+  sadece semayi/sozlesmeyi tutmasi olculur; akademik icerik dogrulugu bu
+  kabul testinin kapsaminda degildir.
 
 KULLANIM
   python3 tools/taze_klon.py [--kaynak YOL_VEYA_URL] [--tut]
 
 CIKIS
-  0 : klon kuruldu, uc komut da beklenen sozlesmeyi verdi
-  1 : klon, kurulum veya komut sozlesmesi basarisiz (fail-closed)
+  0 : klon kuruldu, dort komut da beklenen sozlesmeyi verdi ve agac temiz
+  1 : klon, kurulum, eksik dosya, kirli agac veya komut sozlesmesi basarisiz
 """
 
 import argparse
@@ -40,7 +41,6 @@ import tempfile
 from pathlib import Path
 
 KOK = Path(__file__).resolve().parents[1]
-KISA_BEKLEYEN = 'KISA SET:'
 
 
 class Hata(Exception):
@@ -77,8 +77,9 @@ def git_kos(cwd, *args, **kwargs):
 
 
 def kaynak_dogrula(kaynak, yerel):
+    """Yerel kaynagin temiz oldugunu denetle ve tam HEAD'i dondur."""
     if not yerel:
-        return
+        return None
     if not kaynak.is_dir():
         raise Hata('kaynak dizin yok: %s' % kaynak)
     for ad in ('Makefile', 'demo', 'requirements-dev.txt'):
@@ -88,9 +89,47 @@ def kaynak_dogrula(kaynak, yerel):
     if kirli:
         raise Hata('kaynak agac kirli; taze klondan once commit/temizle:\n%s'
                    % kirli)
+    return git_kos(kaynak, 'rev-parse', 'HEAD').strip()
 
 
-def klonla(kaynak, hedef, yerel):
+def agac_yollari(klon):
+    """HEAD agacindaki butun yollari NUL-guvenli bicimde dondur."""
+    try:
+        p = subprocess.run(
+            ['git', '-C', str(klon), 'ls-tree', '-r', '-z', '--name-only',
+             'HEAD'], capture_output=True, timeout=60)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        raise Hata('git ls-tree kosulamadi: %s' % type(e).__name__)
+    if p.returncode != 0:
+        raise Hata('git ls-tree rc=%d' % p.returncode)
+    yollar = []
+    for ham in p.stdout.split(b'\0'):
+        if not ham:
+            continue
+        try:
+            yollar.append(ham.decode('utf-8'))
+        except UnicodeDecodeError as e:
+            raise Hata('agac yolu UTF-8 degil: %s' % e)
+    return sorted(yollar)
+
+
+def eksik_dosyalar(klon):
+    """HEAD'de olup calisma agacinda bulunmayan izlenen yollari dondur."""
+    return [yol for yol in agac_yollari(klon)
+            if not os.path.lexists(str(klon / yol))]
+
+
+def _commit_var(klon, sha):
+    try:
+        p = subprocess.run(
+            ['git', '-C', str(klon), 'cat-file', '-e', sha + '^{commit}'],
+            capture_output=True, timeout=60)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        raise Hata('git cat-file kosulamadi: %s' % type(e).__name__)
+    return p.returncode == 0
+
+
+def klonla(kaynak, hedef, yerel, beklenen_head=None):
     cmd = ['git', 'clone', '--quiet']
     if yerel:
         # Yerel kopyada hardlink/parent .git sizmasini engelle; commit'lenmis
@@ -100,12 +139,26 @@ def klonla(kaynak, hedef, yerel):
     p = kos(cmd, KOK)
     if p.returncode != 0:
         raise Hata('git clone rc=%d' % p.returncode)
+    if beklenen_head:
+        # Klonun varsayilan dali degil, kaynagin o anki HEAD'i olculur.
+        # Detached HEAD bir ref'e bagli olmayabilir; nesneyi acikca getir.
+        if not _commit_var(hedef, beklenen_head):
+            git_kos(hedef, 'fetch', '--quiet', str(kaynak), beklenen_head)
+        git_kos(hedef, 'checkout', '--quiet', '--detach', beklenen_head)
+    head = git_kos(hedef, 'rev-parse', 'HEAD').strip()
+    if beklenen_head and head != beklenen_head:
+        raise Hata('klon HEAD uyusmuyor: beklenen=%s bulunan=%s'
+                   % (beklenen_head, head))
     kirli = git_kos(hedef, 'status', '--porcelain', '--untracked-files=all')
     if kirli:
         raise Hata('yeni klon temiz degil:\n%s' % kirli)
     if (hedef / '.venv').exists():
         raise Hata('klonda kaynak .venv tasinmis')
-    return git_kos(hedef, 'rev-parse', 'HEAD')
+    eksik = eksik_dosyalar(hedef)
+    if eksik:
+        raise Hata('yeni klonda eksik izlenen dosya: %s'
+                   % ', '.join(eksik[:5]))
+    return head
 
 
 def venv_kur(klon, python3):
@@ -156,20 +209,40 @@ def sozlesme_dogrula(p):
         raise Hata('make dogrula 8/8 PASS hukmunu basmadi')
 
 
-def sozlesme_kisa(p):
+def sozlesme_kanit(p):
     if p.returncode != 0:
-        raise Hata('make mutasyon-kisa rc=%d' % p.returncode)
+        raise Hata('make kanit-dogrula rc=%d' % p.returncode)
     metin = (p.stdout or '') + (p.stderr or '')
-    if KISA_BEKLEYEN not in metin or 'HUKUM: PASS' not in metin:
-        raise Hata('make mutasyon-kisa KISA SET PASS hukmunu basmadi')
+    if 'KANIT: TEMIZ' not in metin:
+        raise Hata('make kanit-dogrula KANIT: TEMIZ hukmunu basmadi')
+
+
+def sozlesme_iddia(p):
+    if p.returncode != 0:
+        raise Hata('make iddia rc=%d' % p.returncode)
+    metin = (p.stdout or '') + (p.stderr or '')
+    if 'HUKUM: PASS' not in metin:
+        raise Hata('make iddia HUKUM: PASS hukmunu basmadi')
+    if 'HUKUM: HIZLI' in metin:
+        raise Hata('make iddia hizli kipte kaldi; agsiz tam kosu bekleniyor')
+
+
+def agac_kontrol(klon, asama):
+    """Eksik izlenen dosya ve standart (ignore disi) kirli agaci fail-closed ele."""
+    eksik = eksik_dosyalar(klon)
+    if eksik:
+        raise Hata('%s: eksik izlenen dosya: %s'
+                   % (asama, ', '.join(eksik[:5])))
+    kirli = git_kos(klon, 'status', '--porcelain', '--untracked-files=all')
+    if kirli:
+        raise Hata('%s: klon izlenen agaci kirli:\n%s' % (asama, kirli))
 
 
 def calistir(kaynak_arg, tut):
     kaynak_ham = Path(kaynak_arg).expanduser()
     yerel = kaynak_ham.exists()
     kaynak = kaynak_ham.resolve() if yerel else kaynak_arg
-    if yerel:
-        kaynak_dogrula(kaynak, True)
+    kaynak_head = kaynak_dogrula(kaynak, True) if yerel else None
     python3 = shutil.which('python3') or sys.executable
     make = shutil.which('make')
     if not make:
@@ -179,22 +252,22 @@ def calistir(kaynak_arg, tut):
     klon = tmp / 'repo'
     basarili = False
     try:
-        print('TAZE KLON — commit edilmis agactan sifirdan kurulum')
+        print('TAZE KLON — commit edilmis HEAD\'ten kabul testi')
         print('kaynak: %s' % kaynak)
-        head = klonla(kaynak, klon, yerel)
+        head = klonla(kaynak, klon, yerel, kaynak_head)
         print('klon HEAD: %s' % head)
+        agac_kontrol(klon, 'klon sonrasi')
         venv, py = venv_kur(klon, python3)
         print('venv: %s' % venv)
         env = ortam(venv, py)
-        sozlesme_demo(kos([make, 'demo'], klon, env=env, timeout=180))
         sozlesme_dogrula(kos([make, 'dogrula'], klon, env=env, timeout=900))
-        sozlesme_kisa(kos([make, 'mutasyon-kisa'], klon, env=env, timeout=300))
-
-        kirli = git_kos(klon, 'status', '--porcelain', '--untracked-files=all')
-        if kirli:
-            raise Hata('komutlardan sonra klon izlenen agaci kirli:\n%s' % kirli)
+        sozlesme_kanit(kos([make, 'kanit-dogrula'], klon, env=env, timeout=180))
+        sozlesme_demo(kos([make, 'demo'], klon, env=env, timeout=180))
+        sozlesme_iddia(kos([make, 'iddia'], klon, env=env, timeout=1800))
+        agac_kontrol(klon, 'komutlardan sonra')
         basarili = True
-        print('\nHUKUM: PASS — taze klon; demo rc=2, dogrula 8/8, kisa set PASS')
+        print('\nHUKUM: PASS — taze klon; dogrula 8/8, kanit temiz, demo rc=2, '
+              'agsiz iddia PASS')
         return 0
     finally:
         if basarili and not tut:

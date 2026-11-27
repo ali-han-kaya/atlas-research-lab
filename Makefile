@@ -28,7 +28,7 @@ yardim:
 	@echo "make demo      ince sarmalayici: ./demo (kod ayrimi icin ./demo; make her hatada 2 doner)"
 	@echo "make demo-selftest  demo 0/1/2 sozlesmesini gecici fiksturlerle sinar"
 	@echo "make temiz-teslim  sentetik temiz teslimi ve 5 kenar fiksturunu uctan uca sinar"
-	@echo "make taze-klon  temiz klonda venv kur; demo, dogrula ve kisa mutasyon setini kos"
+	@echo "make taze-klon  temiz klonda venv kur; dogrula, kanit-dogrula, demo ve agsiz iddia kabul testini kos"
 	@echo "make fresh-clone  taze-klon icin Ingilizce alias"
 	@echo "make kapsam    mutasyon kapsam tablosu guncel mi (docs/MUTASYON_KAPSAM.md)"
 	@echo "make kapsam-yaz  kapsam tablosunu yeniden uret"
