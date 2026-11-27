@@ -1,5 +1,5 @@
 {
-  "commit": "9ab0c1651b8a74e01982fd85413f9e39ad376667",
+  "commit": "e6f8e3af70b560873902959302a59cc728bcd2af",
   "file_count": 304,
   "files": [
     {
@@ -1319,7 +1319,7 @@
     {
       "mode": "100644",
       "path": "docs/DEVIR-2026-11-22-1923.md",
-      "sha256": "356e8c7786a8fce535bd51f2857420833d8ead231aaf17736fced1eb0e2ee583",
+      "sha256": "a40e6196644deac97b3bb680a852b60dae92316a0004fad87920fe6a1fc527d0",
       "size": 8028
     },
     {
@@ -1775,13 +1775,13 @@
     {
       "mode": "100644",
       "path": "tools/sir_kapisi_mutasyon.py",
-      "sha256": "302fe1c61f0cb756ca99a32f679dcc7b80321f4960174e7812edad8f4c46c8d9",
-      "size": 15650
+      "sha256": "43d48f4dddb368498a1fed126a718738efa0e71b4f4dbd727a0d2c908e024bac",
+      "size": 15754
     },
     {
       "mode": "100644",
       "path": "tools/sir_kapisi_mutasyon_kaniti.json",
-      "sha256": "c24391b326f9e3f7b7c0d0474b656234f972ab9887df9d6482a220a3271abddd",
+      "sha256": "abad43b58fa436e3c3b9189391f0833795547fc5abedd83aa2131f3442d3ae35",
       "size": 2931
     },
     {
@@ -1827,7 +1827,7 @@
       "size": 16100
     }
   ],
-  "generated_at": "2026-11-27T15:27:24Z",
+  "generated_at": "2026-11-27T15:41:43Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1842,6 +1842,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "98e9d4836c4684d14b2abf9d179fad77ed4b30ce",
-  "tree_sha256": "4cba528bc7e6a5432e8740735f95ad4fbd0e288df746210341a9c9d1bfb64e3e"
+  "tree": "8532bf8e3997f853f68b53ff84cd64e6e715d56e",
+  "tree_sha256": "22dfa650253f1e80a0e79b4797115864fc1424aba3a2acdc70b83448e13d65cb"
 }
