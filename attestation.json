@@ -1,12 +1,12 @@
 {
-  "commit": "043e9aa61c3664bc0703ec797c34fcfbd66f63b6",
+  "commit": "8f40ce4b9fdebc3e4c9490c96012052078afcb36",
   "file_count": 303,
   "files": [
     {
       "mode": "100755",
       "path": ".githooks/pre-commit",
-      "sha256": "8b6c826fea146c825fceceb8157b5e85bac7edb651f9e2808c3180cf6fae4d56",
-      "size": 127
+      "sha256": "d2df3e32b18c92551cd69e634319e3a9c6eea7ec5a1f8c4f5c2bef60a5f64dc1",
+      "size": 303
     },
     {
       "mode": "100755",
@@ -41,8 +41,8 @@
     {
       "mode": "100644",
       "path": ".gitignore",
-      "sha256": "cf2304a1269332853d9afc9a07eb05f6882d146649406890306a2cf9c7770b6d",
-      "size": 443
+      "sha256": "04a9c3a782674aedcbc91d4a3d46f282051f743bab875f53a0cb233cf3d3a7d8",
+      "size": 1091
     },
     {
       "mode": "120000",
@@ -1451,8 +1451,8 @@
     {
       "mode": "100644",
       "path": "docs/YAYIN-SOZLESMESI.md",
-      "sha256": "eba4ba7d17850312384fda16d1a859845e46500bf0d753b4e574e4a377230810",
-      "size": 5128
+      "sha256": "751e8d1a2d875e9fb83c3a5772c61b8e30c2e162ed0042878924f1f2fce667ac",
+      "size": 5981
     },
     {
       "mode": "100644",
@@ -1523,8 +1523,8 @@
     {
       "mode": "100644",
       "path": "tools/dogrula.py",
-      "sha256": "7f5f4ecf85a8ab6618ed328f1829e42b8043e82225edcaadd2d604d141728559",
-      "size": 47629
+      "sha256": "70fe57dc76b2540178358e8cd4e311cb43be9f5581841a11efe5449344460f18",
+      "size": 49318
     },
     {
       "mode": "100644",
@@ -1781,8 +1781,8 @@
     {
       "mode": "100644",
       "path": "tools/sir_kapisi_selftest.py",
-      "sha256": "1d5aceb89ff49f155ce115ad3435718ac7b5f2030ca895b884be57e0c5a8049f",
-      "size": 16741
+      "sha256": "54bf23c87340d81358047d591684a639699bb55232436c6a4549a57e29b66214",
+      "size": 17241
     },
     {
       "mode": "100644",
@@ -1805,23 +1805,23 @@
     {
       "mode": "100644",
       "path": "tools/yayin_kapisi.py",
-      "sha256": "2f540aeb3bb6d7fb01a988d92819c94002fedf01e33ad00f56862a73fb610559",
-      "size": 14341
+      "sha256": "247fe42b79b3f26843b89d4abc929c6194ca3a221ac7e2977c6ef84b641269c6",
+      "size": 17784
     },
     {
       "mode": "100644",
       "path": "tools/yayin_manifest.json",
-      "sha256": "95b14a5aeff1856f61f361540fdfac70a5397b370ad3c7557c937d1d2d905fd1",
-      "size": 13699
+      "sha256": "d18c18e40448ffbae394ffd382483de33a04746d21a971ebf547af575a17a4d6",
+      "size": 14320
     },
     {
       "mode": "100644",
       "path": "tools/yayinla.py",
-      "sha256": "8d5ba997552774e0638f6bd2cde7ee9735d1094b36ce682dc5bf6f1672c22be7",
-      "size": 14956
+      "sha256": "850a7b7d88bbed7279ba69312a406f80893af07321a9582f55ab144950dec7fd",
+      "size": 16100
     }
   ],
-  "generated_at": "2026-11-27T11:53:19Z",
+  "generated_at": "2026-11-27T12:25:42Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1836,6 +1836,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "38693fd34214ca46b3b7f680b1640b42284efd10",
-  "tree_sha256": "5156a95dbf6845119261dddb1f29eb181ead1809384bc53dc0778a778dcbd285"
+  "tree": "a6f911d9d31247e3b6f24f435c9f44f94166f08a",
+  "tree_sha256": "d8e8bbfa4f7628bc7c274822768bfa90225cac1b2d5c095122c0fa3899f08ff0"
 }
