@@ -1,5 +1,5 @@
 {
-  "_aciklama": "Public sayisal iddia defteri. Her satir: iddia metni + gectigi dosyadaki birebir alinti + ureten komut + beklenen olcum. tools/iddia.py bu defteri denetler; kapı satırları `kapi.kontrol` ile sürümlü ATLAS-KAPI-CIKTI/v1 zarfından okunur; alinti dosyada yoksa defter bozuktur. Tarihli kayitlar ve mekanizma sabitleri kapsam disidir (kapsam blogu). `olcum_dosyasi` ham kanit dosyasini adlandirir; tools/iddia.py bu yolu dogrular.",
+  "_aciklama": "Public sayisal iddia defteri. Her satir: iddia metni + gectigi dosyadaki birebir alinti + ureten komut + beklenen olcum. tools/iddia.py bu defteri denetler; kapı satırları `kapi.kontrol` ile sürümlü ATLAS-KAPI-CIKTI/v1 zarfından okunur; alinti dosyada yoksa defter bozuktur. Tarihli kayitlar ve mekanizma/protokol adlari yalniz kapsam blogundaki gerekceli istisnalarla kapsam disinda tutulur. `olcum_dosyasi` ham kanit dosyasini adlandirir; tools/iddia.py bu yolu dogrular.",
   "olcum_dosyasi": "tools/iddia_olcum.json",
   "kapsam": {
     "dahil": [
@@ -27,7 +27,7 @@
         "neden": "uretilmis pip-audit raporu; makineye bagli"
       }
     ],
-    "sinif_disi": "Mekanizma adlari, protokol sabitleri (2-of-2, KFAZ0-5, P0/P1/P2), kimlikler (KANIT-05, FIX-003), surumler, tarihler ve cikis kodlari olcum iddiasi degildir; kalan sayisal olcum cumleleri defterdedir. Makine denetimi: kapsam.sayisal_istisna.",
+    "sinif_disi": "VARSAYILAN-RED: her sayisal jeton iddiadir; yalniz kimlikler (KANIT-05, FIX-003), surumler, tarih/saat, cikis kodlari, saf tablo hucreleri, sira/araliklar ve komut secenekleri yapisal olarak muaftir. Kalan her jeton defter alintisi ya da gerekceli istisna ister. Makine denetimi: kapsam.sayisal_istisna.",
     "sayisal_istisna": [
       {
         "desen": "8/8 düzeltme uygulandı",
@@ -62,10 +62,6 @@
         "neden": "dosya boyutu tasarim siniri; olcum iddiasi degil"
       },
       {
-        "desen": "tarif hatasını",
-        "neden": "GNU make tarif hatasi cikis kodu; kanonik kod ayrimi Python cikisiyla olculur"
-      },
-      {
         "desen": "Yalnız 1 devam eder",
         "neden": "diff cikis kodu; katalog yenileme akisinin sozlesmesi"
       },
@@ -76,6 +72,66 @@
       {
         "desen": "43 dosyada attestation",
         "neden": "arsiv remote 7948525 ile fark sayisi; dis agac karsilastirmasi, public agacta olculemez"
+      },
+      {
+        "desen": "Sekizi de `0` olmadan",
+        "neden": "surum isaretcisi sifir kosulu; mekanizma sabiti, olcum iddiasi degil"
+      },
+      {
+        "desen": "RUN_ID=",
+        "neden": "kabuk ornegi; kanit paketi indirme komutunun sayisal literalleri"
+      },
+      {
+        "desen": "ATLAS_Research_Lab.*7948525",
+        "neden": "arsiv remote revizyon kimligi; dis agac karsilastirmasi, public agacta olculemez"
+      },
+      {
+        "desen": "40 hex",
+        "neden": "Git commit/tree nesnesinin sabit kimlik uzunlugu; olcum iddiasi degil"
+      },
+      {
+        "desen": "yol 1:",
+        "neden": "secenek numarasi; secim basligi, sayisal olcum degil"
+      },
+      {
+        "desen": "# diff 0 = fark yok",
+        "neden": "diff cikis kodu gostergesi; katalog yenileme sozlesmesinin literal aciklamasi"
+      },
+      {
+        "desen": "sed -E 's/",
+        "neden": "kabuk ornegi; yalniz _kaynak tarihini soyan sed literalleri"
+      },
+      {
+        "desen": "firing-tested \\(HATA or TERMINAL\\)",
+        "neden": "mutasyon envanteri sayimi; kaynak tablo docs/MUTASYON_KAPSAM.md tarafindan uretilir"
+      },
+      {
+        "desen": "finding \\(P1; not added to the coverage count\\)",
+        "neden": "mutasyon envanteri sayimi; kaynak tablo docs/MUTASYON_KAPSAM.md tarafindan uretilir"
+      },
+      {
+        "desen": "Outside the inventory sit",
+        "neden": "olu kimlik envanteri sayimi; kaynak tablo docs/MUTASYON_KAPSAM.md tarafindan uretilir"
+      },
+      {
+        "desen": "branch ever emits",
+        "neden": "harici referans envanteri sayimi; kaynak tablo docs/MUTASYON_KAPSAM.md tarafindan uretilir"
+      },
+      {
+        "desen": "PARITE: DRIFT",
+        "neden": "yayin paritesi cikis kodu; UYGULA=1 ile ayni komut ornegi"
+      },
+      {
+        "desen": "carry 1",
+        "neden": "cikis kodu devam satiri; make sarmalayicisinin 1/2 ayrimi"
+      },
+      {
+        "desen": "2-of-2 acceptance",
+        "neden": "protokol kabul adi; iki bagimsiz hakemin 2/2 onayi, sayisal olcum degil"
+      },
+      {
+        "desen": "2-of-2 kapı",
+        "neden": "protokol kapi adi; iki bagimsiz hakemin 2/2 onayi, sayisal olcum degil"
       }
     ]
   },
@@ -192,27 +248,31 @@
     },
     {
       "id": "IDD-04",
-      "iddia": "mutasyon bataryasi 113/113 vaka atesledi",
+      "iddia": "mutasyon bataryasi 117/117 vaka atesledi",
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "Mutation battery **113/113 firing cases + 29/29 expected findings** over 118 verified rules: **93 firing-tested** and **25 expected-finding-only**."
+          "alinti": "Mutation battery **117/117 firing cases (113 gate + 4 meta) + 29/29 expected findings** over 118 verified rules: **93 firing-tested** and **25 expected-finding-only**."
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "SONUC: 113/113 kural atesledi · 29/29 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+          "alinti": "SONUC: 117/117 kural atesledi · 29/29 beklenen bulgu dogrulandi · taban temiz olmayan=0"
         },
         {
           "dosya": "README.tr.md",
-          "alinti": "113 ateşleyen (105 HATA + 8 TERMINAL) + 29 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,"
+          "alinti": "117 ateşleyen (109 HATA + 8 TERMINAL) + 29 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,"
         },
         {
           "dosya": "docs/README.md",
-          "alinti": "Güncel katalog **142 vaka = 113 ateşleyen (105 HATA + 8 TERMINAL)"
+          "alinti": "Güncel katalog **146 vaka = 117 ateşleyen (109 HATA + 8 TERMINAL)"
         },
         {
           "dosya": "README.en.md",
-          "alinti": "The current battery is **113/113** firing cases plus **29/29** expected findings over **118** verified rules: **93 firing-tested** and **25 expected-finding-only**;"
+          "alinti": "The current battery is **117/117** firing cases (113 gate + 4 meta) plus **29/29** expected findings over **118** verified rules: **93 firing-tested** and **25 expected-finding-only**;"
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "| `make mutasyon` | Every case starts with a silent clean baseline and injects one violation. Error cases must turn red (`rc=1`) with the expected marker; expected-finding cases must emit the expected warning/finding (`rc=0` is allowed). A finding present in the baseline fails the case. |"
         }
       ],
       "durum": "OLCULDU",
@@ -221,7 +281,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "ayikla": "SONUC:\\s*(\\d+/\\d+) kural atesledi",
-      "beklenen": "113/113"
+      "beklenen": "117/117"
     },
     {
       "id": "IDD-05",
@@ -229,11 +289,11 @@
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "Mutation battery **113/113 firing cases + 29/29 expected findings** over 118 verified rules: **93 firing-tested** and **25 expected-finding-only**."
+          "alinti": "Mutation battery **117/117 firing cases (113 gate + 4 meta) + 29/29 expected findings** over 118 verified rules: **93 firing-tested** and **25 expected-finding-only**."
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "SONUC: 113/113 kural atesledi · 29/29 beklenen bulgu dogrulandi · taban temiz olmayan=0"
+          "alinti": "SONUC: 117/117 kural atesledi · 29/29 beklenen bulgu dogrulandi · taban temiz olmayan=0"
         },
         {
           "dosya": "docs/EN/QUICKSTART.md",
@@ -241,7 +301,11 @@
         },
         {
           "dosya": "README.en.md",
-          "alinti": "The current battery is **113/113** firing cases plus **29/29** expected findings over **118** verified rules: **93 firing-tested** and **25 expected-finding-only**;"
+          "alinti": "The current battery is **117/117** firing cases (113 gate + 4 meta) plus **29/29** expected findings over **118** verified rules: **93 firing-tested** and **25 expected-finding-only**;"
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "| `make mutasyon` | Every case starts with a silent clean baseline and injects one violation. Error cases must turn red (`rc=1`) with the expected marker; expected-finding cases must emit the expected warning/finding (`rc=0` is allowed). A finding present in the baseline fails the case. |"
         }
       ],
       "durum": "OLCULDU",
@@ -266,7 +330,7 @@
         },
         {
           "dosya": "README.en.md",
-          "alinti": "The current battery is **113/113** firing cases plus **29/29** expected findings over **118** veri"
+          "alinti": "The current battery is **117/117** firing cases (113 gate + 4 meta) plus **29/29** expected findings over **118** veri"
         }
       ],
       "durum": "OLCULDU",
@@ -282,11 +346,15 @@
     },
     {
       "id": "IDD-07",
-      "iddia": "bildirilen kapi kurali sayisi 118",
+      "iddia": "dogrulanan kapi kurali sayisi 118",
       "kaynaklar": [
         {
           "dosya": "docs/EN/QUICKSTART.md",
           "alinti": "of 118 rules, **93** are"
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "Gate scripts declare **123** identifiers. **120** of them are rules: **118** are verified — **93** proven by a case that turns the gate red and **25** that only emit an expected marker — while **2** are declared but out of scope with a measured reason. **3** are dead identities that no code branch ever prints, plus **1** external decision reference. Zero verified rules are out of scope, and zero are unexplained gaps. The full per-rule table is generated from code: [`docs/KURAL-KATALOGU.md`](docs/KURAL-KATALOGU.md)."
         }
       ],
       "durum": "OLCULDU",
@@ -297,7 +365,7 @@
       ],
       "beklenen": "118",
       "kapi": {
-        "kontrol": "KAPSAM.bildirilen"
+        "kontrol": "KAPSAM.toplam_dogrulanan"
       }
     },
     {
@@ -307,6 +375,10 @@
         {
           "dosya": "README.tr.md",
           "alinti": "- **ENVANTER DIŞI — ölü kimlik** — 3 kimlik, her biri ölçülmüş bir gerekçeyle:"
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "Gate scripts declare **123** identifiers. **120** of them are rules: **118** are verified — **93** proven by a case that turns the gate red and **25** that only emit an expected marker — while **2** are declared but out of scope with a measured reason. **3** are dead identities that no code branch ever prints, plus **1** external decision reference. Zero verified rules are out of scope, and zero are unexplained gaps. The full per-rule table is generated from code: [`docs/KURAL-KATALOGU.md`](docs/KURAL-KATALOGU.md)."
         }
       ],
       "durum": "OLCULDU",
@@ -331,6 +403,10 @@
         {
           "dosya": "docs/EN/QUICKSTART.md",
           "alinti": "of them is counted as a rule. Of the rules that are counted, 0 are mentioned"
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "Gate scripts declare **123** identifiers. **120** of them are rules: **118** are verified — **93** proven by a case that turns the gate red and **25** that only emit an expected marker — while **2** are declared but out of scope with a measured reason. **3** are dead identities that no code branch ever prints, plus **1** external decision reference. Zero verified rules are out of scope, and zero are unexplained gaps. The full per-rule table is generated from code: [`docs/KURAL-KATALOGU.md`](docs/KURAL-KATALOGU.md)."
         }
       ],
       "durum": "OLCULDU",
@@ -407,6 +483,10 @@
         {
           "dosya": "README.en.md",
           "alinti": "H1..H5 hygiene/secrets + T1..T3 self-tests; 8 checks, raw output"
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "| `make dogrula` | One entry point for repository hygiene, syntax, secret scan and the self-test suites."
         }
       ],
       "durum": "OLCULDU",
@@ -462,11 +542,11 @@
     },
     {
       "id": "IDD-15",
-      "iddia": "H2 python sozdizimi dosya sayisi 87",
+      "iddia": "H2 python sozdizimi dosya sayisi 90",
       "kaynaklar": [
         {
           "dosya": "docs/DURUM.md",
-          "alinti": "| Python dosya sayısı (H2) | 87 |"
+          "alinti": "| Python dosya sayısı (H2) | 90 |"
         }
       ],
       "durum": "OLCULDU",
@@ -475,7 +555,7 @@
         "tools/dogrula.py",
         "--json"
       ],
-      "beklenen": "87",
+      "beklenen": "90",
       "kapi": {
         "kontrol": "H2"
       }
@@ -647,6 +727,14 @@
         {
           "dosya": "docs/EN/QUICKSTART.md",
           "alinti": "asserts `./demo` exits **1** while `make demo` exits **2** (the wrapper cannot"
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "`./demo` is the canonical demo entry point. Its exit code is exactly **1** for the expected red and **2** for a broken fixture; a consistent fixture exits cleanly. `make demo` is only a thin wrapper: GNU make reports every failing recipe as **2**, so it cannot carry the 1-versus-2 distinction. Use `./demo` when the code matters."
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "| `./demo` | Reproduces the frozen `DENEME/` contradiction: the manifest claims more fixes than the master text contains, while the frozen gate says `PASS`."
         }
       ],
       "durum": "OLCULDU",
@@ -665,6 +753,10 @@
         {
           "dosya": "docs/EN/QUICKSTART.md",
           "alinti": "asserts `./demo` exits **1** while `make demo` exits **2** (the wrapper cannot"
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "`./demo` is the canonical demo entry point. Its exit code is exactly **1** for the expected red and **2** for a broken fixture; a consistent fixture exits cleanly. `make demo` is only a thin wrapper: GNU make reports every failing recipe as **2**, so it cannot carry the 1-versus-2 distinction. Use `./demo` when the code matters."
         }
       ],
       "durum": "OLCULDU",
@@ -723,6 +815,10 @@
         {
           "dosya": "docs/README.md",
           "alinti": "21 Kasım 2026 canlı kontrolü: **9/9 kimlik geçerli**; aday depodaki katalogla"
+        },
+        {
+          "dosya": "SURUM.md",
+          "alinti": "`python3 tools/katalog_kontrol.py` `9/9 gecerli · 0 bulgu` rc=0"
         }
       ],
       "durum": "AG_GEREKLI",
@@ -732,7 +828,11 @@
       ],
       "ayikla": "SONUC:\\s*(\\d+/\\d+) gecerli",
       "beklenen": "9/9",
-      "gerekce": "models.dev canli katalogu; ag ister, varsayilan kosuda atlanir"
+      "gerekce": "models.dev canli katalogu; ag ister, varsayilan kosuda atlanir",
+      "borc": {
+        "son_inceleme": "2026-11-27",
+        "omur_gun": 30
+      }
     },
     {
       "id": "IDD-26",
@@ -761,10 +861,18 @@
         {
           "dosya": "docs/EN/QUICKSTART.md",
           "alinti": "**Approximate duration:** under a second (224 files hashed, no subprocesses)."
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "| `tools/yayinla.py` | Publication parity: copies only an explicit allowlist from the private lab tree, refuses out-of-scope artefacts, scans for secrets and reports new/changed/deleted files."
         }
       ],
       "durum": "OLCULMEDI",
-      "gerekce": "tools/yayinla.py --lab dis lab yolunu ister; public klonda yeniden uretilemez"
+      "gerekce": "tools/yayinla.py --lab dis lab yolunu ister; public klonda yeniden uretilemez",
+      "borc": {
+        "son_inceleme": "2026-11-27",
+        "omur_gun": 90
+      }
     },
     {
       "id": "IDD-27",
@@ -776,7 +884,11 @@
         }
       ],
       "durum": "BEYAN",
-      "gerekce": "2026-11-24 macOS 27.2 arm64 Python 3.9.6 taze /tmp klonu olcumu; makineye bagli, kapida yeniden kosulmaz"
+      "gerekce": "2026-11-24 macOS 27.2 arm64 Python 3.9.6 taze /tmp klonu olcumu; makineye bagli, kapida yeniden kosulmaz",
+      "borc": {
+        "son_inceleme": "2026-11-24",
+        "omur_gun": 90
+      }
     },
     {
       "id": "IDD-28",
@@ -788,7 +900,11 @@
         }
       ],
       "durum": "BEYAN",
-      "gerekce": "ayni makine ve /tmp klonunda 2026-11-24 olcumu; makineye bagli"
+      "gerekce": "ayni makine ve /tmp klonunda 2026-11-24 olcumu; makineye bagli",
+      "borc": {
+        "son_inceleme": "2026-11-24",
+        "omur_gun": 90
+      }
     },
     {
       "id": "IDD-29",
@@ -800,7 +916,11 @@
         }
       ],
       "durum": "BEYAN",
-      "gerekce": "ayni makine ve oturumda 2026-11-19 olcumu; makineye bagli"
+      "gerekce": "ayni makine ve oturumda 2026-11-19 olcumu; makineye bagli",
+      "borc": {
+        "son_inceleme": "2026-11-19",
+        "omur_gun": 90
+      }
     },
     {
       "id": "IDD-30",
@@ -812,7 +932,11 @@
         }
       ],
       "durum": "BEYAN",
-      "gerekce": "ozel depo tarihcesi; bu public depoda yok, yeniden olculemez"
+      "gerekce": "ozel depo tarihcesi; bu public depoda yok, yeniden olculemez",
+      "borc": {
+        "son_inceleme": "2026-11-27",
+        "omur_gun": 90
+      }
     },
     {
       "id": "IDD-31",
@@ -824,7 +948,11 @@
         }
       ],
       "durum": "BEYAN",
-      "gerekce": "kok scripts/ yayimlanmadi; sayi public agacta dogrulanamaz"
+      "gerekce": "kok scripts/ yayimlanmadi; sayi public agacta dogrulanamaz",
+      "borc": {
+        "son_inceleme": "2026-11-27",
+        "omur_gun": 90
+      }
     },
     {
       "id": "IDD-32",
@@ -836,7 +964,11 @@
         }
       ],
       "durum": "BEYAN",
-      "gerekce": "19 Kasim 2026 yerel makine olcumu; katalog icerigi makineye bagli"
+      "gerekce": "19 Kasim 2026 yerel makine olcumu; katalog icerigi makineye bagli",
+      "borc": {
+        "son_inceleme": "2026-11-19",
+        "omur_gun": 90
+      }
     },
     {
       "id": "IDD-33",
@@ -845,6 +977,14 @@
         {
           "dosya": "README.tr.md",
           "alinti": "`T1` (`OLG-1`) yalnız bu kamu ağacındaki `attestation.json` kanıtını kullanır."
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "- **OLG-1 (`T1`) runs only against this tree's `attestation.json`.** `olgu_lint` verifies the real commit/tree evidence; there is no historical or private-tree fallback. `make dogrula` reports 8/8 and T1 is a pass. If the attestation is missing or corrupt, OLG-1 fails; it is not reported as not run. The default `make kanit` writes its generated copy to the ignored `kanit-cikti/` path; use the explicit `make kanit-yaz` target when the tracked record must be refreshed."
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "| `make kanit` / `make kanit-yaz` / `make kanit-paket-dogrula` / `make makbuz-dogrula` | `make kanit` produces the attestation in the ignored `kanit-cikti/` path"
         }
       ],
       "durum": "OLCULDU",
@@ -937,27 +1077,31 @@
         }
       ],
       "durum": "BEYAN",
-      "gerekce": "maliyet iddiasi; model cagrisi yok — olcum degil tasarim beyani"
+      "gerekce": "maliyet iddiasi; model cagrisi yok — olcum degil tasarim beyani",
+      "borc": {
+        "son_inceleme": "2026-11-27",
+        "omur_gun": 180
+      }
     },
     {
       "id": "IDD-39",
-      "iddia": "mutasyon katalogunda 142 vaka (113 atesleyen + 29 beklenen-bulgu)",
+      "iddia": "mutasyon katalogunda 146 vaka (117 atesleyen + 29 beklenen-bulgu)",
       "kaynaklar": [
         {
           "dosya": "README.tr.md",
-          "alinti": "each exercised by a 142-case battery: silent clean baseline + one violation + a red/terminal"
+          "alinti": "each exercised by a 146-case battery: silent clean baseline + one violation + a red/terminal"
         },
         {
           "dosya": "README.tr.md",
-          "alinti": "veya ihlal sonrası beklenen iz yoksa vaka geçmez. Katalog 142 vakadır:"
+          "alinti": "veya ihlal sonrası beklenen iz yoksa vaka geçmez. Katalog 146 vakadır:"
         },
         {
           "dosya": "docs/README.md",
-          "alinti": "Güncel katalog **142 vaka = 113 ateşleyen (105 HATA + 8 TERMINAL)"
+          "alinti": "Güncel katalog **146 vaka = 117 ateşleyen (109 HATA + 8 TERMINAL)"
         },
         {
           "dosya": "README.tr.md",
-          "alinti": "`make mutasyon` 142 vakanın gerçekten ateşlediğini kanıtlar: HATA vakalarında"
+          "alinti": "`make mutasyon` 146 vakanın gerçekten ateşlediğini kanıtlar: HATA vakalarında"
         }
       ],
       "durum": "OLCULDU",
@@ -967,7 +1111,7 @@
         "import sys; sys.path.insert(0, 'tools'); import mutasyon_bataryasi as m; print('VAKA: %d' % len(m.vakalar()))"
       ],
       "ayikla": "VAKA: (\\d+)",
-      "beklenen": "142"
+      "beklenen": "146"
     },
     {
       "id": "IDD-40",
@@ -1093,7 +1237,11 @@
         }
       ],
       "durum": "BEYAN",
-      "gerekce": "21 Kasim 2026 yerel izin probu; dosya izinlerine bagli, kapida yeniden kosulmaz"
+      "gerekce": "21 Kasim 2026 yerel izin probu; dosya izinlerine bagli, kapida yeniden kosulmaz",
+      "borc": {
+        "son_inceleme": "2026-11-21",
+        "omur_gun": 90
+      }
     },
     {
       "id": "IDD-46",
@@ -1109,7 +1257,11 @@
         }
       ],
       "durum": "BEYAN",
-      "gerekce": "2026-11-24 macOS 27.2 arm64 Python 3.9.6 taze /tmp klonu olcumu; dosya sistemi ve donanima bagli, kapida yeniden kosulmaz"
+      "gerekce": "2026-11-24 macOS 27.2 arm64 Python 3.9.6 taze /tmp klonu olcumu; dosya sistemi ve donanima bagli, kapida yeniden kosulmaz",
+      "borc": {
+        "son_inceleme": "2026-11-24",
+        "omur_gun": 90
+      }
     },
     {
       "id": "IDD-48",
@@ -1161,7 +1313,11 @@
         }
       ],
       "durum": "BEYAN",
-      "gerekce": "21 Kasim 2026 yerel desen taramasi; fikstur dondurulmus, kapida yeniden kosulmaz"
+      "gerekce": "21 Kasim 2026 yerel desen taramasi; fikstur dondurulmus, kapida yeniden kosulmaz",
+      "borc": {
+        "son_inceleme": "2026-11-21",
+        "omur_gun": 90
+      }
     },
     {
       "id": "IDD-51",
@@ -1173,15 +1329,19 @@
         }
       ],
       "durum": "BEYAN",
-      "gerekce": "54/54 is the earlier frozen mutation baseline, retained as a historical snapshot. Current HEAD measures 113/113 firing cases + 29/29 expected findings over 118 verified rules (93 firing-tested, 25 expected-finding-only; 142-case battery); 8/8 and 174/174 are current and measured by IDD-01/IDD-02."
+      "gerekce": "54/54 is the earlier frozen mutation baseline, retained as a historical snapshot. Current HEAD measures 117/117 firing cases + 29/29 expected findings over 118 verified rules (93 firing-tested, 25 expected-finding-only; 146-case battery); 8/8 and 174/174 are current and measured by IDD-01/IDD-02.",
+      "borc": {
+        "son_inceleme": "2026-11-27",
+        "omur_gun": 90
+      }
     },
     {
       "id": "IDD-52",
-      "iddia": "ayrik sozlesme ozeti 105/105 HATA, 8/8 TERMINAL, 29/29 beklenen-bulgu",
+      "iddia": "ayrik sozlesme ozeti 109/109 HATA, 8/8 TERMINAL, 29/29 beklenen-bulgu",
       "kaynaklar": [
         {
           "dosya": "docs/EN/QUICKSTART.md",
-          "alinti": "SOZLESME: 105/105 HATA (rc=1) · 8/8 TERMINAL (rc=2) · 29/29 BEKLENEN_BULGU"
+          "alinti": "SOZLESME: 109/109 HATA (rc=1) · 8/8 TERMINAL (rc=2) · 29/29 BEKLENEN_BULGU"
         }
       ],
       "durum": "OLCULDU",
@@ -1190,7 +1350,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "ayikla": "SOZLESME: (\\d+/\\d+) HATA",
-      "beklenen": "105/105"
+      "beklenen": "109/109"
     },
     {
       "id": "IDD-53",
@@ -1203,6 +1363,22 @@
         {
           "dosya": "README.tr.md",
           "alinti": "- **BEKLENEN BULGU** — 25 kural (yalnız P1/beklenen-bulgu sözleşmesiyle;"
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "Gate scripts declare **123** identifiers. **120** of them are rules: **118** are verified — **93** proven by a case that turns the gate red and **25** that only emit an expected marker — while **2** are declared but out of scope with a measured reason. **3** are dead identities that no code branch ever prints, plus **1** external decision reference. Zero verified rules are out of scope, and zero are unexplained gaps. The full per-rule table is generated from code: [`docs/KURAL-KATALOGU.md`](docs/KURAL-KATALOGU.md)."
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "The historical baseline is **23**. The current allowance is **zero**. A new"
+        },
+        {
+          "dosya": "docs/EN/QUICKSTART.md",
+          "alinti": "The historical baseline is **23**. The current allowance is **zero**. A new"
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "| `make iddia` | Re-measures the numeric claims printed in the public docs and requires each stored raw output line to match the current output **verbatim**."
         }
       ],
       "durum": "OLCULDU",
@@ -1223,6 +1399,10 @@
         {
           "dosya": "README.tr.md",
           "alinti": "- **ENVANTER DIŞI — dış referans** — 1 kimlik: `DEC-027` bir karar referansıdır,"
+        },
+        {
+          "dosya": "README.en.md",
+          "alinti": "Gate scripts declare **123** identifiers. **120** of them are rules: **118** are verified — **93** proven by a case that turns the gate red and **25** that only emit an expected marker — while **2** are declared but out of scope with a measured reason. **3** are dead identities that no code branch ever prints, plus **1** external decision reference. Zero verified rules are out of scope, and zero are unexplained gaps. The full per-rule table is generated from code: [`docs/KURAL-KATALOGU.md`](docs/KURAL-KATALOGU.md)."
         }
       ],
       "durum": "OLCULDU",
@@ -1238,11 +1418,11 @@
     },
     {
       "id": "IDD-55",
-      "iddia": "kural katalogu ozeti: 121 bildirim = 118 kural + 3 olu kimlik + 1 referans",
+      "iddia": "kural katalogu ozeti: 123 bildirim = 120 kural (118 dogrulanan + 2 kapsam disi) + 3 olu kimlik",
       "kaynaklar": [
         {
           "dosya": "README.en.md",
-          "alinti": "Gate scripts declare **121** identifiers. **118** of them are rules — **93** proven by a case that turns the gate red and **25** that only emit an expected marker — and **3** are dead identities that no code branch ever prints, plus **1** external decision reference."
+          "alinti": "Gate scripts declare **123** identifiers. **120** of them are rules: **118** are verified — **93** proven by a case that turns the gate red and **25** that only emit an expected marker — while **2** are declared but out of scope with a measured reason. **3** are dead identities that no code branch ever prints, plus **1** external decision reference."
         }
       ],
       "durum": "OLCULDU",
@@ -1251,7 +1431,7 @@
         "tools/kapsam.py",
         "--json"
       ],
-      "beklenen": "118",
+      "beklenen": "120",
       "kapi": {
         "kontrol": "KAPSAM.bildirilen"
       }

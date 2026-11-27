@@ -37,9 +37,6 @@ KOK = Path(__file__).resolve().parents[1]
 HEDEF = 'IDD-04'
 
 
-DEFTERLER = ('tools/iddia_defteri.json', 'tools/iddia_olcum.json')
-
-
 def _imza():
     """Ana agacin DOKUNULMAMASI gereken izleri.
 
@@ -49,8 +46,10 @@ def _imza():
     defterlerin degismedigi kesin olarak olculur.
     """
     import hashlib
+    defter = _defter_oku(KOK)
+    defterler = ('tools/iddia_defteri.json', defter['olcum_dosyasi'])
     iz = {}
-    for rel in DEFTERLER:
+    for rel in defterler:
         p = KOK / rel
         iz[rel] = hashlib.sha256(p.read_bytes()).hexdigest() if p.is_file() else '<yok>'
     r = subprocess.run(['git', '-C', str(KOK), 'rev-parse', 'HEAD'],
@@ -101,7 +100,8 @@ def _defter_yaz(kopya, veri):
 def vaka_kanitsiz(tmp, zaman_asimi):
     """Ham kanit satiri silinince kapi komut kosmadan kirmizi olmali."""
     kopya = _kopya(tmp)
-    yol = kopya / 'tools' / 'iddia_olcum.json'
+    defter = _defter_oku(kopya)
+    yol = kopya / defter['olcum_dosyasi']
     veri = json.loads(yol.read_text(encoding='utf-8'))
     if HEDEF not in veri['olcumler']:
         return False, '%s kaydi zaten yok; vaka kurulamadi' % HEDEF, 0.0

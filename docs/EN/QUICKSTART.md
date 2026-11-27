@@ -81,8 +81,8 @@ after-mutation contract holds. A green baseline alone is not enough; a marker
 in the baseline fails the case before the mutation is even evaluated.
 
 ```text
-SONUC: 113/113 kural atesledi · 29/29 beklenen bulgu dogrulandi · taban temiz olmayan=0
-SOZLESME: 105/105 HATA (rc=1) · 8/8 TERMINAL (rc=2) · 29/29 BEKLENEN_BULGU
+SONUC: 117/117 kural atesledi · 29/29 beklenen bulgu dogrulandi · taban temiz olmayan=0
+SOZLESME: 109/109 HATA (rc=1) · 8/8 TERMINAL (rc=2) · 29/29 BEKLENEN_BULGU
 HUKUM: PASS — her vaka temiz tabanda sessiz, ihlalde kirmizi/beklenen bulgu.
 ```
 
@@ -208,8 +208,8 @@ silently.
 A claim you cannot re-run is never forced green: `AG_GEREKLI` (network), `BEYAN`
 (dated/machine-bound) and `OLCULMEDI` are counted separately and marked
 `ham kanit yok`. Run `make iddia-hizli` for the offline subset; the default
-`make iddia` is the full suite. A concrete hand-trace of one row is in the Turkish
-README, section *Tek bir iddiayı elle izlemek*.
+`make iddia` is the full suite. A concrete one-command trace of one row is in the Turkish
+README, section *Tek bir iddiayı izlemek*.
 
 ## What else is measured
 
@@ -219,9 +219,10 @@ README, section *Tek bir iddiayı elle izlemek*.
 | `make model-kimlik` | zero retired-ID references in active code/config/tests/docs; every candidate file is inspected (binary-safe, no size cap), gitignored files are enumerated separately and must match a reasoned `gorulmedi` pattern or fail, the PASS line reports `taranan`/`incelenmedi` with its approved/unapproved split/`gorulmedi` with its reason count/`onay`/`aktif`, an approved uninspected file still counts in `incelenmedi`, an uninspected file without an approval entry fails, and `onay` is the same total-record count in the inventory, and seven named mutants in `make mutasyon` revert each protection |
 | `make guvenlik` | `pip-audit` findings, each named in `docs/GUVENLIK.md`; unlisted finding → red |
 | `make dogrula-ci` | runner mode used by GitHub Actions (same rules, no CI-only exemption) |
-| `make katalog-kontrol` | live models.dev gate: fixed allowlist IDs and all ten `profiller.bedava` roles, including `name`/`family`/`nvidia` family checks (`AILE_FARKLI`) driven by `bedava_politika.aile/ad_oneki/saglayici`; network required, run manually outside CI; `OLCULMEDI` fails, never passes |
+| `make katalog-kontrol` | live models.dev gate: fixed allowlist IDs and all ten `profiller.bedava` roles, including `name`/`family`/`nvidia` family checks (`AILE_FARKLI`) driven by `bedava_politika.aile/ad_oneki/saglayici`; network required, run manually outside CI; `OLCULMEDI` fails, never passes; writes the append-only ledger by default (the canary does not) |
+| `make katalog-yenile` | download live models.dev, extract active IDs, generate and validate a candidate; stops before `cp` and never changes `tools/model_katalog.json` |
 | `make oztest` | the three self-test suites alone |
-| `make iddia` | numeric claims in README/docs, re-measured with their stored raw evidence line; named by `IDD-*` on mismatch. A scope gate also fails for any numeric claim neither quoted in the ledger nor covered by a narrow justified exception (`kapsam.sayisal_istisna`); stale, reasonless or over-broad exceptions are red too |
+| `make iddia` | numeric claims in README/docs, re-measured with their stored raw evidence line; named by `IDD-*` on mismatch. The scope gate is default-deny: every numeric token must be quoted in the ledger or covered by a narrow justified exception (`kapsam.sayisal_istisna`) unless it is a structural identity, version, date/time, exit code, pure table cell, sequence/range, or command option; dictionary presence is irrelevant, and stale, reasonless or over-broad exceptions are red |
 | `make iddia-hizli` | fast claims only; skips `dogrula`/`mutation` rows, marks them `ATLANDI` and never counts them as PASS; the full run is unchanged |
 | `make iddia-yaz` | regenerate the raw evidence snapshot after an intentional change |
 
@@ -257,8 +258,11 @@ does not call it. `make dogrula-ci` includes the offline
 and local `reasoning`/`tool_call`, non-deprecated `status`, and the configured
 `bedava_politika.asgari_limit`. Exit 1 names stale/missing IDs or a broken
 bedava condition; exit 2 is **`OLCULMEDI`** when the live catalog cannot be
-read. `OLCULMEDI` never becomes PASS. Each run appends a
-commit/tree/tree_sha256 and definition-SHA-256 record; pass `--kayit <path>` to
-write it to a separate file. For the code distinction, run
+read. `OLCULMEDI` never becomes PASS. A ledger row is written only when
+`--kayit` is supplied: the standard path is `make katalog-kontrol`, whose
+default `KAYIT_ARGS` passes `--kayit docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl`. The
+weekly canary runs `python3 tools/katalog_kontrol.py` without `--kayit`, so it
+does not append to that ledger; a direct script run without `--kayit` writes
+nothing. Pass `--kayit <path>` to write the record to a named file instead. For the code distinction, run
 `python3 tools/katalog_kontrol.py` directly; GNU make turns a failing recipe
 into exit 2.

@@ -51,7 +51,7 @@ gecersiz kilmaz, ama kapi kodunu degistirmek kiler.
 |---|---|
 | Taranan betik | 32 |
 | Kural bildiren betik | 20 |
-| Bildirilen kural (envanter) | 118 |
+| Bildirilen kural (envanter) | 120 |
 | — envanter disi: olu kimlik (bildirilir, basilMAZ) | 3 |
 | — envanter disi: dis referans | 1 |
 | Kod icinde uretilen, envantere alinmayan kimlik | 41 |
@@ -64,9 +64,9 @@ gecersiz kilmaz, ama kapi kodunu degistirmek kiler.
 | — tanı | 2 |
 | — kütüphane | 3 |
 | — kapsam dışı | 7 |
-| Batarya vakasi (toplam) | 142 |
-| — atesleyen (HATA + TERMINAL) | 113 |
-| — HATA (rc=1) | 105 |
+| Batarya vakasi (toplam) | 146 |
+| — atesleyen (HATA + TERMINAL) | 117 |
+| — HATA (rc=1) | 109 |
 | — TERMINAL (rc=2) | 8 |
 | — beklenen bulgu | 29 |
 | Atesleyen vakayla test edilen kural (TEST EDILDI) | 93 |
@@ -76,7 +76,7 @@ gecersiz kilmaz, ama kapi kodunu degistirmek kiler.
 | — bunlardan son kosuda GECEN (kanitli) | 25 |
 | — vaka VAR, son kosu kaniti YOK | 0 |
 | Toplam dogrulanan kural | 118 |
-| Gerekceli kapsam disi kural | 0 |
+| Gerekceli kapsam disi kural | 2 |
 | Bosluk (gerekce yok) | 0 |
 | — bunlardan yalniz oz-testte anilan | 0 |
 | — hicbir testte gecmeyen | 0 |
@@ -193,6 +193,18 @@ Bu kesim, adi gecen uc betikteki butun canli kurallari ve varsa olu kimlikleri t
 | teslim_imza | TSL-05 | BEKLENEN BULGU | TSL-05 | son kosuda gecti: TSL-05 |
 | teslim_imza | TSL-06 | TEST EDILDI | TSL-06 | son kosuda gecti: TSL-06 |
 
+## Meta arac mutasyonlari (tools/)
+
+Bu araçlar kural kimliği taşımadıkları için kural envanterine ve test edilen kural sayacına girmez. Yine de kendi negatif testleri mutasyon bataryasında koşar: temiz taban PASS, aracın tek bir güvenlik dalı bozulunca test FAIL vermek zorundadır. Bir hedefin vakası silinirse veya hedefi değişirse `make kapsam` fail-closed durur.
+
+| Arac | Hedef | Vaka | Test kapisi | Sozlesme |
+|---|---|---|---|---|
+| durum | `tools/durum.py` | META-DURUM-CANLI | `tools/durum_selftest.py` | HATA |
+| iddia | `tools/iddia.py` | META-IDDIA-KAPSAM | `tools/iddia_selftest.py` | HATA |
+| kanit | `tools/kanit.py` | META-KANIT-PAKET | `tools/kanit_negatif.py` | HATA |
+| kapsam | `tools/kapsam.py` | META-KAPSAM-RATCHET | `tools/kapsam.py` | HATA |
+| **Toplam** | **4 araç** | **4 vaka** | | |
+
 Ayrintili P1/P0 gerekcesi risk tablosunda; kodda hic basilmayan kimliklerin gerekcesi Envanter disi tablosundadir.
 
 ## Sonraki dilim
@@ -225,6 +237,14 @@ Baska bir kurala/karara yapilan atiflar kural sayilmaz; her biri gerekceli ve ik
 | `verify_doi.py` | DEC-027 | DEC karar kimligi; verify_doi bu kurali uygulamaz, DEC-027 bolum-farkindaligi politikasina atif yapar |
 
 Toplam envanter disi dis referans: **1**.
+
+## Kapsam disi siniflari
+
+Gerekceler tahmin degil; her satir betigin kodundaki bagimliliga dayanir (asagida betik adiyla birlikte yazili).
+
+| Sinif | Gerekce (betikte olculen bagimlilik) | Betik | Kural |
+|---|---|---|---|
+| istisna | Olculdu: tools/sir_gecmis_selftest.py vaka_bolunmus_eposta + vaka_eski_kisisel_eposta ile PII kuralini uctan uca atesler; mutasyon bataryasinin kopyasi .git tasimadigi icin ayni Git senaryosu orada kurulmuyor. Gelecekte ayni fixture bataryaya tasinirsa bu istisna kaldirilmalidir. | secret_scan.py | 2 |
 
 ## Kimliksiz kapi betikleri
 
@@ -396,10 +416,10 @@ sessizce yok sayilmaz.
 | `katalog_kontrol.py` | 0 | 0 | 0 | 0 |
 | `kod_gate_merge.py` | 0 | 0 | 0 | 0 |
 | `perm_lint.py` | 8 | 0 | 0 | 8 |
-| `secret_scan.py` | 5 | 0 | 0 | 5 |
+| `secret_scan.py` | 7 | 0 | 0 | 7 |
 | `test_attest.py` | 12 | 1 | 0 | 12 |
 
-Toplam: 32 betik · 118 tekil kural; her satirda Envanter = Baslikta ∪ Bolum basligi.
+Toplam: 32 betik · 120 tekil kural; her satirda Envanter = Baslikta ∪ Bolum basligi.
 
 ## Referans olarak ayiklanan kimlikler
 
@@ -540,6 +560,8 @@ tip ihlalidir; kopya degil, farkli hata dalidir.
 | `secret_scan.py` | SEC-03 | SEC-03 | BEKLENEN BULGU | son kosuda gecti: SEC-03 |
 | `secret_scan.py` | SEC-04 | SEC-04 | BEKLENEN BULGU | son kosuda gecti: SEC-04 |
 | `secret_scan.py` | SEC-05 | SEC-05 | BEKLENEN BULGU | son kosuda gecti: SEC-05 |
+| `secret_scan.py` | SEC-06 | — | KAPSAM DISI | istisna: Olculdu: tools/sir_gecmis_selftest.py vaka_bolunmus_eposta + vaka_eski_kisisel_eposta ile PII kuralini uctan uca atesler; mutasyon bataryasinin kopyasi .git tasimadigi icin ayni Git senaryosu orada kurulmuyor. Gelecekte ayni fixture bataryaya tasinirsa bu istisna kaldirilmalidir. |
+| `secret_scan.py` | SEC-07 | — | KAPSAM DISI | istisna: Olculdu: tools/sir_gecmis_selftest.py vaka_shallow + vaka_git_yok ile eksik/bozuk Git gecmisini fail-closed atesler; batarya kopyasi .git tasimadigi icin bu senaryo dogrudan bataryada kurulamiyor. Gercek kapi make dogrula on kosulu olarak kosar. |
 | `test_attest.py` | TST-01 | TST-01 | TEST EDILDI | son kosuda gecti: TST-01 |
 | `test_attest.py` | TST-02 | TST-02 | TEST EDILDI | son kosuda gecti: TST-02 |
 | `test_attest.py` | TST-03 | TST-03 | TEST EDILDI | son kosuda gecti: TST-03 |

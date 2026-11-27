@@ -5,8 +5,8 @@
 NEDEN VAR
   Mutasyon bataryasi iki sozlesmeli: kirmizi atesleyen vakalar (HATA/TERMINAL)
   ve beklenen-bulgu vakalari. Tarihsel 12.128 snapshot'i 109 vaka = 91
-  atesleyen + 18 beklenen-bulgu; guncel katalog 141 vaka = 113 atesleyen
-  (105 HATA + 8 TERMINAL) + 28 beklenen-bulgu. Bu sayilar README, docs ve
+  atesleyen + 18 beklenen-bulgu; guncel katalog 146 vaka = 117 atesleyen
+  (109 HATA + 8 TERMINAL) + 29 beklenen-bulgu. Bu sayilar README, docs ve
   iddia defterine elle yazilir; biri guncellenmezse anlati sessizce tek
   sozlesmeli "hepsi kirmizi" bicimine geri kayabilir.
 
@@ -16,7 +16,7 @@ NEDEN VAR
       katalogdaki sozlesme (FRZ-01T -> FRZ-01 takma adiyla).
   Sonra README.tr.md, README.en.md, docs/README.md, docs/EN/QUICKSTART.md,
   docs/DERSLER_v1_2026-08-30.md ve tools/iddia_defteri.json icindeki sayilari
-  birebir karsilastirir. Tek-sozlesmeli ifadeler (141/141, 140/140, 109/109, "her vaka
+  birebir karsilastirir. Tek-sozlesmeli ifadeler (146/146, 141/141, 140/140, "her vaka
   kirmizi") ve guncel baglamda tarihsel 109 toplami fail-closed reddedilir.
 
 NE OLCMEZ
@@ -74,7 +74,8 @@ CAPALAR = (
         'ad': 'README.tr guncel batarya',
         'dosya': 'README.tr.md',
         'kaynak': 'guncel',
-        'desen': (r'Mutation battery \*\*(\d+)/(\d+) firing cases \+ '
+        'desen': (r'Mutation battery \*\*(\d+)/(\d+) firing cases'
+                  r'(?: \([^)]*\))? \+ '
                   r'(\d+)/(\d+) expected findings\*\*'),
         'alanlar': ('atesleyen', 'atesleyen', 'bulgu', 'bulgu'),
     },
@@ -91,8 +92,8 @@ CAPALAR = (
         'ad': 'README.en guncel batarya',
         'dosya': 'README.en.md',
         'kaynak': 'guncel',
-        'desen': (r'current battery is \*\*(\d+)/(\d+)\*\* firing cases '
-                  r'plus \*\*(\d+)/(\d+)\*\* expected findings'),
+        'desen': (r'current battery is \*\*(\d+)/(\d+)\*\* firing cases'
+                  r'(?: \([^)]*\))? plus \*\*(\d+)/(\d+)\*\* expected findings'),
         'alanlar': ('atesleyen', 'atesleyen', 'bulgu', 'bulgu'),
     },
     {
@@ -154,9 +155,12 @@ CAPALAR = (
 # Tek-sozlesmeli anlatimin dogrudan imzalari. Tarihsel DERSLER satirlari bu
 # taramaya girmez; orada gecmis bir uygulamanin kaydi mesru olabilir.
 YASAK_IFADELER = (
+    (r'\b146/146\b', '146/146 (tum guncel vakalar kirmizi)'),
     (r'\b141/141\b', '141/141 (tum guncel vakalar kirmizi)'),
     (r'\b140/140\b', '140/140 (tum guncel vakalar kirmizi)'),
-    (r'\b109/109\b', '109/109 (tum tarihsel vakalar kirmizi)'),
+    # 109/109 artik guncel HATA alt-sayacidir (SOZLESME satiri); yalniz
+    # HATA etiketi olmadan gecen tarihsel tum-vaka iddiasini reddet.
+    (r'\b109/109\b(?!\s*HATA)', '109/109 (tum tarihsel vakalar kirmizi)'),
     (r'\bher vaka(?:sı|si)?\s+kırmızı\b', 'her vaka kirmizi'),
     (r'\btüm vakalar\s+kırmızı\b', 'tum vakalar kirmizi'),
     (r'\bbütün vakalar\s+kırmızı\b', 'butun vakalar kirmizi'),
@@ -322,6 +326,10 @@ def _bayat_109_tara(kok):
                           metin.find('\n', eslesme.start())
                           if metin.find('\n', eslesme.start()) != -1
                           else len(metin)]
+            # 109 artik guncel HATA alt-sayacidir; tarihsel tum-vaka
+            # toplamiyla karistirilmamali.
+            if '109 HATA' in satir or re.search(r'\b109/109\s+HATA\b', satir):
+                continue
             if not re.search(r'vaka|case|mutasyon|mutation|firing|ateş|'
                              r'beklenen|bulgu', satir, re.I):
                 continue

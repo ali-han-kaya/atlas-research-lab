@@ -265,6 +265,7 @@
     "tools/iddia.py",
     "tools/iddia_bozma_selftest.py",
     "tools/iddia_defteri.json",
+    "tools/iddia_entegrasyon_selftest.py",
     "tools/iddia_olcum.json",
     "tools/iddia_selftest.py",
     "tools/kamu_lint.py",
@@ -281,6 +282,8 @@
     "tools/katalog_kayit_dogrula_selftest.py",
     "tools/katalog_kontrol.py",
     "tools/katalog_kontrol_selftest.py",
+    "tools/katalog_yenile.py",
+    "tools/katalog_yenile_selftest.py",
     "tools/kural_katalogu.py",
     "tools/model_katalog.json",
     "tools/model_katalog_uret.py",
@@ -297,6 +300,7 @@
     "tools/oztest_mutasyon.py",
     "tools/oztest_mutasyon_kaniti.json",
     "tools/secret_fixtures.json",
+    "tools/sir_gecmis_selftest.py",
     "tools/sir_kapisi.py",
     "tools/sir_kapisi_mutasyon.py",
     "tools/sir_kapisi_mutasyon_kaniti.json",
@@ -306,7 +310,8 @@
     "tools/temiz_teslim_selftest.py",
     "tools/yayin_kapisi.py",
     "tools/yayin_manifest.json",
-    "tools/yayinla.py"
+    "tools/yayinla.py",
+    "tools/yayinla_selftest.py"
   ],
   "yasak_yollar": [
     "projeler/",

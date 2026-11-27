@@ -21,4 +21,4 @@ olculdu=42 · ag=1 · beyan=11 · olculmedi=1
 Ham kanıt dosyası defterin üst düzeyindeki `olcum_dosyasi` alanındadır
 (`tools/iddia_olcum.json`); `tools/iddia.py` bu yolun tam olarak o dosya
 olduğunu doğrular. Tek bir satırın defter → komut → ham kanıt → hüküm izi kök
-`README.tr.md` içindeki **Tek bir iddiayı elle izlemek** bölümündedir.
+`README.tr.md` içindeki **Tek bir iddiayı izlemek** bölümündedir.

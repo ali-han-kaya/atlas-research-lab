@@ -9,8 +9,9 @@ beyan ile olcumu karsilastirir. Tutmayan satir kimligiyle (IDD-07) kirmizi
 basilir ve rc=1 doner.
 
 HAM KANIT: her OLCULDU satirinin son olculen ham cikti SATIRI defterdeki
-`olcum_dosyasi` yolunda (tek gecerli deger: `tools/iddia_olcum.json`) ayni
-IDD-* anahtariyla saklanir; defter bu yolu adlandirir, betik dogrular.
+`olcum_dosyasi` alanindan cozulen yolda (tek gecerli deger:
+`tools/iddia_olcum.json`) ayni IDD-* anahtariyla saklanir; yol okuma ve
+yazmada bu alandan gelir, alan sabit degere kilitlidir.
 Varsayilan kosu uc seyi birden ister:
   1. ham kanit satiri guncel komut ciktisinda BIREBIR ayni olmali,
   2. ham kanit kendi desenine uymali ve beyan edilen degeri vermeli,
@@ -34,13 +35,15 @@ bu satirlari ATLANDI basar ve PASS saymaz. --yaz ile birlesemez (kismi anlik
 goruntu tam kaniti silerdi); varsayilan tam kosu aynen kalir.
 
 KAPSAM KAPISI: defter yalniz kendi satirlarini degil kapsamini da denetler.
-README.en.md, README.md, README.tr.md, docs/README.md ve docs/EN/QUICKSTART.md icindeki her sayisal olcum
-iddiasi (oran `8/8`, olcum adi tasiyan sayi `116 vaka`, uretilmis sayac
-`incelenmedi=0`) ya defterdeki bir alintinin icinde olmali ya da
-`kapsam.sayisal_istisna` icindeki dar ve gerekceli bir desenle eslesmelidir.
-Kimlik (KANIT-05), surum (v5.5.4), tarih (2026-11-19) ve cikis kodu (rc=1) bu
-tanimin disindadir. Kapsanmayan tek bir iddia rc=2 ile kirmizi olur; hicbir
-iddiayi kapsamayan olu istisna veya uc satirdan genis istisna da kirmizidir.
+README.en.md, README.md, README.tr.md, docs/README.md ve docs/EN/QUICKSTART.md
+icindeki her sayisal jeton VARSAYILAN-RED altindadir: ya defterdeki bir
+alintinin icinde olmali ya da `kapsam.sayisal_istisna` icindeki dar ve gerekceli
+bir desenle eslesmelidir. Yalniz kimlik (KANIT-05), surum (v5.5.4), tarih/saat
+(2026-11-19), cikis kodu (rc=1), saf tablo hucresi, sira/aralik (1., 1-4) ve
+komut secenegi (--limit=1) yapisal olarak muaftir; olcum sozcugu yakinligi
+artik jetonu kapsam disina cikaramaz. Kapsanmayan tek bir jeton rc=2 ile
+kirmizi olur; hicbir jetonu kapsamayan olu istisna veya uc satirdan genis
+istisna da kirmizidir.
 
 CIKIS: 0 = olculen OLCULDU satirlari ham kanitiyla tuttu (--hizli'da agir
        satirlar ATLANDI) · 1 = en az bir iddia tutmadi (veya --yaz sirasinda
@@ -54,6 +57,7 @@ KULLANIM
   python3 tools/iddia.py --kanit          # her PASS satirinin ham kanitini da bas
   python3 tools/iddia.py --ag             # ag gerektiren satirlari da olc
   python3 tools/iddia.py --sadece IDD-01,IDD-24
+  python3 tools/iddia.py --iz IDD-48      # tek iddiayi defterden ham kanita izle
   python3 tools/iddia.py --yaz            # ham kanit anlik goruntusunu yenile
   python3 tools/iddia.py --dokuman        # README/docs make + CI job sozlesmesi
 """
@@ -62,6 +66,7 @@ import datetime
 import json
 import os
 import re
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -70,7 +75,9 @@ import kapi_cikti
 
 KOK = Path(__file__).resolve().parents[1]
 DEFTER = KOK / 'tools' / 'iddia_defteri.json'
-OLCUM = KOK / 'tools' / 'iddia_olcum.json'
+# Defterdeki olcum_dosyasi alaninin kilitli degeri; dosya yolu bu alandan
+# cozulur, sabit bir Path'ten okunmaz veya yazilmaz.
+OLCUM_KILIDI = 'tools/iddia_olcum.json'
 OZET_DOSYASI = KOK / 'docs' / 'IDDIA-OZET.md'
 OZET_BASLA = '<!-- IDDIA-OZET:BASLA -->'
 OZET_BITIR = '<!-- IDDIA-OZET:BITIR -->'
@@ -82,48 +89,29 @@ AGIR_BETIKLER = ('tools/dogrula.py', 'tools/mutasyon_bataryasi.py')
 # bir desen, kapsami kapali degil acik hale getirir; bu yuzden kirmizidir.
 AZAMI_ISTISNA_SATIR = 3
 
-# Sayisal jeton: tarih, binlik ayiracli oran, surum, oran ve sade sayi.
+# Sayisal jeton: tarih, saat, binlik ayiracli oran, surum, oran ve sade sayi.
 # Harfe yapisik rakamlar (KANIT-05, KFAZ0, P0, UTF-8) jeton degildir.
+_AYLAR = (r'Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|'
+          r'Kasım|Aralık|January|February|March|April|May|June|July|August|'
+          r'September|October|November|December|Agustos|Subat|Mayis|Eylul|'
+          r'Kasim|Aralik')
 KAPSAM_JETON = re.compile(r"""
     (?<![\w.])
     (?:
-        \d{1,2}\s+(?:Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|
-                       Eylül|Ekim|Kasım|Aralık|January|February|March|April|
-                       May|June|July|August|September|October|November|
-                       December)\s+\d{4}
+        \d{1,2}\s+(?:%s)\s+\d{4}
       | \d{4}-\d{2}-\d{2}
+      | \d{1,2}:\d{2}(?::\d{2})?
       | \d{1,3}(?:\.\d{3})+(?:/\d{1,3}(?:\.\d{3})+)?
       | v?\d+(?:\.\d+)+
       | \d+/\d+(?:/\d+)?
       | \d+(?:[.,]\d+)?
     )
     (?!\w)
-""", re.X)
+""" % _AYLAR, re.X)
 TARIH_JETON = re.compile(
-    r'^(?:\d{1,2}\s+(?:Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|'
-    r'Eylül|Ekim|Kasım|Aralık|January|February|March|April|May|June|July|'
-    r'August|September|October|November|December)\s+\d{4}|'
-    r'\d{4}-\d{2}-\d{2})$', re.I)
-# Olcum adi/birimi: sayinin yaninda (en fazla uc kelime) gorunurse jeton bir
-# olcum iddiasidir. Sonuc sozcukleri (yeni/degisen/silinen/new/changed/deleted)
-# yalniz hemen yanindaysa sayilir; "0 `olmadan` yeni" bir iddia degildir.
-OLCUM_SOZCUK = re.compile(r"""
-    \b(?:
-        vaka|kural|dosya|bulgu|model|commit|kalem|test|sat[ıi]r|kay[ıi]t|rol|
-        kenar|saniye|dakika|bayt|hata|kimlik|ajan|senaryo|ko[sş]um|
-        gecen|kalan|ge[cç]|pass\b|fail\b|case|rule|file|finding|check|second|
-        role|line|record|token|gate|kap[ıi]|lens|iddia|kan[ıi]t|
-        s[ıi]n[ıi]r|limit|scope|gap|fix
-    )\w*
-  | %
-""", re.X | re.I)
-SONUC_SOZCUK = re.compile(r'^(?:yeni|degisen|silinen|new|changed|deleted)\b',
-                          re.I)
-# Uretilmis sayac alanlari: kalem=8, incelenmedi=0, planda=217 ...
-SAYAC_ALAN = re.compile(
-    r'(?<![A-Za-z0-9_])(?:kalem|gecen|kalan|calistirilmadi|olculdu|atlandi|'
-    r'olculmedi|planda|yeni|degisen|ayni|silinecek|taranan|incelenmedi|'
-    r'onay|aktif|aday|komut|dosya)=(\d+)')
+    r'^(?:\d{1,2}\s+(?:%s)\s+\d{4}|'
+    r'\d{4}-\d{2}-\d{2}|'
+    r'\d{1,2}:\d{2}(?::\d{2})?)$' % _AYLAR, re.I)
 
 
 class DefterHatasi(Exception):
@@ -137,6 +125,20 @@ def _metin(yol):
         raise DefterHatasi('%s okunamadi: %s' % (yol, e))
 
 
+def ham_kanit_yolu(defter):
+    """Defterdeki `olcum_dosyasi` alanini tek kaynak olarak coz.
+
+    Alan `tools/iddia_olcum.json` disina cikamaz; yol yine de alandan
+    uretilir. Boylece okuma ve yazma ayni tek kaynagi kullanir.
+    """
+    rel = defter.get('olcum_dosyasi')
+    if rel != OLCUM_KILIDI:
+        raise DefterHatasi(
+            'sema: olcum_dosyasi %r olmali, bulunan %r'
+            % (OLCUM_KILIDI, rel))
+    return KOK / rel
+
+
 def yukle():
     try:
         defter = json.loads(DEFTER.read_text(encoding='utf-8'))
@@ -146,13 +148,10 @@ def yukle():
         raise DefterHatasi('sema: "iddialar" listesi yok')
     if not defter['iddialar']:
         raise DefterHatasi('sema: defter bos')
-    # Ham kanit yolu defterden okunur ve tek gecerli yola kilitlenir; boylece
-    # iddia -> komut -> ham kanit zinciri defterin kendisinden izlenir.
-    beklenen_olcum = OLCUM.relative_to(KOK).as_posix()
-    if defter.get('olcum_dosyasi') != beklenen_olcum:
-        raise DefterHatasi(
-            'sema: olcum_dosyasi %r olmali, bulunan %r'
-            % (beklenen_olcum, defter.get('olcum_dosyasi')))
+    # Ham kanit yolu defterdeki alandan cozulur; alan tek gecerli degere
+    # kilitlidir. Boylece iddia -> komut -> ham kanit zinciri defterin
+    # kendisinden izlenir.
+    ham_kanit_yolu(defter)
     return defter
 
 
@@ -280,25 +279,57 @@ def _olcum_penceresi(satir, bas, son):
     return ' '.join(once + sonra)
 
 
-def _kimlik_mi(satir, bas):
-    """KANIT-05, FIX-003, OLG-1, DEVIR-...-1945 gibi kimlik parcasi mi?
-    Tirenden once buyuk harf ya da rakam varsa jeton kimlige aittir."""
-    return (bas >= 2 and satir[bas - 1] == '-'
-            and (satir[bas - 2].isupper() or satir[bas - 2].isdigit()))
+def _kimlik_mi(satir, bas, son=None):
+    """KANIT-05, FIX-003, OLG-1, OLCUM-01…07 gibi kimlik parcasi mi?
+    Tirenden once buyuk harf ya da rakam varsa jeton kimlige aittir; kimlik
+    zincirleri (OLCUM-01/02/03/06) ve aralik sonlari da kimliktir."""
+    if (bas >= 2 and satir[bas - 1] in '-–—'
+            and (satir[bas - 2].isupper() or satir[bas - 2].isdigit())):
+        return True
+    if bas >= 1 and satir[bas - 1] == '…' and son is not None:
+        return bool(re.search(r'[A-Z][A-Z0-9]*-\d+$', satir[:bas - 1]))
+    if son is not None:
+        return bool(re.search(r'[A-Z][A-Z0-9]*-\d+(?:[/…]\d+)+$',
+                              satir[:son]))
+    return False
 
 
-def _protokol_mu(satir, bas, son):
-    """2-of-2, KFAZ0-5 gibi protokol sabiti mi?"""
-    dilim = satir[max(0, bas - 8):son + 8]
-    return bool(re.search(r'\d+\s*[-–]\s*of\s*[-–]\s*\d+', dilim)
-                or re.search(r'KFAZ0[–-]5', dilim))
+def _surum_mu(satir, bas, jeton):
+    """v5.5.4 / 1.7.410 gibi noktali surum mu? Iki bilesenli ciplak ondalik
+    (1.5) ancak acik surum baglaminda (Python 3.9, surum 1.5) surum sayilir."""
+    if re.match(r'^v\d+(?:\.\d+)+$', jeton, re.I):
+        return True
+    if re.match(r'^\d+(?:\.\d+){2,}$', jeton):
+        return True
+    once = satir[max(0, bas - 32):bas]
+    return bool(re.search(r'(?:python3?|s[üu]r[üu]m|version|release)'
+                          r'[\s`(]*[vV]?\s*$', once, re.I))
 
 
 def _cikis_kodu_mu(satir, bas, son):
-    """rc=1, rc!=0, exit code 2, Exit 1 gibi cikis kodu degeri mi?"""
-    once = satir[max(0, bas - 20):bas]
-    return bool(re.search(r'(?:rc|exit(?:\s+code)?|kod\w*)\s*(?:[=!]=?)?\s*$',
-                          once, re.I))
+    """rc=1, rc!=0, exit code 2, Exit 1 gibi cikis kodu degeri mi?
+    Duz metindeki 'exit code is exactly **1**' ve '2 döner' de bu siniftadir."""
+    once = satir[max(0, bas - 80):bas]
+    sonra = satir[son:son + 50]
+    if re.search(r'(?:rc|exit(?:\s+code)?|kod\w*|çıkış\s*kodu|çikis\s*kodu)'
+                 r'\s*(?:[=!]=?|:)?\s*[\*`]*$', once, re.I):
+        return True
+    m = re.search(r'(?:exit|çıkış|çikis)\s*(?:code|kodu)?\b', once, re.I)
+    if m and not re.search(r'[.;]\s', once[m.start():]):
+        return True
+    if re.search(r'(?:returns?|exits?|döner|doner)\s*[\*`]*$', once, re.I):
+        return True
+    if re.search(r'^\s*[\*`]*(?:ile|olarak|döner|doner|returns?|exits?)\b',
+                 sonra, re.I):
+        return True
+    if re.search(r"^\s*'[a-zçğıöşü]{1,3}\b", sonra, re.I):
+        return True
+    if re.search(r'(?:make|gnu make).{0,60}\b(?:as|olarak)\s*[\*`]*$',
+                 once, re.I):
+        return True
+    if re.search(r'diff\s*[\*`]*$', once, re.I):
+        return True
+    return False
 
 
 def _tablo_hucre_mi(satir, bas, son):
@@ -315,51 +346,43 @@ def _tablo_hucre_mi(satir, bas, son):
 
 
 def _sira_numarasi_mi(satir, bas, son):
-    """Markdown madde/shell case numarasi mi (1., 3., 0))?"""
+    """Markdown madde/shell case numarasi veya 1-4 gibi sira araligi mi?"""
     once = satir[:bas]
     if not once.strip() and satir[son:son + 1] in ('.', ')'):
         return True
-    return bool(re.match(r'^#{1,6}\s+$', once)
-                and satir[son:son + 1] == '.')
+    if re.match(r'^#{1,6}\s+$', once) and satir[son:son + 1] == '.':
+        return True
+    if satir[son:son + 1] in '.):' and (bas == 0 or satir[bas - 1] in ' \t([,;'):
+        if satir[son + 1:son + 2].isspace() or son + 1 >= len(satir):
+            return True
+    if re.match(r'^\d+[-–—]\d+(?:[.)]|\s|$)', satir[bas:]):
+        if bas == 0 or satir[bas - 1] in ' \t([,;':
+            return True
+    return False
 
 
 def _secenek_mi(satir, bas, son):
-    """--limit=1, --depth 1, fetch-depth: 0 gibi komut secenegi mi?"""
-    once = satir[max(0, bas - 28):bas]
-    return bool(re.search(r'(?:--[\w-]+[= ]|fetch-depth:\s*)$', once))
+    """--limit=1, --depth 1, -n 1, UYGULA=1 gibi komut secenegi mi?"""
+    once = satir[max(0, bas - 40):bas]
+    return bool(re.search(r'(?:--[\w-]+[= ]|-\w[\w-]*[= ]|'
+                          r'[A-Z][A-Z0-9_]*=|fetch-depth:\s*)$', once))
 
 
 def _iddia_mi(jeton, satir, bas, son):
-    """Jeton bir sayisal olcum iddiasi mi? Kimlik, tarih, protokol sabiti,
-    cikis kodu, tablo kodu, sira numarasi ve komut secenegi degilse; oran/
-    yuzde, olcum adi yaninda, uretilmis sayac, dolar tutari veya N-vs-M ise
-    evet."""
-    if _kimlik_mi(satir, bas) or TARIH_JETON.match(jeton):
+    """Jeton bir sayisal iddia mi? VARSAYILAN-RED: yalniz kimlik, surum,
+    tarih/saat, cikis kodu, saf tablo hucresi, sira/aralik ve komut secenegi
+    yapisal olarak muaftir. Kalan her jeton defter alintisi ya da gerekceli
+    istisna ister; olcum sozcugu yakinligi artik yetmez."""
+    if _kimlik_mi(satir, bas, son) or _surum_mu(satir, bas, jeton) \
+            or TARIH_JETON.match(jeton):
         return False
-    if _protokol_mu(satir, bas, son) or _cikis_kodu_mu(satir, bas, son):
+    if _cikis_kodu_mu(satir, bas, son):
         return False
     if _tablo_hucre_mi(satir, bas, son) or _sira_numarasi_mi(satir, bas, son):
         return False
     if _secenek_mi(satir, bas, son):
         return False
-    if '/' in jeton or satir[son:son + 1] == '%':
-        return True
-    if bas > 0 and satir[bas - 1] == '$':
-        return True
-    if re.match(r'-vs-\d', satir[son:son + 8]) or \
-            re.search(r'\d-vs-$', satir[max(0, bas - 8):bas]):
-        return True
-    if re.match(r'\s+vs\.?\s+\d', satir[son:son + 10]) or \
-            re.search(r'\d\s+vs\.?\s+$', satir[max(0, bas - 10):bas]):
-        return True
-    if re.match(r'\s*s\b', satir[son:son + 4]):
-        return True
-    if SONUC_SOZCUK.match(satir[son:].lstrip()):
-        return True
-    for eslesme in SAYAC_ALAN.finditer(satir):
-        if eslesme.start(1) == bas and eslesme.end(1) == son:
-            return True
-    return bool(OLCUM_SOZCUK.search(_olcum_penceresi(satir, bas, son)))
+    return True
 
 
 def kapsam_denetle(defter):
@@ -442,14 +465,14 @@ def kapsam_denetle(defter):
             'istisna': istisna, 'eksikler': eksikler}
 
 
-def olcum_yukle(gerekli=True):
-    if not OLCUM.is_file():
+def olcum_yukle(kanit_yolu, gerekli=True):
+    if not kanit_yolu.is_file():
         if gerekli:
             raise DefterHatasi('%s yok — `make iddia-yaz` ile uretin'
-                               % OLCUM.relative_to(KOK))
+                               % kanit_yolu.relative_to(KOK))
         return {'olcumler': {}}
     try:
-        veri = json.loads(OLCUM.read_text(encoding='utf-8'))
+        veri = json.loads(kanit_yolu.read_text(encoding='utf-8'))
     except (OSError, ValueError) as e:
         raise DefterHatasi('olcum dosyasi okunamadi: %s' % e)
     if not isinstance(veri, dict) or not isinstance(veri.get('olcumler'), dict):
@@ -859,6 +882,153 @@ def dokuman_sozlesmesi(kok=KOK):
     return 0
 
 
+def _kaynak_satiri(dosya, alinti):
+    """Alintinin kaynak dosyadaki 1-tabanli satir numarasi."""
+    metin = _metin(dosya)
+    bas = metin.find(alinti)
+    if bas < 0:
+        return '?'
+    return metin[:bas].count('\n') + 1
+
+
+def _json_anahtar_satiri(yol, anahtar):
+    """JSON dosyasinda ust duzey bir anahtarin satir numarasi."""
+    try:
+        metin = Path(yol).read_text(encoding='utf-8')
+    except OSError:
+        return '?'
+    desen = re.compile(r'^\s*"%s"\s*:' % re.escape(anahtar))
+    for no, satir in enumerate(metin.splitlines(), 1):
+        if desen.match(satir):
+            return no
+    return '?'
+
+
+def _defter_satiri(eid):
+    """Defterdeki `"id": "IDD-..."` satirini bul."""
+    try:
+        metin = DEFTER.read_text(encoding='utf-8')
+    except OSError:
+        return '?'
+    desen = re.compile(r'^\s*"id"\s*:\s*"%s"' % re.escape(eid))
+    for no, satir in enumerate(metin.splitlines(), 1):
+        if desen.match(satir):
+            return no
+    return '?'
+
+
+def _komut_goster(argv):
+    """Komutu kabukta tekrar calistirilabilir bicimde goster."""
+    goster = ['python3' if a == '{py}' else a for a in argv]
+    # `python3 -c '...'` komutunu okunabilir tut: kod tek tirnaklarla dolu;
+    # cift tirnakla sarmak `shlex.quote`un `'"'"'` gurultusunu onler.
+    if (len(goster) == 3 and goster[0] == 'python3' and goster[1] == '-c'
+            and '"' not in goster[2] and '\n' not in goster[2]):
+        kod = goster[2].replace('\\', '\\\\').replace('$', '\\$')
+        kod = kod.replace('`', '\\`')
+        return 'python3 -c "%s"' % kod
+    return ' '.join(shlex.quote(a) for a in goster)
+
+
+def _kanit_denetle(eid, kanit):
+    """Tek kayit icin ham kanit semasini fail-closed denetle."""
+    if not isinstance(kanit, dict):
+        raise DefterHatasi('%s: olcum kaydi nesne degil' % eid)
+    for alan in ('komut', 'rc', 'ham', 'deger'):
+        if alan not in kanit:
+            raise DefterHatasi('%s: olcum kaydinda "%s" yok' % (eid, alan))
+    if not isinstance(kanit['komut'], list):
+        raise DefterHatasi('%s: ham kanit komutu liste degil' % eid)
+    if not isinstance(kanit['ham'], str) or not kanit['ham'].strip():
+        raise DefterHatasi('%s: ham kanit bos' % eid)
+    if not isinstance(kanit['deger'], str):
+        raise DefterHatasi('%s: ham kanit degeri dize degil' % eid)
+
+
+def tek_iz(eid, ag=False):
+    """Tek bir iddiayi defter -> kaynak -> komut -> ham kanit -> hukum izle.
+
+    Tam `make iddia` kosusundan farkli olarak yalniz secilen kaydi denetler;
+    boylece baska bir satirin eski kaniti veya global kapsam sorunu bu izi
+    kilitlemez. Secilen kaydin kendi semasi, alintisi ve kaniti fail-closed'dir.
+    """
+    defter = yukle()
+    kayit = next((k for k in defter['iddialar'] if k['id'] == eid), None)
+    if kayit is None:
+        print('IZ FAIL — %s defterde yok' % eid)
+        return 2
+
+    # Yalniz secilen kaydin semasi ve kaynak alintisi; global kapsam/ozet
+    # kapilari tam `make iddia` kosusunun isidir.
+    denetle({'iddialar': [kayit]})
+    kanit_yolu = ham_kanit_yolu(defter)
+    olcum = olcum_yukle(kanit_yolu, gerekli=False)
+
+    print('ATLAS — IDDIA IZI · %s' % eid)
+    print('  iddia     : %s' % _kisa(kayit['iddia'], 94))
+    print('  durum     : %s · beklenen=%s'
+          % (kayit['durum'], kayit.get('beklenen', '—')))
+    print('  defter    : %s:%s'
+          % (DEFTER.relative_to(KOK), _defter_satiri(eid)))
+    for kaynak in kayit['kaynaklar']:
+        dosya = kaynak['dosya']
+        print('  kaynak    : %s:%s · %s'
+              % (dosya, _kaynak_satiri(dosya, kaynak['alinti']),
+                 _kisa(kaynak['alinti'], 82)))
+    if kayit['durum'] in ('OLCULDU', 'AG_GEREKLI'):
+        print('  komut     : %s' % _komut_goster(kayit['komut']))
+
+    durum = kayit['durum']
+    if durum == 'BEYAN':
+        print('  ham kanit : yok (beyan)')
+        print('  gerekce   : %s' % _kisa(kayit['gerekce'], 100))
+        print('  HUKUM: BEYAN — yeniden kosulmaz; PASS sayilmaz')
+        return 0
+    if durum == 'OLCULMEDI':
+        print('  ham kanit : yok (olculmedi)')
+        print('  gerekce   : %s' % _kisa(kayit['gerekce'], 100))
+        print('  HUKUM: OLCULMEDI — yeniden uretilemez; PASS sayilmaz')
+        return 2
+    if durum == 'AG_GEREKLI' and not ag:
+        print('  ham kanit : yok (ag gerekli)')
+        print('  HUKUM: OLCULMEDI — ag gerekli; --ag ile kosun')
+        return 2
+
+    kanit = (olcum.get('olcumler') or {}).get(eid)
+    if durum == 'OLCULDU':
+        if kanit is None:
+            print('  ham kanit : YOK')
+            print('  HUKUM: FAIL — ham kanit yok; once `make iddia-yaz`')
+            return 2
+        _kanit_denetle(eid, kanit)
+
+    onbellek = {}
+    taze_ok, _, taze_ayrinti, guncel, rc = taze(kayit, onbellek)
+    if durum == 'OLCULDU':
+        gecti, deger, ayrinti = olc(kayit, onbellek, kanit)
+        print('  ham kanit : %s:%s · rc=%s · deger=%s'
+              % (kanit_yolu.relative_to(KOK),
+                 _json_anahtar_satiri(kanit_yolu, eid), kanit['rc'],
+                 kanit['deger']))
+        print('              %s' % _kisa(kanit['ham'], 120))
+    else:
+        # AG_GEREKLI canli olcumun kalici ham kaniti yoktur.
+        gecti, deger, ayrinti = taze_ok, '-', taze_ayrinti
+    if guncel:
+        print('  guncel    : rc=%d · %s' % (rc, _kisa(guncel, 120)))
+    else:
+        print('  guncel    : rc=%d · %s' % (rc, _kisa(ayrinti or 'cikti yok', 120)))
+    if gecti:
+        print('  HUKUM: PASS — defter -> komut -> ham kanit -> guncel cikti tuttu')
+        return 0
+    print('  neden     : %s' % _kisa(ayrinti or 'bilinmeyen', 120))
+    if rc in (124, 125) or (durum == 'AG_GEREKLI' and rc == 2):
+        print('  HUKUM: OLCULMEDI — komut calistirilamadi (rc=%d)' % rc)
+        return 2
+    print('  HUKUM: FAIL — %s' % eid)
+    return 1
+
+
 def main(argv):
     if '--dokuman' in argv:
         kok = KOK
@@ -874,10 +1044,27 @@ def main(argv):
     yaz = '--yaz' in argv
     hizli = '--hizli' in argv
     kanit_goster = '--kanit' in argv
+    iz = None
     sadece = set()
     for i, arg in enumerate(argv):
         if arg == '--sadece' and i + 1 < len(argv):
             sadece = {x.strip() for x in argv[i + 1].split(',') if x.strip()}
+        elif arg == '--iz':
+            if i + 1 >= len(argv) or argv[i + 1].startswith('--'):
+                print('KULLANIM: --iz IDD-48')
+                return 2
+            iz = argv[i + 1]
+        elif arg.startswith('--iz='):
+            iz = arg.split('=', 1)[1]
+    if iz and (yaz or hizli or sadece):
+        print('KULLANIM: --iz, --yaz/--hizli/--sadece ile birlikte kullanilamaz')
+        return 2
+    if iz:
+        try:
+            return tek_iz(iz, ag)
+        except DefterHatasi as e:
+            print('IZ FAIL — defter: %s' % e)
+            return 2
     if yaz and sadece:
         print('DEFTER BOZUK: --yaz ile --sadece birlikte kullanilamaz')
         print('HUKUM: DEFTER BOZUK — hicbir iddia olculmedi')
@@ -889,12 +1076,13 @@ def main(argv):
         return 2
     try:
         defter = yukle()
+        kanit_yolu = ham_kanit_yolu(defter)
         denetle(defter)
         defter_ozeti = ozet_denetle(defter)
         if yaz:
             olcum = {'olcumler': {}}
         else:
-            olcum = olcum_yukle(gerekli=True)
+            olcum = olcum_yukle(kanit_yolu, gerekli=True)
             denetle_olcum(defter, olcum, hizli)
     except DefterHatasi as e:
         print('DEFTER BOZUK: %s' % e)
@@ -919,7 +1107,7 @@ def main(argv):
     kapsam = defter.get('kapsam') or {}
     print('ATLAS — iddia defteri · %s' % DEFTER.relative_to(KOK))
     print('defter ozeti: %s' % defter_ozeti)
-    print('ham kanit: %s' % OLCUM.relative_to(KOK))
+    print('ham kanit: %s' % kanit_yolu.relative_to(KOK))
     print('kapsam: %s' % ' · '.join(kapsam_denetimi['dosyalar']))
     for haric in kapsam.get('haric') or []:
         print('  haric: %s — %s' % (haric.get('desen'), haric.get('neden')))
@@ -1071,10 +1259,10 @@ def main(argv):
                              .strftime('%Y-%m-%dT%H:%M:%SZ'),
             'olcumler': yeni_olcum,
         }
-        OLCUM.write_text(json.dumps(veri, ensure_ascii=False, indent=2) + '\n',
-                         encoding='utf-8')
+        kanit_yolu.write_text(json.dumps(veri, ensure_ascii=False, indent=2) + '\n',
+                              encoding='utf-8')
         print('  HAM KANIT YAZILDI: %s (%d satir)'
-              % (OLCUM.relative_to(KOK), len(yeni_olcum)))
+              % (kanit_yolu.relative_to(KOK), len(yeni_olcum)))
         return 0
     if kalan:
         print('  HUKUM: FAIL — %s' % ', '.join(s[1] for s in kalan))

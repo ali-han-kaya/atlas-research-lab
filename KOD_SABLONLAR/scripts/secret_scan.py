@@ -18,15 +18,26 @@ KURALLAR
   SEC-03  Yer tutucu ipucu tasiyan eslesme                    [P1 + insan karari]
   SEC-04  Ikili/kilit dosyasi atlandi                                  [bilgi]
   SEC-05  TAM `__pycache__` dizinindeki .pyc kapsam disi           [bilgi]
+  SEC-06  Kisisel e-posta (guvenli ornek alanlari disinda)                 [P0]
+  SEC-07  Git gecmisi tarama hatasi / eksik tarihce                       [P0]
+
+SATIR BOLUNMUS ESLESME: bir sir veya kisisel e-posta satir sonunda
+bolunmusse, ard arda 2..3 satir newline olmadan birlestirilerek de taranir.
+Bu bir bulgu turudur; ayni kalip tek satirda da eslesiyorsa yinelenmez.
+Git gecmisi modu TUM commit'leri, commit/blob nesnelerini ve commit
+ustverisini tarar; sig (shallow) klon, okunamayan nesne veya bos tarihce
+PASS uretmez.
 
 Kullanim: python3 scripts/secret_scan.py [--diff] [--dizin .] [--json]
   --diff : yalniz `git diff --name-only HEAD` dosyalarini tarar (varsayilan)
   --tum  : calisma agacindaki tum metin dosyalarini tarar
+  --git-gecmis : tum ref'lerdeki commit ve blob gecmisini tarar (fail-closed)
 """
 import hashlib, importlib.util, json, os, pathlib, re, subprocess, sys
 
 JSON_CIK = "--json" in sys.argv
 TUM = "--tum" in sys.argv
+GECMIS = "--git-gecmis" in sys.argv
 dizin = "."
 if "--dizin" in sys.argv:
     i = sys.argv.index("--dizin")
@@ -186,7 +197,7 @@ def v4_yukle():
             sys.exit(1)
         finally:
             sys.dont_write_bytecode = _onceki
-        if hasattr(m, "SECRET_PATTERNS"):
+        if getattr(m, "SECRET_PATTERNS", None):
             return m, str(a)
     return None, None
 
@@ -231,6 +242,302 @@ def hedef_dosyalar():
     if not hepsi_ok:
         sys.exit(1)
     return [KOK / x for x in dict.fromkeys(yollar)]
+
+
+# --------------------------------------------------------------- ORTAK TARAMA
+# Satir bolunmus bir sir, iki ayri satirin newline ile ayrilmis halidir. Kalip
+# tek basina satirlarda eslesmez; ancak parcalar newline olmadan birlestirilince
+# eslesir. Pencereyi kasten kisa tutuyoruz: butun dosyayi newline'siz birlestirmek
+# ilgisiz iki satiri birbirine yapistirip yanlis pozitif uretir.
+SATIR_PENCERESI = 3
+EPOSTA_KALIBI = re.compile(r"(?<![\w.+-])[\w.+-]+@[\w-]+(?:\.[\w-]+)+")
+
+# Bunlar gercek bir kisiye ait olmayan, belgelenmis ornek/robot adresleridir.
+# `.invalid`, `.test` ve `.localhost` RFC 2606/6761 geregi cozulmez; burada
+# kullanilanlar test fiksturudur, gercek bir hesaba isaret etmez.
+GUVENLI_EPOSTA_TAM = {
+    "noreply@example.com",
+    "noreply@codebuff.com",
+    "git@github.com",
+    "noreply@github.com",
+}
+GUVENLI_EPOSTA_ALANLARI = {
+    "example.com", "example.org", "example.net",
+    "users.noreply.github.com",
+}
+GUVENLI_EPOSTA_SONEKLERI = (
+    ".example.com", ".example.org", ".example.net",
+    ".invalid", ".test", ".localhost",
+)
+
+
+def _eposta_guvenli(adres):
+    """Ornek/robot/test adresi mi? Kisisel adresler burada True OLMAZ."""
+    adres = str(adres).strip().lower().rstrip(".")
+    if adres in GUVENLI_EPOSTA_TAM:
+        return True
+    if "@" not in adres:
+        return False
+    alan = adres.rsplit("@", 1)[1]
+    if alan in GUVENLI_EPOSTA_ALANLARI:
+        return True
+    return any(alan.endswith(son) for son in GUVENLI_EPOSTA_SONEKLERI)
+
+
+def _satir_araligi_muaf(rel, satirlar, bas, son):
+    """Bir eslesmenin degdigi BUTUN satirlar tam-hash fiksturu mu?"""
+    rel = str(rel).replace("\\", "/")
+    if not FIKSTUR or rel not in FIKSTUR_DOSYALARI:
+        return False
+    if bas < 1 or son < bas or son > len(satirlar):
+        return False
+    for i in range(bas - 1, son):
+        if (rel, _satir_hash(satirlar[i])) not in FIKSTUR:
+            return False
+    return True
+
+
+def _blob_muaf(yollar, satirlar, bas, son):
+    """Ayni blob birden fazla yolda ise hepsi muaf olmadan susturma yok."""
+    if not yollar:
+        return False
+    return all(_satir_araligi_muaf(y, satirlar, bas, son) for y in yollar)
+
+
+def _sir_ham(metin, satirlar):
+    """Sir kaliplarini tek metinde ve 2..3 satirlik pencerelerde bul.
+
+    Donus: (bas_satir, son_satir, neden, bolunmus, eslesme). Eslesme yalniz
+    yer tutucu notu icin kullanilir; rapora ASLA yazilmaz. Ayni eslesme hem
+    tam metinde hem pencerede bulunursa pencere kopyasi eklenmez.
+    """
+    kayitlar, gorulen = [], set()
+
+    def ekle(bas, son, neden, bolunmus, eslesme):
+        # Ayni satir araliginda tam metin ve bolunmus pencere eslesmesi
+        # birlikte olusabilir; ikinci kaydi ayni bulgu saymamak icin anahtar
+        # `bolunmus` alanini icermez.
+        anahtar = (bas, son, neden)
+        if anahtar in gorulen:
+            return
+        gorulen.add(anahtar)
+        kayitlar.append((bas, son, neden, bolunmus, eslesme))
+
+    for kalip, neden in v4.SECRET_PATTERNS:
+        kalip_re = re.compile(kalip)
+        for m in kalip_re.finditer(metin):
+            bas = metin.count("\n", 0, m.start()) + 1
+            son = metin.count("\n", 0, m.end()) + 1
+            ekle(bas, son, neden, False, m.group(0))
+        for n in range(2, SATIR_PENCERESI + 1):
+            for i in range(0, len(satirlar) - n + 1):
+                parcalar = satirlar[i:i + n]
+                if any(kalip_re.search(x) for x in parcalar):
+                    continue
+                birlesik = "".join(parcalar)
+                m = kalip_re.search(birlesik)
+                if m:
+                    ekle(i + 1, i + n, neden, True, m.group(0))
+    return kayitlar
+
+
+def _pii_ham(satirlar):
+    """Kisisel e-posta adaylarini tek satir ve bolunmus pencerelerde bul."""
+    kayitlar, gorulen = [], set()
+
+    def ekle(bas, son):
+        if (bas, son) not in gorulen:
+            gorulen.add((bas, son))
+            kayitlar.append((bas, son))
+
+    for i, satir in enumerate(satirlar):
+        if any(not _eposta_guvenli(m.group(0))
+               for m in EPOSTA_KALIBI.finditer(satir)):
+            ekle(i + 1, i + 1)
+    for n in range(2, SATIR_PENCERESI + 1):
+        for i in range(0, len(satirlar) - n + 1):
+            parcalar = satirlar[i:i + n]
+            if any(not _eposta_guvenli(m.group(0))
+                   for x in parcalar for m in EPOSTA_KALIBI.finditer(x)):
+                continue
+            for m in EPOSTA_KALIBI.finditer("".join(parcalar)):
+                if not _eposta_guvenli(m.group(0)):
+                    ekle(i + 1, i + n)
+                    break
+    return kayitlar
+
+
+def _git_calistir(argumanlar, veri=None):
+    """Git komutunu calistir; rc!=0 veya zaman asimi fail-closed'dir."""
+    try:
+        r = subprocess.run(["git"] + argumanlar, cwd=str(KOK), input=veri,
+                           capture_output=True, timeout=300)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        raise RuntimeError("git calistirilamadi: %s" % str(e)[:160])
+    if r.returncode != 0:
+        hata = (r.stderr or b"").decode("utf-8", "replace").strip()[:180]
+        raise RuntimeError("git %s exit=%d%s" % (
+            " ".join(argumanlar), r.returncode, (": " + hata) if hata else ""))
+    return r.stdout
+
+
+def _gecmis_nesneleri():
+    """Tum ref'lerdeki nesneleri ve yol eslemelerini oku; hata = istisna."""
+    shallow = _git_calistir(["rev-parse", "--is-shallow-repository"])
+    if shallow.decode("utf-8", "replace").strip().lower() == "true":
+        raise RuntimeError("sig (shallow) klon: tum gecmis yerelde yok")
+
+    ham = _git_calistir(["rev-list", "--all", "--objects"])
+    if not ham.strip():
+        raise RuntimeError("ref/commit yok: taranacak git gecmisi bulunamadi")
+    sira, yollar = [], {}
+    for satir in ham.decode("utf-8", "replace").splitlines():
+        parca = satir.split(" ", 1)
+        sha = parca[0].strip()
+        if not sha:
+            continue
+        if sha not in yollar:
+            sira.append(sha)
+            yollar[sha] = []
+        if len(parca) == 2 and parca[1]:
+            yollar[sha].append(parca[1])
+    # rev-list tag nesnesini her zaman listelemez; tag mesajindaki e-posta da
+    # gecmisin parcasi oldugu icin refs/tags nesnelerini ayrica ekle.
+    for satir in _git_calistir(["for-each-ref", "--format=%(objectname)",
+                                "refs/tags"]).decode("utf-8", "replace").splitlines():
+        sha = satir.strip()
+        if sha and sha not in yollar:
+            sira.append(sha)
+            yollar[sha] = []
+
+    cevap = _git_calistir(["cat-file", "--batch"],
+                          ("\n".join(sira) + "\n").encode("utf-8"))
+    nesneler, konum = [], 0
+    for sha in sira:
+        nl = cevap.find(b"\n", konum)
+        if nl < 0:
+            raise RuntimeError("cat-file basligi eksik")
+        baslik = cevap[konum:nl]
+        konum = nl + 1
+        parca = baslik.split()
+        if len(parca) == 2 and parca[1] == b"missing":
+            raise RuntimeError("nesne okunamadi: %s" % sha[:12])
+        if len(parca) < 3:
+            raise RuntimeError("cat-file basligi gecersiz: %s" % sha[:12])
+        try:
+            boyut = int(parca[2])
+        except ValueError:
+            raise RuntimeError("cat-file boyutu gecersiz: %s" % sha[:12])
+        if boyut < 0 or konum + boyut > len(cevap):
+            raise RuntimeError("cat-file govdesi eksik: %s" % sha[:12])
+        icerik = cevap[konum:konum + boyut]
+        konum += boyut
+        if konum < len(cevap) and cevap[konum:konum + 1] == b"\n":
+            konum += 1
+        nesneler.append((sha, parca[1].decode("utf-8", "replace"), icerik,
+                         yollar.get(sha, [])))
+    if konum != len(cevap):
+        raise RuntimeError("cat-file ciktisinda artan veri var")
+    return nesneler
+
+
+def _ikili_mi(yollar, icerik):
+    if b"\x00" in icerik:
+        return True
+    if not yollar:
+        return False
+    return all(pathlib.PurePosixPath(y).suffix.lower() in v4.SKIP_BINARY_EXT
+               for y in yollar)
+
+
+def _gecmis_tara():
+    """Tum ref'lerdeki commit/blob/commit-ustverisi taramasini yurut."""
+    bulgular, atlanan = [], 0
+    fikstur_muaf = 0
+    commit_sayisi = blob_sayisi = 0
+
+    def ekle(kural, konum, tur, aciklama):
+        bulgular.append({"kural": kural, "siddet": "P0", "konum": konum,
+                         "tur": tur, "aciklama": aciklama})
+
+    try:
+        nesneler = _gecmis_nesneleri()
+        for sha, tur, icerik, yollar in nesneler:
+            if tur == "blob":
+                blob_sayisi += 1
+                if _ikili_mi(yollar, icerik):
+                    atlanan += 1
+                    bulgular.append({"kural": "SEC-04", "siddet": "BILGI",
+                                     "konum": (yollar[0] if yollar else "blob/" + sha[:12]),
+                                     "tur": "ikili nesne",
+                                     "aciklama": "ikili blob atlandi — icerik taranmadi"})
+                    continue
+                metin = icerik.decode("utf-8", "ignore")
+                satirlar = metin.splitlines()
+                for bas, son, neden, bolunmus, _es in _sir_ham(metin, satirlar):
+                    if _blob_muaf(yollar, satirlar, bas, son):
+                        fikstur_muaf += 1
+                        continue
+                    konum = "%s:%d%s" % (
+                        (yollar[0] if yollar else "blob/" + sha[:12]), bas,
+                        ("-%d" % son) if son > bas else "")
+                    ekle("SEC-02", konum, neden,
+                         "sir kalibi eslesti" + (" (satir bolunmus)" if bolunmus else ""))
+                for bas, son in _pii_ham(satirlar):
+                    konum = "%s:%d%s" % (
+                        (yollar[0] if yollar else "blob/" + sha[:12]), bas,
+                        ("-%d" % son) if son > bas else "")
+                    ekle("SEC-06", konum, "kisisel e-posta",
+                         "guvenli ornek/robot alani olmayan e-posta")
+            elif tur in ("commit", "tag"):
+                if tur == "commit":
+                    commit_sayisi += 1
+                metin = icerik.decode("utf-8", "ignore")
+                satirlar = metin.splitlines()
+                for bas, son, neden, bolunmus, _es in _sir_ham(metin, satirlar):
+                    konum = "%s/%s:%d%s" % (tur, sha[:12], bas,
+                                             ("-%d" % son) if son > bas else "")
+                    ekle("SEC-02", konum, neden,
+                         "commit ustverisinde sir kalibi" +
+                         (" (satir bolunmus)" if bolunmus else ""))
+                for bas, son in _pii_ham(satirlar):
+                    konum = "%s/%s:%d%s" % (tur, sha[:12], bas,
+                                             ("-%d" % son) if son > bas else "")
+                    ekle("SEC-06", konum, "kisisel e-posta",
+                         "commit ustverisinde guvenli olmayan e-posta")
+    except Exception as e:
+        print("FAIL SEC-07: git gecmisi taranamadi: %s" % str(e)[:240],
+              file=sys.stderr)
+        return 1
+
+    p0 = sum(1 for b in bulgular if b["siddet"] == "P0")
+    rapor = {
+        "sema": "SECRET-SCAN/v1", "kalip_kaynagi": v4_yol or "YOK",
+        "kismi_mod": False, "kalip_sayisi": len(v4.SECRET_PATTERNS),
+        "taranan_kapsam": "git-gecmis", "commit_sayisi": commit_sayisi,
+        "blob_sayisi": blob_sayisi, "atlanan_dosya": atlanan,
+        "fikstur_muafiyeti": fikstur_muaf, "p0": p0, "p1": 0,
+        "bulgular": bulgular,
+    }
+    if JSON_CIK:
+        print(json.dumps(rapor, ensure_ascii=False, indent=2))
+    else:
+        for b in bulgular:
+            print("%s %s %s: %s" % (b["siddet"], b["kural"], b["konum"],
+                                      b["aciklama"]))
+        print("SECRET-SCAN GECMIS %s — commit=%d blob=%d · P0=%d · "
+              "atlanan=%d · fikstur=%d" %
+              ("FAIL" if p0 else "PASS", commit_sayisi, blob_sayisi, p0,
+               atlanan, fikstur_muaf))
+    return 1 if p0 else 0
+
+
+if GECMIS:
+    if KISMI:
+        print("SECRET-SCAN GECMIS KISMI — kalip tabani yok; tam tarama yapilmadi",
+              file=sys.stderr)
+        sys.exit(3)
+    sys.exit(_gecmis_tara())
 
 
 # KISMI mod sabitleri — bir "kalip listesi" DEGILDIR, dosya bicimi imzalaridir.
@@ -332,6 +639,7 @@ for p in hedef_dosyalar():
         continue
 
     dokuman_env = bool(v4.DOC_ENV_RE.search(rel))
+    sir_konumlari = set()
     for kalip, neden in v4.SECRET_PATTERNS:
         for m in re.finditer(kalip, metin):       # D2: ilk eslesmede DURMA
             satir = metin[: m.start()].count("\n") + 1
@@ -340,6 +648,7 @@ for p in hedef_dosyalar():
             if (rel.replace("\\", "/"), _h) in FIKSTUR:
                 fikstur_muaf.append(konum)
                 continue
+            sir_konumlari.add((satir, neden))
             yer_tutucu = v4.looks_like_placeholder(m.group(0))
             if yer_tutucu or dokuman_env:
                 # OTOMATIK INDIRGEME YOK: gorunur kalir, insana birakilir
@@ -349,6 +658,45 @@ for p in hedef_dosyalar():
             else:
                 bulgular.append({"kural": "SEC-02", "siddet": "P0", "konum": konum, "tur": neden,
                                  "aciklama": "sir kalibi eslesti"})
+
+    # Bolunmus fikstur: iki/uc satira yayilmis bir sir, tek satirda eslesmez.
+    # Satirlar newline olmadan birlestirilir; yalniz TEK satirda eslesmeyen
+    # pencereler raporlanir ki ayni bulgu iki kez sayilmasin.
+    for n in range(2, SATIR_PENCERESI + 1):
+        for i in range(0, len(satirlar) - n + 1):
+            parcalar = satirlar[i:i + n]
+            for kalip, neden in v4.SECRET_PATTERNS:
+                kalip_re = re.compile(kalip)
+                if any(kalip_re.search(x) for x in parcalar):
+                    continue
+                m = kalip_re.search("".join(parcalar))
+                if not m:
+                    continue
+                bas, son = i + 1, i + n
+                if (bas, neden) in sir_konumlari:
+                    continue
+                if _satir_araligi_muaf(rel, satirlar, bas, son):
+                    fikstur_muaf.append(f"{rel}:{bas}-{son}")
+                    continue
+                konum = f"{rel}:{bas}-{son}"
+                yer_tutucu = v4.looks_like_placeholder(m.group(0))
+                if yer_tutucu or dokuman_env:
+                    bulgular.append({"kural": "SEC-03", "siddet": "P1", "konum": konum,
+                                     "tur": neden,
+                                     "aciklama": "satir bolunmus eslesme; yer tutucu/ belge "
+                                                 "ipucu var — insan karari gerekir"})
+                else:
+                    bulgular.append({"kural": "SEC-02", "siddet": "P0", "konum": konum,
+                                     "tur": neden,
+                                     "aciklama": "satir bolunmus sir kalibi eslesti"})
+
+    # Kisisel e-posta: guvenli ornek/robot alanlari disinda P0. Adresin kendisi
+    # rapora yazilmaz; yalniz konum ve kural gorunur.
+    for bas, son in _pii_ham(satirlar):
+        konum = f"{rel}:{bas}" + (f"-{son}" if son > bas else "")
+        bulgular.append({"kural": "SEC-06", "siddet": "P0", "konum": konum,
+                         "tur": "kisisel e-posta",
+                         "aciklama": "guvenli ornek/robot alani olmayan e-posta"})
 
 p0 = sum(1 for b in bulgular if b["siddet"] == "P0")
 p1 = sum(1 for b in bulgular if b["siddet"] == "P1")

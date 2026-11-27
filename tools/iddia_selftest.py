@@ -44,6 +44,17 @@ def _json_yaz(yol, veri):
     _yaz(yol, json.dumps(veri, ensure_ascii=False, indent=2) + "\n")
 
 
+def _defter_oku(kok):
+    return json.loads((kok / "tools" / "iddia_defteri.json").read_text(
+        encoding="utf-8"))
+
+
+def _kanit_yolu(kok, defter=None):
+    """Ham kanit yolunu defterdeki tek alandan coz."""
+    defter = defter or _defter_oku(kok)
+    return kok / defter["olcum_dosyasi"]
+
+
 def _ozet_yaz(kok, icerik=OZET):
     _yaz(kok / "docs" / "IDDIA-OZET.md", icerik)
 
@@ -140,7 +151,7 @@ def _kapsam_kok(gecici, ad, metin, istisna=None, dahil=None):
     defter["kapsam"] = {"dahil": dahil or ["README.md"],
                         "sayisal_istisna": istisna or []}
     _json_yaz(kok / "tools" / "iddia_defteri.json", defter)
-    _json_yaz(kok / "tools" / "iddia_olcum.json", _hizli_kanit())
+    _json_yaz(_kanit_yolu(kok, defter), _hizli_kanit())
     _sahte_agir(kok, "dogrula")
     _sahte_agir(kok, "mutasyon_bataryasi")
     return kok
@@ -152,8 +163,9 @@ def _hazirla(kok):
     _kapi_modulu(kok)
     _yaz(kok / "README.md", "HIZLI 7/7\nAGIR 3/3\n")
     _ozet_yaz(kok)
-    _json_yaz(kok / "tools" / "iddia_defteri.json", _defter(kok))
-    _json_yaz(kok / "tools" / "iddia_olcum.json", _hizli_kanit())
+    defter = _defter(kok)
+    _json_yaz(kok / "tools" / "iddia_defteri.json", defter)
+    _json_yaz(_kanit_yolu(kok, defter), _hizli_kanit())
     _sahte_agir(kok, "dogrula")
     _sahte_agir(kok, "mutasyon_bataryasi")
 
@@ -207,6 +219,63 @@ def main():
         bekle("ozet atlananlari ayri saydi",
               "atlandi=2" in cikti and "HIZLI — 1/1" in cikti, cikti)
 
+        temel = "HIZLI 7/7\nAGIR 3/3\n"
+
+        # --iz: tek kayit izi; diger satirlarin eksik kaniti bu izi kilitlemez.
+        r = _calistir(kok, "--iz", "IDD-01")
+        cikti = _cikti(r)
+        bekle("--iz tek kayit rc=0", r.returncode == 0, cikti)
+        for etiket in ("ATLAS — IDDIA IZI", "defter    :", "kaynak    :",
+                       "komut     :", "ham kanit :", "guncel    :",
+                       "HUKUM: PASS"):
+            bekle("--iz ciktisinda %s var" % etiket.strip(),
+                  etiket in cikti, cikti)
+        bekle("--iz kaynak satirini gosterdi", "README.md:1" in cikti, cikti)
+        bekle("--iz yalniz secilen kaydi gosterdi", "IDD-02" not in cikti, cikti)
+        bekle("--iz agir komutlari kosmadi",
+              not (kok / "tools" / "dogrula.marker").exists()
+              and not (kok / "tools" / "mutasyon_bataryasi.marker").exists(),
+              cikti)
+
+        r = _calistir(kok, "--iz=IDD-01")
+        bekle("--iz= formu rc=0", r.returncode == 0, _cikti(r))
+
+        r = _calistir(kok, "--iz", "IDD-99")
+        cikti = _cikti(r)
+        bekle("--iz bilinmeyen ID rc=2", r.returncode == 2, cikti)
+        bekle("--iz bilinmeyen ID adlandirildi", "IDD-99" in cikti, cikti)
+
+        kanit_yolu = _kanit_yolu(kok)
+        once = kanit_yolu.read_bytes()
+        r = _calistir(kok, "--iz", "IDD-01", "--yaz")
+        bekle("--iz --yaz rc=2", r.returncode == 2, _cikti(r))
+        bekle("--iz --yaz kaniti degistirmedi",
+              kanit_yolu.read_bytes() == once, _cikti(r))
+
+        # Bozuk ham kanit: komut guncel olsa da iz FAIL olmali.
+        iz_bozuk = _kapsam_kok(gecici, "iz-bozuk", temel)
+        bozuk_yolu = _kanit_yolu(iz_bozuk)
+        bozuk = json.loads(bozuk_yolu.read_text(encoding="utf-8"))
+        bozuk["olcumler"]["IDD-01"]["ham"] = "HIZLI 9/9"
+        _json_yaz(bozuk_yolu, bozuk)
+        r = _calistir(iz_bozuk, "--iz", "IDD-01")
+        cikti = _cikti(r)
+        bekle("--iz bozuk ham kanitta rc=1", r.returncode == 1, cikti)
+        bekle("--iz bozuk ham kaniti adlandirdi",
+              "HUKUM: FAIL" in cikti and "ham kanit" in cikti, cikti)
+
+        # Ham kanit yoksa komut kosmadan fail-closed olmali.
+        iz_yok = _kapsam_kok(gecici, "iz-yok", temel)
+        yok_yolu = _kanit_yolu(iz_yok)
+        yok = json.loads(yok_yolu.read_text(encoding="utf-8"))
+        yok["olcumler"].pop("IDD-01")
+        _json_yaz(yok_yolu, yok)
+        r = _calistir(iz_yok, "--iz", "IDD-01")
+        cikti = _cikti(r)
+        bekle("--iz eksik ham kanitta rc=2", r.returncode == 2, cikti)
+        bekle("--iz eksik ham kaniti adlandirdi",
+              "ham kanit yok" in cikti, cikti)
+
         # Tam kosu hala fail-closed: agir kanit eksikse rc=2, komut kosmaz.
         r = _calistir(kok)
         cikti = _cikti(r)
@@ -216,7 +285,7 @@ def main():
               and "IDD-03" in cikti, cikti)
 
         # Kanit tamamsa varsayilan kosu iki agir komutu da kosar.
-        _json_yaz(kok / "tools" / "iddia_olcum.json", _tam_kanit())
+        _json_yaz(_kanit_yolu(kok), _tam_kanit())
         r = _calistir(kok)
         cikti = _cikti(r)
         bekle("tam kosu tam kanitta rc=0", r.returncode == 0, cikti)
@@ -226,12 +295,21 @@ def main():
               cikti)
 
         # Kismi anlik goruntu tam kaniti silmemeli.
-        kanit_yolu = kok / "tools" / "iddia_olcum.json"
+        kanit_yolu = _kanit_yolu(kok)
         once = kanit_yolu.read_bytes()
         r = _calistir(kok, "--yaz", "--hizli")
         bekle("--yaz --hizli rc=2", r.returncode == 2, _cikti(r))
         bekle("--yaz --hizli kanit dosyasini degistirmedi",
               kanit_yolu.read_bytes() == once, _cikti(r))
+
+        # Basarili --yaz, kaniti defterdeki olcum_dosyasi alanina yazar.
+        r = _calistir(kok, "--yaz")
+        cikti = _cikti(r)
+        bekle("--yaz defterdeki kanit yolunu kullandi",
+              r.returncode == 0
+              and "HAM KANIT YAZILDI:" in cikti
+              and str(kanit_yolu.relative_to(kok)) in cikti
+              and kanit_yolu.is_file(), cikti)
 
         # Yalniz agir satir secilirse hizli kipte olculecek sey yoktur.
         for marker in ("dogrula.marker", "mutasyon_bataryasi.marker"):
@@ -245,7 +323,6 @@ def main():
               not (kok / "tools" / "dogrula.marker").exists(), cikti)
 
         # --- OLCUM DOSYASI: defter ham kanit yolunu tek basina tasir.
-        temel = "HIZLI 7/7\nAGIR 3/3\n"
         ozet_drift = _kapsam_kok(gecici, "ozet-drift", temel)
         _ozet_yaz(ozet_drift, OZET.replace("olculdu=3", "olculdu=2"))
         r = _calistir(ozet_drift, "--hizli")
@@ -283,6 +360,28 @@ def main():
         bekle("kapsamsiz iddia dosya:satir ve jeton basar",
               "README.md:3" in cikti and "'42'" in cikti, cikti)
         bekle("kapsamsiz iddia HUKUM KAPSAM BOZUK",
+              "HUKUM: KAPSAM BOZUK" in cikti, cikti)
+
+        # Sozlukte olmayan olcum adlari da varsayilan-redde yakalanir:
+        # "agents" / "phases" OLCUM_SOZCUK listesinde yok; yine de kirmizi.
+        agents = _kapsam_kok(gecici, "kapsam-agents",
+                             temel + "SISTEM 12 agents\n")
+        r = _calistir(agents, "--hizli")
+        cikti = _cikti(r)
+        bekle("sozluk disi 12 agents rc=2", r.returncode == 2, cikti)
+        bekle("12 agents jetonu ve satiri adlandirilir",
+              "README.md:3" in cikti and "'12'" in cikti, cikti)
+        bekle("12 agents HUKUM KAPSAM BOZUK",
+              "HUKUM: KAPSAM BOZUK" in cikti, cikti)
+
+        phases = _kapsam_kok(gecici, "kapsam-phases",
+                             temel + "AKIS 5 phases\n")
+        r = _calistir(phases, "--hizli")
+        cikti = _cikti(r)
+        bekle("sozluk disi 5 phases rc=2", r.returncode == 2, cikti)
+        bekle("5 phases jetonu ve satiri adlandirilir",
+              "README.md:3" in cikti and "'5'" in cikti, cikti)
+        bekle("5 phases HUKUM KAPSAM BOZUK",
               "HUKUM: KAPSAM BOZUK" in cikti, cikti)
 
         istisnali = _kapsam_kok(

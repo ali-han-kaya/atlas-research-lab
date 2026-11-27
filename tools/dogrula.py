@@ -377,6 +377,22 @@ def fikstur_muafiyeti():
     return rc == 0, son[:150], ([] if rc == 0 else satirlar[-12:])
 
 
+def yayinla_oztesti():
+    """Yayinla'nin fikstur muafiyeti ve public katman testini kosar.
+
+    Sayilan sekiz kaleme dahil degildir; fikstur muafiyeti gibi bir on
+    kosuldur. Bozuk manifest, tasinan fikstur satiri veya silinmeye calisilan
+    korunan belge varsa dogrula yesil donmez.
+    """
+    rc, cikti, _ = kos([sys.executable,
+                        os.path.join(KOK, 'tools',
+                                     'yayinla_selftest.py')])
+    satirlar = [s.strip() for s in cikti.splitlines() if s.strip()]
+    baslik = [s for s in satirlar if s.startswith('HUKUM:')]
+    son = (baslik[-1] if baslik else (satirlar[-1] if satirlar else '(bos cikti)'))
+    return rc == 0, son[:150], ([] if rc == 0 else satirlar[-12:])
+
+
 PAKET_MANIFEST = os.path.join(KOK, 'KOMUT_TOOLKIT_v4', 'ARACLAR',
                               'SHA256SUMS.txt')
 
@@ -1042,6 +1058,21 @@ def main():
                         'fikstur muafiyet testi FAIL')
         print()
         print('  HUKUM: FAIL — FIKSTUR MUAFIYETI (sessiz/P0/fail-closed)')
+        return 1
+    print()
+
+    yayinla_gecti, yayinla_ozet, yayinla_detay = yayinla_oztesti()
+    print('  %-24s %-7s %s' % ('yayinla oz-testi',
+                                'PASS' if yayinla_gecti else 'FAIL',
+                                yayinla_ozet))
+    for satir in yayinla_detay:
+        print('        | %s' % satir[:400])
+    if not yayinla_gecti:
+        if JSON:
+            _json_erken('ONKOSUL.YAYINLA', 'yayinla oz-testi', yayinla_ozet,
+                        'yayinla oz-testi FAIL')
+        print()
+        print('  HUKUM: FAIL — YAYINLA OZ-TESTI (fikstur/public katman)')
         return 1
     print()
 

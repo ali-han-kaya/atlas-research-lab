@@ -318,7 +318,7 @@ Two further limits, stated so they are not mistaken for coverage:
 
 | Command | Output |
 |---|---|
-| `make mutasyon` | `SONUC: 113/113 kural atesledi · 29/29 beklenen bulgu · taban temiz olmayan=0` |
+| `make mutasyon` | `SONUC: 117/117 kural atesledi · 29/29 beklenen bulgu · taban temiz olmayan=0` (+4 meta arac vakasi) |
 | `make kapsam` | `ratchet PASS (test=93/93, bosluk=0/0)` |
 | `make dogrula` | `kalem=8 · gecen=8 · kalan=0` |
 

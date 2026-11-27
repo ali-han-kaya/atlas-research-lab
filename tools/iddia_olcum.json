@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-27T13:59:17Z",
+  "zaman": "2026-11-27T19:15:00Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -29,7 +29,7 @@
         "--json"
       ],
       "rc": 0,
-      "ham": "OZ-TEST: 146/146 gecti · KANIT commit=733cd69 tree=b97d108",
+      "ham": "OZ-TEST: 146/146 gecti · KANIT commit=e8382f8 tree=0e18158",
       "deger": "146/146"
     },
     "IDD-04": {
@@ -38,8 +38,8 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 113/113 kural atesledi · 29/29 beklenen bulgu dogrulandi · taban temiz olmayan=0",
-      "deger": "113/113"
+      "ham": "SONUC: 117/117 kural atesledi · 29/29 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "deger": "117/117"
     },
     "IDD-05": {
       "komut": [
@@ -47,7 +47,7 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SONUC: 113/113 kural atesledi · 29/29 beklenen bulgu dogrulandi · taban temiz olmayan=0",
+      "ham": "SONUC: 117/117 kural atesledi · 29/29 beklenen bulgu dogrulandi · taban temiz olmayan=0",
       "deger": "29/29"
     },
     "IDD-06": {
@@ -67,7 +67,7 @@
         "--json"
       ],
       "rc": 0,
-      "ham": "bildirilen=118",
+      "ham": "toplam_dogrulanan=118",
       "deger": "118"
     },
     "IDD-08": {
@@ -147,8 +147,8 @@
         "--json"
       ],
       "rc": 0,
-      "ham": "dogrula H2 PASS 87",
-      "deger": "87"
+      "ham": "dogrula H2 PASS 90",
+      "deger": "90"
     },
     "IDD-16": {
       "komut": [
@@ -290,8 +290,8 @@
         "import sys; sys.path.insert(0, 'tools'); import mutasyon_bataryasi as m; print('VAKA: %d' % len(m.vakalar()))"
       ],
       "rc": 0,
-      "ham": "VAKA: 142",
-      "deger": "142"
+      "ham": "VAKA: 146",
+      "deger": "146"
     },
     "IDD-40": {
       "komut": [
@@ -336,7 +336,7 @@
         "--kontrol"
       ],
       "rc": 0,
-      "ham": "MODEL KIMLIK: PASS — 1 emekli kimlik · aday=1934 dosya · taranan=305 dosya · incelenmedi=0 dosya (onayli=0 · onaysiz=0) · gorulmedi=1629 dosya (5 gerekce) · onay=1 kayit · aktif=0",
+      "ham": "MODEL KIMLIK: PASS — 1 emekli kimlik · aday=310 dosya · taranan=310 dosya · incelenmedi=0 dosya (onayli=0 · onaysiz=0) · gorulmedi=0 dosya (0 gerekce) · onay=1 kayit · aktif=0",
       "deger": "0/0/0/1"
     },
     "IDD-48": {
@@ -365,8 +365,8 @@
         "tools/mutasyon_bataryasi.py"
       ],
       "rc": 0,
-      "ham": "SOZLESME: 105/105 HATA (rc=1) · 8/8 TERMINAL (rc=2) · 29/29 BEKLENEN_BULGU",
-      "deger": "105/105"
+      "ham": "SOZLESME: 109/109 HATA (rc=1) · 8/8 TERMINAL (rc=2) · 29/29 BEKLENEN_BULGU",
+      "deger": "109/109"
     },
     "IDD-53": {
       "komut": [
@@ -395,8 +395,8 @@
         "--json"
       ],
       "rc": 0,
-      "ham": "bildirilen=118",
-      "deger": "118"
+      "ham": "bildirilen=120",
+      "deger": "120"
     },
     "IDD-56": {
       "komut": [
@@ -405,7 +405,7 @@
         "--json"
       ],
       "rc": 0,
-      "ham": "{\"capa\": 10, \"guncel\": \"142/113/29\", \"guncel_ayrinti\": {\"atesleyen\": 113, \"bulgu\": 29, \"hata\": 105, \"terminal\": 8, \"vaka\": 142}, \"iddia\": 5, \"schema\": \"MUTASYON-ANLATIM/v1\", \"tarihsel\": \"109/91/18\", \"tarihsel_ayrinti\": {\"atesleyen\": 91, \"bulgu\": 18, \"hata\": 84, \"terminal\": 7, \"vaka\": 109}}",
+      "ham": "{\"capa\": 10, \"guncel\": \"146/117/29\", \"guncel_ayrinti\": {\"atesleyen\": 117, \"bulgu\": 29, \"hata\": 109, \"terminal\": 8, \"vaka\": 146}, \"iddia\": 5, \"schema\": \"MUTASYON-ANLATIM/v1\", \"tarihsel\": \"109/91/18\", \"tarihsel_ayrinti\": {\"atesleyen\": 91, \"bulgu\": 18, \"hata\": 84, \"terminal\": 7, \"vaka\": 109}}",
       "deger": "109/91/18"
     }
   }

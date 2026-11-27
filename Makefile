@@ -1,8 +1,10 @@
 PY ?= python3
 # pip-audit yalniz gelistirme aracidir; varsa yerel sanal ortam kullanilir.
 PY_AUDIT ?= $(shell test -x .venv/bin/python && echo .venv/bin/python || echo $(PY))
+# `make iddia IDD=IDD-48` tek iddia izi; ARGS ile tam iddia bayraklari gecirilebilir.
+IDDIA_ARGS ?= $(if $(IDD),--iz $(IDD),)
 
-.PHONY: dogrula dogrula-ci bagimlilik-kontrol kanit kanit-yaz proof dokuman-sozlesmesi kanit-dogrula kanit-paket-dogrula kanit-paket-selftest makbuz-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon mutasyon-anlatim mutasyon-anlatim-selftest mutasyon-kisa sir-mutasyon oztest-mutasyon oztest-mutasyon-yaz oztest demo demo-selftest temiz-teslim taze-klon fresh-clone kapsam kapsam-yaz kapsam-selftest kapi-sozlesme-test model-kimlik kamu-lint kamu-selftest kamu-arama kamu-arama-selftest yayin-kapisi katalog-kontrol bedava-kontrol katalog-selftest ci-katalog-denetim katalog-kayit-dogrula katalog-kayit-selftest iddia iddia-hizli iddia-ag iddia-yaz iddia-selftest guvenlik kur yayinla yardim
+.PHONY: dogrula dogrula-ci bagimlilik-kontrol kanit kanit-yaz proof dokuman-sozlesmesi kanit-dogrula kanit-paket-dogrula kanit-paket-selftest makbuz-dogrula kanit-negatif olgu-negatif durum-yaz durum-kontrol durum-selftest mutasyon mutasyon-anlatim mutasyon-anlatim-selftest mutasyon-kisa sir-mutasyon sir-gecmis sir-gecmis-selftest oztest-mutasyon oztest-mutasyon-yaz oztest demo demo-selftest temiz-teslim taze-klon fresh-clone kapsam kapsam-yaz kapsam-selftest kapi-sozlesme-test model-kimlik kamu-lint kamu-selftest kamu-arama kamu-arama-selftest yayin-kapisi yayinla-selftest katalog-kontrol katalog-yenile bedava-kontrol katalog-selftest ci-katalog-denetim katalog-kayit-dogrula katalog-kayit-selftest iddia iddia-iz iddia-hizli iddia-ag iddia-yaz iddia-selftest iddia-entegrasyon-selftest guvenlik kur yayinla yardim
 
 yardim:
 	@echo "make dogrula   tek giris: bagimlilik on kontrolu + temiz teslim on kontrolu + hijyen + sozdizimi + sir taramasi + kapi oz-testi + uc oz-test (ATLAS_LAB varsa parite)"
@@ -25,6 +27,8 @@ yardim:
 	@echo "make mutasyon-anlatim-selftest  anlatim kapisinin pozitif + negatif vakalari"
 	@echo "make mutasyon-kisa  6 vakalik hizli duman seti (HATA/TERMINAL/BEKLENEN_BULGU)"
 	@echo "make sir-mutasyon  dort sir kapisi kenarinin FAIL->PASS mutasyon kanitini dogrula"
+	@echo "make sir-gecmis  tum git ref'lerini ve satir bolunmus sirlari fail-closed tara"
+	@echo "make sir-gecmis-selftest  gecmis/satir bolunme/sig klon negatif testleri"
 	@echo "make oztest-mutasyon  hedef kapi bozulunca ilgili oz-testin PASS->FAIL oldugunu olc; bos govdeli testleri tara"
 	@echo "make demo      ince sarmalayici: ./demo (kod ayrimi icin ./demo; make her hatada 2 doner)"
 	@echo "make demo-selftest  demo 0/1/2 sozlesmesini gecici fiksturlerle sinar"
@@ -41,17 +45,21 @@ yardim:
 	@echo "make kamu-arama  repo kapsamli GitHub kod aramasi; yalniz incomplete_results=false 0'lari kanit"
 	@echo "make kamu-arama-selftest  kod arama sozlesmesini agsiz sina"
 	@echo "make yayin-kapisi  yayin manifesti + makale/sir/ozel yol kapisi (dogrula on kosulu)"
+	@echo "make yayinla-selftest  yayinla fikstur muafiyeti ve public katman korumasinin negatif testleri"
 	@echo "make katalog-kontrol  canli models.dev kapisi: allowlist + bedava profili + append-only kanit (KAYIT_ARGS ile yol)"
+	@echo "make katalog-yenile  canli katalogdan aday uret + dogrula; cp YAPMAZ (1-4)"
 	@echo "make bedava-kontrol  yalniz bedava profili: 10 rol + canli models.dev; elle, CI'ya baglanmaz"
-	@echo "make katalog-selftest  katalog kapisi, uretici ve kayit-dogrulayici oz-testleri (ag yok; dogrula on kosulu)"
+	@echo "make katalog-selftest  katalog kapisi, uretici, yenileme ve kayit-dogrulayici oz-testleri (ag yok; dogrula on kosulu)"
 	@echo "make ci-katalog-denetim  CI workflowlarinda canli katalog/models.dev adimi yok; offline katalog selftesti dogrula-ci icinde"
 	@echo "make katalog-kayit-dogrula  JSONL kanit kaydi: sema + sira + commit/tree/hash + append-only"
-	@echo "make iddia    README/docs sayisal iddialarini ureten komutla yeniden olc (ag haric)"
+	@echo "make iddia    README/docs sayisal iddialarini ureten komutla yeniden olc (ag haric); make iddia IDD=IDD-48 tek iz"
+	@echo "make iddia-iz IDD=IDD-48  tek iddiayi defter -> komut -> ham kanit -> hukum izle"
 	@echo "make iddia-hizli  dogrula/mutasyon gibi pahali satirlari atla; atlananlar PASS degil"
 	@echo "make iddia-ag  ag gerektiren iddialari da olc"
 	@echo "make iddia-yaz  ham kanit anlik goruntusunu yenile (tools/iddia_olcum.json)"
 	@echo "make dokuman-sozlesmesi  README/docs make hedefleri ve CI job adlari gercek Makefile/workflow ile uyusuyor mu"
 	@echo "make iddia-selftest  hizli kip ve atlama sozlesmesinin negatif testleri"
+	@echo "make iddia-entegrasyon-selftest  gercek README/docs kopyasinda make iddia'nin kapsam ihlalini dosya:satir ve jetonla yakaladigini sinar"
 	@echo "make guvenlik  pip-audit: bilinen CVE taramasi (requirements-dev.txt)"
 	@echo "make kur       commit/push korumasini bu klonda etkinlestir"
 	@echo "make oztest    yalniz oz-test paketleri"
@@ -59,10 +67,10 @@ yardim:
 	@echo "make yayinla UYGULA=1  aktarimi yaz"
 
 # Eksik Python modulu kapilardan once, tek ve net bir kurulum hukmune
-dogrula: bagimlilik-kontrol katalog-selftest ci-katalog-denetim
+dogrula: bagimlilik-kontrol katalog-selftest ci-katalog-denetim sir-gecmis
 	@$(PY) tools/dogrula.py
 
-dogrula-ci: bagimlilik-kontrol katalog-selftest ci-katalog-denetim dokuman-sozlesmesi
+dogrula-ci: bagimlilik-kontrol katalog-selftest ci-katalog-denetim dokuman-sozlesmesi sir-gecmis
 	@$(PY) tools/dogrula.py --ci
 
 # Katalog oz-testlerinden de once kosar; eksik modul varsa kapilar baslamaz.
@@ -129,6 +137,12 @@ mutasyon-kisa:
 sir-mutasyon:
 	@$(PY) tools/sir_kapisi_mutasyon.py --kontrol
 
+sir-gecmis:
+	@$(PY) KOD_SABLONLAR/scripts/secret_scan.py --git-gecmis
+
+sir-gecmis-selftest:
+	@$(PY) tools/sir_gecmis_selftest.py
+
 oztest-mutasyon:
 	@$(PY) tools/mutasyon_bataryasi.py --katalog-tutarlilik-oztest
 	@$(PY) tools/oztest_mutasyon.py --kontrol
@@ -191,6 +205,12 @@ KAYIT_ARGS ?= --kayit docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl
 katalog-kontrol:
 	@$(PY) tools/katalog_kontrol.py $(KAYIT_ARGS)
 
+# 1-4. adimlar tek komutta: indir, kimlikleri cikar, adayi uret, ayni anlik
+# goruntuyule dogrula. Hedef katalogu DEGISTIRMEZ; cp insan incelemesinden
+# sonra ayrica yapilir.
+katalog-yenile:
+	@$(PY) tools/katalog_yenile.py
+
 # Canli models.dev ister; bu yuzden bilerek CI'ya baglanmaz. Yalniz profil
 # sozlesmesini (10 rol, tek kimlik, cost 0, reasoning/tool_call true) olcer.
 bedava-kontrol:
@@ -199,6 +219,7 @@ bedava-kontrol:
 katalog-selftest:
 	@$(PY) tools/katalog_kontrol_selftest.py
 	@$(PY) tools/model_katalog_uret_selftest.py
+	@$(PY) tools/katalog_yenile_selftest.py
 	@$(PY) tools/katalog_kayit_dogrula_selftest.py
 
 ci-katalog-denetim:
@@ -213,7 +234,12 @@ katalog-kayit-dogrula:
 	@$(PY) tools/katalog_kayit_dogrula.py
 
 iddia:
-	@$(PY) tools/iddia.py
+	@$(PY) tools/iddia.py $(IDDIA_ARGS)
+
+# GNU make uzun secenekleri recipe'ye gecirmez; tek iz icin IDD= kullanilir.
+iddia-iz:
+	@test -n "$(IDD)" || { echo "HATA: IDD=IDD-48 gerekli"; exit 2; }
+	@$(PY) tools/iddia.py --iz "$(IDD)"
 
 dokuman-sozlesmesi:
 	@$(PY) tools/iddia.py --dokuman
@@ -229,12 +255,24 @@ iddia-yaz:
 
 iddia-selftest:
 	@$(PY) tools/iddia_selftest.py
+	@$(PY) tools/iddia_entegrasyon_selftest.py
+
+iddia-entegrasyon-selftest:
+	@$(PY) tools/iddia_entegrasyon_selftest.py
+
+
+
 
 # Sir fiksturu muafiyetinin regresyon testi: bilinen satir sessiz, satir/dosya
 # degisimi P0, bozuk manifest fail-closed. `make dogrula` bunu on kosul olarak
 # kosar; CI ayrica dogrudan cagrir.
 fikstur-muafiyet-test:
 	@$(PY) tools/fikstur_muafiyet_selftest.py
+
+# Yayinla'nin fikstur muafiyeti ve public katman korumasinin regresyon testi.
+# `make dogrula` bunu on kosul olarak kosar; CI ayrica dogrudan cagirir.
+yayinla-selftest:
+	@$(PY) tools/yayinla_selftest.py
 
 # Gecici kopyada IDD-04'u bozup gercek kapinin kirmizi yandigini olcer.
 # Push/PR'da KOSMAZ; yalniz elle (ve workflow_dispatch ile) cagrilir.

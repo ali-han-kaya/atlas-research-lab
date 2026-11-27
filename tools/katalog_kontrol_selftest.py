@@ -13,7 +13,8 @@ NEDEN VAR
   Adim 4 yerleştirme akisi `docs/README.md` icindeki bash blogundan birebir
   okunur ve gecici bir kokte kosar: eksik aday, kontrol hatasi, fark yoklugu,
   okunamayan diff ve onaysiz/yanlis onay hedef dosyayi degistirmez; yalniz acik
-  `e` onayi kopyalar.
+  `e` onayi kopyalar. Yalniz `_kaynak` tarihi degisen diff, onay `e` olsa
+  bile otomatik reddedilir; bu ayri bir negatif vakayla kilitlenir.
 
 KULLANIM
   python3 tools/katalog_kontrol_selftest.py
@@ -218,14 +219,16 @@ def _adim4_betigi_ve_yollar(kok, gecici):
 
 
 def _adim4_vaka(ad, aday_icerik, kontrol_rc, girdi, beklenen_rc,
-                kopya_beklenir, diff_rc=None):
+                kopya_beklenir, diff_rc=None, eski_icerik=None,
+                beklenen_iz=None):
     """Belgelenen Adim 4 betigini gercek bash ile gecici kokte kos."""
     with tempfile.TemporaryDirectory(prefix='adim4_') as gecici:
         kok = Path(gecici)
         (kok / 'tools').mkdir()
         (kok / 'islem').mkdir()
         betik, aday, hedef = _adim4_betigi_ve_yollar(KOK, kok)
-        eski = ('{"openrouter": {"models": {"nvidia/old": '
+        eski = (eski_icerik if eski_icerik is not None else
+                '{"openrouter": {"models": {"nvidia/old": '
                 '{"reasoning": true, "tool_call": true}}}}\n')
         hedef.write_text(eski, encoding='utf-8')
         if aday_icerik is not None:
@@ -267,6 +270,9 @@ def _adim4_vaka(ad, aday_icerik, kontrol_rc, girdi, beklenen_rc,
         if r.returncode != beklenen_rc:
             return False, 'rc=%d (beklenen %d) · %s' % (
                 r.returncode, beklenen_rc, cikti.strip()[:180])
+        if beklenen_iz is not None and beklenen_iz not in cikti:
+            return False, 'beklenen iz yok (%s) · %s' % (
+                beklenen_iz, cikti.strip()[:180])
         if kopya_beklenir:
             if hedef_son != aday_icerik:
                 return False, 'kopya olusmadi veya icerik farkli · %s' % (
@@ -305,6 +311,25 @@ def adim4_vakalari():
         except Exception as e:  # noqa: BLE001 - test kosucusu hatayi raporlar
             ok, ayrinti = False, 'ISTISNA: %s' % e
         sonuc.append((ad, ok, ayrinti))
+
+    # Yalnız `_kaynak` tarihi değişen aday, onay `e` olsa bile kopyalanmaz.
+    kaynak_eski = (
+        '{\n'
+        ' "_aciklama": "Sabit model katalogu.",\n'
+        ' "_kaynak": "models.dev semasi; yalniz depoda gecen model '
+        'kimlikleri, 2026-11-19",\n'
+        ' "openrouter": {"models": {"nvidia/old": '
+        '{"reasoning": true, "tool_call": true}}}\n'
+        '}\n')
+    kaynak_yeni = kaynak_eski.replace('2026-11-19', '2026-11-27')
+    try:
+        ok, ayrinti = _adim4_vaka(
+            'adim4 yalniz kaynak tarihi', kaynak_yeni, 0, 'e\n', 1, False,
+            None, kaynak_eski,
+            'HATA: yalniz _kaynak tarihi degisti')
+    except Exception as e:  # noqa: BLE001 - test kosucusu hatayi raporlar
+        ok, ayrinti = False, 'ISTISNA: %s' % e
+    sonuc.append(('adim4 yalniz kaynak tarihi', ok, ayrinti))
     return sonuc
 
 

@@ -69,7 +69,7 @@ def vaka_dosya(icerik, beklenen_rc, iz, sizinti=None):
         shutil.rmtree(tmp, ignore_errors=True)
 
 
-def vaka_hook(icerik, beklenen_basarili, iz=None):
+def vaka_hook(icerik, beklenen_basarili, iz=None, iddia_beklenir=False):
     """Gercek git commit: hook devrede mi?"""
     tmp = Path(tempfile.mkdtemp(prefix='sir_hook_'))
     try:
@@ -83,6 +83,12 @@ def vaka_hook(icerik, beklenen_basarili, iz=None):
              '{"schema":"ATLAS-YAYIN/v1","izinli":["deneme.md"],'
              '"yasak_yollar":["projeler/"],'
              '"yasak_uzantilar":[".pdf",".docx"]}\n')
+        # Makefile + tools/iddia.py: pre-commit'in `make iddia-hizli` adimini
+        # gercekten cagirdigini marker ile olc. Fiksturde tam defter yok;
+        # hizli kapinin sozlesmesi iddia_selftest.py'de olculur.
+        _yaz(depo / 'tools' / 'iddia.py', '# fikstur\n')
+        _yaz(depo / 'Makefile',
+             'iddia-hizli:\n\t@echo FAKE-IDDIA-HIZLI >> iddia.marker\n')
         for ad in ('pre-commit', 'pre-push'):
             _yaz(depo / '.githooks' / ad,
                  (KOK / '.githooks' / ad).read_text(encoding='utf-8'))
@@ -105,6 +111,10 @@ def vaka_hook(icerik, beklenen_basarili, iz=None):
         if basarili != beklenen_basarili:
             return False, 'commit rc=%d (beklenen basarili=%s)' % (
                 r.returncode, beklenen_basarili)
+        if iddia_beklenir and not (depo / 'iddia.marker').is_file():
+            return False, 'iddia-hizli cagrilmadi'
+        if not iddia_beklenir and (depo / 'iddia.marker').is_file():
+            return False, 'iddia-hizli beklenmedik sekilde cagrildi'
         if iz and iz not in cikti:
             return False, 'iz yok (%s)' % iz
         return True, 'commit rc=%d · %s' % (r.returncode, iz or 'yer tutucu gecti')
@@ -362,7 +372,8 @@ def main():
         ('yer tutucu sessiz', lambda: vaka_dosya(YER, 0, None)),
         ('temiz dosya sessiz', lambda: vaka_dosya(TEMIZ, 0, None)),
         ('hook canli commit engeller', lambda: vaka_hook(CANLI, False, 'canli-dsn')),
-        ('hook yer tutucuyu gecirir', lambda: vaka_hook(YER, True)),
+        ('hook yer tutucuyu gecirir',
+         lambda: vaka_hook(YER, True, iddia_beklenir=True)),
         ('push eski siri uyariyla gecirir',
          lambda: vaka_push(False, True,
                            'SIR-KAPISI UYARI: eski gecmis 1 commit · 1 desen',

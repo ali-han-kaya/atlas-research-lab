@@ -922,6 +922,32 @@ def _git_kur(d):
         subprocess.run(komut, cwd=str(d), capture_output=True, text=True, timeout=120)
 
 
+def _meta_kanit_hazirla(k):
+    """Meta vaka: kanit.py'nin gercek commit/agac fiksturu.
+
+    `kanit_negatif.py` gercek bir git deposu ister. Kopya deposunda `.git`
+    tasinmadigi icin once burada kucuk bir taban kurulur; attestation taban
+    commit'inden uretilir ve ayri bir commit'e eklenir. Boylece temiz taban
+    `kanit_dogrula` PASS verir; `kanit_negatif.py` KANIT-00..06'yi kosabilir.
+    """
+    att = k / 'attestation.json'
+    if att.exists():
+        att.unlink()
+    _git_komut(k, 'init', '-q')
+    _git_komut(k, 'add', '-A')
+    _git_komut(k, 'commit', '-qm', 'META kanit tabani')
+    r = subprocess.run(
+        [sys.executable, str(k / 'tools' / 'kanit.py'), '--paketsiz',
+         '--cikti', 'attestation.json'],
+        cwd=str(k), capture_output=True, text=True, timeout=300)
+    if r.returncode != 0:
+        cikti = (r.stdout or '') + (r.stderr or '')
+        raise RuntimeError('META kanit attestation uretilemedi (rc=%d): %s'
+                           % (r.returncode, cikti.strip()[-500:]))
+    _git_komut(k, 'add', '-f', 'attestation.json')
+    _git_komut(k, 'commit', '-qm', 'META kanit attestation')
+
+
 def _reck_hazirla(k):
     """RECK-01/02/03/04/06: KFAZ0/1/2 makine bloklari + temiz kucuk git deposu."""
     kosu = k / 'sandbox_reck' / '_KOSU'
@@ -1341,6 +1367,39 @@ def _mk_aktif_sayac_sil(k):
         k, 'tools/model_kimlik.py',
         "            '(%d gerekce) · onay=%d kayit · aktif=0'\n",
         "            '(%d gerekce) · onay=%d kayit'\n")
+
+
+# --- meta araclar: test edilen aracin kendi negatif testi kirmizi olmali ----
+def _meta_iddia_kapsam(k):
+    """Tek ihlal: sayisal kapsam eksigi artik kirmizi degil."""
+    return degistir(
+        k, 'tools/iddia.py',
+        "    if kapsam_denetimi['eksikler']:\n",
+        "    if False and kapsam_denetimi['eksikler']:\n")
+
+
+def _meta_kanit_paket(k):
+    """Tek ihlal: yabanci paket hedefi sahiplik denetimi olmadan kabul edilir."""
+    return degistir(
+        k, 'tools/kanit.py',
+        "    if not coz.exists():\n        return coz\n",
+        "    if True:  # MUTANT: paket sahipligi denetlenmedi\n        return coz\n")
+
+
+def _meta_durum_canli(k):
+    """Tek ihlal: --kontrol canli testleri yeniden kosmaz."""
+    return degistir(
+        k, 'tools/durum.py',
+        "        canli = uret(canli=True, kok=kok)\n",
+        "        canli = beklenen  # MUTANT: canli kontrol kosulmadi\n")
+
+
+def _meta_kapsam_ratchet(k):
+    """Tek ihlal: ratchet butun kapsam kaybini sessizce yutar."""
+    return degistir(
+        k, 'tools/kapsam.py',
+        "    return yeni, geri, test_eksik, bosluk_fazla\n",
+        "    return [], [], 0, 0  # MUTANT: ratchet ihlalleri yutuldu\n")
 
 
 def taban_ve_bulgu(kok, kapi, argumanlar, mutasyon, iz, cwd=None, env=None,
@@ -2098,6 +2157,27 @@ def vakalar():
         ('MODELKIM-AKTIF-SAYAC', 'ATLAS', 'PASS raporu aktif sayacini tasir',
          'tools/model_kimlik.py', lambda k: ['--oztest'],
          _mk_aktif_sayac_sil, 'FAIL — rapor', {'kontrol': True}),
+        # --- meta araclar: tools/ iddia, kanit, durum, kapsam ----------------
+        # Aracin kendi negatif testi temiz tabanda PASS, aracin tek bir
+        # guvenlik dalini bozan mutasyonda FAIL vermek zorundadir. Bu vakalar
+        # kapi kurali degildir; kapsam tablosunda ayri "META" bolumunde durur.
+        ('META-IDDIA-KAPSAM', 'META', 'sayisal iddia kapsami varsayilan-red',
+         'tools/iddia_selftest.py', lambda k: [],
+         _meta_iddia_kapsam, 'IDDIA OZ-TEST: FAIL',
+         {'meta': 'iddia', 'hedef': 'tools/iddia.py'}),
+        ('META-KANIT-PAKET', 'META', 'kanit paketi sahipligi',
+         'tools/kanit_negatif.py', lambda k: [],
+         _meta_kanit_paket, 'KANIT NEGATIF: FAIL',
+         {'meta': 'kanit', 'hedef': 'tools/kanit.py',
+          'kur': _meta_kanit_hazirla}),
+        ('META-DURUM-CANLI', 'META', 'durum canli kontrolu',
+         'tools/durum_selftest.py', lambda k: [],
+         _meta_durum_canli, 'DURUM NEGATIF TEST: FAIL',
+         {'meta': 'durum', 'hedef': 'tools/durum.py'}),
+        ('META-KAPSAM-RATCHET', 'META', 'kapsam ratchet ihlali',
+         'tools/kapsam.py', lambda k: ['--oztest'],
+         _meta_kapsam_ratchet, 'KAPSAM RATCHET OZTEST: test kaybi yakalanmadi',
+         {'meta': 'kapsam', 'hedef': 'tools/kapsam.py'}),
         # --- kapsam disi kalan uygulanabilir kurallar: sentetik fikstur ------
         # dep_audit: DEP-03/04/06 P1'dir; rc=0 oldugu icin beklenen-bulgu.
         ('DEP-03', 'KOD', 'sabitlenmemis surum P1',

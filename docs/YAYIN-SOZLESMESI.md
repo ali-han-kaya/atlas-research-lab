@@ -80,6 +80,10 @@ durur. `git commit --no-verify` ile bu kapı atlansa bile H1 çalışma ağacın
 CI ise push edilen ağaçta aynı ihlali yakalar. `.gitignore` aynı kapsamı ayrıca
 ignore eder; fakat ignore edilmiş bir dosya H1 tarafından görülmeye devam eder.
 
+Depo kökünde `Makefile` ve `tools/iddia.py` varsa ve `make` komutu
+bulunuyorsa hook ardından `make iddia-hizli` çalıştırır. Bu adım yalnız hızlı iddia satırlarını ölçer;
+`dogrula`/`mutasyon` satırlarını `ATLANDI` olarak basar ve PASS saymaz. Tam `make iddia`, CI’daki ayrı `iddia-tam` işinde haftalık/elle koşar; hızlı koşu onun yerine geçmez.
+
 ### Tek komut
 
 ```bash

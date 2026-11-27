@@ -86,6 +86,13 @@ make bedava-kontrol                  # yalniz bedava profili; CI'ya baglanmaz
 - **Canlı ölçüm CI dışındadır.** `make katalog-kontrol` ağ gerektirir; elle
   veya yerel zamanlanmış bir işle çalıştırılır. CI yalnız çevrimdışı
   `make katalog-selftest` testini `make dogrula-ci` üzerinden koşar.
+- **Kayıt yazımı ayrı bir adımdır.** Kayıt yalnız `--kayit` verilen ölçümde
+  oluşur; izlenen defterin standart yazım yolu `make katalog-kontrol`tür ve
+  hedef varsayılan olarak `KAYIT_ARGS=--kayit
+  docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` geçirir. Haftalık kanarya doğrudan
+  `python3 tools/katalog_kontrol.py` çalıştırdığı ve `--kayit` vermediği için
+  deftere satır eklemez; `--kayit` olmadan doğrudan çağrı da yazmaz. `--kayit
+  <yol>` ayrı dosyaya yazar.
 - Ölçüm **on rolün tamamını** kapsar: `profiller.bedava` altındaki her `kod-*`
   anahtarı canlı kayda çözülür ve rol rol basılır. Rol sayısı 10 değilse kapı
   `ROL_SAYISI` hatasıyla kırmızıdır.
@@ -105,7 +112,7 @@ make bedava-kontrol                  # yalniz bedava profili; CI'ya baglanmaz
 
 ### 3.2 Kayıt alanları
 
-Her ölçüm kaydı şunları taşır; kayıt **append-only**dir, eski satır silinmez:
+Deftere yazılan her ölçüm kaydı şunları taşır; kayıt **append-only**dir, eski satır silinmez:
 
 - tarih (UTC), `kaynak` (`ci`/`yerel`), varsa `github_run_id`,
 - `commit`, `tree`, `tree_sha256` — `make kanit` ile aynı ağaç özeti,
@@ -125,12 +132,11 @@ dosyalarla eşleşmez. `make katalog-kayit-dogrula` bu dosyanın şemasını, sa
 sırasını, her satırın commit/tree/tree_sha256 ve tanım SHA-256'larını ve Git
 geçmişindeki append-only zinciri denetler; çalışma ağacı HEAD'den farklıysa ya
 da bir satır sonradan değiştirilmişse **FAIL** verir. CI bu adımı tam geçmişle
-(`fetch-depth: 0`) koşar. CI aynı şemayı `$RUNNER_TEMP/bedava-katalog.jsonl` altına
-yazar, `$GITHUB_STEP_SUMMARY`'ye basar ve `bedava-katalog-kaniti` artifact'ı
-olarak yükler. Depodaki append-only kayda bu artifact'ın JSON satırı eklenir;
-böylece depo kaydı CI koşusunun kendi commit/tree/hash'lerini taşır. CI belirteci salt-okunur olduğu için satırı bot commit etmez; depoya girişi ayrı
-bir kanıt commit'idir ve o commit attestation commit'iyle birlikte push edilir;
-kanıt zinciri bu çift için yeniden üretilir.
+(`fetch-depth: 0`) koşar. Canlı ölçüm CI dışında olduğu için CI bu deftere satır
+eklemez; CI yalnız mevcut defteri doğrular. Depoya giriş, yerel/elle
+`make katalog-kontrol` ile yazılan satırın ayrı bir kanıt commit'iyle push
+edilmesidir; CI belirteci salt-okunur olduğu için bot satır commit etmez. Kanıt
+zinciri bu çift için yeniden üretilir.
 
 Yerel allowlist (`tools/model_katalog.json`) canlı kataloğun kopyası değildir;
 yalnız aktif hatlarda geçen kimlikleri taşır. MOD-1/MOD-2 kapıları bu sabit
@@ -314,10 +320,11 @@ Aynı ölçümde canlı kayıt (`https://models.dev/api.json`,
 Bu tablo 21.11.2026'da **elle** alınmış tarihsel kayıttır; sonraki ölçüm yeni
 satır olarak eklenir, eskisi değiştirilmez. Bu tarihten sonra ölçüm
 **sürekli değildir**: canlı ölçüm ağ gerektirdiği için CI dışında, elle/yerel
-koşulur; on rolü canlı models.dev'den yeniden ölçer; sonuç
-`docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydına commit/tree/tree_sha256 ve tanım
-SHA-256'larıyla eklenir. Tek günlük anlık görüntüye bağımlılık yoktur; ağ
-okunamazsa kayıt `OLCULMEDI` olur; PASS sayılmaz.
+koşulur; on rolü canlı models.dev'den yeniden ölçer. Sonuç, `--kayit` verilen
+`make katalog-kontrol` ile `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydına
+commit/tree/tree_sha256 ve tanım SHA-256'larıyla eklenir; kanarya `--kayit`
+vermediği için bu deftere yazmaz. Tek günlük anlık görüntüye bağımlılık yoktur;
+ağ okunamazsa kayıt `OLCULMEDI` olur; PASS sayılmaz.
 
 ### 6.1 Otomatik kayıt sözleşmesi
 
@@ -428,7 +435,7 @@ nedenle `KOTA-01` doğrudan HTTPS API ile ölçüldü. Sürücü ve kota dışı
 | `KOD_SABLONLAR/routing.profiles.json` | `profiller.bedava` — on rolün model eşlemesi |
 | `KOD_SABLONLAR/opencode.json` | birincil sürücü ve `_model_notu` |
 | `tools/model_katalog.json` | hermetik allowlist (MOD-1/MOD-2) |
-| `KOD_SABLONLAR/scripts/katalog_kontrol.py` | canlı models.dev kapısı: allowlist + on rol + aile (`name`/`family`/`nvidia`) + append-only kayıt (ağ); **tek kaynak** |
+| `KOD_SABLONLAR/scripts/katalog_kontrol.py` | canlı models.dev kapısı: allowlist + on rol + aile (`name`/`family`/`nvidia`) + append-only kayıt (`--kayit`; ağ); **tek kaynak** |
 | `tools/katalog_kontrol.py` | lab uyumluluk girişi; yalnız kanonik KOD betiğini çalıştırır (`make katalog-kontrol` ve eski belgeler) |
 | `KOD_SABLONLAR/.github/workflows/katalog-kontrol.yml` | hedef projeye `kur.sh` ile kurulan CI şablonu |
 | `tools/model_kimlik.py` | emekli kimlik taraması, `--oztest`, `--envanter` |
@@ -436,7 +443,7 @@ nedenle `KOTA-01` doğrudan HTTPS API ile ölçüldü. Sürücü ve kota dışı
 | `make katalog-kontrol` | canlı ölçüm + `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydı |
 | `make bedava-kontrol` | yalnız bedava profili: on rol, tek kimlik, canlı cost/reasoning/tool_call; CI'ya bağlanmaz |
 | bu dosya §6.2 | `PROFIL-01` / `SURUCU-01` / `KOTA-01` ayrı sınır ölçümü |
-| `.github/workflows/dogrula.yml` | `dogrula` ve `iddia` işleri; canlı katalog işi yok |
+| `.github/workflows/dogrula.yml` | `dogrula`, `iddia` ve `iddia-tam` işleri; canlı katalog işi yok |
 | `make model-kimlik` | aktif atıf denetimi (fail-closed ön koşul) |
 | `make mutasyon` | korumaların geri alınamazlığı; güncel vaka sayısı komut çıktısında |
 | `make dogrula` | sekiz kalemlik ana kapı (MOD-1/MOD-2 dahil) |

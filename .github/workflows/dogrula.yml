@@ -56,6 +56,13 @@ jobs:
           test -z "$(git status --porcelain --untracked-files=all)"
           python3 KOD_SABLONLAR/scripts/secret_scan.py --tum
 
+      # Git gecmisi ayri bir saldiri yuzeyidir: calisma agacindan silinen bir
+      # sir eski commit/blob'larda kalabilir. Bolunmus satir ve kisisel e-posta
+      # negatiflerini once ayri adimda olc; gercek gecmis taramasi dogrula-ci'nin
+      # `sir-gecmis` on kosulu olarak ayni akista fail-closed kosar.
+      - name: Git gecmisi sır/kişisel veri öz-testi
+        run: make sir-gecmis-selftest
+
       # Runner kipi: aynı kurallar, ayrı muafiyet yok. Sekiz kalemin tamamı
       # koşar; T1 (OLG-1) bu ağacın attestation.json kanıtıyla çalışır ve
       # çıktısında kendi commit/tree çıpasını basar
@@ -71,6 +78,11 @@ jobs:
       # manifest fail-closed.
       - name: Sir fiksturu muafiyeti (sessiz / P0 / fail-closed)
         run: make fikstur-muafiyet-test
+
+      # Yayinla'nin fikstur muafiyeti ve public katman korumasi: bozuk manifest
+      # fail-closed, tasinan fikstur satiri bulgu, korunan belgeler silinmiyor.
+      - name: Yayinla fikstur muafiyeti ve public katman testi
+        run: make yayinla-selftest
 
       # Katalog kapisinin negatif dallari ayri bir CI adimi olarak gorunur:
       # on rol fiksturu, maliyet/limit/kimlik/deprecated/ag ve OLCULMEDI.
@@ -124,8 +136,8 @@ jobs:
         run: make mutasyon
 
       # Mutasyon sayilari kamu anlatimina elle yazilir. Kapi 109/91/18 ve
-      # guncel 141/113/28 sayilarini vaka katalogundan turetir; README, docs
-      # ve iddia defteri ayrisirsa ya da tek-sozlesmeli (141/141) ifade
+      # guncel 146/117/29 sayilarini vaka katalogundan turetir; README, docs
+      # ve iddia defteri ayrisirsa ya da tek-sozlesmeli (146/146) ifade
       # girerse kirmizi olur. Bataryadan SONRA kosar: kayit taze olsun.
       - name: Mutasyon anlatimi katalogla tutarli mi
         run: make mutasyon-anlatim
@@ -248,6 +260,7 @@ jobs:
 
   iddia:
     name: iddia defteri
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -274,8 +287,83 @@ jobs:
       - name: Dokuman sozlesmesi (make + CI job)
         run: make dokuman-sozlesmesi
 
-      - name: make iddia
-        run: make iddia
+      # Push/PR'da pahali dogrula/mutasyon satirlarini kosmadan hizli kapiyi
+      # calistir. ATLANDI satirlari PASS sayilmaz; tam kosu ayri `iddia-tam`
+      # isinde haftalik/elle kosar. Sonuc, yesil CI ile "kismi kosu" arasindaki
+      # farki gizlememek icin is ozetine de yazilir.
+      - name: make iddia-hizli
+        shell: bash
+        run: |
+          set +e
+          log="${RUNNER_TEMP:-/tmp}/iddia-hizli.log"
+          make iddia-hizli 2>&1 | tee "$log"
+          rc=${PIPESTATUS[0]}
+          set -e
+          atlandi=$(grep -c '^  ATLANDI' "$log" || true)
+          if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+            {
+              echo "## iddia defteri — hızlı"
+              echo
+              echo "- **Komut:** make iddia-hizli (push/PR)"
+              echo "- **rc:** ${rc}"
+              echo "- **Atlanan ağır satır:** ${atlandi} (ATLANDI; PASS değil)"
+              echo
+              echo '```text'
+              grep -E '^(sayisal kapsam:|  olculdu=|  HUKUM:|  NOT:|  FAIL)' "$log" || true
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit "$rc"
+
+  # Haftalik/elle tam kosu: agir satirlar dahil butun defteri olcer.
+  # Push/PR'daki hizli isin yerine gecmez; ayri is olarak gorunur.
+  iddia-tam:
+    name: iddia defteri (tam)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bagimliliklar
+        run: python3 -m pip install --quiet -r requirements-dev.txt
+
+      - name: Iddia hizli kip sozlesmesi
+        run: make iddia-selftest
+
+      - name: Dokuman sozlesmesi (make + CI job)
+        run: make dokuman-sozlesmesi
+
+      # Haftalik/elle tam kosu. Hizli kosudan farki ve PASS olmayan
+      # BEYAN/OLCULMEDI/AG satirlari is ozetinde ayrica gorunur.
+      - name: make iddia (tam)
+        shell: bash
+        run: |
+          set +e
+          log="${RUNNER_TEMP:-/tmp}/iddia-tam.log"
+          make iddia 2>&1 | tee "$log"
+          rc=${PIPESTATUS[0]}
+          set -e
+          if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+            {
+              echo "## iddia defteri — tam"
+              echo
+              echo "- **Komut:** make iddia (haftalık/elle)"
+              echo "- **rc:** ${rc}"
+              echo "- **Atlanan:** yok (tam koşu)"
+              echo
+              echo '```text'
+              grep -E '^(sayisal kapsam:|  olculdu=|  HUKUM:|  NOT:|  FAIL)' "$log" || true
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit "$rc"
 
   # Haftalik public parite: public klonda ozel lab yoktur; ayni agac
   # kendisiyle karsilastirilir. `yayinla.py` kuru kosusu sifir fark

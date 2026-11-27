@@ -122,10 +122,34 @@ KAPSAM_KUMELERI = {
     'dep_audit': 'KOD_SABLONLAR/scripts/dep_audit.py',
 }
 
+# Meta araclar kural envanterine girmez (KURAL kimlikleri yoktur), ama
+# mutasyon bataryasinda kendi negatif testleriyle temsil edilmelidir. Bu
+# sozluk iki yonlu fail-closed'dir: her hedefin en az bir META vakasi olmali;
+# bir META vakasinin hedefi buradaki dosyayla ayni olmali. Meta vakalari
+# test edilen kural sayacina ve kapsam ratchet'ina eklenmez.
+META_ARACLARI = {
+    'iddia': 'tools/iddia.py',
+    'kanit': 'tools/kanit.py',
+    'durum': 'tools/durum.py',
+    'kapsam': 'tools/kapsam.py',
+}
+
 # Yeni bir kural gercekten test edilemiyorsa gerekcesi buraya ACIKCA yazilir:
 #   ('KOD_SABLONLAR/scripts/ornek.py', 'ORN-07'): 'olculmus gerekce',
 # Anahtar betik+yeni kuraldir; betik adi tek basina yeni kurala gerekce vermez.
-KAPSAM_ISTISNA = {}
+KAPSAM_ISTISNA = {
+    ('KOD_SABLONLAR/scripts/secret_scan.py', 'SEC-06'):
+        'Olculdu: tools/sir_gecmis_selftest.py vaka_bolunmus_eposta + '
+        'vaka_eski_kisisel_eposta ile PII kuralini uctan uca atesler; '
+        'mutasyon bataryasinin kopyasi .git tasimadigi icin ayni Git '
+        'senaryosu orada kurulmuyor. Gelecekte ayni fixture bataryaya '
+        'tasinirsa bu istisna kaldirilmalidir.',
+    ('KOD_SABLONLAR/scripts/secret_scan.py', 'SEC-07'):
+        'Olculdu: tools/sir_gecmis_selftest.py vaka_shallow + vaka_git_yok '
+        'ile eksik/bozuk Git gecmisini fail-closed atesler; batarya kopyasi '
+        '.git tasimadigi icin bu senaryo dogrudan bataryada kurulamiyor. '
+        'Gercek kapi make dogrula on kosulu olarak kosar.',
+}
 
 
 # Baska kurala/karara yapilan atiflar envantere girmez. Her satir
@@ -1581,6 +1605,61 @@ def kume_kanitlari(satirlar):
     return ayrinti, ozet
 
 
+def _meta_opsiyon(vaka):
+    """META vakasinin opsiyon sozlugunu dondur (etiketli/eski kayitlar dahil)."""
+    if len(vaka) > 7 and isinstance(vaka[7], dict):
+        return vaka[7]
+    if len(vaka) > 8 and isinstance(vaka[8], dict):
+        return vaka[8]
+    return {}
+
+
+def meta_arac_denetle(vakalar=None):
+    """Meta araclarin her biri icin negatif test vakasi var mi? Fail-closed."""
+    vakalar = vakalar if vakalar is not None else batarya()
+    gorulen = {}
+    for vaka in vakalar:
+        ops = _meta_opsiyon(vaka)
+        ad = ops.get('meta')
+        if not ad:
+            continue
+        if ad not in META_ARACLARI:
+            raise SystemExit('META KAPSAM: bilinmeyen arac %r · %s'
+                             % (ad, vaka[0]))
+        hedef = ops.get('hedef')
+        if hedef != META_ARACLARI[ad]:
+            raise SystemExit(
+                'META KAPSAM: %s hedefi %r, beklenen %r'
+                % (vaka[0], hedef, META_ARACLARI[ad]))
+        if not (KOK / hedef).is_file():
+            raise SystemExit('META KAPSAM: hedef yok: %s' % hedef)
+        gorulen.setdefault(ad, []).append(vaka)
+    eksik = sorted(set(META_ARACLARI) - set(gorulen))
+    if eksik:
+        raise SystemExit('META KAPSAM: vakasiz arac: %s' % ', '.join(eksik))
+    return gorulen
+
+
+def meta_arac_tablosu(vakalar):
+    """tools/ altindaki meta araclarin mutasyon kapsamini listeler."""
+    gruplar = meta_arac_denetle(vakalar)
+    out = ['| Arac | Hedef | Vaka | Test kapisi | Sozlesme |',
+           '|---|---|---|---|---|']
+    for ad in sorted(gruplar):
+        for vaka in gruplar[ad]:
+            out.append('| %s | `%s` | %s | `%s` | %s |'
+                       % (ad, META_ARACLARI[ad], vaka[0],
+                          vaka[3], vaka_sozlesmesi_adi(vaka)))
+    out.append('| **Toplam** | **%d araç** | **%d vaka** | | |'
+               % (len(gruplar), sum(len(v) for v in gruplar.values())))
+    return out
+
+
+def vaka_sozlesmesi_adi(vaka):
+    """Kapsam tablosu icin sozlesme adi; batarya modulunu tek yerden kullanir."""
+    return batarya_modu().vaka_sozlesmesi(vaka)[0]
+
+
 def kume_tablosu(ayrinti, ozet):
     """Kume ozeti ve her kuralin vakasini tek yerde gosterir."""
     out = ['| Kume | Canli kural | TEST EDILDI | BEKLENEN BULGU | OLU KIMLIK |',
@@ -1731,6 +1810,14 @@ def markdown():
             'turetilir; canli kuralin mutasyon vakasi yoksa `make kapsam` '
             'fail-closed durur.', '']
     out += kume_tablosu(kume_ayrinti, kume_ozet)
+    out += ['', '## Meta arac mutasyonlari (tools/)', '',
+            'Bu araçlar kural kimliği taşımadıkları için kural envanterine ve '
+            'test edilen kural sayacına girmez. Yine de kendi negatif testleri '
+            'mutasyon bataryasında koşar: temiz taban PASS, aracın tek bir '
+            'güvenlik dalı bozulunca test FAIL vermek zorundadır. Bir hedefin '
+            'vakası silinirse veya hedefi değişirse `make kapsam` fail-closed '
+            'durur.', '']
+    out += meta_arac_tablosu(vakalar)
     out += ['', 'Ayrintili P1/P0 gerekcesi risk tablosunda; kodda hic '
             'basilmayan kimliklerin gerekcesi Envanter disi tablosundadir.']
     if bosluk:
@@ -1975,10 +2062,14 @@ def main(argv):
         print('KUME KAPSAM: PASS — %d kume · %d canli kural · %d olu kimlik'
               % (len(KAPSAM_KUMELERI), sum(o[1] for o in kume_ozet),
                  sum(o[4] for o in kume_ozet)))
+        meta = meta_arac_denetle(batarya())
+        print('META KAPSAM: PASS — %d arac · %d vaka'
+              % (len(meta), sum(len(v) for v in meta.values())))
         print('KAPSAM OZTEST: PASS — kimlik ve kaynak fail-closed · sozlesme ayrik · '
               'ratchet iki yonlu · FRZ-08 >100 · DEC-027 referans · '
-              'olu kimlik %d gerekceli · kimliksiz %d siniflandirilmis'
-              % (len(OLU_KIMLIK), len(KIMLIKSIZ_SINIFLAR)))
+              'olu kimlik %d gerekceli · kimliksiz %d siniflandirilmis · '
+              'meta %d arac'
+              % (len(OLU_KIMLIK), len(KIMLIKSIZ_SINIFLAR), len(meta)))
         return 0
     if '--kontrol' in argv or '--yaz' in argv:
         kod_ici_oztest()
@@ -1995,6 +2086,9 @@ def main(argv):
         kimliksiz_dogrula()
         kume_kanitlari(olc()[0])
         print('KUME KAPSAM: PASS — TSL/API/DEP canli kurallarin tamami vakali')
+        meta = meta_arac_denetle(batarya())
+        print('META KAPSAM: PASS — %d arac · %d vaka'
+              % (len(meta), sum(len(v) for v in meta.values())))
         print('OLU KIMLIK: PASS — %d envanter disi kimlik · hepsi olculen ve '
               'gerekceli · %d dis referans' % (len(OLU_KIMLIK), len(REFERANS)))
         print('KIMLIKSIZ KAPSAM: PASS — %d betik uc siniftan biriyle '

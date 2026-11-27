@@ -80,7 +80,7 @@ kopyasında çalışır ve iki sözleşmeden birini ölçer:
    mutasyon sonrası çıktıda görünmelidir.
 
 Temiz taban veya sözleşme eksikse vaka `ATESLEMEDI` / `TABAN_KIRIK` olarak raporlanır
-ve betik `rc=1` ile çıkar. Güncel katalog **142 vaka = 113 ateşleyen (105 HATA + 8 TERMINAL)
+ve betik `rc=1` ile çıkar. Güncel katalog **146 vaka = 117 ateşleyen (109 HATA + 8 TERMINAL)
 + 29 beklenen-bulgu**; 118 doğrulanan kuralın 93'ü ateşleyen vakayla, 25'i yalnız
 beklenen-bulgu sözleşmesiyle kapsanır. Ölçülen kurallar ve katmanları çıktıda ada basmadır.
 
@@ -146,9 +146,12 @@ CI yalnız çevrimdışı `make katalog-selftest` testini `make dogrula-ci` üze
 çalıştırır. Canlı kapı yalnız allowlist'i değil, `profiller.bedava` altındaki on
 rolü de canlı kayıtla karşılaştırır. Eksik/çelişkili kayıt veya bedava koşulu
 ihlali `rc=1`, ölçülemeyen ağ/JSON `rc=2` ve **`OLCULMEDI`**dır; PASS sayılmaz.
-Her koşu commit/tree/tree_sha256 ve tanım SHA-256'larıyla append-only
-`docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydına eklenir; istenirse `--kayit <yol>`
-ile ayrı dosyaya yazılır. Kanonik kod `KOD_SABLONLAR/scripts/katalog_kontrol.py`;
+Append-only `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` defterine satır, `--kayit`
+verilen ölçümde yazılır; standart yol `make katalog-kontrol`tür ve hedef
+varsayılan olarak `KAYIT_ARGS=--kayit docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl`
+geçirir. Haftalık kanarya doğrudan `python3 tools/katalog_kontrol.py`
+çalıştırdığı ve `--kayit` vermediği için deftere satır eklemez; `--kayit`
+olmadan doğrudan çağrı da yazmaz. `--kayit <yol>` ayrı dosyaya yazar. Kanonik kod `KOD_SABLONLAR/scripts/katalog_kontrol.py`;
 labdaki `tools/katalog_kontrol.py` yalnız ince uyumluluk girişidir (GNU make
 tarif hatasını 2'ye çevirir).
 
@@ -365,12 +368,28 @@ aşağıdaki `git grep` yol listesine de eklenir.
 
 Aynı canlı kapı, required olmayan haftalık bir iş olarak da koşar:
 `.github/workflows/katalog-canary.yml` (Pazartesi 04:00 UTC) yalnız
-`python3 tools/katalog_kontrol.py` çalıştırır; PR/push hükmüne girmez ve
+`python3 tools/katalog_kontrol.py` çalıştırır; `--kayit` vermediği için deftere
+satır eklemez. PR/push hükmüne girmez ve
 `make dogrula` ile mevcut CI hükmünü değiştirmez. `rc=1` kimlik/uyuşmazlık,
 `rc=2` ölçülemedi demektir; ikisi de PASS sayılmaz ve iş, aynı başlıklı açık
 issue'yu güncelleyerek (yoksa açarak) kırmızı kalır. Kanarya yalnız haber
-verir; allowlist'i kendisi yenilemez — yenileme yine aşağıdaki elle adımlarla
-ve diff incelemesiyle yapılır. Elle tetikleme: `workflow_dispatch`.
+verir; allowlist'i kendisi yenilemez — yenileme aşağıdaki tek komutla veya elle
+adımlarla ve diff incelemesiyle yapılır. Elle tetikleme: `workflow_dispatch`.
+
+### Tek komutla aday üret (1-4)
+
+```bash
+make katalog-yenile
+```
+
+Canlı kataloğu indirir, yalnız aktif kaynaklardan kimlikleri çıkarır, adayı
+üretir ve adayı aynı anlık görüntüyle doğrular. **`cp` yapmaz:** aday ve diff
+yollarını basar, `tools/model_katalog.json` değişmez. Ağ/JSON, kimlik çıkarma,
+üretim, kontrol veya diff denetimlerinden biri başarısızsa hiçbir yerleştirme
+yapılmaz. Yalnız `_kaynak` tarihi değişen aday incelemeye sunulmadan reddedilir.
+Yerleştirme yine 4. adımdaki diff incelemesi ve açık onayla yapılır. Kanonik
+çıkış kodu için `python3 tools/katalog_yenile.py`; GNU make, hedefin hatasını
+2'ye çevirir.
 
 ### 1. Canlı kataloğu indir
 
@@ -436,6 +455,23 @@ esac
 test -s /tmp/model_katalog.diff
 grep -q '^[+-][^+-]' /tmp/model_katalog.diff
 
+# Yalnız _kaynak tarihi değişen fark anlamsızdır: inceleme onayına sunulmadan
+# reddedilir. `e` yazmak bu kapıyı açamaz.
+degisen=$(grep -cE '^[+-][^+-]' /tmp/model_katalog.diff || true)
+kaynak=$(grep -cE '^[+-][[:space:]]*"_kaynak"[[:space:]]*:' /tmp/model_katalog.diff || true)
+if [ "$degisen" -eq 2 ] && [ "$kaynak" -eq 2 ]; then
+  eski_kaynak=$(grep -m1 -E '^-[[:space:]]*"_kaynak"[[:space:]]*:' /tmp/model_katalog.diff || true)
+  yeni_kaynak=$(grep -m1 -E '^\+[[:space:]]*"_kaynak"[[:space:]]*:' /tmp/model_katalog.diff || true)
+  eski_govde=$(printf '%s\n' "$eski_kaynak" \
+    | sed -E 's/^-[[:space:]]*"_kaynak"[[:space:]]*:[[:space:]]*"//; s/",?[[:space:]]*$//; s/,[[:space:]]*[0-9]{4}-[0-9]{2}-[0-9]{2}$//')
+  yeni_govde=$(printf '%s\n' "$yeni_kaynak" \
+    | sed -E 's/^\+[[:space:]]*"_kaynak"[[:space:]]*:[[:space:]]*"//; s/",?[[:space:]]*$//; s/,[[:space:]]*[0-9]{4}-[0-9]{2}-[0-9]{2}$//')
+  if [ "$eski_govde" = "$yeni_govde" ]; then
+    echo 'HATA: yalniz _kaynak tarihi degisti; anlamsiz yenileme reddedildi'
+    exit 1
+  fi
+fi
+
 # İNCELEME KAPISI: diff'i açın. Yalnız beklenen model değişikliği varsa `e`
 # yazın; boş veya başka cevap cp'yi çalıştırmaz.
 read -r -p 'Diff beklenen model degisikligi mi? [e/H] ' onay
@@ -446,8 +482,10 @@ cp /tmp/model_katalog.json tools/model_katalog.json
 Bu akışın fail-closed davranışı `make katalog-selftest` içinde geçici
 fikstürlerle koşar: eksik aday, kontrol hatası, fark yokluğu, okunamayan diff
 ve onaysız/yanlış onay hedef dosyayı değiştirmez; yalnız açık `e` onayı
-kopyalar. Test, yukarıdaki bash bloğunu `docs/README.md`den birebir okur; belge
-ile davranış ayrışırsa kırmızı olur.
+kopyalar. Yalnız `_kaynak` tarihi değişen diff, inceleme sorusuna gelmeden
+otomatik reddedilir (`HATA: yalniz _kaynak tarihi degisti...`); `e` yazmak bu
+reddi aşamaz. Test, yukarıdaki bash bloğunu `docs/README.md`den birebir okur;
+belge ile davranış ayrışırsa kırmızı olur.
 
 Kontrol `rc=0` vermeden, diff 1 dışında kod döndürmeden veya inceleme onayı
 olmadan `cp` yapmayın. Diff yalnız beklenen model değişikliğini göstermiyorsa
@@ -557,6 +595,46 @@ Aktarımın iki mekanik kuralı vardır ve ikisi de ölçülebilir:
 2. **Ürün yasağı.** Planda `.pdf`, `.docx`, `.tex`, `.zip`, `.bundle` gibi üretilmiş
    ürün/arşiv uzantısı görünürse aktarım **hiç yazmadan** çıkar.
 
+### Public katmanı koruması
+
+`tools/yayinla.py`, bu deponun kendi public katmanını aktarımın dışında tutar.
+`KORUNAN` kümesindeki yollar `fazlalik()` tarafından `SILINECEK` sayılmaz;
+kaynak laboratuvarın planına da dahil edilmezler:
+
+- Kök: `README.md`, `SECURITY.md`, `LICENSE`, `Makefile`, `.gitignore`.
+- `docs/` altında: `docs/README.md`, `docs/DURUM.md`, `docs/IDDIA-OZET.md`,
+  `docs/ATLAS-KISA-TUR.md`, `docs/YAYIN-SOZLESMESI.md`,
+  `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl`, `docs/EN/ARCHITECTURE.md`,
+  `docs/EN/QUICKSTART.md`, `docs/assets/demo-red.gif`.
+- `KORUNAN_KOKLER`: `.github/` ve `tools/`.
+
+`docs/` klasörünün tamamı korunmaz: yalnız yukarıdaki yollar korunur; listede
+olmayan bir `docs/` dosyası planda yoksa `SILINECEK` olarak görünür.
+
+### Sır taraması ve fikstür kaydı
+
+Sır taraması, satırları dosya adına göre değil `tools/secret_fixtures.json`
+içindeki **dosya + tam satır SHA-256** kayıtlarına göre muaf tutar. Her kayıt
+`dosya`, `satir_sha256`, `gerekce` ve `kanit` taşır; `satir` alanı yalnız insan
+denetimi içindir, eşleşme anahtarı değildir.
+
+Tarama sırasında her satırın kendi SHA-256'sı hesaplanır. Yalnız aynı `dosya`
+yolu ve aynı satır hash'i birlikte manifestte varsa satır sessiz kalır. Satır
+metni değişirse hash tutmaz; değer başka bir dosyaya taşınırsa dosya yolu
+tutmaz. İki durumda da bulgu üretilir; dosya, uzantı veya dizin adına göre toplu
+muafiyet yoktur. Ayrıca `AKIAXXX` veya `AKIA1234567890` içeren satırlar desen
+taramasından önce atlanır; bu, manifest kaydından bağımsız dar yer tutucu
+kuralıdır.
+
+Manifest yalnız bu araç deposundaki `tools/secret_fixtures.json` yolundan
+okunur; `--lab` ile taranan ağacın kendi manifesti kullanılmaz. Kayıtların
+`dosya` alanı `docs/OLCUM-02-CANLI-KOSU.md` ve
+`KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_selftest.py` ile sınırlıdır; bu iki dosya
+dışındaki kayıt, zorunlu alan eksikliği, geçersiz satır hash'i veya yinelenen
+kayıt fail-closed hatadır. Manifest bozuk veya beklenen üst düzey biçimde değilse
+tarama hata verir ve `--uygula` hiçbir şey yazmaz; manifest yoksa hiçbir kayıt
+yoktur, dolayısıyla hiçbir satır muaf sayılmaz.
+
 ## İddia defteri ve kapsam sınırı
 
 `make iddia`, bu depodaki public sayısal iddiaları `tools/iddia_defteri.json`
@@ -573,20 +651,21 @@ tablolar (`MUTASYON_KAPSAM.md`, `GUVENLIK.md`) kapsam dışıdır: bunlar yenide
 koşulacak iddia değil, ölçümün o günkü kaydıdır. Kapsam dışı dosyalar yeşil
 sayılmaz; defterin `kapsam.haric` bloğunda gerekçeleriyle listelenir.
 
-Kapsam kapısı bu sınırı makineye bağlar: üç public dokümandaki sayısal ölçüm
-iddiaları — oranlar, ölçüm adı taşıyan sayılar ve üretilmiş sayaçlar — defterdeki
-bir alıntının içinde değilse `kapsam.sayisal_istisna` içindeki dar ve gerekçeli
-bir istisnayla eşleşmek zorundadır. Eşleşmeyen iddia `dosya:satır` ve jetonla,
-gerekçesiz, ölü veya çok geniş istisna da kendi adıyla kırmızı olur. Kimlik,
-sürüm, tarih ve çıkış kodu değerleri bu tanımın dışındadır; kapsamın kendisi
-böylece her koşuda denetlenir.
+Kapsam kapısı bu sınırı makineye bağlar: public dokümanlardaki her sayısal jeton
+varsayılan olarak iddiadır. Yalnız kimlik, sürüm, tarih/saat, çıkış kodu, saf
+tablo hücresi, sıra/aralık ve komut seçeneği yapısal olarak muaftır; sözlükte
+ölçüm adı bulunmayan sayısal ifadeler de kırmızıdır. Jeton defterdeki bir
+alıntının içinde değilse `kapsam.sayisal_istisna` içindeki dar ve gerekçeli bir
+istisnayla eşleşmek zorundadır. Eşleşmeyen jeton `dosya:satır` ve değeriyle,
+gerekçesiz, ölü veya çok geniş istisna da kendi adıyla kırmızı olur. Kapsamın
+kendisi böylece her koşuda denetlenir.
 
 Defterin üst düzeyindeki `olcum_dosyasi` alanı ham kanıt dosyasını adlandırır
 (`tools/iddia_olcum.json`); `make iddia` bu yolun tam olarak o dosya olduğunu
 doğrular. Defterin durum dağılımı [`IDDIA-OZET.md`](IDDIA-OZET.md) içindeki
 makine okunur özetle her koşuda karşılaştırılır; ayrışma `rc=2` ile kırmızıdır.
 Tek bir satırın defter → komut → ham kanıt izi kök README'deki *Tek bir
-iddiayı elle izlemek* bölümündedir.
+iddiayı izlemek* bölümündedir.
 
 `make iddia-hizli` yalnız hızlı satırları ölçer; `dogrula` ve `mutasyon`
 komutlarını koşmaz. Atlanan satırlar `ATLANDI` olarak basılır ve PASS sayılmaz;

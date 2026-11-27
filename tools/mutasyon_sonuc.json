@@ -1,10 +1,10 @@
 {
  "schema": "MUTASYON-SONUC/v1",
- "kaynak_sha256": "ea82f2e69f2958881038c2af6833b3e40faaf3c079a6138f188e6615c0fcb662",
+ "kaynak_sha256": "4820603e06d6bd7e0dce5d58b6ba0d6a833a18c9627ca16e5e22e38732cbd677",
  "kisa": false,
  "sayilar": {
-  "vaka": 142,
-  "gecti": 142,
+  "vaka": 146,
+  "gecti": 146,
   "kalan": 0
  },
  "vakalar": [
@@ -1495,6 +1495,54 @@
    "durum": "GECTI",
    "gecti": true,
    "ayrinti": "taban rc=0 · FAIL iz yok · mutasyon rc=1 · FAIL iz=FAIL — rapor (yalniz) · kontrol rc=0 · FAIL iz yok"
+  },
+  {
+   "id": "META-IDDIA-KAPSAM",
+   "katman": "META",
+   "aciklama": "sayisal iddia kapsami varsayilan-red",
+   "kural": "",
+   "kural_onek": "",
+   "betik": "tools/iddia_selftest.py",
+   "sozlesme": "HATA",
+   "durum": "GECTI",
+   "gecti": true,
+   "ayrinti": "taban rc=0 · FAIL iz yok · mutasyon rc=1 · FAIL iz=IDDIA OZ-TEST: FAIL (yalniz) · kontrol rc=0 · FAIL iz yok"
+  },
+  {
+   "id": "META-KANIT-PAKET",
+   "katman": "META",
+   "aciklama": "kanit paketi sahipligi",
+   "kural": "",
+   "kural_onek": "",
+   "betik": "tools/kanit_negatif.py",
+   "sozlesme": "HATA",
+   "durum": "GECTI",
+   "gecti": true,
+   "ayrinti": "taban rc=0 · FAIL iz yok · mutasyon rc=1 · FAIL iz=KANIT NEGATIF: FAIL (yalniz) · kontrol rc=0 · FAIL iz yok"
+  },
+  {
+   "id": "META-DURUM-CANLI",
+   "katman": "META",
+   "aciklama": "durum canli kontrolu",
+   "kural": "",
+   "kural_onek": "",
+   "betik": "tools/durum_selftest.py",
+   "sozlesme": "HATA",
+   "durum": "GECTI",
+   "gecti": true,
+   "ayrinti": "taban rc=0 · FAIL iz yok · mutasyon rc=1 · FAIL iz=DURUM NEGATIF TEST: FAIL (yalniz) · kontrol rc=0 · FAIL iz yok"
+  },
+  {
+   "id": "META-KAPSAM-RATCHET",
+   "katman": "META",
+   "aciklama": "kapsam ratchet ihlali",
+   "kural": "",
+   "kural_onek": "",
+   "betik": "tools/kapsam.py",
+   "sozlesme": "HATA",
+   "durum": "GECTI",
+   "gecti": true,
+   "ayrinti": "taban rc=0 · FAIL iz yok · mutasyon rc=1 · FAIL iz=KAPSAM RATCHET OZTEST: test kaybi yakalanmadi (yalniz) · kontrol rc=0 · FAIL iz yok"
   },
   {
    "id": "DEP-03",

@@ -102,7 +102,7 @@ visible; evidence levels (`BIRINCIL`/`DIJITAL`/`BEYAN`/`OLCULMEDI`); fail-closed
 (unmeasured is never a pass); and tamper detection (`GATE_TAMPERED` → P0).
 - **How claims are verified.** `make dogrula` (hygiene, syntax, secret scan, secret-gate
 self-test, three self-test suites), `make mutasyon` (ninety-three firing-tested gate rules,
-each exercised by a 142-case battery: silent clean baseline + one violation + a red/terminal
+each exercised by a 146-case battery: silent clean baseline + one violation + a red/terminal
 verdict or expected finding), and `tools/yayinla.py`
 (publish parity: 0 new / 0 changed / 0 deleted). The same commands run in CI on GitHub Actions.
 `make iddia` closes the remaining gap: it re-measures the numbers printed in this README.
@@ -110,7 +110,7 @@ verdict or expected finding), and `tools/yayinla.py`
 exit code 1** (fixture drift: 2; consistent fixture: 0). `make demo` is only a thin
 wrapper and cannot carry 1 vs 2, because GNU make always exits 2 on a failing recipe. `make dogrula` → **8 pass / 0 fail / 0 not run** (T1, `OLG-1`, now
 runs against this tree's `attestation.json`); current self-test and inventory values are generated in
-[`docs/DURUM.md`](docs/DURUM.md). Mutation battery **113/113 firing cases + 29/29 expected findings** over 118 verified rules: **93 firing-tested** and **25 expected-finding-only**. Mutation-tested vs untested gate rules are measured
+[`docs/DURUM.md`](docs/DURUM.md). Mutation battery **117/117 firing cases (113 gate + 4 meta) + 29/29 expected findings** over 118 verified rules: **93 firing-tested** and **25 expected-finding-only**. Mutation-tested vs untested gate rules are measured
 in [`docs/MUTASYON_KAPSAM.md`](docs/MUTASYON_KAPSAM.md); dependent-package findings in
 [`docs/GUVENLIK.md`](docs/GUVENLIK.md); CI green. Non-Turkish readers:
 [`docs/EN/QUICKSTART.md`](docs/EN/QUICKSTART.md).
@@ -297,8 +297,8 @@ tek bir ihlal üretilir ve kapının **kırmızıya döndüğü**
 (`rc=1`, yalnız hedef FAIL) doğrulanır. Beklenen-bulgu vakasında kapı `rc=0`
 kalabilir, ama ihlal sonrası beklenen uyarı/işaret çıktıda **bulunmalıdır**. Her
 iki modda da temiz tabanda bulgunun yokluğu ortak ön koşuldur; taban kirliyse
-veya ihlal sonrası beklenen iz yoksa vaka geçmez. Katalog 142 vakadır:
-113 ateşleyen (105 HATA + 8 TERMINAL) + 29 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,
+veya ihlal sonrası beklenen iz yoksa vaka geçmez. Katalog 146 vakadır:
+117 ateşleyen (109 HATA + 8 TERMINAL) + 29 beklenen-bulgu. Beklenen-bulgu vakalarından `QR-02-DENGE`,
 `quote_ratio.py` içindeki dengesiz düz tırnak uyarısını ayrı bir vaka olarak
 kilitler; böylece uyarı dalı runner tarafından atlanmaz. Model, ağ ve yerel
 katalog gerekmez.
@@ -319,12 +319,21 @@ kimlik, canlı `name`/`family`/`nvidia` aile denetimi (`AILE_FARKLI`), sıfır
 `cost.input`/`cost.output`, canlı ve yerel `reasoning`/`tool_call`,
 `deprecated` olmayan `status` ve `bedava_politika.asgari_limit`
 (200.000/32.768) alt sınırı. İhlal `rc=1`;
-ağ/JSON okunamazsa `rc=2` ve **`OLCULMEDI`** — PASS sayılmaz. Her koşu
-commit/tree/tree_sha256 ve tanım SHA-256'larıyla append-only
-`docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydına eklenir; istenirse
-`--kayit <yol>` ile ayrı dosyaya yazılır. Kanonik kod ayrımı için
+ağ/JSON okunamazsa `rc=2` ve **`OLCULMEDI`** — PASS sayılmaz. Append-only
+`docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` defterine satır, `--kayit` verilen
+ölçümde yazılır; standart yol `make katalog-kontrol`tür ve hedef varsayılan
+olarak `KAYIT_ARGS=--kayit docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` geçirir.
+Haftalık kanarya doğrudan `python3 tools/katalog_kontrol.py` çalıştırdığı ve
+`--kayit` vermediği için deftere satır eklemez; `--kayit` olmadan doğrudan
+betik çağrısı da yazmaz. `--kayit <yol>` verilirse kayıt belirtilen dosyaya
+yazılır. Kanonik kod ayrımı için
 `python3 tools/katalog_kontrol.py` kullanılır; GNU make, tarif hatasını 2'ye
 çevirir.
+
+Allowlist'i canlı katalogdan yenilemek için `make katalog-yenile` 1-4. adımları
+tek komutta koşar: indirir, kimlikleri çıkarır, adayı üretir ve doğrular.
+**`cp` yapmaz**; aday ile diff'in yollarını basar ve yerleştirmeyi insan
+incelemesine bırakır. Ayrıntı: [docs/README.md](docs/README.md).
 
 Emekli bir model kimliği yalnız tarihsel `SURUM`/`OLCUM` satırlarında
 yaşayabilir; aktif kod, config, test ve dokümanlarda sıfır atıf
@@ -403,7 +412,7 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 | Mutasyon kapsamı | `make kapsam` → `docs/MUTASYON_KAPSAM.md` güncel mi (üretilmiş tablo) |
 | Kamu temizliği | `make kamu-lint` → özel mutlak yol, kaldırılmış alan ve sahte hash taraması; `make kamu-selftest` → negatif fikstürler PASS; `make dogrula` ön koşulu |
 | Kanıt kapısı negatifi | `make kanit-negatif` → KANIT-00..06 kodlarının her biri gerçek bozulmayla; ana ağaç değişmez |
-| Bedava canlı katalog kanaryası | `.github/workflows/katalog-canary.yml` → haftalık, required değil; canlı `python3 tools/katalog_kontrol.py`; bulgu varsa issue açar. Elle koşu: `make katalog-kontrol` |
+| Bedava canlı katalog kanaryası | `.github/workflows/katalog-canary.yml` → haftalık, required değil; canlı `python3 tools/katalog_kontrol.py` (`--kayit` yok; deftere satır yazmaz); bulgu varsa issue açar. Defter kaydı için: `make katalog-kontrol` |
 | Ağsız katalog negatifi | `.github/workflows/katalog-agsiz-kaniti.yml` → yalnız `workflow_dispatch`; erişilemeyen `--api-url` ile `OLCULMEDI`/`rc=2` beklenir. Kapi kırmızı döner; iş, bu kırmızının doğru oluştuğunu doğrularsa yeşil kalır |
 | İddia defteri | `make iddia` → README/docs sayısal iddialarını üreten komutla ve ham kanıt satırıyla yeniden ölçer; tutmayan satır `IDD-*` ile kırmızı |
 | Hızlı iddia | `make iddia-hizli` → `dogrula`/`mutasyon` gibi pahalı satırları atlar; atlananlar `ATLANDI` ve PASS değil, tam koşu değişmez |
@@ -414,7 +423,7 @@ tools/             bu deponun kendi araçları (doğrulama, yayın aktarımı)
 | Commit/push koruması | `make kur` → `core.hooksPath=.githooks`; canlı DSN commit edilemez |
 | Runner doğrulaması | `make dogrula-ci` — yalnız o ortamda ölçülebilen kalemler hükme girer, öz-testler rapor |
 | Doküman sözleşmesi | `make dokuman-sozlesmesi` — README/docs make hedefleri ve CI job adları gerçek `Makefile`/workflow ile karşılaştırılır; bayat hedef veya ad kırmızı |
-| Sürekli doğrulama | `.github/workflows/dogrula.yml` — `dogrula` ve `iddia` job'ları; her push/PR ve haftalık |
+| Sürekli doğrulama | `.github/workflows/dogrula.yml` — `dogrula`, `iddia` (push/PR hızlı) ve `iddia-tam` (haftalık tam) job'ları; her push/PR ve haftalık |
 | Dış labdan aktarım | `tools/yayinla.py --lab <yol>` (kuru koşu) · `--uygula` (yazar) |
 
 `tools/yayinla.py` yalnız **açık listedeki** mekanizma yollarını taşır; liste dışına
@@ -466,42 +475,51 @@ Defterin kapsamı dört public dokümandır: `README.md`, `README.tr.md`,
 olarak atlar ve kapıyı kırmaz; `make iddia-ag` canlı kataloğu okuyamazsa satırı
 `AG` olarak işaretler ve `rc=2` döner — sahte PASS veya sahte FAIL üretmez.
 
-Kapsam kapısı bu listeyi kendiliğinden denetler: üç dokümandaki sayısal ölçüm
-iddiaları — oranlar, ölçüm adı taşıyan sayılar ve üretilmiş sayaçlar — defterdeki
-bir alıntının içinde değilse `kapsam.sayisal_istisna` içindeki dar ve gerekçeli
-bir desenle eşleşmek zorundadır. Eşleşmeyen tek bir iddia `dosya:satır` ve
-jetonla kırmızı olur; hiçbir iddiayı kapsamayan ölü istisna veya üç satırdan
-geniş istisna da kırmızıdır. Kimlik, sürüm, tarih ve çıkış kodu değerleri bu
-tanımın dışındadır. Böylece elle tutulan satır listesi değil, kapsamın kendisi
-kapıya bağlanır.
+Kapsam kapısı bu listeyi kendiliğinden denetler: public dokümanlardaki her
+sayısal jeton varsayılan olarak iddiadır. Yalnız kimlik, sürüm, tarih/saat,
+çıkış kodu, saf tablo hücresi, sıra/aralık ve komut seçeneği yapısal olarak
+muaftır; sözlükte ölçüm adı bulunmayan sayısal ifadeler de kırmızıdır. Jeton
+defterdeki bir alıntının içinde değilse `kapsam.sayisal_istisna` içindeki dar ve
+gerekçeli bir desenle eşleşmek zorundadır. Eşleşmeyen tek bir jeton
+`dosya:satır` ve değeriyle kırmızı olur; hiçbir jetonu kapsamayan ölü istisna
+veya üç satırdan geniş istisna da kırmızıdır. Böylece elle tutulan satır listesi
+değil, kapsamın kendisi kapıya bağlanır.
 
-### Tek bir iddiayı elle izlemek
+### Tek bir iddiayı izlemek
 
-Örnek: `IDD-48` — KOD `bedava` profilinin alt sınırı.
+Örnek: `IDD-48` — KOD `bedava` profilinin alt sınırı. Tek komut:
 
-1. **Defter satırı.** `tools/iddia_defteri.json` içindeki `IDD-48` kaydı,
-   yukarıdaki alt sınır cümlesini `kaynaklar` alanında birebir taşır;
-   `komut` alanı `KOD_SABLONLAR/routing.profiles.json` dosyasını okur ve
-   `beklenen` alanı aşağıdaki çıktı satırındaki değerdir.
-2. **Komut.** Depo kökünde:
+```bash
+make iddia IDD=IDD-48
+```
 
-   ```bash
-   python3 -c "import json; d=json.load(open('KOD_SABLONLAR/routing.profiles.json')); a=d['bedava_politika']['asgari_limit']; print('LIMIT: %d/%d' % (a['context'], a['output']))"
-   ```
+`--iz` bayrağını doğrudan Python komutunda da kullanabilirsiniz:
 
-   Çıktı:
+```bash
+python3 tools/iddia.py --iz IDD-48
+```
 
-   ```text
-   LIMIT: 200000/32768
-   ```
+Beklenen çıktı satırı:
 
-3. **Ham kanıt.** `tools/iddia_olcum.json` → `olcumler.IDD-48`: `ham` alanı
-   yukarıdaki çıktı satırının birebir aynısıdır, `deger` aynı değeri taşır,
-   `rc` alanı sıfırdır. `make iddia` bu satırın güncel çıktıda birebir aynı
-   olmasını ister.
-4. **Hüküm.** `make iddia --kanit` çıktısında `PASS IDD-48` satırı ve
-   `kanit: LIMIT: 200000/32768` görünür; özet sayımı
-   [`docs/IDDIA-OZET.md`](docs/IDDIA-OZET.md) içindedir.
+```text
+LIMIT: 200000/32768
+```
+
+GNU make, `--iz` gibi uzun seçenekleri recipe'ye aktarmaz; bu yüzden Make
+hedefinde `IDD=` kısa yolu kullanılır. Komut tek ekranda şu zinciri basar:
+
+- **Defter:** kaydın `tools/iddia_defteri.json` içindeki satırı, durumu ve
+  beklenen değeri.
+- **Kaynak:** her `kaynaklar` alıntısının dosyası, satır numarası ve birebir
+  metni.
+- **Komut:** defterdeki komutun çalıştırılabilir biçimi.
+- **Ham kanıt:** `tools/iddia_olcum.json` içindeki saklanan `ham` satırı,
+  `rc` ve `deger`.
+- **Güncel çıktı ve hüküm:** komutun şimdiki çıktısı; `PASS`, `FAIL` veya
+  ölçülemeyen durum.
+
+`make iddia` tam defteri ve kapsamı denetlemeye devam eder; `--iz` yalnız
+seçilen kaydı izler ve başka satırların bayat kanıtı yüzünden kilitlenmez.
 
 Defterin üst düzeyindeki `olcum_dosyasi` alanı ham kanıt dosyasını adlandırır
 (`tools/iddia_olcum.json`); `make iddia` bu yolun tam olarak o dosya olduğunu
@@ -606,7 +624,7 @@ kapısı `KANIT-05` ile kırmızı olur. Ayrıntılı sınırlar ve negatif kont
 
 ## Mutasyon kapsamı
 
-`make mutasyon` 142 vakanın gerçekten ateşlediğini kanıtlar: HATA vakalarında
+`make mutasyon` 146 vakanın gerçekten ateşlediğini kanıtlar: HATA vakalarında
 sessiz temiz taban → tek ihlal → `rc=1`; TERMINAL vakalarında `rc=2` +
 `GATE_TAMPERED`/`TERMINAL FAIL`; beklenen-bulgu vakalarında sessiz temiz taban →
 tek ihlal → işaretli bulgu (`rc=0` olabilir). **Her kuralın** durumu ise
