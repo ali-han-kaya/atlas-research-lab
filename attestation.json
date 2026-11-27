@@ -1,5 +1,5 @@
 {
-  "commit": "51a37900f53e69b009580897964c79a8ddc035c2",
+  "commit": "add599182cdd6c615ded60f67b19afb8aa81ca7f",
   "file_count": 303,
   "files": [
     {
@@ -1379,8 +1379,8 @@
     {
       "mode": "100644",
       "path": "docs/MUTASYON_KAPSAM.md",
-      "sha256": "db40ed6a53b0db4c3134df0d0265dadc19b0b9268a4d21778e4a8ba5583381f7",
-      "size": 46190
+      "sha256": "6209176b6dcc98e20a70734e1f113ad40a357dfa809d0e11c9273968f243dacc",
+      "size": 46458
     },
     {
       "mode": "100644",
@@ -1821,7 +1821,7 @@
       "size": 14956
     }
   ],
-  "generated_at": "2026-11-27T11:23:09Z",
+  "generated_at": "2026-11-27T11:31:51Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1836,6 +1836,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "0d97b6b0ea2191110fd015a0dbc6dbb100df33a0",
-  "tree_sha256": "9e85d0cb26b50e24dc19dfedd650af0f2a20725df87657cf39e215aa2279b046"
+  "tree": "1075d42babac7b3757370e1961c89f3631c86800",
+  "tree_sha256": "5156a95dbf6845119261dddb1f29eb181ead1809384bc53dc0778a778dcbd285"
 }
