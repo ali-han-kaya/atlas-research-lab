@@ -1,6 +1,6 @@
 {
-  "commit": "2efab79741a8ba7c39d23f680ca232a28b33423a",
-  "file_count": 301,
+  "commit": "d4675f468e47a1ad6817f3ae350473a01625662b",
+  "file_count": 303,
   "files": [
     {
       "mode": "100755",
@@ -700,6 +700,12 @@
     },
     {
       "mode": "100644",
+      "path": "KOD_SABLONLAR/.github/workflows/katalog-kontrol.yml",
+      "sha256": "5bd21fb0c9826b50ab897c57b3b58ead17b30abeac4964b160245e9955f187cb",
+      "size": 1107
+    },
+    {
+      "mode": "100644",
       "path": "KOD_SABLONLAR/.opencode/agent/kod-architect.md",
       "sha256": "4493fddc2ff6fd5f04cd408d53a7a105c376c93a758cb010d9b006bff5b56248",
       "size": 2178
@@ -821,14 +827,14 @@
     {
       "mode": "100644",
       "path": "KOD_SABLONLAR/00_KOD_OKU_BENI.md",
-      "sha256": "be62e789dda53b85887263f43cdb0c086a9906e4ec5713b82b38ef9fd64c4cd8",
-      "size": 5534
+      "sha256": "201c0839dbe755c2c6c05ccf2a44ed599adf745b6b0d7a4276b37ba840ae5ccc",
+      "size": 5809
     },
     {
       "mode": "100644",
       "path": "KOD_SABLONLAR/OPERATOR_SURME.md",
-      "sha256": "243599c3461a6719437dedfe6788b2b9a48f1d68822839bde493a995ddbc7586",
-      "size": 3134
+      "sha256": "03b005f3b9b0eddffe58020611d243e27d38431e5a02f0c72c154d8de3771117",
+      "size": 3969
     },
     {
       "mode": "100644",
@@ -845,8 +851,8 @@
     {
       "mode": "100644",
       "path": "KOD_SABLONLAR/scripts/README.md",
-      "sha256": "143dae29d65c2ba271da1b9f81985561ca9385c699800e167fd804f9e8ed7582",
-      "size": 1079
+      "sha256": "0ff102c1eeb5a8cf35ad2d49310cc24e4ef88f1ef30f96f98a438ce6abac833b",
+      "size": 1934
     },
     {
       "mode": "100755",
@@ -897,6 +903,12 @@
       "size": 6086
     },
     {
+      "mode": "100644",
+      "path": "KOD_SABLONLAR/scripts/katalog_kontrol.py",
+      "sha256": "c7d5d328dbbf65565fe3722f1cadf9643a43fe46e692a8302dc955595e8d641b",
+      "size": 26731
+    },
+    {
       "mode": "100755",
       "path": "KOD_SABLONLAR/scripts/kod_gate_merge.py",
       "sha256": "b6300c3ea25f5b4df26718f39e31ea819c659cd4ead790ab51e736254da8ead7",
@@ -905,8 +917,8 @@
     {
       "mode": "100755",
       "path": "KOD_SABLONLAR/scripts/kod_selftest.py",
-      "sha256": "73a5217b0688ef2d58e15c55d3fc730d7eb1d26b83e67ac811332e2a8889bda1",
-      "size": 110470
+      "sha256": "24bc85aa8cadc1e18c079da45b22708c6ce04caba4b26e5f458b90a4def5f8bc",
+      "size": 110876
     },
     {
       "mode": "100755",
@@ -917,8 +929,8 @@
     {
       "mode": "100755",
       "path": "KOD_SABLONLAR/scripts/kur.sh",
-      "sha256": "4f8a60fbfeb402c1d3fa2f04f8191b5c0782a7b460f318cdda04226cf57295bd",
-      "size": 9321
+      "sha256": "8c0879546c897407af54ca9f9149a0c9fb88032e890e52e184078de0d01b05f7",
+      "size": 10522
     },
     {
       "mode": "100755",
@@ -1289,8 +1301,8 @@
     {
       "mode": "100644",
       "path": "docs/DERSLER_v1_2026-08-30.md",
-      "sha256": "ec696a203335113bfa087fa5ed0f37368b189cddc7ad98f93c75b64902bf8eb1",
-      "size": 521260
+      "sha256": "f5e5c5e89c271c503aa0add09fc78546f9e88a4c8b70f7f8b69ab5607929dfb6",
+      "size": 522273
     },
     {
       "mode": "100644",
@@ -1319,7 +1331,7 @@
     {
       "mode": "100644",
       "path": "docs/DURUM.md",
-      "sha256": "3e297c1fc9af931b138ccafe797c544f390df15b04a5dfab7e3e16f1a8984a35",
+      "sha256": "b8bab80a88c22a9408fd7a6f29bd474a0d893265626fa0a3572ab319d8794b6b",
       "size": 1489
     },
     {
@@ -1331,7 +1343,7 @@
     {
       "mode": "100644",
       "path": "docs/EN/QUICKSTART.md",
-      "sha256": "63234df71381994be2378a2928c5b24ae510756b2e08ca02c1d98863cfb76acb",
+      "sha256": "9b830927c49d9e34d53d65e563e192500187da4425ac44bc6d37ab30ea4104d5",
       "size": 14025
     },
     {
@@ -1355,8 +1367,8 @@
     {
       "mode": "100644",
       "path": "docs/KOD_BEDAVA_MODEL_POLITIKASI.md",
-      "sha256": "bf68328381d6d3eb668024ac13614021545a5c3d553d5c8019fa2c4b97f5c54e",
-      "size": 22539
+      "sha256": "e07e217ddefad8dfddf5744b3e63823a5ff639bb61d8965fcd06129f67fab79f",
+      "size": 22866
     },
     {
       "mode": "100644",
@@ -1433,8 +1445,8 @@
     {
       "mode": "100644",
       "path": "docs/README.md",
-      "sha256": "aa29cb69c462c51b778db3caaf749f781bd992f04bee96d4c0cb1670d33d9b83",
-      "size": 33415
+      "sha256": "1a583006056c5636b3d22796f224642cee7c6edf2c9ebd91b7dba23e46e25c6c",
+      "size": 33471
     },
     {
       "mode": "100644",
@@ -1553,13 +1565,13 @@
     {
       "mode": "100644",
       "path": "tools/iddia_defteri.json",
-      "sha256": "52b602e53da120a73c772b50678d21cedd3f4ab5d10514f887a61b6476b42ec8",
+      "sha256": "4372d0f746764c8044a502b4142fb8cea96e1151feb3676b14e4fb46a7d33af4",
       "size": 39138
     },
     {
       "mode": "100644",
       "path": "tools/iddia_olcum.json",
-      "sha256": "6421654550e4842051aba0a6a1d4ac74081a1986793f5b39b3a9edffc4ce3d34",
+      "sha256": "d34994d3a7387cff57c371abd3973b3a0ed71916ae61f2528a4de217a33674d1",
       "size": 9337
     },
     {
@@ -1619,8 +1631,8 @@
     {
       "mode": "100644",
       "path": "tools/kapsam.py",
-      "sha256": "948e236a68021f8d813e650c650d4c1e3e3103c73fec94dba726dfc5678f367c",
-      "size": 102247
+      "sha256": "79741a730cc7e536a8f9ad5777c4c34843594ef1db7e1d1ff4225d5d648c5d22",
+      "size": 102515
     },
     {
       "mode": "100644",
@@ -1643,8 +1655,8 @@
     {
       "mode": "100644",
       "path": "tools/katalog_kontrol.py",
-      "sha256": "d18b3b24bc7db8d522fec72565d2915a43dc324df11ed4494061027746a923ad",
-      "size": 25460
+      "sha256": "57f9f6d25f9bfca8ee01978e3884d8458006b4ff37c36b6b83dc3bc9f9c86141",
+      "size": 626
     },
     {
       "mode": "100644",
@@ -1715,7 +1727,7 @@
     {
       "mode": "100644",
       "path": "tools/mutasyon_sonuc.json",
-      "sha256": "d2317aa113f3ddf91c06f09a90c993c64e2ebddeb3dbbb13e7a53ed7aceb46bc",
+      "sha256": "44c7e88fd3fbf7b49ceee4ff80773ed674154a13b1ea19760f4a660d07b58600",
       "size": 53220
     },
     {
@@ -1799,8 +1811,8 @@
     {
       "mode": "100644",
       "path": "tools/yayin_manifest.json",
-      "sha256": "e1e73764a7b99aefab8d4bd9941297711886e6877e8405c63f1b668412b4b917",
-      "size": 13592
+      "sha256": "95b14a5aeff1856f61f361540fdfac70a5397b370ad3c7557c937d1d2d905fd1",
+      "size": 13699
     },
     {
       "mode": "100644",
@@ -1809,7 +1821,7 @@
       "size": 14956
     }
   ],
-  "generated_at": "2026-11-27T10:12:51Z",
+  "generated_at": "2026-11-27T10:51:13Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1824,6 +1836,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "c44ca5942244de07c685834f331fa01eb6576657",
-  "tree_sha256": "27884f2a3acbd166fb70086198dc7c057788afaa08c8fed060849654fda50a04"
+  "tree": "b9ae4e3dbd423ecc837b5262a92cc96a2c63a448",
+  "tree_sha256": "86a82ac5d10e05236f2f4a98feb29106326d7031d6f40604388fd4d1d8b18d07"
 }
