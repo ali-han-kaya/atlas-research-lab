@@ -1,5 +1,5 @@
 {
-  "commit": "e2beeaba01c51896780686dc3a67a8f7c1c8383f",
+  "commit": "ccd15afc6141d6722fd40de0151f6f649ee79667",
   "file_count": 304,
   "files": [
     {
@@ -191,8 +191,8 @@
     {
       "mode": "100644",
       "path": "AGENTS.md",
-      "sha256": "233b96b2485cd2c659659d605c1ca3a0a889181a29971ff189748f70eb33661f",
-      "size": 11740
+      "sha256": "eced860440cfbb57c12bb4380f9f986fc060f3a5b3b6dd7796508c497c851837",
+      "size": 11736
     },
     {
       "mode": "100644",
@@ -1367,7 +1367,7 @@
     {
       "mode": "100644",
       "path": "docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl",
-      "sha256": "cf57998add4c24fa77b811787fc8dba8e1e466381bd1ffd1a9e28d72f13ecde0",
+      "sha256": "3b45aaa3a2fcf7699bf488d0111b4ed103216e10b598e08e38af0f4870623f04",
       "size": 7244
     },
     {
@@ -1827,7 +1827,7 @@
       "size": 16100
     }
   ],
-  "generated_at": "2026-11-27T14:46:14Z",
+  "generated_at": "2026-11-27T15:18:30Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1842,6 +1842,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "d46345db34f05709b2681584351dd3cfca6bc1a8",
-  "tree_sha256": "154b207e9e0c19c5dc0a4c8e61340a29ccf35cfc51553fe78c227418cb41c72d"
+  "tree": "679f9e2290c7d449a12c0b930895aafbc204cdbc",
+  "tree_sha256": "5b18b462a18bf1367edf1e14dd8fc79c16d2bb70c681b7f45e3c65c36d0a5753"
 }
