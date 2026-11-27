@@ -2,7 +2,7 @@
   "sema": "OZTEST-MUTASYON/v1",
   "kaynak": {
     "ATLAS_SABLONLAR/scripts/atlas_selftest.py": "372240380e423a75fe4e44695e4a924a6c1e89cb95c92eaf9bbd9cbe490f501b",
-    "KOD_SABLONLAR/scripts/kod_selftest.py": "73a5217b0688ef2d58e15c55d3fc730d7eb1d26b83e67ac811332e2a8889bda1",
+    "KOD_SABLONLAR/scripts/kod_selftest.py": "24bc85aa8cadc1e18c079da45b22708c6ce04caba4b26e5f458b90a4def5f8bc",
     "KOMUT_TOOLKIT_v4/ARACLAR/betikler/v4_selftest.py": "3ad2a57ab1842239ce310407bb4e23bbdea5e227dd2794ad909c0e751c0d6836",
     "ATLAS_SABLONLAR/scripts/budget_guard.py": "75fa54f2345eaa5795ea7e80a4e95c24a59deabb3ba9a8f9034375dd37dc5d2e",
     "ATLAS_SABLONLAR/scripts/check_models.py": "5553264f3a45d52699e5dd67cabfdf052d3f0d827d8aad76afb9a1979eab6ce6",
