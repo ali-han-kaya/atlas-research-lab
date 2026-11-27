@@ -6,6 +6,7 @@
     ".githooks/pre-push",
     ".github/workflows/dogrula.yml",
     ".github/workflows/iddia-bozma.yml",
+    ".github/workflows/katalog-agsiz-kaniti.yml",
     ".github/workflows/katalog-canary.yml",
     ".gitignore",
     ".opencode/agent/atlas-gate-2a.md",
