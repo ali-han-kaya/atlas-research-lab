@@ -1,6 +1,6 @@
 {
   "_aciklama": "Her OLCULDU iddiasinin son olculen HAM cikti satiri. tools/iddia.py bu satirin guncel komut ciktisinda birebir ayni olmasini ve beyanla tutmasini ister.",
-  "zaman": "2026-11-27T07:17:35Z",
+  "zaman": "2026-11-27T07:38:59Z",
   "olcumler": {
     "IDD-01": {
       "komut": [
@@ -29,7 +29,7 @@
         "--json"
       ],
       "rc": 0,
-      "ham": "OZ-TEST: 146/146 gecti · KANIT commit=b184272 tree=d32c5a3",
+      "ham": "OZ-TEST: 146/146 gecti · KANIT commit=ca74a20 tree=2e36b6c",
       "deger": "146/146"
     },
     "IDD-04": {
