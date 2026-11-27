@@ -249,9 +249,7 @@ def _aile_denetle(kayit, mid, tam):
             and aile.casefold().startswith(AILE_FAMILY_ONEK)):
         sorunlar.append('family=%r; %r ailesi bekleniyor'
                         % (aile, AILE_FAMILY_ONEK))
-    # Sentetik test kimlikleri saglayici oneki tasimayabilir; gercek profil
-    # `nvidia/<model>` bicimindedir ve onek varsa nvidia olmak zorundadir.
-    if '/' in mid and not mid.startswith(AILE_SAGLAYICI + '/'):
+    if not mid.startswith(AILE_SAGLAYICI + '/'):
         sorunlar.append('saglayici=%r; %s bekleniyor'
                         % (mid, AILE_SAGLAYICI))
     canli_id = kayit.get('id')

@@ -38,9 +38,14 @@ ROLLER = (
 ASGARI = {'context': 10000, 'output': 1000}
 
 
+def _kimlik(ad):
+    """Fikstur kisaltmasini gercek `nvidia/<model>` bicimine cevir."""
+    return ad if '/' in ad else 'nvidia/' + ad
+
+
 def profil(farkli=None):
     """On rollu, tek kimlikli bedava profili fiksturu."""
-    bedava = dict.fromkeys(ROLLER, 'openrouter/m1')
+    bedava = dict.fromkeys(ROLLER, 'openrouter/nvidia/m1')
     if farkli:
         bedava.update(farkli)
     return {
@@ -51,21 +56,22 @@ def profil(farkli=None):
 
 def yerel(*kimlikler, **degisiklik):
     return {'openrouter': {'models': {
-        k: {'reasoning': True, 'tool_call': True, **degisiklik.get(k, {})}
-        for k in kimlikler}}}
+        _kimlik(ham): {'reasoning': True, 'tool_call': True,
+                       **degisiklik.get(ham, degisiklik.get(_kimlik(ham), {}))}
+        for ham in kimlikler}}}
 
 
 def canli(*kimlikler, **degisiklik):
     return {'openrouter': {'models': {
-        k: {
+        _kimlik(ham): {
             'name': 'Nemotron 3 Ultra (free)',
             'family': 'nemotron-ultra-free',
             'reasoning': True,
             'tool_call': True,
             'cost': {'input': 0, 'output': 0},
             'limit': {'context': 100000, 'output': 10000},
-            **degisiklik.get(k, {}),
-        } for k in kimlikler}}}
+            **degisiklik.get(ham, degisiklik.get(_kimlik(ham), {})),
+        } for ham in kimlikler}}}
 
 
 def vaka(yerel_veri, canli_veri, beklenen_rc, iz, profil_veri=None,
@@ -138,9 +144,9 @@ def main():
          'AILE_FARKLI', profil(meta)),
         ('kimlik drifti', yerel('m1', 'm2'), canli('m1', 'm2'), 1,
          'TEK_KIMLIK_DEGIL',
-         profil({'kod-tester': 'openrouter/m2'})),
+         profil({'kod-tester': 'openrouter/nvidia/m2'})),
         ('eksik model adiyla', yerel('m1', 'm2'), canli('m1'), 1,
-         'openrouter/m2', None),
+         'openrouter/nvidia/m2', None),
         ('allowlist disi', yerel('m2'), canli('m1'), 1, 'KATALOGDA_YOK',
          None),
         ('yerel yetenek', yerel('m1', m1={'tool_call': False}), canli('m1'),
