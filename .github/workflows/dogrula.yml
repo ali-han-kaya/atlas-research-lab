@@ -72,6 +72,13 @@ jobs:
       - name: Sir fiksturu muafiyeti (sessiz / P0 / fail-closed)
         run: make fikstur-muafiyet-test
 
+      # Katalog kapisinin negatif dallari ayri bir CI adimi olarak gorunur:
+      # on rol fiksturu, maliyet/limit/kimlik/deprecated/ag ve OLCULMEDI.
+      # `make dogrula-ci` bunu zaten on kosul olarak kosar; buradaki acik
+      # adim, regresyonu serbest metin bir on kosulun arkasina saklamaz.
+      - name: Katalog kapisi oz-testi (negatif dallar)
+        run: make katalog-selftest
+
       - name: make dogrula-ci
         run: make dogrula-ci
 

@@ -36,6 +36,10 @@ ROLLER = (
     'kod-gate',
 )
 ASGARI = {'context': 10000, 'output': 1000}
+OLCULMEDI = 'OLCULMEDI'
+# Eski/yazim kaymasi ciktiya sizarsa test bunu ayri bir hata olarak yakalar.
+ESKI_OLCULMEDI = ('OLCULEMEDI', 'OLCULMADI')
+AG_ADRESI = 'http://127.0.0.1:9'
 
 
 def _kimlik(ad):
@@ -102,13 +106,49 @@ def vaka(yerel_veri, canli_veri, beklenen_rc, iz, profil_veri=None,
         if eksik:
             return False, 'iz yok (%s) · %s' % (
                 ', '.join(eksik), cikti.strip()[:160])
-        if 'OLCULEMEDI' in cikti:
-            return False, 'eski yazim OLCULEMEDI · %s' % cikti.strip()[:160]
-        if ('OLCULMEDI' in cikti) != (beklenen_rc == 2):
-            return False, 'OLCULMEDI beklentisi tutmadi · %s' % cikti.strip()[:160]
+        if any(eski in cikti for eski in ESKI_OLCULMEDI):
+            return False, 'eski yazim OLCULMEDI · %s' % cikti.strip()[:160]
+        if (OLCULMEDI in cikti) != (beklenen_rc == 2):
+            return False, '%s beklentisi tutmadi · %s' % (
+                OLCULMEDI, cikti.strip()[:160])
         if beklenen_rc == 0 and 'BEDAVA: 10/10' not in cikti:
             return False, 'PASS ama BEDAVA: 10/10 yok · %s' % cikti.strip()[:160]
         return True, 'rc=%d · %s' % (r.returncode, ', '.join(izler))
+
+
+def vaka_ag():
+    """Erisilemeyen `--api-url` gercekten OLCULMEDI/rc=2 mi?
+
+    JSON bozuklugu ayri bir daldir; burada gercek ag hatasi (connection
+    refused) sinanir. Boylece `--api-dosya` fiksturleri ag dalini
+    maskeleyemez.
+    """
+    with tempfile.TemporaryDirectory(prefix='katalog_kontrol_ag_') as tmp:
+        yol = Path(tmp)
+        katalog = yol / 'katalog.json'
+        profil_yolu = yol / 'profil.json'
+        katalog.write_text(json.dumps(yerel('m1')), encoding='utf-8')
+        profil_yolu.write_text(json.dumps(profil()), encoding='utf-8')
+        r = subprocess.run(
+            [sys.executable, str(ARAC),
+             '--katalog', str(katalog),
+             '--profil-dosya', str(profil_yolu),
+             '--api-url', AG_ADRESI, '--timeout', '1'],
+            cwd=str(KOK), capture_output=True, text=True, timeout=30)
+        cikti = (r.stdout or '') + (r.stderr or '')
+        if r.returncode != 2:
+            return False, 'rc=%d (beklenen 2) · %s' % (
+                r.returncode, cikti.strip()[:180])
+        for iz in ('KATALOG KONTROL: ' + OLCULMEDI,
+                   'BEDAVA: ' + OLCULMEDI):
+            if iz not in cikti:
+                return False, 'ag izi yok (%s) · %s' % (
+                    iz, cikti.strip()[:180])
+        if any(eski in cikti for eski in ESKI_OLCULMEDI):
+            return False, 'eski yazim OLCULMEDI · %s' % cikti.strip()[:180]
+        if 'HUKUM: GUNCEL' in cikti or 'BEDAVA: 10/10' in cikti:
+            return False, 'ag hatasinda yesil hukum · %s' % cikti.strip()[:180]
+        return True, 'rc=2 · %s' % AG_ADRESI
 
 
 def main():
@@ -175,11 +215,20 @@ def main():
             ok, ayrinti = False, 'ISTISNA: %s' % e
         gecen += 1 if ok else 0
         print('  %-28s %-4s %s' % (ad, 'PASS' if ok else 'FAIL', ayrinti))
+    try:
+        ok, ayrinti = vaka_ag()
+    except Exception as e:  # noqa: BLE001 - test kosucusu hatayi raporlar
+        ok, ayrinti = False, 'ISTISNA: %s' % e
+    gecen += 1 if ok else 0
+    print('  %-28s %-4s %s' % ('ag erisilemez', 'PASS' if ok else 'FAIL',
+                               ayrinti))
+
     print()
-    if gecen == len(vakalar):
-        print('KATALOG KONTROL OZ-TEST: %d/%d gecti' % (gecen, len(vakalar)))
+    toplam = len(vakalar) + 1
+    if gecen == toplam:
+        print('KATALOG KONTROL OZ-TEST: %d/%d gecti' % (gecen, toplam))
         return 0
-    print('KATALOG KONTROL OZ-TEST: FAIL — %d/%d' % (gecen, len(vakalar)))
+    print('KATALOG KONTROL OZ-TEST: FAIL — %d/%d' % (gecen, toplam))
     return 1
 
 
