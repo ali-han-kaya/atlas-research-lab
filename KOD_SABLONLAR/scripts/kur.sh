@@ -92,6 +92,21 @@ for parca in .opencode scripts templates opencode.json routing.profiles.json 00_
   kopyala "$SABLON/$parca" "$HEDEF/$parca"
 done
 
+# 1b) Canli katalog kapisi — tek kaynak betik scripts/ icinde tasinir.
+# Allowlist de hedefe kopyalanir; yoksa gate varsayilan yolu bulamaz.
+[ -f "$LAB/tools/model_katalog.json" ] || { echo "FAIL: $LAB/tools/model_katalog.json yok" >&2; exit 1; }
+kopyala "$LAB/tools/model_katalog.json" "$HEDEF/model_katalog.json"
+
+# 1c) Proje CI workflow'u. Hedefte ayni yol varsa DOKUNMA; proje kendi
+# workflow'unu korur, yoksa sablonu kurar.
+WORKFLOW="$SABLON/.github/workflows/katalog-kontrol.yml"
+[ -f "$WORKFLOW" ] || { echo "FAIL: sablonda eksik: .github/workflows/katalog-kontrol.yml" >&2; exit 1; }
+if [ -e "$HEDEF/.github/workflows/katalog-kontrol.yml" ]; then
+  echo "  .github/workflows/katalog-kontrol.yml zaten var — DOKUNULMADI"
+else
+  kopyala "$WORKFLOW" "$HEDEF/.github/workflows/katalog-kontrol.yml"
+fi
+
 # 2) ORTAK cekirdegi — KOPYALANMAZ DENIR AMA GEREKLIDIR.
 #    Kapi ILKELERI tek kaynaktan gelir; burada yapilan sey ilkeyi CATALLAMAK
 #    degil, hedef depoya AYNI dosyayi tasimaktir. `dogrula` adimi iki kopyanin
@@ -186,12 +201,20 @@ else
   HATA=$((HATA + 1))
 fi
 
+# katalog kapisi hedefte gercekten kurulu mu (K2/K3)
+for parca in scripts/katalog_kontrol.py model_katalog.json routing.profiles.json \
+             .github/workflows/katalog-kontrol.yml; do
+  if [ -f "$HEDEF/$parca" ]; then echo "  OK   $parca var";
+  else echo "  FAIL $parca hedefte YOK"; HATA=$((HATA + 1)); fi
+done
+
 # betikler gercekten kosuyor mu (K2/K3)
 # NOT: alt kabuk `( ... )` KULLANILMAZ. Kullanilsaydi $HATA alt kabukta artar ve
 # disarida KAYBOLURDU; betik basarisiz dogrulamalara ragmen "KURULUM TAM" derdi.
 # Bu, tam da bu turda kapatilan fail-OPEN sinifidir (shellcheck SC2030/SC2031).
 ONCEKI_DIZIN="$PWD"
 cd "$HEDEF" || { echo "  FAIL hedefe girilemedi"; exit 1; }
+d "katalog_kontrol --help" python3 scripts/katalog_kontrol.py --help
 d "budget_guard --preflight KFAZ0" python3 scripts/budget_guard.py --preflight KFAZ0
 python3 scripts/kod_gate_merge.py > /dev/null 2>&1
 if [ $? -eq 1 ]; then

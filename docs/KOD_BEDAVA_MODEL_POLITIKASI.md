@@ -73,7 +73,7 @@ tabanın altına düşerse `LIMIT_YETERSIZ` ile reddedilir, tahmin edilmez.
 ### 3.1 Kanonik ölçüm ve otomasyon
 
 ```bash
-python3 tools/katalog_kontrol.py     # kanonik rc
+python3 tools/katalog_kontrol.py     # lab ince giriş; kanonik KOD betiğini çalıştırır
 make katalog-kontrol                 # sarmalayıcı + append-only kayıt; GNU make hatayı 2'ye çevirir
 make bedava-kontrol                  # yalniz bedava profili; CI'ya baglanmaz
 ```
@@ -428,7 +428,9 @@ nedenle `KOTA-01` doğrudan HTTPS API ile ölçüldü. Sürücü ve kota dışı
 | `KOD_SABLONLAR/routing.profiles.json` | `profiller.bedava` — on rolün model eşlemesi |
 | `KOD_SABLONLAR/opencode.json` | birincil sürücü ve `_model_notu` |
 | `tools/model_katalog.json` | hermetik allowlist (MOD-1/MOD-2) |
-| `tools/katalog_kontrol.py` | canlı models.dev kapısı: allowlist + on rol + aile (`name`/`family`/`nvidia`) + append-only kayıt (ağ) |
+| `KOD_SABLONLAR/scripts/katalog_kontrol.py` | canlı models.dev kapısı: allowlist + on rol + aile (`name`/`family`/`nvidia`) + append-only kayıt (ağ); **tek kaynak** |
+| `tools/katalog_kontrol.py` | lab uyumluluk girişi; yalnız kanonik KOD betiğini çalıştırır (`make katalog-kontrol` ve eski belgeler) |
+| `KOD_SABLONLAR/.github/workflows/katalog-kontrol.yml` | hedef projeye `kur.sh` ile kurulan CI şablonu |
 | `tools/model_kimlik.py` | emekli kimlik taraması, `--oztest`, `--envanter` |
 | `tools/model_kimlik_istisna.json` | emekli kimlik + satır hash'leri + `onay` |
 | `make katalog-kontrol` | canlı ölçüm + `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydı |

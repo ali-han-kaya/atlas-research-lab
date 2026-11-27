@@ -59,6 +59,11 @@ törensel hale getirir.
 `bedava` profiline kimlik seçimi ve emekli kimlik değişimi bağlayıcı koşullara
 tabidir: [`../docs/KOD_BEDAVA_MODEL_POLITIKASI.md`](../docs/KOD_BEDAVA_MODEL_POLITIKASI.md).
 
+Canlı models.dev kapısı `scripts/katalog_kontrol.py` ile kurulur; `kur.sh` hedefe
+`model_katalog.json` allowlist'ini ve `.github/workflows/katalog-kontrol.yml`
+şablonunu da taşır. Ayrıntı ve `rc=2 = OLCULMEDI` sözleşmesi:
+[`scripts/README.md`](scripts/README.md).
+
 ## Makine bloğu zorunluluğu
 
 KFAZ0/1/2 artefaktları `.md`'dir ama her biri gövdesinde bir ` ```json ` bloğu

@@ -1836,12 +1836,14 @@ with tempfile.TemporaryDirectory() as d:
 def sahte_lab(kok):
     (kok / "ATLAS_SABLONLAR").mkdir(parents=True, exist_ok=True)
     yaz(kok / "ORTAK/scripts/ortak_gate.py", "# stub\n")
+    yaz(kok / "tools/model_katalog.json", {"openrouter": {"models": {}}})
     sab = kok / "KOD_SABLONLAR"
     (sab / ".opencode").mkdir(parents=True, exist_ok=True)
     yaz(sab / "templates/kod_profil.ORNEK.json", {"dil": "python"})
     for _a in ("opencode.json", "routing.profiles.json", "00_KOD_OKU_BENI.md",
                "OPERATOR_SURME.md"):
         yaz(sab / _a, "{}\n" if _a.endswith(".json") else "# stub\n")
+    yaz(sab / ".github/workflows/katalog-kontrol.yml", "name: stub\n")
     (sab / "scripts").mkdir(parents=True, exist_ok=True)
     shutil.copy(S / "kur.sh", sab / "scripts" / "kur.sh")
     return sab / "scripts" / "kur.sh"
@@ -1866,9 +1868,14 @@ with tempfile.TemporaryDirectory() as d:
 
 # ---- kur.sh --dogrula: eksik .gitignore KURULUM EKSIK sayilir ---------------
 def sahte_kurulum(kok):
-    """--dogrula'nin kosturdugu betikler STUB'dir: oz-test kendini cagirmaz."""
+    """--dogrula'nin kosturdugu betikler STUB'dir: oz-test kendini cagmaz."""
     (kok / "scripts").mkdir(parents=True, exist_ok=True)
     yaz(kok / "ORTAK/scripts/ortak_gate.py", "# stub\n")
+    yaz(kok / "model_katalog.json", {"openrouter": {"models": {}}})
+    yaz(kok / "routing.profiles.json", {})
+    yaz(kok / ".github/workflows/katalog-kontrol.yml", "name: stub\n")
+    yaz(kok / "scripts/katalog_kontrol.py",
+        "import sys\nsys.exit(0)\n")
     for _b, _cikis in (("budget_guard.py", 0), ("kod_gate_merge.py", 1),
                        ("kod_selftest.py", 0), ("perm_lint.py", 0)):
         yaz(kok / "scripts" / _b, f"import sys\nsys.exit({_cikis})\n")

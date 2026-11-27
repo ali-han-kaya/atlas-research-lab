@@ -148,8 +148,9 @@ rolü de canlı kayıtla karşılaştırır. Eksik/çelişkili kayıt veya bedav
 ihlali `rc=1`, ölçülemeyen ağ/JSON `rc=2` ve **`OLCULMEDI`**dır; PASS sayılmaz.
 Her koşu commit/tree/tree_sha256 ve tanım SHA-256'larıyla append-only
 `docs/KOD_BEDAVA_KATALOG_KAYDI.jsonl` kaydına eklenir; istenirse `--kayit <yol>`
-ile ayrı dosyaya yazılır. Kanonik kod ayrımı `python3 tools/katalog_kontrol.py`
-ile alınır (GNU make tarif hatasını 2'ye çevirir).
+ile ayrı dosyaya yazılır. Kanonik kod `KOD_SABLONLAR/scripts/katalog_kontrol.py`;
+labdaki `tools/katalog_kontrol.py` yalnız ince uyumluluk girişidir (GNU make
+tarif hatasını 2'ye çevirir).
 
 Farkın nereden geldiği ölçüldü (19 Kasım 2026): aynı 9 modellik içerik başka bir
 yolda **174/174**, yerel tam katalog (390 model) **174/174**, katalog yok **170/174**

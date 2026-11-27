@@ -28,6 +28,28 @@ bash KOD_SABLONLAR/scripts/kur.sh <hedef-depo> --dogrula  # MEVCUT kurulumu dene
 symlink kalmadığını ve kapıların gerçekten koştuğunu sınar. Kurulum modunda bu
 sapma kontrolü anlamsızdır (taze kopya bozulmayı ezer), bu yüzden ayrı moddur.
 
+### Canlı katalog kapısı (kurulumla gelir)
+
+`kur.sh` hedef projeye şunları taşır:
+
+- `scripts/katalog_kontrol.py` — tek kaynak canlı models.dev kapısı,
+- `model_katalog.json` — labdaki `tools/model_katalog.json` allowlist kopyası,
+- `.github/workflows/katalog-kontrol.yml` — proje CI şablonu (hedefte aynı yol
+  varsa dokunulmaz).
+
+Hedef projede yerel koşu:
+
+```
+python3 scripts/katalog_kontrol.py --profil-only
+python3 scripts/katalog_kontrol.py --katalog model_katalog.json \
+  --profil-dosya routing.profiles.json
+```
+
+`rc=0` bütün koşullar sağlandı; `rc=1` adlandırılmış ihlal; `rc=2`
+`OLCULMEDI` (ağ/JSON) ve **PASS değildir**. Workflow bu komutu push/PR,
+haftalık cron ve `workflow_dispatch` ile çalıştırır. `make dogrula` hermetik
+kalır; bu kapı ayrı ve ağ gerektiren bir ölçümdür.
+
 ## HATTI SÜRME — `--agent` KULLANMAYIN  (ÖLÇÜM-02 K5/K6/K17)
 
 **Önce temiz ağaç (v1.7.22, O3-04):** `kos_faz.sh --komut kod-faz0` yalnız

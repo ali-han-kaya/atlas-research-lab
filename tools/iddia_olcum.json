@@ -147,8 +147,8 @@
         "--json"
       ],
       "rc": 0,
-      "ham": "dogrula H2 PASS 86",
-      "deger": "86"
+      "ham": "dogrula H2 PASS 87",
+      "deger": "87"
     },
     "IDD-16": {
       "komut": [
@@ -336,7 +336,7 @@
         "--kontrol"
       ],
       "rc": 0,
-      "ham": "MODEL KIMLIK: PASS — 1 emekli kimlik · aday=1930 dosya · taranan=302 dosya · incelenmedi=0 dosya (onayli=0 · onaysiz=0) · gorulmedi=1628 dosya (4 gerekce) · onay=1 kayit · aktif=0",
+      "ham": "MODEL KIMLIK: PASS — 1 emekli kimlik · aday=1932 dosya · taranan=304 dosya · incelenmedi=0 dosya (onayli=0 · onaysiz=0) · gorulmedi=1628 dosya (4 gerekce) · onay=1 kayit · aktif=0",
       "deger": "0/0/0/1"
     },
     "IDD-48": {

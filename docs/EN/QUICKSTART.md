@@ -141,7 +141,7 @@ ATLAS_LAB=<LAB_KOKU> make yayinla
 
 ```text
 YAYIN PLANI · kaynak: <lab path>
-  planda=222 · yeni=0 · degisen=0 · ayni=222 · silinecek=0
+  planda=224 · yeni=0 · degisen=0 · ayni=224 · silinecek=0
 
 SIR TARAMASI: temiz (0 bulgu)
 
@@ -153,14 +153,14 @@ Exit code 0. A drifted, missing or extra file is named and the command exits
 then applies the plan. The same run scans the planned bytes for live
 credentials and blocks the transfer on a finding. Runtime files under
 `.opencode/` (`package.json`, lockfiles) are ignored in both trees and are not
-part of the plan, so the 222-file count is deterministic.
+part of the plan, so the 224-file count is deterministic.
 
 This is a maintainer check: without a lab tree the target stops before writing
 — `ATLAS_LAB degiskeni gerekli` when the variable is unset, `HATA: kaynak
 dizin yok` for a bad path — both with exit code 2. It is deliberately not part
 of `make dogrula`.
 
-**Approximate duration:** under a second (222 files hashed, no subprocesses).
+**Approximate duration:** under a second (224 files hashed, no subprocesses).
 
 ## 4. `./demo` — reproduce the historical failure, on purpose
 

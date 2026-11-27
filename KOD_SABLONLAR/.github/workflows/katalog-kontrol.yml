@@ -1,0 +1,43 @@
+name: katalog-kontrol
+
+# KOD projesine kur.sh ile eklenen canli models.dev kapisi.
+# Bu is ag gerektirir; rc=2 (OLCULMEDI) dahil sifir olmayan her cikis kirmizidir.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * 1'
+  push:
+    paths:
+      - 'routing.profiles.json'
+      - 'model_katalog.json'
+      - 'scripts/katalog_kontrol.py'
+      - '.github/workflows/katalog-kontrol.yml'
+  pull_request:
+    paths:
+      - 'routing.profiles.json'
+      - 'model_katalog.json'
+      - 'scripts/katalog_kontrol.py'
+      - '.github/workflows/katalog-kontrol.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: katalog-kontrol-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  live-catalog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Live models.dev catalog gate
+        run: |
+          python3 scripts/katalog_kontrol.py \
+            --katalog model_katalog.json \
+            --profil-dosya routing.profiles.json \
+            --timeout 30
