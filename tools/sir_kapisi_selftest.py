@@ -75,6 +75,14 @@ def vaka_hook(icerik, beklenen_basarili, iz=None):
     try:
         depo = tmp / 'depo'
         _yaz(depo / 'tools' / 'sir_kapisi.py', KAPI.read_text(encoding='utf-8'))
+        # pre-commit artik kapsam ates duvarini da cagirir; fikstur bu araca
+        # ve minimal bir manifeste sahip olmali, yoksa temiz commit de durur.
+        _yaz(depo / 'tools' / 'yayin_kapisi.py',
+             (KOK / 'tools' / 'yayin_kapisi.py').read_text(encoding='utf-8'))
+        _yaz(depo / 'tools' / 'yayin_manifest.json',
+             '{"schema":"ATLAS-YAYIN/v1","izinli":["deneme.md"],'
+             '"yasak_yollar":["projeler/"],'
+             '"yasak_uzantilar":[".pdf",".docx"]}\n')
         for ad in ('pre-commit', 'pre-push'):
             _yaz(depo / '.githooks' / ad,
                  (KOK / '.githooks' / ad).read_text(encoding='utf-8'))
