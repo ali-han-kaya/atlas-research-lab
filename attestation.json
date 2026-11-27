@@ -1,5 +1,5 @@
 {
-  "commit": "b03018c07bec49301340bd355518baffff3770d4",
+  "commit": "6eb32f14cbac9e0158c5aa3ff00967b9310f21fc",
   "file_count": 304,
   "files": [
     {
@@ -17,8 +17,8 @@
     {
       "mode": "100644",
       "path": ".github/workflows/dogrula.yml",
-      "sha256": "17ef2b7a47fd086d1ee20267e3fa02dd2c4bb8bb2d2e5a610c202986a3e5fd0e",
-      "size": 12194
+      "sha256": "0fa02650ab2b09256da5fff143cdadbbbf8083e4edb5b2883943aa07aa8e3ac4",
+      "size": 12428
     },
     {
       "mode": "100644",
@@ -1187,8 +1187,8 @@
     {
       "mode": "100644",
       "path": "Makefile",
-      "sha256": "e112a8af423e8655795f89760cb48cbd7b538bfa7703f3b58005d8b7df1bc9bd",
-      "size": 10278
+      "sha256": "505b97944d89d425933f969a8c43369eb5257ee6e76e02086cb86acd1759b6f6",
+      "size": 10489
     },
     {
       "mode": "100644",
@@ -1253,8 +1253,8 @@
     {
       "mode": "100644",
       "path": "README.tr.md",
-      "sha256": "e0812591dceb39511ef4997701be0952039e7f9eee290604dbb3dfb59c685eab",
-      "size": 38895
+      "sha256": "566d35a759da5add92043b159c588cda84a581e4d3a4d343032c3e351b9df5b2",
+      "size": 39084
     },
     {
       "mode": "100644",
@@ -1295,8 +1295,8 @@
     {
       "mode": "100644",
       "path": "docs/DENETIM-2026-11-24-KAPSAM-DISI.md",
-      "sha256": "972e5274bb988b536e44193f98fb9d448f2ce82fe07ece5aaa94337788754fd6",
-      "size": 9718
+      "sha256": "ea0dea1c47b1e90e503834bc6167fd706d3d2fa59ec65e311c62a696586668e2",
+      "size": 9711
     },
     {
       "mode": "100644",
@@ -1559,8 +1559,8 @@
     {
       "mode": "100644",
       "path": "tools/iddia.py",
-      "sha256": "90fc5a9d9e47fc76322234be82e2ece9f7d5f0e4e248eec5f5ff4e8d3de2ba7d",
-      "size": 40674
+      "sha256": "fb2c387ea709687f6e3cec2f1331d94b9ce8fa4520d61557850cc4c0dfe41af1",
+      "size": 47832
     },
     {
       "mode": "100644",
@@ -1827,7 +1827,7 @@
       "size": 16100
     }
   ],
-  "generated_at": "2026-11-27T14:10:05Z",
+  "generated_at": "2026-11-27T14:29:24Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1842,6 +1842,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "c52af09d06a5af616b14d4020a2e9100c4d403a7",
-  "tree_sha256": "ceb691e1010134270b276d515942f23195bff71f3ca03ab487b448e880f98e54"
+  "tree": "ce90356f82a9ac55d41d4f87c85c81406d954e9c",
+  "tree_sha256": "1071b9ddc22c7b6f89f796fbbcc8f1266d6c0a3a0c33d1a8375ed7799f2fdbb3"
 }
