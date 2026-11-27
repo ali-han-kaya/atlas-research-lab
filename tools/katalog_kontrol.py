@@ -14,8 +14,9 @@ NEDEN VAR
 
   KOSULLAR (bedava profili, politika: docs/KOD_BEDAVA_MODEL_POLITIKASI.md)
     - on rolun tamami ayni kimlige bakar (tek kimlik),
-    - canli `name` `Nemotron 3` ile baslar, `family` `nemotron` ile baslar ve
-      saglayici `nvidia`dir; sapma `AILE_FARKLI`dir,
+    - `bedava_politika.aile` / `ad_oneki` / `saglayici` zorunlu okunur; canli
+      `name` ad onekiyle, `family` aile onekiyle baslar ve saglayici eslesir;
+      alan eksikse `BEDAVA: FAIL`, sapma `AILE_FARKLI`dir,
     - kimlik canli kayitta vardir, `status` deprecated degildir,
     - `cost.input` ve `cost.output` (varsa diger sayisal cost alanlari) 0'dir,
     - `reasoning` ve `tool_call` canlida true, yerel allowlist'te de true'dur,
@@ -57,9 +58,6 @@ VARSAYILAN_API = 'https://models.dev/api.json'
 YETENEKLER = ('reasoning', 'tool_call')
 PROFIL_ADI = 'bedava'
 BEKLENEN_ROL = 10
-AILE_AD_ONEK = 'Nemotron 3'
-AILE_FAMILY_ONEK = 'nemotron'
-AILE_SAGLAYICI = 'nvidia'
 TANIM_DOSYALARI = (
     'tools/model_katalog.json',
     'KOD_SABLONLAR/routing.profiles.json',
@@ -182,7 +180,7 @@ def karsilastir(yerel, canli):
 
 
 def _bedava_profil(veri):
-    """(roller, asgari_limit) dondur; sozlesme bozuksa ProfilHatasi."""
+    """(roller, asgari_limit, aile) dondur; sozlesme bozuksa ProfilHatasi."""
     if not isinstance(veri, dict):
         raise ProfilHatasi('profil dosyasi kok nesnesi degil')
     profiller = veri.get('profiller')
@@ -200,6 +198,12 @@ def _bedava_profil(veri):
     politika = veri.get('bedava_politika')
     if not isinstance(politika, dict):
         raise ProfilHatasi('bedava_politika nesnesi yok')
+    aile = {}
+    for alan in ('aile', 'ad_oneki', 'saglayici'):
+        deger = politika.get(alan)
+        if not isinstance(deger, str) or not deger.strip():
+            raise ProfilHatasi('bedava_politika.%s bos/metin degil' % alan)
+        aile[alan] = deger
     asgari = politika.get('asgari_limit')
     if not isinstance(asgari, dict):
         raise ProfilHatasi('bedava_politika.asgari_limit nesnesi yok')
@@ -208,7 +212,9 @@ def _bedava_profil(veri):
         if not isinstance(deger, int) or isinstance(deger, bool) or deger <= 0:
             raise ProfilHatasi('bedava_politika.asgari_limit.%s pozitif tamsayi degil'
                                % alan)
-    return roller, {'context': asgari['context'], 'output': asgari['output']}
+    return (roller,
+            {'context': asgari['context'], 'output': asgari['output']},
+            aile)
 
 
 def _model_id(deger):
@@ -237,33 +243,34 @@ def _canli_kayit(canli, mid):
     return kayit if isinstance(kayit, dict) else None
 
 
-def _aile_denetle(kayit, mid, tam):
-    """Canli kaydin ayni Nemotron 3/nvidia ailesinde kaldigini denetle."""
+def _aile_denetle(kayit, mid, tam, aile):
+    """Canli kaydin `bedava_politika` aile beklentisine uydugunu denetle."""
     sorunlar = []
     ad = kayit.get('name')
-    if not (isinstance(ad, str) and ad.startswith(AILE_AD_ONEK)):
+    if not (isinstance(ad, str) and ad.startswith(aile['ad_oneki'])):
         sorunlar.append('name=%r; %r ile baslamali'
-                        % (ad, AILE_AD_ONEK))
-    aile = kayit.get('family')
-    if not (isinstance(aile, str)
-            and aile.casefold().startswith(AILE_FAMILY_ONEK)):
+                        % (ad, aile['ad_oneki']))
+    family = kayit.get('family')
+    if not (isinstance(family, str)
+            and family.casefold().startswith(aile['aile'].casefold())):
         sorunlar.append('family=%r; %r ailesi bekleniyor'
-                        % (aile, AILE_FAMILY_ONEK))
-    if not mid.startswith(AILE_SAGLAYICI + '/'):
+                        % (family, aile['aile']))
+    saglayici = aile['saglayici']
+    if not mid.startswith(saglayici + '/'):
         sorunlar.append('saglayici=%r; %s bekleniyor'
-                        % (mid, AILE_SAGLAYICI))
+                        % (mid, saglayici))
     canli_id = kayit.get('id')
     if isinstance(canli_id, str) and not (
-            canli_id.startswith(AILE_SAGLAYICI + '/') or
-            canli_id.startswith('openrouter/' + AILE_SAGLAYICI + '/')):
+            canli_id.startswith(saglayici + '/') or
+            canli_id.startswith('openrouter/' + saglayici + '/')):
         sorunlar.append('canli id=%r; %s bekleniyor'
-                        % (canli_id, AILE_SAGLAYICI))
+                        % (canli_id, saglayici))
     if sorunlar:
         return [('AILE_FARKLI', tam, ' · '.join(sorunlar))]
     return []
 
 
-def _bedava_denetle(roller, asgari, canli, yerel):
+def _bedava_denetle(roller, asgari, aile, canli, yerel):
     """Bedava profilini olcer; (bulgular, model_id, canli_kayit, gecen, toplam)."""
     bulgular = []
     gruplar = {}
@@ -302,7 +309,7 @@ def _bedava_denetle(roller, asgari, canli, yerel):
 
         ok = True
 
-        aile_bulgulari = _aile_denetle(kayit, mid, tam)
+        aile_bulgulari = _aile_denetle(kayit, mid, tam, aile)
         if aile_bulgulari:
             bulgular.extend(aile_bulgulari)
             ok = False
@@ -435,7 +442,8 @@ def _tree_sha256(commit):
     return mod.agac_ozeti(mod.agac_dosyalari(commit))
 
 
-def _kayit_yaz(args, satirlar, sonuc, sebep, model, canli_kayit, asgari, rol_sayisi):
+def _kayit_yaz(args, satirlar, sonuc, sebep, model, canli_kayit, asgari,
+               rol_sayisi, aile=None):
     """Olcumu append-only JSONL'e yaz; basariliysa True."""
     if not args.kayit:
         return True
@@ -463,6 +471,7 @@ def _kayit_yaz(args, satirlar, sonuc, sebep, model, canli_kayit, asgari, rol_say
             'roller': rol_sayisi,
             'model': model,
             'asgari_limit': asgari,
+            'aile_politikasi': aile,
             'canli': canli_kayit,
             'sonuc': sonuc,
             'sebep': sebep,
@@ -531,17 +540,18 @@ def main(argv=None):
         yerel = _katalog(_oku_json(Path(args.katalog)))
     except Hata as e:
         yaz('KATALOG KONTROL: OLCULMEDI — %s' % e)
-        _kayit_yaz(args, satirlar, 'OLCULMEDI', str(e), None, None, None, 0)
+        _kayit_yaz(args, satirlar, 'OLCULMEDI', str(e), None, None, None, 0,
+                   None)
         return 2
 
     try:
         profil_veri = _oku_json(Path(args.profil_dosya))
-        roller, asgari = _bedava_profil(profil_veri)
+        roller, asgari, aile = _bedava_profil(profil_veri)
         profil_hata = None
     except Hata as e:
-        roller, asgari, profil_hata = {}, None, 'profil dosyasi okunamadi: %s' % e
+        roller, asgari, aile, profil_hata = {}, None, None, 'profil dosyasi okunamadi: %s' % e
     except ProfilHatasi as e:
-        roller, asgari, profil_hata = {}, None, str(e)
+        roller, asgari, aile, profil_hata = {}, None, None, str(e)
 
     try:
         if args.api_dosya:
@@ -557,7 +567,7 @@ def main(argv=None):
             yaz('BEDAVA: FAIL — %s' % profil_hata)
         model = _model_id(next(iter(roller.values()))) if len(roller) == 1 else None
         _kayit_yaz(args, satirlar, 'OLCULMEDI', str(e), model, None, asgari,
-                   len(roller))
+                   len(roller), aile)
         return 2
 
     if args.profil_only:
@@ -587,7 +597,7 @@ def main(argv=None):
         yaz('BEDAVA: FAIL — %s' % profil_hata)
     else:
         bedava_bulgular, model_id, canli_model, gecen_rol, rol_toplam = _bedava_denetle(
-            roller, asgari, canli, yerel)
+            roller, asgari, aile, canli, yerel)
         yaz()
         yaz('BEDAVA PROFIL — %s · profiller.%s · %d rol'
             % (args.profil_dosya, PROFIL_ADI, rol_toplam))
@@ -627,7 +637,8 @@ def main(argv=None):
         rc = 0
 
     if not _kayit_yaz(args, satirlar, sonuc, sebep, model_id,
-                      _kanit_ozeti(canli_model), asgari, len(roller)):
+                      _kanit_ozeti(canli_model), asgari, len(roller),
+                      aile):
         if rc == 0:
             yaz('HUKUM: KAYIT YOK — olcum PASS ama kanit yazilamadi; PASS sayilmaz.')
             rc = 2

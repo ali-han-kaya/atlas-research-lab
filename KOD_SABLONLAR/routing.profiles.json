@@ -15,7 +15,10 @@
     "kod-gate KARAR VERMEZ, kod_gate_merge.py ciktisini sunar — bu yuzden en ucuz modeldedir."
   ],
   "bedava_politika": {
-    "aciklama": "KOD bedava profili icin baglayici alt sinir. tools/katalog_kontrol.py bu degerlerin altina dusen canli limiti FAIL sayar. Degerler olculmus bir maksimum degil, politika tabanidir.",
+    "aciklama": "KOD bedava profili icin baglayici aile ve alt sinir sozlesmesi. tools/katalog_kontrol.py hem aile beklentisini hem de bu degerlerin altina dusen canli limiti FAIL sayar. Degerler olculmus bir maksimum degil, politika tabanidir.",
+    "aile": "nemotron",
+    "ad_oneki": "Nemotron 3",
+    "saglayici": "nvidia",
     "asgari_limit": {
       "context": 200000,
       "output": 32768

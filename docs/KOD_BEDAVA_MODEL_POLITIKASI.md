@@ -42,7 +42,7 @@ yoktur, `OLCULMEDI` yazılır ve karar bekler.
 
 | # | Koşul | Kanıt alanı | Geçme ölçütü |
 |---|---|---|---|
-| 1 | **Aynı aile** | models.dev `name`, `family`; `tools/model_kimlik_istisna.json` gerekçesi | `name` `Nemotron 3` ile başlar, `family` `nemotron` ile başlar, sağlayıcı `nvidia`dır; sapma `AILE_FARKLI`; emekli kimliğin aile aidiyeti defter gerekçesinde yazılıdır |
+| 1 | **Aynı aile** | models.dev `name`, `family`; `bedava_politika.aile/ad_oneki/saglayici`; `tools/model_kimlik_istisna.json` gerekçesi | `name` `Nemotron 3` ile başlar, `family` `nemotron` ile başlar, sağlayıcı `nvidia`dır; bu üç beklenti `bedava_politika`dan okunur, sapma `AILE_FARKLI`; emekli kimliğin aile aidiyeti defter gerekçesinde yazılıdır |
 | 2 | **Sıfır maliyet** | models.dev `cost.input`, `cost.output`, varsa diğer `cost.*` alanları | hepsi `0`; `:free` soneki **tek başına kanıt değildir** |
 | 3 | **reasoning** | models.dev `reasoning` + `tools/model_katalog.json` aynı alan | canlı ve yerel değer ikisi de `true` |
 | 4 | **tool_call** | models.dev `tool_call` + `tools/model_katalog.json` aynı alan | canlı ve yerel değer ikisi de `true` |
@@ -51,7 +51,10 @@ yoktur, `OLCULMEDI` yazılır ve karar bekler.
 
 **Aynı aile ölçütü.** Aile, model adındaki `Nemotron 3` kuşağı, `nemotron`
 aileden gelen canlı `family` alanı ve `nvidia` sağlayıcısıdır; canlı `family`
-(ölçümde `nemotron-ultra-free`) ayrıca kaydedilir. Kapı üçünden biri saparsa
+(ölçümde `nemotron-ultra-free`) ayrıca kaydedilir. Üç beklenti
+`bedava_politika.aile`, `bedava_politika.ad_oneki` ve
+`bedava_politika.saglayici` alanlarında tutulur; kapı bunları **zorunlu** okur,
+alan eksik ya da boşsa `BEDAVA: FAIL` verir. Kapı üçünden biri saparsa
 `AILE_FARKLI` ile kırmızı olur. Eski kimliğin tam değeri `tools/model_kimlik_istisna.json`
 içindedir ve canlı katalogda artık bulunmadığı için eski kaydın canlı `family`
 alanıyla karşılaştırılması **OLCULMEDI**dir. Farklı bir aileye geçiş emeklilik
@@ -77,7 +80,8 @@ make bedava-kontrol                  # yalniz bedava profili; CI'ya baglanmaz
 
 - Kaynak: `https://models.dev/api.json`.
 - `make bedava-kontrol` yalnız `profiller.bedava` sözleşmesini denetler: on rol,
-  tek kimlik, canlı `name`/`family`/`nvidia`, `cost` 0, `reasoning`/`tool_call`
+  tek kimlik, `bedava_politika`daki `aile`/`ad_oneki`/`saglayici` beklentisine
+  uyan canlı `name`/`family`/sağlayıcı, `cost` 0, `reasoning`/`tool_call`
   true. Ağ yoksa `rc=2` ve `OLCULMEDI` döner; bu hedef CI'ya bağlanmaz.
 - **Canlı ölçüm CI dışındadır.** `make katalog-kontrol` ağ gerektirir; elle
   veya yerel zamanlanmış bir işle çalıştırılır. CI yalnız çevrimdışı
@@ -107,6 +111,7 @@ Her ölçüm kaydı şunları taşır; kayıt **append-only**dir, eski satır si
 - `commit`, `tree`, `tree_sha256` — `make kanit` ile aynı ağaç özeti,
 - `id`, `name`, `family`, `status`, `reasoning`, `tool_call`,
 - `cost` nesnesinin tamamı, `limit.context`, `limit.output`,
+- `aile_politikasi` (`aile`, `ad_oneki`, `saglayici` beklentileri),
 - `asgari_limit` ve `roller` sayısı,
 - sonuç (`PASS`/`FAIL`/`OLCULMEDI`), sebep ve komutun ham satırları,
 - ölçüm anındaki tanım dosyalarının SHA-256'sı:

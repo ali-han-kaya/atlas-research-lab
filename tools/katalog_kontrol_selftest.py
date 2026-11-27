@@ -36,6 +36,7 @@ ROLLER = (
     'kod-gate',
 )
 ASGARI = {'context': 10000, 'output': 1000}
+AILE = {'aile': 'nemotron', 'ad_oneki': 'Nemotron 3', 'saglayici': 'nvidia'}
 OLCULMEDI = 'OLCULMEDI'
 # Eski/yazim kaymasi ciktiya sizarsa test bunu ayri bir hata olarak yakalar.
 ESKI_OLCULMEDI = ('OLCULEMEDI', 'OLCULMADI')
@@ -47,14 +48,18 @@ def _kimlik(ad):
     return ad if '/' in ad else 'nvidia/' + ad
 
 
-def profil(farkli=None):
-    """On rollu, tek kimlikli bedava profili fiksturu."""
+def profil(farkli=None, politika=None):
+    """On rollu, tek kimlikli ve aile sozlesmeli bedava profili fiksturu."""
     bedava = dict.fromkeys(ROLLER, 'openrouter/nvidia/m1')
     if farkli:
         bedava.update(farkli)
+    beklenti = dict(AILE)
+    beklenti['asgari_limit'] = dict(ASGARI)
+    if politika:
+        beklenti.update(politika)
     return {
         'profiller': {'bedava': bedava},
-        'bedava_politika': {'asgari_limit': dict(ASGARI)},
+        'bedava_politika': beklenti,
     }
 
 
@@ -182,6 +187,17 @@ def main():
          'AILE_FARKLI', None),
         ('aile saglayici drifti', yerel('meta/m1'), canli('meta/m1'), 1,
          'AILE_FARKLI', profil(meta)),
+        # Uc vaka beklentinin koddan degil `bedava_politika`dan okundugunu
+        # kanitlar: canli kayit ayni kalir, yalniz politika alani sapar.
+        ('aile politikasi drifti', yerel('m1'), canli('m1'), 1,
+         'AILE_FARKLI', profil(politika={'aile': 'baska'})),
+        ('ad oneki politikasi drifti', yerel('m1'), canli('m1'), 1,
+         'AILE_FARKLI', profil(politika={'ad_oneki': 'Baska Model'})),
+        ('saglayici politikasi drifti', yerel('m1'), canli('m1'), 1,
+         'AILE_FARKLI', profil(politika={'saglayici': 'meta'})),
+        ('aile politikasi eksik', yerel('m1'), canli('m1'), 1,
+         ('BEDAVA: FAIL', 'bedava_politika.aile'),
+         profil(politika={'aile': None})),
         ('kimlik drifti', yerel('m1', 'm2'), canli('m1', 'm2'), 1,
          'TEK_KIMLIK_DEGIL',
          profil({'kod-tester': 'openrouter/nvidia/m2'})),
