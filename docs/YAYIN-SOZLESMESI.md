@@ -17,7 +17,7 @@ girmez.
 | Durum | Kapsam | Gerekçe |
 |---|---|---|
 | **Dahil** | ATLAS/KOD/Toolkit hatları, ajan ve komut tanımları, şablonlar, kapı betikleri, testler, mutasyon kataloğu, `DENEME/` regresyon fikstürü, seçilmiş ölçüm ve ders kayıtları, README/Makefile/LICENSE, bu sözleşme ve yayın kapısı | Mekanizmayı okutan, çalıştıran ve denetleyen asgari küme |
-| **Hariç** | Üretilmiş makale metinleri, PDF/kitapçık, konu korpusları, `projeler/` altındaki çalışmalar, ham araştırma çıktıları, kişisel oturum devirleri, sırlar ve kimlik bilgileri | Ürün/özel bağlam arşivi; yayın mekanizmasının parçası değil |
+| **Hariç** | Üretilmiş makale metinleri, PDF/DOCX/LaTeX, konu korpusları, ham veri ve büyük veri dosyaları, `projeler/` altındaki çalışmalar, kişisel oturum devirleri, sırlar ve kimlik bilgileri | Ürün/özel bağlam arşivi; yayın mekanizmasının parçası değil |
 | **İstisna** | Kapıların pinlediği kanonik OLGU-06 devri | Sürüm satırı ve `olgu_lint` bu kayda bağlı; kimlik bilgisi taşımadığı ölçüldü |
 
 Bir makale veya ham çıktı, "sadece örnek" diye dahi public ağaca eklenmez.
@@ -29,8 +29,8 @@ Bir makale veya ham çıktı, "sadece örnek" diye dahi public ağaca eklenmez.
 `tools/yayin_manifest.json` üç bölüm taşır:
 
 - `izinli`: public ağaçta bulunabilecek **her** dosyanın açık yolu.
-- `yasak_yollar`: makale/proje/arşiv kümelerinin yol önekleri.
-- `yasak_uzantilar`: PDF, LaTeX, ofis ve arşiv uzantıları.
+- `yasak_yollar`: makale/korpus/veri/proje/arşiv kümelerinin yol önekleri.
+- `yasak_uzantilar`: PDF, LaTeX, ofis, arşiv ve büyük veri uzantıları.
 
 Manifestte olup ağaçta olmayan yol da hatadır. Böylece kapı iki yönlü parite
 kurar: **ağaçta fazlalık** ve **manifestte ölü kayıt** ayrı ayrı kırmızıdır.
@@ -52,7 +52,11 @@ sırası yasaktır; kapı push edilecek ağacın tamamını görmeden yeşil dö
 
 `tools/yayin_kapisi.py` hem izlenen hem de ignore edilmemiş izlenmeyen
 dosyaları `git ls-files --cached --others --exclude-standard` ile görür.
-Böylece "henüz eklemedim" denilen bir sızıntı da gözden kaçmaz.
+Böylece "henüz eklemedim" denilen bir sızıntı da gözden kaçmaz. Buna ek olarak
+H1 (`tools/dogrula.py` → `hijyen`) ignore edilmiş dosyaları da tarar: `.gitignore`
+bir savunma katmanıdır, tek başına hüküm değildir. Aynı yasak yol/uzantı listesi
+H1, yayın kapısı ve `yayinla.py` tarafından `yayin_manifest.json` üzerinden
+okunur; liste kopyalanmaz.
 
 | Kod | Anlam |
 |---|---|
@@ -68,10 +72,19 @@ Bulgu satırı yalnız **dosya, satır ve kural kimliği** yazar; sır değerini
 eşleşen metni basmaz. Bir dosya okunamıyorsa "temiz" sayılmaz: `YAYIN-04` ile
 durdurur.
 
+### Commit ateş duvarı
+
+`.githooks/pre-commit` sır kapısından sonra `yayin_kapisi.py --staged` çalıştırır.
+Staged dosyalarda yasak yol/uzantı veya 5 MB üstü boyut varsa commit fail-closed
+durur. `git commit --no-verify` ile bu kapı atlansa bile H1 çalışma ağacında,
+CI ise push edilen ağaçta aynı ihlali yakalar. `.gitignore` aynı kapsamı ayrıca
+ignore eder; fakat ignore edilmiş bir dosya H1 tarafından görülmeye devam eder.
+
 ### Tek komut
 
 ```bash
 python3 tools/yayin_kapisi.py --kontrol --oztest
+python3 tools/yayin_kapisi.py --staged   # pre-commit kısa yolu
 ```
 
 `--oztest` geçici bir git deposunda temiz tabanı ve beş ihlali (listesiz dosya,

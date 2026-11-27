@@ -1,3 +1,6 @@
 #!/bin/sh
-# Canli kimlik bilgisi tasiyan DSN commit edilemez. Yer tutucular serbest.
-exec python3 tools/sir_kapisi.py --staged
+# Commit kapisi: canli sir + kapsam ates duvari. Ikisi de fail-closed'dur.
+# Kapsam kontrolu staged yollarda makale/korpus/PDF/DOCX/veri ve 5 MB ustunu
+# durdurur; manifest okunamazsa commit de durur.
+python3 tools/sir_kapisi.py --staged || exit $?
+exec python3 tools/yayin_kapisi.py --staged

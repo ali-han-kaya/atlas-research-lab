@@ -139,16 +139,58 @@ def gez():
             yield os.path.join(kok, ad)
 
 
+def _kapsam_politikasi():
+    """(yasak_yollar, yasak_uzantilar) veya fail-closed hata dondur."""
+    try:
+        with open(os.path.join(KOK, 'tools', 'yayin_manifest.json'),
+                  encoding='utf-8') as f:
+            veri = json.load(f)
+        if not isinstance(veri, dict):
+            raise ValueError('manifest nesne degil')
+        yollar = veri.get('yasak_yollar')
+        uzantilar = veri.get('yasak_uzantilar')
+        if (not isinstance(yollar, list) or not yollar
+                or not isinstance(uzantilar, list) or not uzantilar):
+            raise ValueError('yasak listeleri bos veya gecersiz')
+        return ([str(x) for x in yollar],
+                [str(x).lower() for x in uzantilar]), None
+    except (OSError, ValueError) as e:
+        return None, 'kapsam manifesti okunamadi: %s' % str(e)[:160]
+
+
+def _yasak_yol(rel, onek):
+    """Manifest yol onegiyle eslesme; `docs/_ARSIV-` gibi onekleri de kapsar."""
+    rel = rel.replace('\\', '/')
+    ham = str(onek).replace('\\', '/')
+    onek = ham.rstrip('/')
+    if not onek:
+        return False
+    if ham.endswith('/'):
+        return rel == onek or rel.startswith(onek + '/')
+    return rel == onek or rel.startswith(onek)
+
+
 def hijyen():
     kotu = []
+    politika, hata = _kapsam_politikasi()
+    if politika is None:
+        return False, 'kapsam manifesti hatasi', [hata]
+    yasak_yollar, yasak_uzantilar = politika
     for tam in gez():
         rel = os.path.relpath(tam, KOK)
+        norm = rel.replace('\\', '/')
         if os.path.islink(tam) and not os.path.exists(tam):
             kotu.append('kirik symlink: %s -> %s' % (rel, os.readlink(tam)))
             continue
         if os.path.basename(tam) == '.DS_Store':
             kotu.append('macOS artefakti: %s' % rel)
-        elif os.path.getsize(tam) > 5 * 1024 * 1024:
+        if os.path.splitext(norm)[1].lower() in yasak_uzantilar:
+            kotu.append('yasak uzanti: %s' % rel)
+        for onek in yasak_yollar:
+            if _yasak_yol(norm, onek):
+                kotu.append('yasak yol: %s (%s)' % (rel, onek))
+                break
+        if os.path.getsize(tam) > 5 * 1024 * 1024:
             kotu.append('5 MB ustu: %s' % rel)
     return not kotu, '%d bulgu' % len(kotu), kotu
 

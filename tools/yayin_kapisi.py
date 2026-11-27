@@ -25,6 +25,7 @@ NEDEN AYRI KAPI
 KULLANIM
   python3 tools/yayin_kapisi.py --kontrol
   python3 tools/yayin_kapisi.py --oztest
+  python3 tools/yayin_kapisi.py --staged            # pre-commit kapsam kapisi
   python3 tools/yayin_kapisi.py --kontrol --oztest
   python3 tools/yayin_kapisi.py --kontrol --kok <baska-agac> \
       --manifest tools/yayin_manifest.json
@@ -167,6 +168,18 @@ def _bulgu(kod, yol, satir, ayrinti):
     return "%s %s:%s %s" % (kod, yol, satir, ayrinti)
 
 
+def _yasak_yol(rel, onek):
+    """Yol onegi eslesmesi; `docs/_ARSIV-` gibi onekleri de kapsar."""
+    norm = _yol_norm(rel)
+    ham = _yol_norm(onek)
+    onek = ham.rstrip("/")
+    if not onek:
+        return False
+    if ham.endswith("/"):
+        return norm == onek or norm.startswith(onek + "/")
+    return norm == onek or norm.startswith(onek)
+
+
 def _sir_fiksturleri(kok):
     """Yalniz dosya + TAM satir SHA-256'si ile belgelenmis sahte sirlar."""
     yol = Path(kok) / "tools" / "secret_fixtures.json"
@@ -232,7 +245,7 @@ def _tara(kok, manifest_rel):
             bulgular.append(_bulgu("YAYIN-01", rel, 1,
                                    "manifestte listelenmemis dosya"))
         for onek in yasak_yollar:
-            if norm == onek or norm.startswith(onek.rstrip("/") + "/"):
+            if _yasak_yol(norm, onek):
                 bulgular.append(_bulgu("YAYIN-02", rel, 1,
                                        "yasak yol: %s" % onek))
                 break
@@ -270,6 +283,49 @@ def _tara(kok, manifest_rel):
     return len(dosyalar), len(izinli), bulgular
 
 
+def _staged_dosyalar(kok):
+    """Commit'e girecek degismis yollar (silinenler haric); fail-closed."""
+    ham = _git(kok, "diff", "--cached", "--name-only",
+               "--diff-filter=ACMR", "-z")
+    sonuc = []
+    for parca in ham.split(b"\0"):
+        if not parca:
+            continue
+        try:
+            sonuc.append(parca.decode("utf-8"))
+        except UnicodeDecodeError as exc:
+            raise RuntimeError("staged dosya adi UTF-8 degil: %s" % exc)
+    return sorted(set(sonuc))
+
+
+def _staged_tara(kok, manifest_rel):
+    """Pre-commit icin yalniz kapsam ates duvari: yasak yol/uzanti/boyut."""
+    _, yasak_yollar, yasak_uzantilar = _manifest_oku(kok, manifest_rel)
+    dosyalar = _staged_dosyalar(kok)
+    bulgular = []
+    for rel in dosyalar:
+        norm = _yol_norm(rel)
+        for onek in yasak_yollar:
+            if _yasak_yol(norm, onek):
+                bulgular.append(_bulgu("YAYIN-02", rel, 1,
+                                       "yasak yol: %s" % onek))
+                break
+        uzanti = os.path.splitext(norm)[1].lower()
+        if uzanti in yasak_uzantilar:
+            bulgular.append(_bulgu("YAYIN-02", rel, 1,
+                                   "yasak uzanti: %s" % uzanti))
+        try:
+            boy = int(_git(kok, "cat-file", "-s", ":" + norm).strip() or b"0")
+        except (RuntimeError, ValueError):
+            bulgular.append(_bulgu("YAYIN-04", rel, 1,
+                                   "staged boyut okunamadi"))
+            continue
+        if boy > AZAMI_BAYT:
+            bulgular.append(_bulgu("YAYIN-04", rel, 1,
+                                   "5 MB ustu: %d bayt" % boy))
+    return len(dosyalar), bulgular
+
+
 def _oztest():
     """Temiz + dort ayri ihlal vakasini gecici bir git deposunda olcer."""
     hatalar = []
@@ -283,7 +339,7 @@ def _oztest():
                 "schema": SEMA,
                 "izinli": ["temiz.txt", "tools/yayin_manifest.json"],
                 "yasak_yollar": ["projeler/"],
-                "yasak_uzantilar": [".pdf", ".tex"],
+                "yasak_uzantilar": [".pdf", ".tex", ".parquet"],
             }
             (kok / "tools" / "yayin_manifest.json").write_text(
                 json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
@@ -293,6 +349,16 @@ def _oztest():
             if bulgular or n != 2 or m != 2:
                 hatalar.append("temiz taban beklenmedik: n=%d m=%d %r"
                                % (n, m, bulgular[:3]))
+            sn, staged = _staged_tara(kok, "tools/yayin_manifest.json")
+            if staged or sn != 2:
+                hatalar.append("staged temiz taban beklenmedik: n=%d %r"
+                               % (sn, staged[:3]))
+
+            (kok / "veri.parquet").write_bytes(b"PAR1")
+            _git(kok, "add", "veri.parquet")
+            _, staged = _staged_tara(kok, "tools/yayin_manifest.json")
+            if not any(str(b).startswith("YAYIN-02") for b in staged):
+                hatalar.append("staged yasak uzanti yakalanmadi: %r" % staged[:3])
 
             (kok / ".test-gizli.txt").write_text(
                 "postgres" + "://kullanici:parola@example.invalid/veritabani\n",
@@ -320,7 +386,7 @@ def _oztest():
             print("FAIL YAYIN-KAPISI OZTEST " + hata)
         print("YAYIN-KAPISI OZ-TEST: FAIL — %d hata" % len(hatalar))
         return 1
-    print("YAYIN-KAPISI OZ-TEST: PASS — 5/5")
+    print("YAYIN-KAPISI OZ-TEST: PASS — 5/5 + staged")
     return 0
 
 
@@ -330,21 +396,38 @@ def main(argv=None):
                     help="gercek agaci manifestle karsilastir")
     ap.add_argument("--oztest", action="store_true",
                     help="gecici depoda temiz + ihlal vakalarini kos")
+    ap.add_argument("--staged", action="store_true",
+                    help="pre-commit: staged yollarda yasak kapsami denetle")
     ap.add_argument("--kok", default=None, help="denetlenecek agac (varsayilan: bu depo)")
     ap.add_argument("--manifest", default=None,
                     help="manifest yolu (varsayilan: %s)" % MANIFEST)
     a = ap.parse_args(argv)
-    if not a.kontrol and not a.oztest:
-        ap.error("--kontrol veya --oztest gerekli")
+    if not a.kontrol and not a.oztest and not a.staged:
+        ap.error("--kontrol, --oztest veya --staged gerekli")
 
     rc = 0
+    kok = Path(a.kok).resolve() if a.kok else KOK
+    manifest = a.manifest or MANIFEST
     if a.oztest:
         rc = _oztest()
         if rc != 0:
             return rc
+    if a.staged:
+        try:
+            n, bulgular = _staged_tara(kok, manifest)
+        except (OSError, RuntimeError, ValueError) as exc:
+            print("FAIL YAYIN-KAPISI STAGED ARAC — %s" % exc)
+            return 2
+        if bulgular:
+            for satir in bulgular[:40]:
+                print("FAIL " + satir)
+            if len(bulgular) > 40:
+                print("FAIL ... +%d bulgu" % (len(bulgular) - 40))
+            print("YAYIN-KAPISI STAGED: FAIL — %d bulgu · staged=%d"
+                  % (len(bulgular), n))
+            return 1
+        print("YAYIN-KAPISI STAGED: PASS — 0 bulgu · staged=%d" % n)
     if a.kontrol:
-        kok = Path(a.kok).resolve() if a.kok else KOK
-        manifest = a.manifest or MANIFEST
         try:
             n, m, bulgular = _tara(kok, manifest)
         except (OSError, RuntimeError, ValueError) as exc:

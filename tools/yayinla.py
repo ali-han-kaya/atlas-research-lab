@@ -113,9 +113,33 @@ FIKSTUR_DOSYALARI = {
 FIKSTUR_DOSYASI = os.path.join(KOK, 'tools', 'secret_fixtures.json')
 
 
-# Uretilmis urun/arsiv izleri yayina giremez: bu depo mekanizmadir.
-YASAK_UZANTI = {'.pdf', '.docx', '.doc', '.tex', '.aux', '.bcf', '.zip',
-                '.bundle', '.epub'}
+# Uretilmis urun/arsiv/veri izleri yayina giremez: bu depo mekanizmadir.
+# Tek kaynak `yayin_manifest.json`; liste orada buyur, burada kopyalanmaz.
+def yasak_kapsam():
+    try:
+        with open(os.path.join(KOK, 'tools', 'yayin_manifest.json'),
+                  encoding='utf-8') as f:
+            veri = json.load(f)
+        yollar = veri.get('yasak_yollar')
+        uzantilar = veri.get('yasak_uzantilar')
+        if (not isinstance(yollar, list) or not yollar
+                or not isinstance(uzantilar, list) or not uzantilar):
+            raise ValueError('yasak listeleri bos veya gecersiz')
+        return ([str(x) for x in yollar],
+                [str(x).lower() for x in uzantilar])
+    except (OSError, ValueError) as exc:
+        raise SystemExit('HATA: yayin manifesti okunamadi: %s' % type(exc).__name__)
+
+
+def yasak_yol(rel, onek):
+    norm = rel.replace(os.sep, '/').lstrip('./')
+    ham = str(onek).replace(os.sep, '/')
+    onek = ham.rstrip('/')
+    if not onek:
+        return False
+    if ham.endswith('/'):
+        return norm == onek or norm.startswith(onek + '/')
+    return norm == onek or norm.startswith(onek)
 
 # Aktarimi kosan kullanicinin ev yolu (sert referans degil, kural parametresi).
 # Boylece depoda sahibinin mutlak yolu diye bir sey kalmaz: kural calisirken
@@ -327,12 +351,15 @@ def main():
         return 2
 
     istenen = topla(lab)
-    yasak = [rel for rel in istenen if os.path.splitext(rel)[1] in YASAK_UZANTI]
+    yasak_yollar, yasak_uzantilar = yasak_kapsam()
+    yasak = [rel for rel in istenen
+             if os.path.splitext(rel)[1].lower() in yasak_uzantilar
+             or any(yasak_yol(rel, onek) for onek in yasak_yollar)]
     if yasak:
-        print('HATA: uretilmis urun/arsiv izi planda: %s' % ', '.join(sorted(yasak)),
-              file=sys.stderr)
-        print('Bu depo mekanizmadir; makale ciktisi/PDF/arsiv yayimlanmaz.',
-              file=sys.stderr)
+        print('HATA: uretilmis urun/veri/arsiv izi planda: %s'
+              % ', '.join(sorted(yasak)), file=sys.stderr)
+        print('Bu depo mekanizmadir; makale ciktisi, korpus, PDF/DOCX ve '
+              'buyuk veri dosyalari yayimlanmaz.', file=sys.stderr)
         return 1
 
     yeni, degisen, ayni = plan(istenen)
