@@ -1,12 +1,12 @@
 {
-  "commit": "4d76a3d7f07560be8466a10c75955e407787d925",
+  "commit": "03dfa75309b0587521272db341e6ce6a01b9c894",
   "file_count": 309,
   "files": [
     {
       "mode": "100755",
       "path": ".githooks/pre-commit",
-      "sha256": "d2df3e32b18c92551cd69e634319e3a9c6eea7ec5a1f8c4f5c2bef60a5f64dc1",
-      "size": 303
+      "sha256": "512488e644d2b088335f198bd9a81ceb8f614cf040534ecdcb8f81cd003a5de5",
+      "size": 742
     },
     {
       "mode": "100755",
@@ -1857,7 +1857,7 @@
       "size": 8252
     }
   ],
-  "generated_at": "2026-11-27T21:08:19Z",
+  "generated_at": "2026-11-27T21:21:43Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1872,6 +1872,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "02b0bf69296d332310d02288da7c40cba9092d46",
-  "tree_sha256": "631d28f8d100a5a8f63fdc867e5e0e30b623bd520d1a618a0089c88b047f4022"
+  "tree": "94b854880037e2cb71acfb3d759624b995f389a7",
+  "tree_sha256": "99d33dff5adbdc0ae8b330373cf61f511b93133e180fd84a7e5f0651edf3dbee"
 }
