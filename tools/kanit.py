@@ -282,6 +282,14 @@ def proof_yaz():
         raise RuntimeError("izlenen dosyalarda commit edilmemis degisiklik "
                            "var; once commit veya geri al")
 
+    # PROOF.md manifestte listeli; dogrula'nin yayin kapisi dosyanin
+    # varligini komutlardan once ister. Gecici dosya sonunda canli
+    # sonuclarla ezilir; sayi veya hüküm tasimaz.
+    yol = KOK / PROOF
+    yol.write_text("# PROOF — üretiliyor\n\n"
+                   "> Bu dosya `make proof` tarafından yeniden yazılıyor.\n",
+                   encoding="utf-8")
+
     sonuclar = []
     for kimlik, argv in PROOF_KOMUTLAR:
         print("PROOF: KOMUT %s — %s" % (kimlik, " ".join(argv)))
@@ -373,7 +381,6 @@ def proof_yaz():
                     "işletim sistemleri veya temiz klon kurulumunu ölçmez.")
     satirlar.append("")
 
-    yol = KOK / PROOF
     yol.write_text("\n".join(satirlar) + "\n", encoding="utf-8")
     print("PROOF: YAZILDI %s" % yol)
     return 0 if all(k["status"] == "PASS" for k in sonuclar) else 1
