@@ -10,6 +10,11 @@ NEDEN VAR
   `make dogrula-ci` hedeflerinin on kosuludur; boylece kapinin negatif
   davranisi commit'li bir regresyon kilidi tasir.
 
+  Adim 4 yerleştirme akisi `docs/README.md` icindeki bash blogundan birebir
+  okunur ve gecici bir kokte kosar: eksik aday, kontrol hatasi, fark yoklugu,
+  okunamayan diff ve onaysiz/yanlis onay hedef dosyayi degistirmez; yalniz acik
+  `e` onayi kopyalar.
+
 KULLANIM
   python3 tools/katalog_kontrol_selftest.py
   python3 tools/katalog_kontrol_selftest.py --ci-denetim [--kok <depo>]
@@ -22,6 +27,7 @@ KULLANIM
 CIKIS: 0 = butun vakalar gecti · 1 = en az bir vaka kirmizi
 """
 import json
+import os
 import re
 import subprocess
 import sys
@@ -161,6 +167,145 @@ def vaka_ag():
         if 'HUKUM: GUNCEL' in cikti or 'BEDAVA: 10/10' in cikti:
             return False, 'ag hatasinda yesil hukum · %s' % cikti.strip()[:180]
         return True, 'rc=2 · %s' % AG_ADRESI
+
+
+def _adim4_betigi(kok=KOK):
+    """docs/README.md'deki Adim 4 yerleştirme betigini birebir oku."""
+    metin = (Path(kok) / 'docs' / 'README.md').read_text(encoding='utf-8')
+    satirlar = metin.splitlines()
+    bas = None
+    for i, satir in enumerate(satirlar):
+        if re.match(r'^###\s+4\.\s', satir):
+            bas = i
+            break
+    if bas is None:
+        raise ValueError('docs/README.md: Adim 4 basligi yok')
+    i = bas + 1
+    while i < len(satirlar) and satirlar[i].strip() != '```bash':
+        i += 1
+    if i >= len(satirlar):
+        raise ValueError('docs/README.md: Adim 4 bash blogu yok')
+    i += 1
+    blok = []
+    while i < len(satirlar) and satirlar[i].strip() != '```':
+        blok.append(satirlar[i])
+        i += 1
+    if i >= len(satirlar) or not blok:
+        raise ValueError('docs/README.md: Adim 4 bash blogu kapali degil')
+    return '\n'.join(blok) + '\n'
+
+
+def _adim4_betigi_ve_yollar(kok, gecici):
+    """Betigi oku, sabit /tmp yollarini gecici kokun yollarina cevir."""
+    betik = _adim4_betigi(kok)
+    for gerekli in ('set -euo pipefail', 'diff_rc=$?',
+                    "read -r -p", "test \"$onay\" = 'e'", 'cp '):
+        if gerekli not in betik:
+            raise ValueError('Adim 4 betiginde beklenen parca yok: %s' % gerekli)
+    aday = Path(gecici) / 'islem' / 'model_katalog.json'
+    api = Path(gecici) / 'islem' / 'models.dev-api.json'
+    fark = Path(gecici) / 'islem' / 'model_katalog.diff'
+    hedef = Path(gecici) / 'tools' / 'model_katalog.json'
+    for eski, yeni in (
+            ('/tmp/model_katalog.json', str(aday)),
+            ('/tmp/models.dev-api.json', str(api)),
+            ('/tmp/model_katalog.diff', str(fark)),
+            ('tools/model_katalog.json', str(hedef))):
+        if eski not in betik:
+            raise ValueError('Adim 4 betiginde yol yok: %s' % eski)
+        betik = betik.replace(eski, yeni)
+    return betik, aday, hedef
+
+
+def _adim4_vaka(ad, aday_icerik, kontrol_rc, girdi, beklenen_rc,
+                kopya_beklenir, diff_rc=None):
+    """Belgelenen Adim 4 betigini gercek bash ile gecici kokte kos."""
+    with tempfile.TemporaryDirectory(prefix='adim4_') as gecici:
+        kok = Path(gecici)
+        (kok / 'tools').mkdir()
+        (kok / 'islem').mkdir()
+        betik, aday, hedef = _adim4_betigi_ve_yollar(KOK, kok)
+        eski = ('{"openrouter": {"models": {"nvidia/old": '
+                '{"reasoning": true, "tool_call": true}}}}\n')
+        hedef.write_text(eski, encoding='utf-8')
+        if aday_icerik is not None:
+            aday.write_text(aday_icerik, encoding='utf-8')
+        (kok / 'islem' / 'models.dev-api.json').write_text(
+            '{}', encoding='utf-8')
+        # Gercek kapi ayri oz-testte olculur; burada Adim 4'un kontrol
+        # cikisini nasil kullandigini sabit bir sozlesmeyle siniriz. Eksik
+        # aday gercek kapida OLCULMEDI/rc=2'dir; gecerli aday ise JSON'dur.
+        (kok / 'tools' / 'katalog_kontrol.py').write_text(
+            'import json, os, sys\n'
+            'args = sys.argv[1:]\n'
+            "if '--katalog' not in args or '--api-dosya' not in args:\n"
+            '    sys.exit(2)\n'
+            "katalog = args[args.index('--katalog') + 1]\n"
+            'if not os.path.isfile(katalog):\n'
+            '    sys.exit(2)\n'
+            'try:\n'
+            "    json.load(open(katalog, encoding='utf-8'))\n"
+            'except (OSError, ValueError):\n'
+            '    sys.exit(2)\n'
+            "sys.exit(int(os.environ.get('ADIM4_KONTROL_RC', '0')))\n",
+            encoding='utf-8')
+        ortam = dict(os.environ, ADIM4_KONTROL_RC=str(kontrol_rc))
+        if diff_rc is not None:
+            # Gercek diff'in okunamadigi dali taklit et; betik cp'ye
+            # gecmemeli. Bu, `case`nin 2+ kolunu ayri bir vakayla kilitler.
+            (kok / 'bin').mkdir()
+            sahte_diff = kok / 'bin' / 'diff'
+            sahte_diff.write_text('#!/bin/sh\nexit %d\n' % diff_rc,
+                                  encoding='utf-8')
+            sahte_diff.chmod(0o755)
+            ortam['PATH'] = str(kok / 'bin') + os.pathsep + ortam['PATH']
+        r = subprocess.run(['bash', '-c', betik], cwd=str(kok), input=girdi,
+                           capture_output=True, text=True, timeout=30,
+                           env=ortam)
+        cikti = (r.stdout or '') + (r.stderr or '')
+        hedef_son = hedef.read_text(encoding='utf-8')
+        if r.returncode != beklenen_rc:
+            return False, 'rc=%d (beklenen %d) · %s' % (
+                r.returncode, beklenen_rc, cikti.strip()[:180])
+        if kopya_beklenir:
+            if hedef_son != aday_icerik:
+                return False, 'kopya olusmadi veya icerik farkli · %s' % (
+                    cikti.strip()[:180])
+            if 'HATA:' in cikti:
+                return False, 'kopya ile HATA ayni anda · %s' % (
+                    cikti.strip()[:180])
+        else:
+            if hedef_son != eski:
+                return False, 'onaysiz/fail-closed durumda hedef degisti · %s' % (
+                    cikti.strip()[:180])
+        return True, 'rc=%d · hedef=%s' % (
+            r.returncode, 'kopyalandi' if kopya_beklenir else 'korundu')
+
+
+def adim4_vakalari():
+    """Adim 4'un eksik/gecersiz/onaysiz durumlarda kopya uretmedigini olc."""
+    eski = ('{"openrouter": {"models": {"nvidia/old": '
+            '{"reasoning": true, "tool_call": true}}}}\n')
+    yeni = ('{"openrouter": {"models": {"nvidia/m1": '
+            '{"reasoning": true, "tool_call": true}}}}\n')
+    vakalar = [
+        ('adim4 eksik fikstur', None, 0, 'e\n', 2, False, None),
+        ('adim4 katalog kontrol FAIL', yeni, 1, 'e\n', 1, False, None),
+        ('adim4 fark yok', eski, 0, 'e\n', 1, False, None),
+        ('adim4 diff okunamaz', yeni, 0, 'e\n', 1, False, 2),
+        ('adim4 onaysiz', yeni, 0, '\n', 1, False, None),
+        ('adim4 yanlis onay', yeni, 0, 'H\n', 1, False, None),
+        ('adim4 acik onay', yeni, 0, 'e\n', 0, True, None),
+    ]
+    sonuc = []
+    for ad, aday, rc, girdi, beklenen, kopya, diff_rc in vakalar:
+        try:
+            ok, ayrinti = _adim4_vaka(ad, aday, rc, girdi, beklenen, kopya,
+                                      diff_rc)
+        except Exception as e:  # noqa: BLE001 - test kosucusu hatayi raporlar
+            ok, ayrinti = False, 'ISTISNA: %s' % e
+        sonuc.append((ad, ok, ayrinti))
+    return sonuc
 
 
 def _workflow_tetikleri(metin):
@@ -464,8 +609,16 @@ def main():
     print('  %-28s %-4s %s' % ('ag erisilemez', 'PASS' if ok else 'FAIL',
                                ayrinti))
 
+    try:
+        adim4 = adim4_vakalari()
+    except Exception as e:  # noqa: BLE001 - test kosucusu hatayi raporlar
+        adim4 = [('adim4', False, 'ISTISNA: %s' % e)]
+    for ad, ok, ayrinti in adim4:
+        gecen += 1 if ok else 0
+        print('  %-28s %-4s %s' % (ad, 'PASS' if ok else 'FAIL', ayrinti))
+
     print()
-    toplam = len(vakalar) + 1
+    toplam = len(vakalar) + 1 + len(adim4)
     if gecen == toplam:
         print('KATALOG KONTROL OZ-TEST: %d/%d gecti' % (gecen, toplam))
         return 0

@@ -443,6 +443,12 @@ test "$onay" = 'e'
 cp /tmp/model_katalog.json tools/model_katalog.json
 ```
 
+Bu akışın fail-closed davranışı `make katalog-selftest` içinde geçici
+fikstürlerle koşar: eksik aday, kontrol hatası, fark yokluğu, okunamayan diff
+ve onaysız/yanlış onay hedef dosyayı değiştirmez; yalnız açık `e` onayı
+kopyalar. Test, yukarıdaki bash bloğunu `docs/README.md`den birebir okur; belge
+ile davranış ayrışırsa kırmızı olur.
+
 Kontrol `rc=0` vermeden, diff 1 dışında kod döndürmeden veya inceleme onayı
 olmadan `cp` yapmayın. Diff yalnız beklenen model değişikliğini göstermiyorsa
 durun; dosyayı elle düzenleyerek farkı susturmayın.

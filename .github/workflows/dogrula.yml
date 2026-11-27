@@ -74,9 +74,12 @@ jobs:
 
       # Katalog kapisinin negatif dallari ayri bir CI adimi olarak gorunur:
       # on rol fiksturu, maliyet/limit/kimlik/deprecated/ag ve OLCULMEDI.
+      # Ayni adim Adim 4 kopyalama akisini da gecici fiksturlerle kosar:
+      # eksik model, kontrol hatasi, fark yoklugu ve onaysiz/yanlis onay
+      # kopya uretmez; yalniz acik `e` onayi kopyalar.
       # `make dogrula-ci` bunu zaten on kosul olarak kosar; buradaki acik
       # adim, regresyonu serbest metin bir on kosulun arkasina saklamaz.
-      - name: Katalog kapisi oz-testi (negatif dallar)
+      - name: Katalog kapisi oz-testi (negatif dallar + Adim 4)
         run: make katalog-selftest
 
       # Canli models.dev/katalog hedefi zorunlu CI'ya geri donmemeli. Denetim
