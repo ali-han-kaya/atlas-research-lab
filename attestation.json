@@ -1,5 +1,5 @@
 {
-  "commit": "03dfa75309b0587521272db341e6ce6a01b9c894",
+  "commit": "3a64f366d14e19b05d972c2f3d1289388ca4a149",
   "file_count": 309,
   "files": [
     {
@@ -1337,7 +1337,7 @@
     {
       "mode": "100644",
       "path": "docs/DURUM.md",
-      "sha256": "4ce5345c1bf5dfeec53452ad911cf81a6740ba70af92e4a2150cb9ba1e31b5c1",
+      "sha256": "782c1d9c9ccce7cf4e65777e8ce5e898baaf4729c5d4b03607d18bf8f0867876",
       "size": 1489
     },
     {
@@ -1857,7 +1857,7 @@
       "size": 8252
     }
   ],
-  "generated_at": "2026-11-27T21:21:43Z",
+  "generated_at": "2026-11-27T21:36:14Z",
   "schema": "ATLAS-KANIT/v1",
   "scope": {
     "excludes": [
@@ -1872,6 +1872,6 @@
     "platform": "macOS-27.2-arm64-arm-64bit",
     "python": "3.9.6"
   },
-  "tree": "94b854880037e2cb71acfb3d759624b995f389a7",
-  "tree_sha256": "99d33dff5adbdc0ae8b330373cf61f511b93133e180fd84a7e5f0651edf3dbee"
+  "tree": "9df7468d7a552be876c1be935f4d016c3f7a2b35",
+  "tree_sha256": "d2385c6f0ddc4648f320751834df99e05df81aa865eda877d98785e72aaaeac1"
 }
